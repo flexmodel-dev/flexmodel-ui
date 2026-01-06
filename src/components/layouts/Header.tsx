@@ -204,7 +204,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleAIChat, onToggleConsole }) => {
           >
             <Button size="small" icon={<GlobalOutlined />}>{currentLocaleText}</Button>
           </Dropdown>
-          <a href={`${import.meta.env.BASE_URL}/rapi-doc/index.html`} target="_blank" rel="noopener noreferrer">
+          <a href={`${import.meta.env.BASE_URL}/swagger-ui/index.html`} target="_blank" rel="noopener noreferrer">
             <FileSearchOutlined style={{ fontSize: token.fontSizeLG }} />
           </a>
           <a href="https://flexmodel.wetech.tech" target="_blank" rel="noopener noreferrer">

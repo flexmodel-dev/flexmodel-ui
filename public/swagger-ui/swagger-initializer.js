@@ -10,6 +10,26 @@ window.onload = function() {
     return '/api/f/docs/openapi.json';
   }
 
+  // 获取URL参数中的主题设置
+  function getThemeFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('theme') || 'light';
+  }
+
+  // 应用主题样式
+  function applyTheme(theme) {
+    const body = document.body;
+    if (theme === 'dark') {
+      body.classList.add('dark-theme');
+    } else {
+      body.classList.remove('dark-theme');
+    }
+  }
+
+  // 应用主题
+  const theme = getThemeFromUrl();
+  applyTheme(theme);
+
   // the following lines will be replaced by docker/configurator, when it runs in a docker-container
   window.ui = SwaggerUIBundle({
     url: getOpenApiUrl(),

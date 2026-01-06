@@ -14,8 +14,8 @@ const OpenAPI: React.FC = () => {
           border: 'none',
           flex: 1
         }}
-        src={`${import.meta.env.BASE_URL}/rapi-doc/index.html?theme=${isDark ? 'dark' : 'light'}`}
-        title="Rapi Doc"
+        src={`${import.meta.env.BASE_URL}/swagger-ui/index.html?theme=${isDark ? 'dark' : 'light'}`}
+        title="OpenAPI Doc"
       />
     </PageContainer>
   );
