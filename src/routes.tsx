@@ -8,6 +8,8 @@ import DataModeling from "./pages/DataModeling";
 import DataSource from "./pages/DataSource";
 import ERView from "./pages/DataView/components/ERView";
 import APILog from "./pages/APILog";
+import Storage from "./pages/Storage";
+
 import {
   ApiOutlined,
   BranchesOutlined,
@@ -23,6 +25,7 @@ import {
   SettingOutlined,
   ThunderboltOutlined,
   UserOutlined,
+  CloudUploadOutlined,
 } from "@ant-design/icons";
 import GraphQLAPI from "@/pages/GraphQLAPI";
 import CustomAPI from "@/pages/CustomAPI";
@@ -168,6 +171,12 @@ export const routes: RouteConfig[] = [
         translationKey: "job_execution_log",
       },
     ]
+  },
+  {
+    path: "/storage",
+    element: <Storage />,
+    icon: CloudUploadOutlined,
+    translationKey: "storage",
   },
   {
     path: "/identity-providers",
