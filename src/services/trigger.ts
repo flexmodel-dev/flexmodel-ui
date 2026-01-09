@@ -43,9 +43,10 @@ export interface TriggerListParams {
  * @returns 触发器列表
  */
 export const getTriggerPage = (
+  projectId: string,
   params?: TriggerListParams,
 ): Promise<PageDTOTriggerDTO> => {
-  return api.get("/triggers", {...params});
+  return api.get(`/projects/${projectId}/triggers`, {...params});
 };
 
 /**
@@ -53,8 +54,8 @@ export const getTriggerPage = (
  * @param data 触发器数据
  * @returns 创建的触发器
  */
-export const createTrigger = (data: Trigger): Promise<Trigger> => {
-  return api.post("/triggers", data);
+export const createTrigger = (projectId: string, data: Trigger): Promise<Trigger> => {
+  return api.post(`/projects/${projectId}/triggers`, data);
 };
 
 /**
@@ -62,8 +63,8 @@ export const createTrigger = (data: Trigger): Promise<Trigger> => {
  * @param id 触发器ID
  * @returns 触发器详情
  */
-export const getTrigger = (id: string): Promise<TriggerDTO> => {
-  return api.get(`/triggers/${id}`);
+export const getTrigger = (projectId: string, id: string): Promise<TriggerDTO> => {
+  return api.get(`/projects/${projectId}/triggers/${id}`);
 };
 
 /**
@@ -72,8 +73,8 @@ export const getTrigger = (id: string): Promise<TriggerDTO> => {
  * @param data 触发器数据
  * @returns 更新后的触发器
  */
-export const updateTrigger = (id: string, data: Trigger): Promise<Trigger> => {
-  return api.put(`/triggers/${id}`, data);
+export const updateTrigger = (projectId: string, id: string, data: Trigger): Promise<Trigger> => {
+  return api.put(`/projects/${projectId}/triggers/${id}`, data);
 };
 
 /**
@@ -82,8 +83,8 @@ export const updateTrigger = (id: string, data: Trigger): Promise<Trigger> => {
  * @param data 触发器数据
  * @returns 更新后的触发器
  */
-export const patchTrigger = (id: string, data: Trigger): Promise<Trigger> => {
-  return api.patch(`/triggers/${id}`, data);
+export const patchTrigger = (projectId: string, id: string, data: Trigger): Promise<Trigger> => {
+  return api.patch(`/projects/${projectId}/triggers/${id}`, data);
 };
 
 /**
@@ -91,8 +92,8 @@ export const patchTrigger = (id: string, data: Trigger): Promise<Trigger> => {
  * @param id 触发器ID
  * @returns 删除结果
  */
-export const deleteTrigger = (id: string): Promise<void> => {
-  return api.delete(`/triggers/${id}`);
+export const deleteTrigger = (projectId: string, id: string): Promise<void> => {
+  return api.delete(`/projects/${projectId}/triggers/${id}`);
 };
 
 /**
@@ -100,6 +101,6 @@ export const deleteTrigger = (id: string): Promise<void> => {
  * @param id 触发器ID
  * @returns 执行结果
  */
-export const executeTrigger = (id: string): Promise<void> => {
-  return api.post(`/triggers/${id}/execute`);
+export const executeTrigger = (projectId: string, id: string): Promise<void> => {
+  return api.post(`/projects/${projectId}/triggers/${id}/execute`);
 };

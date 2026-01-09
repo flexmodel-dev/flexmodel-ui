@@ -14,9 +14,12 @@ import {
 } from '@/services/flow';
 import dayjs from 'dayjs';
 import {t} from 'i18next';
+import {useProject} from '@/store/appStore';
 
 const FlowInstanceList: React.FC = () => {
   const navigate = useNavigate();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   // 状态管理
   const [loading, setLoading] = useState(false);
   const [terminatingIds, setTerminatingIds] = useState<Set<string>>(new Set());
@@ -39,7 +42,7 @@ const FlowInstanceList: React.FC = () => {
   const fetchFlowInstanceList = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getFlowInstanceList(searchParams);
+      const response = await getFlowInstanceList(projectId, searchParams);
       setFlowInstanceList(response.list);
       setTotal(response.total);
     } catch (error) {
@@ -48,7 +51,7 @@ const FlowInstanceList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchParams]);
+  }, [projectId, searchParams]);
 
   useEffect(() => {
     fetchFlowInstanceList();
@@ -78,7 +81,7 @@ const FlowInstanceList: React.FC = () => {
   const handleTerminateFlowInstance = async (flowInstanceId: string) => {
     setTerminatingIds(prev => new Set(prev).add(flowInstanceId));
     try {
-      await terminateFlowInstance(flowInstanceId);
+      await terminateFlowInstance(projectId, flowInstanceId);
       message.success('流程实例终止成功');
       fetchFlowInstanceList();
     } catch (error) {
@@ -100,7 +103,7 @@ const FlowInstanceList: React.FC = () => {
     setHistoryLoading(true);
 
     try {
-      const tasks = await getFlowUserTasks(record.flowInstanceId);
+      const tasks = await getFlowUserTasks(projectId, record.flowInstanceId);
       setUserTasks(tasks);
     } catch (error) {
       console.error('获取用户任务失败:', error);
@@ -320,13 +323,14 @@ const FlowInstanceList: React.FC = () => {
           loading={historyLoading}
           currentFlowInstance={currentFlowInstance}
           userTasks={userTasks}
+          projectId={projectId}
           onClose={() => setHistoryDrawerVisible(false)}
           onCommitted={async () => {
             // 刷新用户任务
             if (currentFlowInstance) {
               try {
                 setHistoryLoading(true);
-                const tasks = await getFlowUserTasks(currentFlowInstance.flowInstanceId);
+                const tasks = await getFlowUserTasks(projectId, currentFlowInstance.flowInstanceId);
                 setUserTasks(tasks);
               } catch {
                 // 忽略错误提示，保持最小打扰

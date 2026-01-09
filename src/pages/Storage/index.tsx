@@ -12,9 +12,12 @@ import CreateStorageDrawer from "@/pages/Storage/components/CreateStorageDrawer"
 import StorageView from "@/pages/Storage/components/StorageView";
 import StorageForm from "@/pages/Storage/components/StorageForm";
 import FileBrowser from "@/pages/Storage/components/FileBrowser";
+import {useProject} from "@/store/appStore";
 
 const StorageManagement: React.FC = () => {
   const {t} = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [activeStorage, setActiveStorage] = useState<StorageSchema | null>(null);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -31,7 +34,7 @@ const StorageManagement: React.FC = () => {
 
   const handleEditStorage = async (formData: any) => {
     try {
-      await updateStorage(formData.name, formData as StorageSchema);
+      await updateStorage(projectId, formData.name, formData as StorageSchema);
       setIsEditing(false);
       if (activeStorage) {
         setActiveStorage(formData as StorageSchema);
@@ -45,7 +48,7 @@ const StorageManagement: React.FC = () => {
   const handleDelete = async () => {
     if (activeStorage) {
       try {
-        await deleteStorage(activeStorage.name);
+        await deleteStorage(projectId, activeStorage.name);
         setDeleteVisible(false);
         setActiveStorage(null);
         message.success(t("delete_storage_success"));

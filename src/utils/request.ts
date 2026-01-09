@@ -31,9 +31,6 @@ const ERROR_CODES = {
   SERVER_ERROR: 500
 } as const
 
-// 不需要X-Tenant-Id请求头的全局接口路径
-const GLOBAL_PATHS = ['/global/profile', '/auth/whoami', '/auth/login', '/auth/refresh', '/tenants']
-
 // API 基础路径
 export const BASE_URI = "/api/f"
 
@@ -160,16 +157,6 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-
-    // 添加X-Tenant-Id请求头
-    const tenantId = localStorage.getItem('tenantId')
-    const url = config.url || ''
-    const shouldAddTenant = !GLOBAL_PATHS.some(path => url.includes(path))
-
-    if (tenantId && shouldAddTenant) {
-      config.headers['X-Tenant-Id'] = tenantId
-    }
-
     return config
   },
   (error: AxiosError) => Promise.reject(error)

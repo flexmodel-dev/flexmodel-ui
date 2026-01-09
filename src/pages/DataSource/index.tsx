@@ -17,9 +17,13 @@ import DataSourceView from "@/pages/DataSource/components/DataSourceView";
 import DataSourceForm from "@/pages/DataSource/components/DataSourceForm";
 import {getModelList} from "@/services/model.ts";
 import {EntitySchema, EnumSchema, NativeQuerySchema,} from "@/types/data-modeling";
+import {useProject} from "@/store/appStore";
 
 const DatasourceManagement: React.FC = () => {
   const {t} = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [activeDs, setActiveDs] = useState<DatasourceSchema | null>(null);
   const [testLoading, setTestLoading] = useState<boolean>(false);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
@@ -60,7 +64,7 @@ const DatasourceManagement: React.FC = () => {
     if (!activeDs) return;
     setTestLoading(true);
     try {
-      const result = await validateDatasource(activeDs);
+      const result = await validateDatasource(projectId, activeDs);
       if (result.success) {
         message.success(
           t("test_connection_success_message", {time: result.time})
@@ -81,7 +85,7 @@ const DatasourceManagement: React.FC = () => {
   const handleEditDatasource = async (formData: any) => {
     try {
       const payload = buildUpdatePayload(formData);
-      await updateDatasource(formData.name, payload as DatasourceSchema);
+      await updateDatasource(projectId, formData.name, payload as DatasourceSchema);
       setIsEditing(false);
       if (activeDs) {
         const merged = mergeDatasource(activeDs, formData);
@@ -96,7 +100,7 @@ const DatasourceManagement: React.FC = () => {
   const handleDelete = async () => {
     if (activeDs) {
       try {
-        await deleteDatasource(activeDs.name);
+        await deleteDatasource(projectId, activeDs.name);
         setDeleteVisible(false);
         message.success(t("delete_datasource_success"));
       } catch {
@@ -107,7 +111,7 @@ const DatasourceManagement: React.FC = () => {
 
   const handleExport = async () => {
     if (!activeDs) return;
-    const models = await getModelList(activeDs.name);
+    const models = await getModelList(projectId, activeDs.name);
     setModelList(models);
     setExportVisible(true);
     scriptForm.resetFields();
@@ -122,7 +126,7 @@ const DatasourceManagement: React.FC = () => {
   const importModels = async () => {
     if (!activeDs) return;
     const values = await scriptForm.validateFields();
-    reqImportModels(activeDs.name, values).then(() =>
+    reqImportModels(projectId, activeDs.name, values).then(() =>
       message.success(t("models_import_success"))
     );
     setImportVisible(false);

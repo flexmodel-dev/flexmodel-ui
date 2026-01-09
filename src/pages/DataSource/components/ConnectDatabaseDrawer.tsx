@@ -5,6 +5,7 @@ import DataSourceForm from "@/pages/DataSource/components/DataSourceForm";
 import DataSourceView from "@/pages/DataSource/components/DataSourceView";
 import Title from "antd/lib/typography/Title";
 import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
 
 const ConnectDatabaseDrawer: React.FC<{
   visible: boolean;
@@ -12,6 +13,9 @@ const ConnectDatabaseDrawer: React.FC<{
   onClose: () => void;
 }> = ({ visible, onChange, onClose }) => {
   const { t } = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [active, setActive] = useState<number>(0);
   const [form] = Form.useForm();
   const [formData, setFormData] = useState<any>({});
@@ -33,7 +37,7 @@ const ConnectDatabaseDrawer: React.FC<{
   const handleTestConnection = async () => {
     try {
       const values = await form.validateFields();
-      const result = await validateDatasource({
+      const result = await validateDatasource(projectId, {
         name: values.name,
         type: 'USER' as import('@/types/data-source').DatasourceType,
         config: { ...values },
@@ -65,7 +69,7 @@ const ConnectDatabaseDrawer: React.FC<{
       updatedAt: ''
     };
     setPLoading(true);
-    const physicsModelNames = await getPhysicsModelNames(data);
+    const physicsModelNames = await getPhysicsModelNames(projectId, data);
     setFormData(data);
     setPhysicsModelData(physicsModelNames.map((item: string) => ({
       key: item,
@@ -76,13 +80,13 @@ const ConnectDatabaseDrawer: React.FC<{
 
   const handleConnectDatabase = async () => {
     try {
-      const res = await createDatasource(formData);
+      const res = await createDatasource(projectId, formData);
       setCurrentVal(res);
       handleNext();
       onChange(res);
       if (targetKeys?.length) {
         message.success(t('connect_sync_models_tips', { name: formData.name }));
-        syncModels(formData.name, targetKeys as string[]).then(() => {
+        syncModels(projectId, formData.name, targetKeys as string[]).then(() => {
           message.success(t('connect_sync_models_done_tips', { name: formData.name }));
         });
       }

@@ -4,57 +4,57 @@ import {ApiDefinition, ApiDefinitionHistory} from "@/types/api-management";
 /**
  * 获取 API 列表
  */
-export const getApis = (): Promise<ApiDefinition[]> => {
-  return api.get('/apis')
+export const getApis = (projectId: string): Promise<ApiDefinition[]> => {
+  return api.get(`/projects/${projectId}/apis`)
 }
 
-export const getApiHistories = (apiId: string): Promise<ApiDefinitionHistory[]> => {
-  return api.get(`/apis/${apiId}/histories`)
+export const getApiHistories = (projectId: string, apiId: string): Promise<ApiDefinitionHistory[]> => {
+  return api.get(`/projects/${projectId}/apis/${apiId}/histories`)
 }
 
-export const restoreApiHistory = (apiId: string, historyId: string): Promise<ApiDefinitionHistory> => {
-  return api.post(`/apis/${apiId}/histories/${historyId}/restore`)
+export const restoreApiHistory = (projectId: string, apiId: string, historyId: string): Promise<ApiDefinitionHistory> => {
+  return api.post(`/projects/${projectId}/apis/${apiId}/histories/${historyId}/restore`)
 }
 
 /**
  * 新建 API
  */
-export const createApi = (data: any): Promise<any> => {
-  return api.post('/apis', data)
+export const createApi = (projectId: string, data: any): Promise<any> => {
+  return api.post(`/projects/${projectId}/apis`, data)
 }
 
 /**
  * 批量生成 API
  */
-export const generateAPIs = (data: any): Promise<any> => {
-  return api.post('/apis/generate', data)
+export const generateAPIs = (projectId: string, data: any): Promise<any> => {
+  return api.post(`/projects/${projectId}/apis/generate`, data)
 }
 
 /**
  * 更新 API
  */
-export const updateApi = (id: string, data: any): Promise<any> => {
-  return api.put(`/apis/${id}`, data)
+export const updateApi = (projectId: string, id: string, data: any): Promise<any> => {
+  return api.put(`/projects/${projectId}/apis/${id}`, data)
 }
 
 /**
  * 更新 API 启用状态
  */
-export const updateApiStatus = (id: string, enabled: boolean): Promise<any> => {
-  return api.patch(`/apis/${id}`, {enabled})
+export const updateApiStatus = (projectId: string, id: string, enabled: boolean): Promise<any> => {
+  return api.patch(`/projects/${projectId}/apis/${id}`, {enabled})
 }
 
 /**
  * 更新 API 名称
  */
-export const updateApiName = (id: string, name: string): Promise<any> => {
-  return api.patch(`/apis/${id}`, {name})
+export const updateApiName = (projectId: string, id: string, name: string): Promise<any> => {
+  return api.patch(`/projects/${projectId}/apis/${id}`, {name})
 }
 
 /**
  * 删除 API
  */
-export const deleteApi = (id: string): Promise<void> => {
-  return api.delete(`/apis/${id}`)
+export const deleteApi = (projectId: string, id: string): Promise<void> => {
+  return api.delete(`/projects/${projectId}/apis/${id}`)
 }
 

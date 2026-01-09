@@ -21,6 +21,7 @@ import DM8 from "@/assets/icons/svg/dm.svg?react";
 import TiDB from "@/assets/icons/svg/tidb.svg?react";
 import MongoDB from "@/assets/icons/svg/mongodb.svg?react";
 import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
 
 const DbsMap: Record<string, any> = {
   mysql: MySQL,
@@ -50,6 +51,9 @@ const DataSourceExplorer: React.FC<DataSourceExplorerProps> = ({
                                                                  selectedDataSource,
                                                                }) => {
   const {t} = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   // 内部管理数据源列表和当前选中的数据源
   const [dsList, setDsList] = useState<DatasourceSchema[]>([]);
   const [activeDs, setActiveDs] = useState<DatasourceSchema | null>(null);
@@ -59,7 +63,7 @@ const DataSourceExplorer: React.FC<DataSourceExplorerProps> = ({
   const getDatasourceListHandler = async () => {
     try {
       setLoading(true);
-      const list = await getDatasourceList();
+      const list = await getDatasourceList(projectId);
       setDsList(list);
 
       // 设置初始选中的数据源

@@ -19,6 +19,7 @@ import {createField, dropField, modifyField} from "@/services/model.ts";
 import FieldForm, {FieldInitialValues} from "./FieldForm.tsx";
 import {Entity, Field, TypedFieldSchema} from "@/types/data-modeling";
 import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
 
 interface FieldListProps {
   datasource: string;
@@ -27,6 +28,8 @@ interface FieldListProps {
 
 const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
   const { t } = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [fieldList, setFieldList] = useState<Field[]>([]);
   const [filteredFieldList, setFilteredFieldList] = useState<Field[]>([]);
   const [searchKeyword, setSearchKeyword] = useState<string>('');
@@ -112,10 +115,10 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
         identity: values.identity ?? false,
       };
       if (selectedFieldIndex === -1) {
-        const res = await createField(datasource, model?.name, typedField);
+        const res = await createField(projectId, datasource, model?.name, typedField);
         setFieldList([...fieldList, res as unknown as Field]);
       } else {
-        await modifyField(datasource, model?.name, values.name, typedField);
+        await modifyField(projectId, datasource, model?.name, values.name, typedField);
         const updatedFields = [...fieldList];
         updatedFields[selectedFieldIndex] = values;
         setFieldList(updatedFields);
@@ -144,7 +147,7 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
   const delField = async (index: number) => {
     try {
       const field = fieldList[index];
-      await dropField(datasource, model?.name, field.name);
+      await dropField(projectId, datasource, model?.name, field.name);
       setFieldList(fieldList.filter((_, i) => i !== index));
       message.success(t("field_delete_success"));
     } catch (error) {

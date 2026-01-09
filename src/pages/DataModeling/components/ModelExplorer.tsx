@@ -10,6 +10,7 @@ import IDLModelForm from "@/pages/DataModeling/components/IDLModelForm";
 import type {DatasourceSchema} from '@/types/data-source';
 import {useTranslation} from "react-i18next";
 import {useLocale} from "@/store/appStore.ts";
+import {useProject} from "@/store/appStore";
 import type {Model} from '@/types/data-modeling';
 import {
   IconEntityFolder,
@@ -93,6 +94,8 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
                                                     }) => {
   const {t} = useTranslation();
   const {locale} = useLocale();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
   const navigate = useNavigate();
   const [activeDs, setActiveDs] = useState<string>(datasource || "");
   const [dsList, setDsList] = useState<DatasourceSchema[]>([]);
@@ -120,7 +123,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
   // 处理模型表单提交
   const handleModelFormSubmit = async (formData: any) => {
     try {
-      await createModel(activeDs, formData);
+      await createModel(projectId, activeDs, formData);
       message.success(t('form_save_success'));
       addModel();
     } catch (error) {
@@ -132,7 +135,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
   // 处理IDL模型表单提交
   const handleIDLModelFormSubmit = async (formData: any) => {
     try {
-      await importModels(activeDs, formData);
+      await importModels(projectId, activeDs, formData);
       message.success(t('model_created_success'));
       addModel();
     } catch (error) {
@@ -172,7 +175,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
 
   // 获取数据源列表
   const reqDatasourceList = async () => {
-    const res = await getDatasourceList();
+    const res = await getDatasourceList(projectId);
     setDsList(res);
     setActiveDs(datasource || res[0].name);
   };
@@ -180,7 +183,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
   // 获取模型列表
   const reqModelList = async () => {
     setModelLoading(true);
-    const res: any = await getModelList(activeDs);
+    const res: any = await getModelList(projectId, activeDs);
     setModelLoading(false);
     const groupData = groupByType(res);
     setModelList(groupData);
@@ -211,7 +214,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
   // 删除模型
   const handleDelete = async () => {
     if (activeModel) {
-      await dropModel(activeDs, activeModel.name);
+      await dropModel(projectId, activeDs, activeModel.name);
       await reqModelList();
       setDeleteDialogVisible(false);
     }

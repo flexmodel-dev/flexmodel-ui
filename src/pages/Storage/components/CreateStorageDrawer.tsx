@@ -3,6 +3,7 @@ import {Button, Drawer, Form, message, Space} from 'antd';
 import {createStorage} from "@/services/storage.ts";
 import StorageForm from "@/pages/Storage/components/StorageForm";
 import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
 
 const CreateStorageDrawer: React.FC<{
   visible: boolean;
@@ -10,6 +11,8 @@ const CreateStorageDrawer: React.FC<{
   onClose: () => void;
 }> = ({ visible, onChange, onClose }) => {
   const { t } = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -25,7 +28,7 @@ const CreateStorageDrawer: React.FC<{
         createdAt: '',
         updatedAt: ''
       };
-      const res = await createStorage(data);
+      const res = await createStorage(projectId, data);
       onChange(res);
       message.success(t('create_storage_success'));
       onClose();

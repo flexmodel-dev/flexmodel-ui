@@ -2,7 +2,8 @@ import {create} from 'zustand';
 import {devtools, persist} from 'zustand/middleware';
 import {getGlobalProfile} from '../services/global';
 import {getDarkModeFromStorage, setDarkModeToStorage} from '../utils/darkMode';
-import {getTenants, Tenant} from '../services/tenant';
+import {mockGetProjects} from '../services/mock/projectMock';
+import type {Project} from '../types/project';
 import zhCN from 'antd/locale/zh_CN';
 import enUS from 'antd/locale/en_US';
 import dayjs from 'dayjs';
@@ -14,10 +15,10 @@ export interface ConfigState {
   error: string | null;
 }
 
-export interface TenantState {
-  currentTenant: Tenant | null;
-  tenants: Tenant[];
-  isLoadingTenants: boolean;
+export interface ProjectState {
+  currentProject: Project | null;
+  projects: Project[];
+  isLoadingProjects: boolean;
 }
 
 export interface ThemeState {
@@ -33,7 +34,7 @@ export interface SidebarState {
   isSidebarCollapsed: boolean;
 }
 
-export interface AppState extends ConfigState, ThemeState, LocaleState, SidebarState, TenantState {
+export interface AppState extends ConfigState, ThemeState, LocaleState, SidebarState, ProjectState {
   // 配置相关
   setConfig: (config: Record<string, any>) => void;
   fetchConfig: () => Promise<void>;
@@ -52,10 +53,10 @@ export interface AppState extends ConfigState, ThemeState, LocaleState, SidebarS
   setSidebarCollapsed: (collapsed: boolean) => void;
   toggleSidebar: () => void;
 
-  // 租户相关
-  setCurrentTenant: (tenant: Tenant | null) => void;
-  setTenants: (tenants: Tenant[]) => void;
-  fetchTenants: () => Promise<void>;
+  // 项目相关
+  setCurrentProject: (project: Project | null) => void;
+  setProjects: (projects: Project[]) => void;
+  fetchProjects: () => Promise<void>;
 }
 
 // 创建store
@@ -70,10 +71,13 @@ export const useAppStore = create<AppState>()(
         isDark: getDarkModeFromStorage(),
         locale: localStorage.getItem('i18nextLng') === 'zh' ? zhCN : enUS,
         currentLang: (localStorage.getItem('i18nextLng') as 'zh' | 'en') || 'zh',
-        isSidebarCollapsed: false, // 初始化侧边栏折叠状态
+        isSidebarCollapsed: false,
         currentTenant: null,
         tenants: [],
         isLoadingTenants: false,
+        currentProject: null,
+        projects: [],
+        isLoadingProjects: false,
 
         // 配置相关actions
         setConfig: (config) => set({config}),
@@ -108,7 +112,6 @@ export const useAppStore = create<AppState>()(
         setLocale: (locale, lang) => {
           set({locale, currentLang: lang});
           localStorage.setItem('i18nextLng', lang);
-          // 同步更新 dayjs 语言
           dayjs.locale(lang);
         },
         toggleLanguage: () => {
@@ -117,7 +120,6 @@ export const useAppStore = create<AppState>()(
           const newLocale = newLang === 'zh' ? zhCN : enUS;
           set({locale: newLocale, currentLang: newLang});
           localStorage.setItem('i18nextLng', newLang);
-          // 同步更新 dayjs 语言
           dayjs.locale(newLang);
         },
 
@@ -130,48 +132,43 @@ export const useAppStore = create<AppState>()(
           const newCollapsed = !isSidebarCollapsed;
           set({isSidebarCollapsed: newCollapsed});
         },
-
-        // 租户相关actions
-        setCurrentTenant: (tenant) => {
-          set({currentTenant: tenant});
-          // 持久化到localStorage
-          if (tenant) {
-            localStorage.setItem('tenantId', tenant.id);
+        // 项目相关actions
+        setCurrentProject: (project) => {
+          set({currentProject: project});
+          if (project) {
+            localStorage.setItem('projectId', project.id);
           } else {
-            localStorage.removeItem('tenantId');
+            localStorage.removeItem('projectId');
           }
         },
-        setTenants: (tenants) => {
-          set({tenants});
+        setProjects: (projects) => {
+          set({projects});
         },
-        fetchTenants: async () => {
-          set({isLoadingTenants: true});
+        fetchProjects: async () => {
+          set({isLoadingProjects: true});
           try {
-            const tenants = await getTenants();
-            set({tenants, isLoadingTenants: false});
+            const projects = await mockGetProjects();
+            set({projects, isLoadingProjects: false});
             
-            // 设置默认租户
-            const storedTenantId = localStorage.getItem('tenantId');
-            const {currentTenant} = get();
+            const storedProjectId = localStorage.getItem('projectId');
+            const {currentProject} = get();
             
-            if (tenants.length > 0) {
-              // 如果有存储的租户ID，尝试从列表中找到它
-              if (storedTenantId) {
-                const storedTenant = tenants.find(t => t.id === storedTenantId);
-                if (storedTenant && storedTenant.id !== currentTenant?.id) {
-                  set({currentTenant: storedTenant});
+            if (projects.length > 0) {
+              if (storedProjectId) {
+                const storedProject = projects.find(p => p.id === storedProjectId);
+                if (storedProject && storedProject.id !== currentProject?.id) {
+                  set({currentProject: storedProject});
                 }
               }
-              // 如果没有当前租户，使用第一个
-              if (!get().currentTenant) {
-                const firstTenant = tenants[0];
-                set({currentTenant: firstTenant});
-                localStorage.setItem('tenantId', firstTenant.id);
+              if (!get().currentProject) {
+                const firstProject = projects[0];
+                set({currentProject: firstProject});
+                localStorage.setItem('projectId', firstProject.id);
               }
             }
           } catch (error) {
-            console.error('Failed to fetch tenants:', error);
-            set({isLoadingTenants: false});
+            console.error('Failed to fetch projects:', error);
+            set({isLoadingProjects: false});
           }
         },
       }),
@@ -218,10 +215,11 @@ export const useSidebar = () => useAppStore((state) => ({
   toggleSidebar: state.toggleSidebar,
 }));
 
-export const useTenant = () => useAppStore((state) => ({
-  currentTenant: state.currentTenant,
-  tenants: state.tenants,
-  isLoadingTenants: state.isLoadingTenants,
-  setCurrentTenant: state.setCurrentTenant,
-  fetchTenants: state.fetchTenants,
+export const useProject = () => useAppStore((state) => ({
+  currentProject: state.currentProject,
+  projects: state.projects,
+  isLoadingProjects: state.isLoadingProjects,
+  setCurrentProject: state.setCurrentProject,
+  setProjects: state.setProjects,
+  fetchProjects: state.fetchProjects,
 }));

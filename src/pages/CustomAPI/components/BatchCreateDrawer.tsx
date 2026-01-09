@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 import {Button, Card, Checkbox, Divider, Drawer, Form, Input, message, Select, Space, Splitter} from "antd";
 import ModelExplorer from "@/pages/DataModeling/components/ModelExplorer.tsx";
 import {generateAPIs} from "@/services/api-info.ts";
+import {useProject} from "@/store/appStore";
 
 interface Props {
   onConfirm: (data: any) => void;
@@ -18,6 +19,8 @@ const BatchCreateDrawer: React.FC<Props> = ({visible, onConfirm, onCancel}) => {
   const [datasource, setDatasource] = useState<any>();
   const [model, setModel] = useState<Model>();
   const [fieldOptions, setFieldOptions] = useState<any[]>();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
 
   useEffect(() => {
     setFieldOptions(model?.fields?.map((f: Field) => ({value: f.name, label: f.name})));
@@ -44,7 +47,7 @@ const BatchCreateDrawer: React.FC<Props> = ({visible, onConfirm, onCancel}) => {
           </Button>
           <Button onClick={async () => {
             form.validateFields().then((values) => {
-              generateAPIs(values).then(() => message.success(t('form_save_success')));
+              generateAPIs(projectId, values).then(() => message.success(t('form_save_success')));
               onConfirm(values);
             });
           }} type="primary">

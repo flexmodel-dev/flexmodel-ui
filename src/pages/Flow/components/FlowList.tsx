@@ -16,10 +16,13 @@ import {
 } from '@/services/flow';
 import dayjs from 'dayjs';
 import {t} from 'i18next';
+import {useProject} from '@/store/appStore';
 
 const FlowList: React.FC = () => {
   const navigate = useNavigate();
   const {token} = theme.useToken();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
 
   // 状态管理
   const [loading, setLoading] = useState(false);
@@ -39,7 +42,7 @@ const FlowList: React.FC = () => {
   const fetchFlowList = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getFlowList(searchParams);
+      const response = await getFlowList(projectId, searchParams);
       setFlowList(response.list);
       setTotal(response.total);
     } catch (error) {
@@ -48,7 +51,7 @@ const FlowList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchParams]);
+  }, [projectId, searchParams]);
 
   useEffect(() => {
     fetchFlowList();
@@ -100,7 +103,7 @@ const FlowList: React.FC = () => {
             throw e as Error;
           }
         }
-        await startProcess({ flowModuleId, variables });
+        await startProcess(projectId, { flowModuleId, variables });
         message.success('流程已启动');
       },
     });
@@ -118,7 +121,7 @@ const FlowList: React.FC = () => {
         remark: values.remark || '',
       };
 
-      const response = await createFlow(createData);
+      const response = await createFlow(projectId, createData);
       message.success('流程创建成功');
         setCreateModalVisible(false);
         form.resetFields();
@@ -137,7 +140,7 @@ const FlowList: React.FC = () => {
   // 删除流程
   const handleDeleteFlow = async (flowModuleId: string) => {
     try {
-      await deleteFlow(flowModuleId);
+      await deleteFlow(projectId, flowModuleId);
       message.success('流程删除成功');
       // 刷新列表
       fetchFlowList();

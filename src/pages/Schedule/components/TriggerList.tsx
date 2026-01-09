@@ -13,6 +13,7 @@ import PageContainer from '@/components/common/PageContainer';
 import TriggerForm from './TriggerForm';
 import {TriggerDTO} from '@/services/trigger';
 import {EntitySchema} from '@/types/data-modeling';
+import {useProject} from "@/store/appStore";
 
 interface TriggerListProps {
   /** 数据源名称（用于事件触发模式） */
@@ -25,6 +26,8 @@ interface TriggerListProps {
 
 const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly = false }) => {
   const {t} = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [form] = Form.useForm();
   const [triggers, setTriggers] = useState<TriggerDTO[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,12 +50,11 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
         size: pageSize
       };
 
-      // 在eventOnly模式下，使用jobGroup过滤
       if (eventOnly && datasource && model) {
         params.jobGroup = `${datasource}_${model.name}`;
       }
 
-      const response = await getTriggerPage(params);
+      const response = await getTriggerPage(projectId, params);
       setTriggers(response.list);
       setTotal(response.total);
     } catch {
@@ -75,9 +77,9 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
   const handleDelete = async (id: string) => {
     try {
       const { deleteTrigger } = await import('@/services/trigger');
-      await deleteTrigger(id);
+      await deleteTrigger(projectId, id);
       message.success(t('delete_success'));
-      loadTriggers(); // 重新加载数据
+      loadTriggers();
     } catch {
       message.error(t('delete_failed'));
     }
@@ -86,12 +88,12 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
   const handleToggleStatus = async (trigger: TriggerDTO) => {
     try {
       const { patchTrigger } = await import('@/services/trigger');
-      await patchTrigger(trigger.id!, {
+      await patchTrigger(projectId, trigger.id!, {
         ...trigger,
         state: !trigger.state
       });
       message.success(t('status_updated_success'));
-      loadTriggers(); // 重新加载数据
+      loadTriggers();
     } catch {
       message.error(t('status_update_failed'));
     }
@@ -101,22 +103,20 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
     try {
       const { createTrigger, updateTrigger } = await import('@/services/trigger');
       if (editingTrigger) {
-        // 更新触发器
-        await updateTrigger(editingTrigger.id!, {
+        await updateTrigger(projectId, editingTrigger.id!, {
           ...values,
           jobId: values.jobId || editingTrigger.jobId
         });
         message.success(t('update_success'));
       } else {
-        // 创建新触发器
-        await createTrigger({
+        await createTrigger(projectId, {
           ...values,
           jobId: values.jobId
         });
         message.success(t('create_success'));
       }
       setModalVisible(false);
-      loadTriggers(); // 重新加载数据
+      loadTriggers();
     } catch {
       message.error(editingTrigger ? t('update_failed') : t('create_failed'));
     }
@@ -125,7 +125,7 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
   const handleExecute = async (id: string) => {
     try {
       const { executeTrigger } = await import('@/services/trigger');
-      await executeTrigger(id);
+      await executeTrigger(projectId, id);
       message.success(t('trigger.execute_success'));
     } catch {
       message.error(t('trigger.execute_failed'));

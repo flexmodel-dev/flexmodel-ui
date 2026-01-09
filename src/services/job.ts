@@ -43,7 +43,8 @@ export interface JobExecutionLogParams {
  * @returns 任务执行日志分页结果
  */
 export const getJobExecutionLogs = (
+  projectId: string,
   params?: JobExecutionLogParams,
 ): Promise<PageDTOJobExecutionLog> => {
-  return api.get("/jobs/logs", { ...params });
+  return api.get(`/projects/${projectId}/jobs/logs`, { ...params });
 };

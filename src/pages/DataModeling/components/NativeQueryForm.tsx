@@ -4,6 +4,7 @@ import TextArea from 'antd/es/input/TextArea';
 import {useTranslation} from 'react-i18next';
 import {executeNativeQuery} from '@/services/datasource.ts';
 import type {NativeQueryModel} from '@/types/data-modeling';
+import {useProject} from '@/store/appStore';
 
 interface NativeQueryFormProps {
   form?: any;
@@ -22,6 +23,9 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
 }, ref) => {
   const { t } = useTranslation();
   const { token } = theme.useToken();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [internalForm] = Form.useForm();
   const form = externalForm || internalForm;
   const [paramsForm] = Form.useForm();
@@ -84,8 +88,13 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
   };
 
   const executeQuery = async () => {
+    if (!projectId || !datasource) {
+      message.error(t("project_or_datasource_required"));
+      return;
+    }
+    
     try {
-      const res = await executeNativeQuery(datasource || '', {
+      const res = await executeNativeQuery(projectId, datasource, {
         statement: form.getFieldValue("statement"),
         parameters: paramsForm.getFieldsValue(),
       });

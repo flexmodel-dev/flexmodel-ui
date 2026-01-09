@@ -4,6 +4,6 @@ import {EnvironmentVariables} from '@/types/environment'
 /**
  * 获取环境变量
  */
-export const getVariables = (): Promise<EnvironmentVariables> => {
-  return api.get('/environment/variables')
+export const getVariables = (projectId: string): Promise<EnvironmentVariables> => {
+  return api.get(`/projects/${projectId}/environment/variables`)
 }

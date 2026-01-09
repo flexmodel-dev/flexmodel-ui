@@ -783,5 +783,12 @@
     "select": "Select Tenant",
     "current": "Current Tenant",
     "switch": "Switch Tenant"
+  },
+  "platform": {
+    "home": "Home",
+    "project_management": "Project Management",
+    "settings": "System Settings",
+    "select_project": "Select Project",
+    "back_to_platform": "Back to Platform"
   }
 }

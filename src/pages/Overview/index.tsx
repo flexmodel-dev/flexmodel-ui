@@ -8,9 +8,13 @@ import {getApiLogStat} from "@/services/api-log";
 import {ApiLogStatSchema} from "@/types/api-log";
 import {useMetricsData} from "@/pages/Overview/components/metrics/useMetricsData";
 import {FmMetricsResponse} from "@/services/metrics";
+import {useProject} from "@/store/appStore";
 
 
 const StatisticsPage: React.FC = () => {
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [stats, setStats] = useState<FmMetricsResponse>({
     queryCount: 0,
     mutationCount: 0,
@@ -60,8 +64,9 @@ const StatisticsPage: React.FC = () => {
   }, [metricsData]);
 
   useEffect(() => {
+    if (!projectId) return;
     const loadData = async () => {
-      const data: ApiLogStatSchema = await getApiLogStat({
+      const data: ApiLogStatSchema = await getApiLogStat(projectId, {
         dateRange: dateRange
           .map((date: any) => date?.format("YYYY-MM-DD HH:mm:ss"))
           ?.join(","),
@@ -70,7 +75,7 @@ const StatisticsPage: React.FC = () => {
       if (data.apiRankingList) setRankingData(data.apiRankingList);
     };
     loadData();
-  }, [dateRange]);
+  }, [projectId, dateRange]);
 
   const handleDateRangeChange = (newDateRange: [Dayjs, Dayjs]) => {
     setDateRange(newDateRange);

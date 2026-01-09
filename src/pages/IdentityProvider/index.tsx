@@ -14,9 +14,13 @@ import OIDCIdPForm from "@/pages/IdentityProvider/components/OIDCIdPForm";
 import JsIdPForm from "@/pages/IdentityProvider/components/JsIdPForm.tsx";
 import IdpView from "@/pages/IdentityProvider/components/IdPView";
 import {PageContainer} from "@/components/common";
+import {useProject} from "@/store/appStore";
 
 const IdPManagement: React.FC = () => {
   const { t } = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [idPList, setIdPList] = useState<IdentityProvider[]>([]);
   const [activeIdP, setActiveIdP] = useState<IdentityProvider | null>(null);
   const [idPLoading, setIdPLoading] = useState<boolean>(false);
@@ -26,9 +30,14 @@ const IdPManagement: React.FC = () => {
   const [form] = Form.useForm();
 
   const getIdentityProviders = useCallback(async () => {
+    if (!projectId) {
+      setIdPLoading(false);
+      return;
+    }
+    
     try {
       setIdPLoading(true);
-      const data = await getIdentityProvidersApi();
+      const data = await getIdentityProvidersApi(projectId);
       setIdPLoading(false);
       setIdPList(data);
       setActiveIdP(data[0] || null);
@@ -36,16 +45,16 @@ const IdPManagement: React.FC = () => {
       console.log(error);
       message.error(t("identity_provider_load_failed"));
     }
-  }, [t]);
+  }, [t, projectId]);
 
   useEffect(() => {
     getIdentityProviders();
   }, [getIdentityProviders]);
 
   const handleDelete = async () => {
-    if (activeIdP) {
+    if (activeIdP && projectId) {
       try {
-        await deleteIdentityProvider(activeIdP.name);
+        await deleteIdentityProvider(projectId, activeIdP.name);
         getIdentityProviders();
         setDeleteVisible(false);
         message.success(t("identity_provider_delete_success"));
@@ -56,9 +65,14 @@ const IdPManagement: React.FC = () => {
   };
 
   const handleEditProvider = async (formData: any) => {
+    if (!projectId) {
+      message.error('Project ID is required');
+      return;
+    }
+    
     try {
       const payload = buildUpdatePayload(formData);
-      await updateIdentityProvider(formData.name, payload);
+      await updateIdentityProvider(projectId, formData.name, payload);
       setIsEditing(false);
       await getIdentityProviders();
       if (activeIdP) {

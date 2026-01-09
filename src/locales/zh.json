@@ -785,5 +785,12 @@
     "select": "选择租户",
     "current": "当前租户",
     "switch": "切换租户"
+  },
+  "platform": {
+    "home": "首页",
+    "project_management": "项目管理",
+    "settings": "系统设置",
+    "select_project": "选择项目",
+    "back_to_platform": "返回平台"
   }
 }

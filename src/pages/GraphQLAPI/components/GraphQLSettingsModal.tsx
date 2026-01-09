@@ -3,7 +3,7 @@ import {Button, Form, Input, message, Modal, Select} from "antd";
 import {getIdentityProviders} from "@/services/identity-provider";
 import {saveSettings} from "@/services/settings";
 import {Settings} from "@/types/settings";
-import {useConfig} from "@/store/appStore";
+import {useConfig, useProject} from "@/store/appStore";
 import {useTranslation} from "react-i18next";
 
 interface GraphQLSettingsModalProps {
@@ -21,17 +21,19 @@ const GraphQLSettingsModal: React.FC<GraphQLSettingsModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const { config } = useConfig();
+  const { currentProject } = useProject();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [identityProviders, setIdentityProviders] = useState<Array<{ name: string }>>([]);
 
-
+  const projectId = currentProject?.id || '';
 
   // 加载身份提供商
   useEffect(() => {
     const loadProviders = async () => {
+      if (!projectId) return;
       try {
-        const providers = await getIdentityProviders();
+        const providers = await getIdentityProviders(projectId);
         setIdentityProviders(providers);
       } catch (error) {
         console.error(t('identity_provider_load_failed'), error);
@@ -41,7 +43,7 @@ const GraphQLSettingsModal: React.FC<GraphQLSettingsModalProps> = ({
     if (visible) {
       loadProviders();
     }
-  }, [visible, t]);
+  }, [visible, projectId, t]);
 
   // 设置表单初始值
   useEffect(() => {
@@ -57,7 +59,7 @@ const GraphQLSettingsModal: React.FC<GraphQLSettingsModalProps> = ({
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
-      if (!settings) return;
+      if (!settings || !projectId) return;
 
       setLoading(true);
       const updatedSettings = {
@@ -68,7 +70,7 @@ const GraphQLSettingsModal: React.FC<GraphQLSettingsModalProps> = ({
         }
       };
 
-      await saveSettings(updatedSettings);
+      await saveSettings(projectId, updatedSettings);
       message.success(t('config_save_success'));
       onSuccess(updatedSettings);
     } catch (error) {

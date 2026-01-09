@@ -18,6 +18,7 @@ import {useTranslation} from 'react-i18next';
 import PageContainer from '@/components/common/PageContainer';
 import {getJobExecutionLogs, JobExecutionLog, JobExecutionLogParams} from '@/services/job';
 import dayjs from 'dayjs';
+import {useProject} from "@/store/appStore";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -25,6 +26,8 @@ const { Text } = Typography;
 
 const JobExecutionLogList: React.FC = () => {
   const { t } = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [form] = Form.useForm();
 
   const [logs, setLogs] = useState<JobExecutionLog[]>([]);
@@ -71,7 +74,7 @@ const JobExecutionLogList: React.FC = () => {
         ...params
       };
 
-      const response = await getJobExecutionLogs(queryParams);
+      const response = await getJobExecutionLogs(projectId, queryParams);
       setLogs(response.list);
       setTotal(response.total);
     } catch (error) {

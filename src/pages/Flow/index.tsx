@@ -4,28 +4,31 @@ import FlowList from "@/pages/Flow/components/FlowList.tsx";
 import {BranchesOutlined, PlayCircleOutlined} from "@ant-design/icons";
 import React from 'react';
 import {useTranslation} from "react-i18next";
+import {useParams} from "react-router-dom";
 import TabPageContainer from "../../components/common/TabPageContainer.tsx";
 
 
 const Flow: React.FC = () => {
 
   const { t } = useTranslation();
+  const {projectId} = useParams<{projectId: string}>();
 
-  // 标签页配置
+  const projectPrefix = projectId ? `/project/${projectId}` : "";
+
   const tabItems: TabMenuItem[] = [
     {
       key: "flow_mgr",
       label: t("flow_mgr"),
       element: FlowList,
       icon: <BranchesOutlined />,
-      path: "/flow/mgr",
+      path: `${projectPrefix}/flow/mgr`,
     },
     {
       key: "flow_instance",
       label: t("flow_instance"),
       element: FlowInstanceList,
       icon: <PlayCircleOutlined />,
-      path: "/flow/instance",
+      path: `${projectPrefix}/flow/instance`,
     },
   ];
 

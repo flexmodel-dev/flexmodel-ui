@@ -7,12 +7,16 @@ import LogSettings from "./components/LogSettings";
 import {useTranslation} from "react-i18next";
 import type {ApiLog} from '@/types/api-log';
 import ApiLogChart from "./components/ApiLogChart";
+import {useProject} from "@/store/appStore";
 
 const { RangePicker } = DatePicker;
 
 const LogViewer: React.FC = () => {
   const { token } = theme.useToken();
   const { t } = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [tableData, setTableData] = useState<{ list: ApiLog[]; total: number }>({ list: [], total: 0 });
   const [log, setLog] = useState<ApiLog | null>(null);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
@@ -24,14 +28,16 @@ const LogViewer: React.FC = () => {
 
 
   const getApiLogsHandler = async () => {
+    if (!projectId) return;
     const filter = form.getFieldsValue();
-    const res = await getApiLogs(getFilterQuery(filter));
+    const res = await getApiLogs(projectId, getFilterQuery(filter));
     setTableData({ list: res.list, total: res.total });
   };
 
   const getApiLogStatHandler = async () => {
+    if (!projectId) return;
     const filter = form.getFieldsValue();
-    const statList: any[] = (await getApiLogStat(getFilterQuery(filter)))?.apiStatList || [];
+    const statList: any[] = (await getApiLogStat(projectId, getFilterQuery(filter)))?.apiStatList || [];
     setChartData({
       xAxis: statList.map((stat) => stat.date),
       series: statList.map((stat) => stat.total)

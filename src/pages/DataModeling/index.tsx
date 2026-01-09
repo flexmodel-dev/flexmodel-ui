@@ -9,9 +9,12 @@ import {useTranslation} from "react-i18next";
 import EnumForm from "@/pages/DataModeling/components/EnumForm";
 import type {Enum} from "@/types/data-modeling.d.ts";
 import ERDiagram from "@/pages/DataModeling/components/ERDiagramView";
+import {useProject} from "@/store/appStore";
 
 const ModelingPage: React.FC = () => {
   const { t } = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
 
   const [activeDs, setActiveDs] = useState("");
   const [activeModel, setActiveModel] = useState<any>({});
@@ -78,7 +81,7 @@ const ModelingPage: React.FC = () => {
             model={activeModel}
             onConfirm={async (anEnum: Enum) => {
               try {
-                await modifyModel(activeDs, anEnum);
+                await modifyModel(projectId, activeDs, anEnum);
                 message.success(t("form_save_success"));
                 setSelectModelVersion(selectModelVersion + 1);
                 setIsEditing(false); // 保存成功后退出编辑状态
@@ -98,7 +101,7 @@ const ModelingPage: React.FC = () => {
             model={activeModel}
             onConfirm={async (data) => {
               try {
-                await modifyModel(activeDs, data);
+                await modifyModel(projectId, activeDs, data);
                 message.success(t("form_save_success"));
                 setSelectModelVersion(selectModelVersion + 1);
                 setNativeQueryIsEditing(false); // 保存成功后退出编辑状态

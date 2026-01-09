@@ -44,12 +44,6 @@ export const sendChatMessage = async (params: ChatRequest, signal?: AbortSignal)
     'Authorization': `Bearer ${localStorage.getItem('token')}`
   };
 
-  // 添加X-Tenant-Id请求头
-  const tenantId = localStorage.getItem('tenantId');
-  if (tenantId) {
-    headers['X-Tenant-Id'] = tenantId;
-  }
-
   return fetch('/api/f/ai/chat/completions', {
     method: 'POST',
     headers,
@@ -101,12 +95,6 @@ export const sendMessage = async (params: SendMessageRequest, signal?: AbortSign
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('token')}`
   };
-
-  // 添加X-Tenant-Id请求头
-  const tenantId = localStorage.getItem('tenantId');
-  if (tenantId) {
-    headers['X-Tenant-Id'] = tenantId;
-  }
 
   return fetch(`/api/f/ai/chat/completions`, {
     method: 'POST',

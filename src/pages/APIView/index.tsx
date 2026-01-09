@@ -1,5 +1,6 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
+import {useParams} from "react-router-dom";
 import {DeploymentUnitOutlined, FileTextOutlined, LineChartOutlined} from "@ant-design/icons";
 import APILog from "@/pages/APILog";
 import TabPageContainer from "@/components/common/TabPageContainer";
@@ -10,36 +11,38 @@ import OpenAPI from "@/pages/OpenAPI";
 
 const ApiView: React.FC = () => {
   const {t} = useTranslation();
+  const {projectId} = useParams<{projectId: string}>();
 
-  // 标签页配置
+  const projectPrefix = projectId ? `/project/${projectId}` : "";
+
   const tabItems: TabMenuItem[] = [
     {
       key: "custom_api",
       label: t("custom_api"),
       element: CustomAPI,
       icon: <DeploymentUnitOutlined/>,
-      path: "/api/custom-api",
+      path: `${projectPrefix}/api/custom-api`,
     },
     {
       key: "graphql_api",
       label: t("graphql_api"),
       element: GraphQLAPI,
       icon: <DeploymentUnitOutlined/>,
-      path: "/api/graphql",
+      path: `${projectPrefix}/api/graphql`,
     },
     {
       key: "open_api",
       label: t("open_api"),
       element: OpenAPI,
       icon: <FileTextOutlined/>,
-      path: "/api/open-api",
+      path: `${projectPrefix}/api/open-api`,
     },
     {
       key: "log",
       label: t("api_log"),
       element: APILog,
       icon: <LineChartOutlined/>,
-      path: "/api/log",
+      path: `${projectPrefix}/api/log`,
     },
   ];
 

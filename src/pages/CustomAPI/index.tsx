@@ -15,7 +15,7 @@ import DetailPanel from "./components/DetailPanel.tsx";
 import {useTranslation} from "react-i18next";
 import {ApiDefinition, ApiDefinitionHistory, ApiMeta, GraphQLData, TreeNode} from "@/types/api-management";
 import BatchCreateDrawer from "./components/BatchCreateDrawer.tsx";
-import {useAppStore, useConfig} from "@/store/appStore.ts";
+import {useAppStore, useConfig, useProject} from "@/store/appStore.ts";
 import DebugPanel from "./components/DebugPanel";
 import EditPanel from "./components/EditPanel/index.tsx";
 import APIExplorer from "./components/APIExplorer";
@@ -34,6 +34,8 @@ const CustomAPI: React.FC = () => {
   const { t } = useTranslation();
   const { config } = useConfig();
   const {currentTenant} = useAppStore();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   // 状态定义
   const [apiList, setApiList] = useState<ApiDefinition[]>([]);
   const [batchCreateDialogDrawer, setBatchCreateDrawerVisible] =
@@ -194,7 +196,7 @@ const CustomAPI: React.FC = () => {
   }, [setSelectedNode, findFirstApiNode]);
 
   const reqApiList = async () => {
-    const apis = await getApis();
+    const apis = await getApis(projectId);
     setApiList(apis);
     return apis;
   };
@@ -208,7 +210,7 @@ const CustomAPI: React.FC = () => {
     if (deleteTarget) {
       setDeleteLoading(true);
       try {
-        await deleteApi(deleteTarget.id);
+        await deleteApi(projectId, deleteTarget.id);
         message.success(t("delete_success"));
         reqApiList();
         setDeleteConfirmVisible(false);
@@ -228,7 +230,7 @@ const CustomAPI: React.FC = () => {
 
   const renameApi = async (name: string) => {
     if (renameTarget) {
-      await updateApiName(renameTarget.id, name);
+      await updateApiName(projectId, renameTarget.id, name);
       message.success(t("rename_success"));
       reqApiList();
     }
@@ -251,7 +253,7 @@ const CustomAPI: React.FC = () => {
     setCreateLoading(true);
     setCreateError("");
     try {
-      await createApi({
+      await createApi(projectId, {
         name: createName,
         parentId: parentId,
         type: "FOLDER",
@@ -284,7 +286,7 @@ const CustomAPI: React.FC = () => {
       const normalizedPath = createApiPath.trim().startsWith("/")
         ? createApiPath.trim()
         : `/${createApiPath.trim()}`;
-      await createApi({
+      await createApi(projectId, {
         name: createName.trim(),
         parentId: parentId,
         type: "API",
@@ -370,7 +372,7 @@ const CustomAPI: React.FC = () => {
         updatedAt: editForm.updatedAt,
       };
 
-      await updateApi(editForm.id, saveData);
+      await updateApi(projectId, editForm.id, saveData);
       message.success(t("form_save_success"));
       reqApiList();
     }
@@ -412,7 +414,7 @@ const CustomAPI: React.FC = () => {
     }
     setHistoryVisible(true);
     try {
-      const list = await getApiHistories(editForm.id);
+      const list = await getApiHistories(projectId, editForm.id);
       const mapped = (list || [])
         .map(mapToHistoryRecord)
         .sort((a, b) => (b.time || "").localeCompare(a.time || ""));
@@ -452,7 +454,7 @@ const CustomAPI: React.FC = () => {
           onToggleEnabled={(val) => {
             if (editForm) {
               setEditForm({ ...editForm, enabled: val });
-              updateApiStatus(editForm.id, val).then(() => {
+              updateApiStatus(projectId, editForm.id, val).then(() => {
                 message.success(val ? t("enabled") : t("closed"));
                 reqApiList();
               });
@@ -568,7 +570,7 @@ const CustomAPI: React.FC = () => {
       return;
     }
     try {
-      await restoreApiHistory(editForm.id, record.id);
+      await restoreApiHistory(projectId, editForm.id, record.id);
       message.success(t("apis.restore_success", { title: record.title }));
       // 刷新API列表并保持当前选中项不变
       const apis = await reqApiList();
@@ -595,7 +597,7 @@ const CustomAPI: React.FC = () => {
       }
       // 重新加载历史记录列表
       try {
-        const list = await getApiHistories(editForm.id);
+        const list = await getApiHistories(projectId, editForm.id);
         const mapped = (list || [])
           .map(mapToHistoryRecord)
           .sort((a, b) => (b.time || "").localeCompare(a.time || ""));

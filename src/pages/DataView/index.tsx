@@ -1,5 +1,6 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
+import {useParams} from "react-router-dom";
 import DataModeling from "@/pages/DataModeling";
 import DataSource from "@/pages/DataSource";
 import ERView from "./components/ERView";
@@ -9,29 +10,31 @@ import {TabMenuItem} from "@/components/common/TabMenu";
 
 const DataView: React.FC = () => {
   const { t } = useTranslation();
+  const {projectId} = useParams<{projectId: string}>();
 
-  // 标签页配置
+  const projectPrefix = projectId ? `/project/${projectId}` : "";
+
   const tabItems: TabMenuItem[] = [
     {
       key: "modeling",
       label: t("data_modeling"),
       element: DataModeling,
       icon: <ContainerOutlined />,
-      path: "/data/modeling",
+      path: `${projectPrefix}/data/modeling`,
     },
     {
       key: "source",
       label: t("data_source"),
       element: DataSource,
       icon: <DatabaseOutlined />,
-      path: "/data/source",
+      path: `${projectPrefix}/data/source`,
     },
     {
       key: "er",
       label: t("er_view"),
       element: ERView,
       icon: <BranchesOutlined />,
-      path: "/data/er",
+      path: `${projectPrefix}/data/er`,
     },
   ];
 

@@ -7,6 +7,7 @@ import "@/components/explore/styles/explore.scss";
 import type {StorageSchema} from "@/types/storage";
 import {getStorageList} from "@/services/storage.ts";
 import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
 
 interface StorageExplorerProps {
   onSelect: (storage: StorageSchema) => void;
@@ -22,6 +23,9 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
   selectedStorage,
 }) => {
   const {t} = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [storageList, setStorageList] = useState<StorageSchema[]>([]);
   const [activeStorage, setActiveStorage] = useState<StorageSchema | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,7 +33,7 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
   const getStorageListHandler = async () => {
     try {
       setLoading(true);
-      const list = await getStorageList();
+      const list = await getStorageList(projectId);
       setStorageList(list);
 
       let initialActiveStorage = null;
