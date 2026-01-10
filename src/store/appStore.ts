@@ -2,7 +2,6 @@ import {create} from 'zustand';
 import {devtools, persist} from 'zustand/middleware';
 import {getGlobalProfile} from '../services/global';
 import {getDarkModeFromStorage, setDarkModeToStorage} from '../utils/darkMode';
-import {mockGetProjects} from '../services/mock/projectMock';
 import type {Project} from '../types/project';
 import zhCN from 'antd/locale/zh_CN';
 import enUS from 'antd/locale/en_US';
@@ -17,8 +16,6 @@ export interface ConfigState {
 
 export interface ProjectState {
   currentProject: Project | null;
-  projects: Project[];
-  isLoadingProjects: boolean;
 }
 
 export interface ThemeState {
@@ -55,8 +52,6 @@ export interface AppState extends ConfigState, ThemeState, LocaleState, SidebarS
 
   // 项目相关
   setCurrentProject: (project: Project | null) => void;
-  setProjects: (projects: Project[]) => void;
-  fetchProjects: () => Promise<void>;
 }
 
 // 创建store
@@ -72,12 +67,7 @@ export const useAppStore = create<AppState>()(
         locale: localStorage.getItem('i18nextLng') === 'zh' ? zhCN : enUS,
         currentLang: (localStorage.getItem('i18nextLng') as 'zh' | 'en') || 'zh',
         isSidebarCollapsed: false,
-        currentTenant: null,
-        tenants: [],
-        isLoadingTenants: false,
         currentProject: null,
-        projects: [],
-        isLoadingProjects: false,
 
         // 配置相关actions
         setConfig: (config) => set({config}),
@@ -141,36 +131,6 @@ export const useAppStore = create<AppState>()(
             localStorage.removeItem('projectId');
           }
         },
-        setProjects: (projects) => {
-          set({projects});
-        },
-        fetchProjects: async () => {
-          set({isLoadingProjects: true});
-          try {
-            const projects = await mockGetProjects();
-            set({projects, isLoadingProjects: false});
-            
-            const storedProjectId = localStorage.getItem('projectId');
-            const {currentProject} = get();
-            
-            if (projects.length > 0) {
-              if (storedProjectId) {
-                const storedProject = projects.find(p => p.id === storedProjectId);
-                if (storedProject && storedProject.id !== currentProject?.id) {
-                  set({currentProject: storedProject});
-                }
-              }
-              if (!get().currentProject) {
-                const firstProject = projects[0];
-                set({currentProject: firstProject});
-                localStorage.setItem('projectId', firstProject.id);
-              }
-            }
-          } catch (error) {
-            console.error('Failed to fetch projects:', error);
-            set({isLoadingProjects: false});
-          }
-        },
       }),
       {
         name: 'app-storage',
@@ -217,9 +177,5 @@ export const useSidebar = () => useAppStore((state) => ({
 
 export const useProject = () => useAppStore((state) => ({
   currentProject: state.currentProject,
-  projects: state.projects,
-  isLoadingProjects: state.isLoadingProjects,
   setCurrentProject: state.setCurrentProject,
-  setProjects: state.setProjects,
-  fetchProjects: state.fetchProjects,
 }));

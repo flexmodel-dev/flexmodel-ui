@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useEffect } from "react";
 import { Layout, Button, Dropdown, Space, Switch, theme as antdTheme, Breadcrumb } from "antd";
 import type { MenuProps } from "antd";
 import enUS from "antd/locale/en_US";
@@ -17,7 +17,7 @@ import {
   SunOutlined
 } from "@ant-design/icons";
 import { applyDarkMode, setDarkModeToStorage } from "@/utils/darkMode";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import ProjectSidebar from "./ProjectSidebar";
 import AIChatBox from "@/components/ai-chatbox/index";
 import Console from "@/components/console/Console.tsx";
@@ -26,21 +26,55 @@ import ResizablePanel from "@/components/common/ResizablePanel";
 import { Outlet } from "react-router-dom";
 import { getFullRoutePath } from "@/routes";
 import UserInfo from "@/components/UserInfo";
+import { getProject, getProjects } from "@/services/project";
+import type { Project } from "@/types/project";
 
 const ProjectLayout: React.FC = () => {
   const { t } = useTranslation();
   const { isDark, toggleDarkMode: toggleDarkModeStore } = useTheme();
   const { setLocale: setLocaleStore, currentLang } = useLocale();
-  const { currentProject, projects, setCurrentProject } = useProject();
+  const { currentProject, setCurrentProject } = useProject();
   const { i18n } = useTranslation();
   const { token } = antdTheme.useToken();
   const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
 
   const [isAIChatVisible, setIsAIChatVisible] = React.useState(false);
   const [isAIChatFloating, setIsAIChatFloating] = React.useState(false);
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [conversationId, setConversationId] = React.useState<string | null>(null);
   const [isConsoleVisible, setIsConsoleVisible] = React.useState(false);
+  const [isProjectInitialized, setIsProjectInitialized] = React.useState(false);
+  const [projects, setProjects] = React.useState<Project[]>([]);
+
+  useEffect(() => {
+    const initializeProject = async () => {
+      if (!projectId) return;
+
+      try {
+        const project = await getProject(projectId);
+        if (project && currentProject?.id !== projectId) {
+          setCurrentProject(project);
+        }
+      } catch (error) {
+        console.error('Failed to fetch project:', error);
+      }
+      setIsProjectInitialized(true);
+    };
+    initializeProject();
+  }, [projectId]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectsData = await getProjects();
+        setProjects(projectsData);
+      } catch (error) {
+        console.error('Failed to fetch projects:', error);
+      }
+    };
+    fetchProjects();
+  }, []);
 
   const toggleDarkMode = useCallback(() => {
     const newDarkMode = !isDark;
@@ -82,8 +116,9 @@ const ProjectLayout: React.FC = () => {
     const project = projects?.find(p => p.id === newProjectId);
     if (project) {
       setCurrentProject(project);
+      navigate(`/project/${newProjectId}`);
     }
-  }, [projects, setCurrentProject]);
+  }, [projects, setCurrentProject, navigate]);
 
   const breadcrumbItems = useMemo(() => {
     const pathname = window.location.hash.replace('#', '');
@@ -261,7 +296,7 @@ const ProjectLayout: React.FC = () => {
                 />
               )}
             >
-              <Outlet />
+              {isProjectInitialized ? <Outlet /> : null}
             </ResizablePanel>
           </ResizablePanel>
         </Layout.Content>

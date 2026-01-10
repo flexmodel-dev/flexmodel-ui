@@ -2,14 +2,12 @@ export interface Project {
   id: string;
   name: string;
   description: string;
-  status: 'active' | 'inactive' | 'archived';
+  enabled: boolean;
+  ownerId: string;
   createdAt: string;
   updatedAt: string;
-  ownerId: string;
-  memberCount: number;
-  apiCount: number;
-  modelCount: number;
-  flowCount: number;
+  createdBy: string;
+  updatedBy: string;
 }
 
 export interface ProjectCreateRequest {
@@ -20,12 +18,5 @@ export interface ProjectCreateRequest {
 export interface ProjectUpdateRequest {
   name?: string;
   description?: string;
-  status?: 'active' | 'inactive' | 'archived';
-}
-
-export interface ProjectListResponse {
-  projects: Project[];
-  total: number;
-  page: number;
-  pageSize: number;
+  enabled?: boolean;
 }

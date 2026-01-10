@@ -3,7 +3,7 @@ import { Card, Row, Col, Button, Typography, Space, Tag, Modal, Form, Input, mes
 import { PlusOutlined, SettingOutlined, DatabaseOutlined, CloudServerOutlined, SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useProject } from '@/store/appStore';
-import { mockCreateProject } from '@/services/mock/projectMock';
+import { createProject, getProjects } from '@/services/project';
 import type { Project } from '@/types/project';
 import { PageContainer } from '@/components/common';
 
@@ -11,15 +11,31 @@ const { Title, Text } = Typography;
 
 const ProjectList: React.FC = () => {
   const navigate = useNavigate();
-  const { projects, isLoadingProjects, fetchProjects } = useProject();
+  const { setCurrentProject } = useProject();
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [form] = Form.useForm();
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects]);
+  }, []);
+
+  const fetchProjects = async () => {
+    setLoading(true);
+    try {
+      const projects = await getProjects();
+      setProjects(projects);
+      setFilteredProjects(projects);
+    } catch (error) {
+      console.error('Failed to fetch projects:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (searchKeyword) {
@@ -31,7 +47,7 @@ const ProjectList: React.FC = () => {
     } else {
       setFilteredProjects(projects);
     }
-  }, [projects, searchKeyword]);
+  }, [searchKeyword]);
 
   const handleCreateProject = () => {
     setIsCreateModalVisible(true);
@@ -40,7 +56,7 @@ const ProjectList: React.FC = () => {
   const handleCreateModalOk = async () => {
     try {
       const values = await form.validateFields();
-      await mockCreateProject(values);
+      await createProject(values);
       setIsCreateModalVisible(false);
       form.resetFields();
       message.success('项目创建成功');
@@ -57,6 +73,10 @@ const ProjectList: React.FC = () => {
   };
 
   const handleProjectClick = (projectId: string) => {
+    const project = projects.find(p => p.id === projectId);
+    if (project) {
+      setCurrentProject(project);
+    }
     navigate(`/project/${projectId}`);
   };
 
@@ -91,22 +111,11 @@ const ProjectList: React.FC = () => {
     }
   };
 
-  if (isLoadingProjects) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Spin size="large" tip="加载项目列表..." />
-      </div>
-    );
-  }
-
   return (
-    <PageContainer>
-      <div style={{ padding: '24px', minHeight: '100vh'}}>
+    <PageContainer loading={loading}>
+      <div style={{ padding: '24px', minHeight: '100vh' }}>
         <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <Title level={2} style={{ margin: 0 }}>项目管理</Title>
-            <Text type="secondary">管理和访问您的项目</Text>
-          </div>
+          <Title level={2} style={{ margin: 0 }}>项目管理</Title>
           <Space>
             <Input
               placeholder="搜索项目..."
@@ -172,7 +181,7 @@ const ProjectList: React.FC = () => {
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Text type="secondary" style={{ fontSize: '12px' }}>
-                        成员: {project.memberCount} 人
+                        所有者: {project.memberCount} 人
                       </Text>
                       <Text type="secondary" style={{ fontSize: '12px' }}>
                         创建时间: {new Date(project.createdAt).toLocaleDateString('zh-CN')}

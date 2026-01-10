@@ -17,7 +17,6 @@ const App = () => {
   const { isDark } = appStore.useTheme();
   const { locale } = appStore.useLocale();
   const { isAuthenticated, getCurrentUser, refreshAuthToken } = useAuth();
-  const { fetchProjects } = appStore.useProject();
 
   useEffect(() => {
     initializeDarkMode();
@@ -28,10 +27,7 @@ const App = () => {
     const initializeAuth = async () => {
       if (isAuthenticated) {
         try {
-          await Promise.all([
-            getCurrentUser(),
-            fetchProjects()
-          ]);
+          await getCurrentUser();
         } catch (error) {
           console.error('Failed to initialize auth:', error);
         }
@@ -39,7 +35,7 @@ const App = () => {
     };
 
     initializeAuth();
-  }, [isAuthenticated, getCurrentUser, fetchProjects]);
+  }, [isAuthenticated, getCurrentUser]);
 
   useEffect(() => {
     if (isAuthenticated) {
