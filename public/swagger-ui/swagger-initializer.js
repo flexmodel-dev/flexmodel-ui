@@ -3,9 +3,9 @@ window.onload = function() {
 
   // 获取 OpenAPI JSON 的 URL
   function getOpenApiUrl() {
-    const tenantId = localStorage.getItem('tenantId');
-    if (tenantId) {
-      return `/api/f/docs/${tenantId}/openapi.json`;
+    const projectId = localStorage.getItem('projectId');
+    if (projectId) {
+      return `/api/f/projects/${projectId}/docs/openapi.json`;
     }
     return '/api/f/docs/openapi.json';
   }
@@ -33,16 +33,26 @@ window.onload = function() {
   // the following lines will be replaced by docker/configurator, when it runs in a docker-container
   window.ui = SwaggerUIBundle({
     url: getOpenApiUrl(),
+    urls: [
+      {
+        url: getOpenApiUrl(),
+        name: 'Project Definition API'
+      },
+      {
+        url: '/api/f/openapi',
+        name: 'Platform API'
+      }
+    ],
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
       SwaggerUIBundle.presets.apis,
-      /*SwaggerUIStandalonePreset*/
+      SwaggerUIStandalonePreset
     ],
-   /* plugins: [
+    plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
-    layout: "StandaloneLayout"*/
+    layout: "StandaloneLayout"
   });
 
   //</editor-fold>

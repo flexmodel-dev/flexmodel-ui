@@ -38,9 +38,3 @@ export interface FileItem {
   lastModified?: string;
   path: string;
 }
-
-export interface ValidateStorageResult {
-  success: boolean;
-  errorMsg?: string;
-  time?: number;
-}

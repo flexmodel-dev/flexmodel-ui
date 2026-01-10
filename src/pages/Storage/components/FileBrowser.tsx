@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {Button, Breadcrumb, Table, Space, message, Upload, Modal, Input, Popconfirm} from 'antd';
 import {
   FolderOutlined,
@@ -12,14 +12,21 @@ import {
 import type {ColumnsType} from 'antd/es/table';
 import type {FileItem} from '@/types/storage';
 import {useTranslation} from 'react-i18next';
+import {
+  listFiles,
+  deleteFile,
+  uploadFile,
+  createFolder
+} from '@/services/storage';
 
 interface FileBrowserProps {
   storageName: string;
+  projectId: string;
 }
 
-const FileBrowser: React.FC<FileBrowserProps> = ({storageName}) => {
+const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
   const {t} = useTranslation();
-  console.log('FileBrowser for storage:', storageName);
+  console.log('FileBrowser for storage:', storageName, 'projectId:', projectId);
   const [currentPath, setCurrentPath] = useState<string>('/');
   const [fileList, setFileList] = useState<FileItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,29 +35,22 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName}) => {
   const [folderName, setFolderName] = useState<string>('');
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  const mockFiles: FileItem[] = [
-    {name: 'documents', type: 'folder', path: '/documents', lastModified: '2024-01-15 10:30:00'},
-    {name: 'images', type: 'folder', path: '/images', lastModified: '2024-01-14 15:20:00'},
-    {name: 'report.pdf', type: 'file', size: 1024000, path: '/report.pdf', lastModified: '2024-01-13 09:15:00'},
-    {name: 'data.csv', type: 'file', size: 51200, path: '/data.csv', lastModified: '2024-01-12 14:45:00'},
-    {name: 'backup.zip', type: 'file', size: 5120000, path: '/backup.zip', lastModified: '2024-01-11 11:00:00'},
-  ];
-
-  const loadFiles = async () => {
+  const loadFiles = useCallback(async () => {
     setLoading(true);
     try {
-      setFileList(mockFiles);
+      const files = await listFiles(projectId, storageName, currentPath === '/' ? undefined : currentPath);
+      setFileList(files);
     } catch (error) {
       console.error(error);
       message.error(t('load_files_failed'));
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId, storageName, currentPath, t]);
 
   React.useEffect(() => {
     loadFiles();
-  }, [currentPath]);
+  }, [loadFiles]);
 
   const handleFolderClick = (file: FileItem) => {
     if (file.type === 'folder') {
@@ -76,16 +76,12 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName}) => {
       return;
     }
     try {
-      const newFolder: FileItem = {
-        name: folderName,
-        type: 'folder',
-        path: `${currentPath}/${folderName}`.replace(/\/+/g, '/'),
-        lastModified: new Date().toLocaleString()
-      };
-      setFileList([...fileList, newFolder]);
+      const folderPath = `${currentPath}/${folderName}`.replace(/\/+/g, '/');
+      await createFolder(projectId, storageName, folderPath);
       message.success(t('create_folder_success'));
       setCreateFolderVisible(false);
       setFolderName('');
+      await loadFiles();
     } catch (error) {
       console.error(error);
       message.error(t('create_folder_failed'));
@@ -94,8 +90,9 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName}) => {
 
   const handleDelete = async (file: FileItem) => {
     try {
-      setFileList(fileList.filter(item => item.path !== file.path));
+      await deleteFile(projectId, storageName, file.path);
       message.success(t('delete_file_success'));
+      await loadFiles();
     } catch (error) {
       console.error(error);
       message.error(t('delete_file_failed'));
@@ -104,9 +101,12 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName}) => {
 
   const handleBatchDelete = async () => {
     try {
-      setFileList(fileList.filter(item => !selectedRowKeys.includes(item.path)));
+      await Promise.all(
+        selectedRowKeys.map(path => deleteFile(projectId, storageName, path as string))
+      );
       setSelectedRowKeys([]);
       message.success(t('batch_delete_success'));
+      await loadFiles();
     } catch (error) {
       console.error(error);
       message.error(t('batch_delete_failed'));
@@ -265,7 +265,20 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName}) => {
         <Upload.Dragger
           multiple
           showUploadList={true}
-          customRequest={() => {}}
+          customRequest={async ({file, onSuccess, onError}) => {
+            try {
+              const fileObj = file as File;
+              const filePath = currentPath === '/' ? `/${fileObj.name}` : `${currentPath}/${fileObj.name}`.replace(/\/+/g, '/');
+              await uploadFile(projectId, storageName, filePath, fileObj, fileObj.size);
+              message.success(t('upload_success', {name: fileObj.name}));
+              onSuccess?.(new Date().getTime().toString());
+              await loadFiles();
+            } catch (error) {
+              console.error(error);
+              message.error(t('upload_failed', {name: (file as File).name}));
+              onError?.(error as Error);
+            }
+          }}
         >
           <p className="ant-upload-drag-icon">
             <UploadOutlined style={{fontSize: 48, color: '#1890ff'}}/>

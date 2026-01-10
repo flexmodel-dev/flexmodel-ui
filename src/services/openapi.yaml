@@ -290,6 +290,32 @@ paths:
         in: header
       security:
       - BearerAuth: []
+  /api/f/projects/{projectId}:
+    get:
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      summary: Find Project
+      tags:
+      - Project Resource
+      security:
+      - BearerAuth: []
   /api/f/projects/{projectId}/apis:
     get:
       summary: 获取接口定义列表
@@ -575,33 +601,6 @@ paths:
       summary: 创建数据源
       tags:
       - 数据源
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DatasourceSchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DatasourceSchema"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      parameters:
-      - name: X-Tenant-Id
-        in: header
-      security:
-      - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/physics/names:
-    post:
-      summary: 获取物理数据库表名称
-      tags:
-      - 数据源
       parameters:
       - name: projectId
         in: path
@@ -622,6 +621,30 @@ paths:
           content:
             application/json:
               schema:
+                $ref: "#/components/schemas/DatasourceSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/datasources/physics/names:
+    post:
+      summary: 获取物理数据库表名称
+      tags:
+      - 数据源
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DatasourceSchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
                 type: array
                 items:
                   type: string
@@ -629,6 +652,9 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalError"
+      parameters:
+      - name: X-Tenant-Id
+        in: header
       security:
       - BearerAuth: []
   /api/f/projects/{projectId}/datasources/validate:
@@ -3367,6 +3393,453 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
+  /api/f/projects/{projectId}/storages:
+    get:
+      summary: 获取所有存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StorageSchema"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - name: X-Tenant-Id
+        in: header
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Storage"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StorageSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/storages/{storageName}:
+    put:
+      summary: 更新存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - name: X-Tenant-Id
+        in: header
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Storage"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StorageSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    get:
+      summary: 获取单个存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StorageSchema"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/storages/{storageName}/files:
+    get:
+      summary: 列出文件
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        schema:
+          type: string
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FileItem"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/storages/{storageName}/files/delete:
+    delete:
+      summary: 删除文件
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/storages/{storageName}/files/exists:
+    get:
+      summary: 检查文件是否存在
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  exists:
+                    description: 是否存在
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/storages/{storageName}/files/info:
+    get:
+      summary: 获取文件信息
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileItem"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/storages/{storageName}/files/size:
+    get:
+      summary: 获取文件大小
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  size:
+                    description: 文件大小
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/storages/{storageName}/files/upload:
+    post:
+      summary: 上传文件
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      - name: X-Tenant-Id
+        in: header
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                fileSize:
+                  type: integer
+                  format: int64
+            encoding:
+              file:
+                contentType: application/octet-stream
+        required: true
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/f/projects/{projectId}/storages/{storageName}/folders/create:
+    post:
+      summary: 创建文件夹
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件夹路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      - name: X-Tenant-Id
+        in: header
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
   /api/f/projects/{projectId}/triggers:
     get:
       summary: 获取触发器列表
@@ -4044,6 +4517,7 @@ components:
           additionalProperties: {}
           description: 流程变量
         projectId:
+          type: string
           examples:
           - default
           description: 项目ID
@@ -4089,6 +4563,8 @@ components:
           examples:
           - 1
           description: 状态
+        projectId:
+          type: string
         nodeExecuteResults:
           type: array
           items:
@@ -4206,6 +4682,8 @@ components:
           examples:
           - flow_module_001
           description: 流程模块ID
+        projectId:
+          type: string
     DatasourceSchema:
       type: object
       description: 接口日志
@@ -4303,6 +4781,8 @@ components:
           examples:
           - flow_module_001
           description: 流程模块ID
+        projectId:
+          type: string
     Direction:
       type: string
       enum:
@@ -4534,6 +5014,20 @@ components:
           type: string
         direction:
           $ref: "#/components/schemas/Direction"
+    FileItem:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/FileType"
+        size:
+          type: integer
+          format: int64
+        lastModified:
+          $ref: "#/components/schemas/Instant"
+        path:
+          type: string
     FileSystemInfo:
       type: object
       properties:
@@ -4593,6 +5087,11 @@ components:
         spaceUtilization:
           type: number
           format: double
+    FileType:
+      type: string
+      enum:
+      - FILE
+      - FOLDER
     FlowElement:
       type: object
       properties:
@@ -4766,6 +5265,8 @@ components:
           examples:
           - flow_deploy_001
           description: 流程部署ID
+        projectId:
+          type: string
         flowName:
           type: string
         flowKey:
@@ -4968,6 +5469,11 @@ components:
           description: 是否唯一
         modelName:
           type: string
+    Instant:
+      type: string
+      format: date-time
+      examples:
+      - 2022-03-10T16:15:50Z
     JobExecutionLog:
       type: object
       properties:
@@ -5266,6 +5772,8 @@ components:
     NodeExecuteResult:
       type: object
       properties:
+        projectId:
+          type: string
         errCode:
           type: integer
           format: int32
@@ -5300,6 +5808,8 @@ components:
           - array
           additionalProperties: {}
           description: 流程变量列表
+        projectId:
+          type: string
     NodeInstance:
       type: object
       properties:
@@ -5458,8 +5968,18 @@ components:
       properties:
         id:
           type: string
+        name:
+          type: string
+        description:
+          type: string
         enabled:
           type: boolean
+        ownerId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
         createdAt:
           $ref: "#/components/schemas/LocalDateTime"
         updatedAt:
@@ -5502,6 +6022,7 @@ components:
           - node_inst_001
           description: 节点实例ID
         projectId:
+          type: string
           examples:
           - default
           description: 项目ID
@@ -5545,6 +6066,8 @@ components:
           examples:
           - 1
           description: 状态
+        projectId:
+          type: string
         nodeExecuteResults:
           type: array
           items:
@@ -5624,6 +6147,8 @@ components:
     RuntimeResult:
       type: object
       properties:
+        projectId:
+          type: string
         errCode:
           type: integer
           format: int32
@@ -5680,6 +6205,8 @@ components:
           type: object
           additionalProperties: {}
           description: 扩展属性
+        projectId:
+          type: string
         activeTaskInstance:
           $ref: "#/components/schemas/NodeInstance"
         variables:
@@ -5764,6 +6291,8 @@ components:
           description: 流程变量
         runtimeContext:
           $ref: "#/components/schemas/RuntimeContext"
+        projectId:
+          type: string
     StartProcessResultSchema:
       type: object
       properties:
@@ -5799,6 +6328,8 @@ components:
           examples:
           - flow_module_001
           description: 流程模块ID
+        projectId:
+          type: string
         nodeExecuteResults:
           type: array
           items:
@@ -5811,6 +6342,41 @@ components:
         variables:
           type: object
           additionalProperties: {}
+    Storage:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/StorageType"
+        config: {}
+        enabled:
+          type: boolean
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+    StorageSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        config: {}
+        enabled:
+          type: boolean
+    StorageType:
+      type: string
+      enum:
+      - S3
+      - LOCAL
     SystemSummaryResponse:
       type: object
       properties:
@@ -5928,6 +6494,8 @@ components:
           examples:
           - 1
           description: 状态
+        projectId:
+          type: string
         nodeExecuteResults:
           type: array
           items:
@@ -6148,6 +6716,8 @@ components:
           examples:
           - success
           description: 错误信息
+        projectId:
+          type: string
 tags:
 - name: GraphQL
   description: GraphQL接口信息
@@ -6161,6 +6731,8 @@ tags:
   description: 接口日志管理
 - name: 数据源
   description: 数据源管理
+- name: 文件存储
+  description: 文件存储管理
 - name: 服务编排
   description: 服务编排管理
 - name: 模型

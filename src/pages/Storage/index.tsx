@@ -28,7 +28,7 @@ const StorageManagement: React.FC = () => {
   const handleSelect = (storage: StorageSchema) => {
     if (activeStorage?.name !== storage.name) {
       setActiveStorage(storage);
-      setActiveTab('config');
+      setActiveTab('browser');
     }
   };
 
@@ -111,11 +111,11 @@ const StorageManagement: React.FC = () => {
                     </Form>
                   ) : (
                     <Tabs activeKey={activeTab} onChange={setActiveTab}>
+                      <Tabs.TabPane key="browser" tab={t('file_browser')}>
+                        <FileBrowser storageName={activeStorage.name} projectId={projectId}/>
+                      </Tabs.TabPane>
                       <Tabs.TabPane key="config" tab={t('configuration')}>
                         <StorageView data={activeStorage}/>
-                      </Tabs.TabPane>
-                      <Tabs.TabPane key="browser" tab={t('file_browser')}>
-                        <FileBrowser storageName={activeStorage.name}/>
                       </Tabs.TabPane>
                     </Tabs>
                   )}
