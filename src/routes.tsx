@@ -9,6 +9,7 @@ import DataSource from "./pages/DataSource";
 import ERView from "./pages/DataView/components/ERView";
 import APILog from "./pages/APILog";
 import Storage from "./pages/Storage";
+import Team from "./pages/Team";
 
 import {
   ApiOutlined,
@@ -39,7 +40,7 @@ import Schedule from "@/pages/Schedule/index.tsx";
 import TriggerList from "./pages/Schedule/components/TriggerList";
 import JobExecutionLogList from "./pages/Schedule/components/JobExecutionLogList";
 import FlowDetail from "./pages/FlowDetail";
-import ProjectList from "./pages/ProjectList";
+import Project from "./pages/Project";
 
 export interface RouteConfig {
   path: string;
@@ -55,9 +56,15 @@ export interface RouteConfig {
 export const platformRoutes: RouteConfig[] = [
   {
     path: "/project",
-    element: <ProjectList />,
+    element: <Project />,
     icon: FolderOutlined,
-    translationKey: "platform.project_management",
+    translationKey: "platform.project",
+  },
+  {
+    path: "/team",
+    element: <Team />,
+    icon: UserOutlined,
+    translationKey: "platform.team",
   },
   {
     path: "/settings",
@@ -196,7 +203,7 @@ export const projectRoutes: RouteConfig[] = [
     translationKey: "storage",
   },
   {
-    path: "/project/:projectId/identity-providers",
+    path: "/project/:projectId/authentication",
     element: <IdentityProvider />,
     icon: UserOutlined,
     translationKey: "identity_providers",

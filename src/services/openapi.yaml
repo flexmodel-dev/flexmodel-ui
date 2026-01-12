@@ -5,7 +5,7 @@ info:
   version: 0.0.1
   description: FlexModel服务器API，提供模型管理和系统监控功能
 paths:
-  /api/f/ai/chat/completions:
+  /api/v1/ai/chat/completions:
     post:
       requestBody:
         content:
@@ -28,7 +28,7 @@ paths:
         in: header
       security:
       - BearerAuth: []
-  /api/f/ai/chat/conversations:
+  /api/v1/ai/chat/conversations:
     get:
       responses:
         "200":
@@ -77,7 +77,7 @@ paths:
         in: header
       security:
       - BearerAuth: []
-  /api/f/ai/chat/conversations/{id}:
+  /api/v1/ai/chat/conversations/{id}:
     get:
       parameters:
       - name: id
@@ -124,7 +124,7 @@ paths:
       - Ai Resource
       security:
       - BearerAuth: []
-  /api/f/auth/login:
+  /api/v1/auth/login:
     post:
       requestBody:
         content:
@@ -147,7 +147,7 @@ paths:
         in: header
       security:
       - BearerAuth: []
-  /api/f/auth/refresh:
+  /api/v1/auth/refresh:
     post:
       parameters:
       - name: refreshToken
@@ -168,7 +168,7 @@ paths:
       - Auth Resource
       security:
       - BearerAuth: []
-  /api/f/auth/whoami:
+  /api/v1/auth/whoami:
     get:
       responses:
         "200":
@@ -185,7 +185,7 @@ paths:
         in: header
       security:
       - BearerAuth: []
-  /api/f/codegen/templates:
+  /api/v1/codegen/templates:
     get:
       tags:
       - 生成器
@@ -208,7 +208,7 @@ paths:
         in: header
       security:
       - BearerAuth: []
-  /api/f/codegen/{template}.zip:
+  /api/v1/codegen/{template}.zip:
     get:
       tags:
       - 生成器
@@ -238,7 +238,7 @@ paths:
       summary: Generate
       security:
       - BearerAuth: []
-  /api/f/global/profile:
+  /api/v1/global/profile:
     get:
       summary: 获取系统配置
       tags:
@@ -267,7 +267,7 @@ paths:
         in: header
       security:
       - BearerAuth: []
-  /api/f/projects:
+  /api/v1/projects:
     get:
       responses:
         "200":
@@ -290,7 +290,7 @@ paths:
         in: header
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}:
+  /api/v1/projects/{projectId}:
     get:
       parameters:
       - name: projectId
@@ -316,7 +316,7 @@ paths:
       - Project Resource
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/apis:
+  /api/v1/projects/{projectId}/apis:
     get:
       summary: 获取接口定义列表
       tags:
@@ -373,7 +373,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/apis/generate:
+  /api/v1/projects/{projectId}/apis/generate:
     post:
       summary: 根据模型生成接口定义
       tags:
@@ -401,7 +401,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/apis/{apiDefinitionId}/histories:
+  /api/v1/projects/{projectId}/apis/{apiDefinitionId}/histories:
     get:
       tags:
       - 接口定义
@@ -434,7 +434,7 @@ paths:
       summary: Find Api Definition Histories
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/apis/{apiDefinitionId}/histories/{historyId}/restore:
+  /api/v1/projects/{projectId}/apis/{apiDefinitionId}/histories/{historyId}/restore:
     post:
       summary: 恢复接口定义
       tags:
@@ -470,7 +470,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/apis/{id}:
+  /api/v1/projects/{projectId}/apis/{id}:
     patch:
       summary: 更新接口定义(局部更新)
       tags:
@@ -569,7 +569,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources:
+  /api/v1/projects/{projectId}/datasources:
     get:
       summary: 获取所有数据源
       tags:
@@ -628,7 +628,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/physics/names:
+  /api/v1/projects/{projectId}/datasources/physics/names:
     post:
       summary: 获取物理数据库表名称
       tags:
@@ -657,7 +657,7 @@ paths:
         in: header
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/validate:
+  /api/v1/projects/{projectId}/datasources/validate:
     post:
       summary: 验证数据源连接
       tags:
@@ -695,7 +695,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}:
     put:
       summary: 更新数据源
       tags:
@@ -760,7 +760,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/import:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/import:
     post:
       summary: 导入模型到数据源
       tags:
@@ -794,7 +794,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models:
     get:
       summary: 获取模型列表
       tags:
@@ -1092,7 +1092,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models/idl/execute:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/idl/execute:
     post:
       tags:
       - 模型
@@ -1131,7 +1131,7 @@ paths:
       summary: Execute Idl
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models/{modelName}:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}:
     put:
       summary: 更新模型
       tags:
@@ -1472,7 +1472,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/fields:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/fields:
     post:
       summary: 创建字段
       tags:
@@ -1515,7 +1515,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/fields/{fieldName}:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/fields/{fieldName}:
     put:
       summary: 更新字段
       tags:
@@ -1602,7 +1602,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/indexes:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/indexes:
     post:
       summary: 创建索引
       tags:
@@ -1647,7 +1647,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/indexes/{indexName}:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/indexes/{indexName}:
     put:
       summary: 更新索引
       tags:
@@ -1736,7 +1736,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/records:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/records:
     get:
       summary: 获取模型数据记录列表
       tags:
@@ -1878,7 +1878,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/records/{id}:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/records/{id}:
     patch:
       summary: 更新模型数据记录(局部更新)
       tags:
@@ -2108,7 +2108,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/native-query:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/native-query:
     post:
       summary: 执行原生查询
       tags:
@@ -2150,7 +2150,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/datasources/{datasourceName}/sync:
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/sync:
     post:
       summary: 从数据源同步物理表到建模
       tags:
@@ -2252,7 +2252,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/docs/openapi.json:
+  /api/v1/projects/{projectId}/docs/openapi.json:
     get:
       summary: 获取接口文档
       tags:
@@ -2279,7 +2279,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows:
+  /api/v1/projects/{projectId}/flows:
     get:
       summary: 获取流程列表
       tags:
@@ -2360,7 +2360,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/instances:
+  /api/v1/projects/{projectId}/flows/instances:
     get:
       summary: 获取流程实例列表
       tags:
@@ -2426,7 +2426,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/instances/start:
+  /api/v1/projects/{projectId}/flows/instances/start:
     post:
       summary: 启动流程实例
       tags:
@@ -2458,7 +2458,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/instances/{flowInstanceId}:
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}:
     get:
       summary: 获取流程实例信息
       tags:
@@ -2490,7 +2490,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/instances/{flowInstanceId}/commit:
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/commit:
     post:
       summary: 提交任务
       tags:
@@ -2528,7 +2528,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/instances/{flowInstanceId}/elements:
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/elements:
     get:
       summary: 获取流程实例历史元素列表
       description: 获取指定流程实例的历史元素列表，主要用于显示流程快照视图。包含流程中已执行的所有节点信息。
@@ -2564,7 +2564,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/instances/{flowInstanceId}/rollback:
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/rollback:
     post:
       summary: 回滚任务
       tags:
@@ -2602,7 +2602,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/instances/{flowInstanceId}/terminate:
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/terminate:
     post:
       summary: 终止流程实例
       tags:
@@ -2640,7 +2640,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/instances/{flowInstanceId}/user-tasks:
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/user-tasks:
     get:
       summary: 获取流程实例历史用户任务列表
       description: 获取指定流程实例的历史用户任务列表，按处理时间倒序排列。包含活跃和已完成的任务，不包含已禁用的任务。
@@ -2683,7 +2683,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/{flowModuleId}:
+  /api/v1/projects/{projectId}/flows/{flowModuleId}:
     put:
       summary: 更新流程
       tags:
@@ -2784,7 +2784,7 @@ paths:
       summary: Delete Flow
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/flows/{flowModuleId}/deploy:
+  /api/v1/projects/{projectId}/flows/{flowModuleId}/deploy:
     post:
       summary: 部署流程
       tags:
@@ -2822,7 +2822,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/graphql:
+  /api/v1/projects/{projectId}/graphql:
     post:
       summary: 执行GraphQL查询
       tags:
@@ -2854,7 +2854,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/identity-providers:
+  /api/v1/projects/{projectId}/authentication:
     get:
       summary: 获取身份源列表
       tags:
@@ -2913,7 +2913,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/identity-providers/{name}:
+  /api/v1/projects/{projectId}/identity-providers/{name}:
     put:
       summary: 更新身份源
       tags:
@@ -2978,7 +2978,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/jobs/logs:
+  /api/v1/projects/{projectId}/jobs/logs:
     get:
       tags:
       - 任务
@@ -3040,7 +3040,7 @@ paths:
       summary: Find Log Page
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/logs:
+  /api/v1/projects/{projectId}/logs:
     get:
       summary: 获取接口日志列表
       tags:
@@ -3112,7 +3112,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/logs/stat:
+  /api/v1/projects/{projectId}/logs/stat:
     get:
       summary: 统计接口日志
       tags:
@@ -3159,7 +3159,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/metrics/all:
+  /api/v1/projects/{projectId}/metrics/all:
     get:
       summary: 获取所有监控指标
       description: 获取JVM、CPU、内存、线程、磁盘、网络等所有监控信息，提供系统完整状态
@@ -3182,7 +3182,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/metrics/cpu:
+  /api/v1/projects/{projectId}/metrics/cpu:
     get:
       summary: 获取CPU监控信息
       description: 返回CPU使用率、系统负载、物理内存等系统资源信息
@@ -3205,7 +3205,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/metrics/disk:
+  /api/v1/projects/{projectId}/metrics/disk:
     get:
       summary: 获取磁盘监控信息
       description: 返回磁盘使用情况、文件系统信息、磁盘I/O统计等存储设备监控数据
@@ -3228,7 +3228,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/metrics/fm:
+  /api/v1/projects/{projectId}/metrics/fm:
     get:
       tags:
       - 系统监控
@@ -3255,7 +3255,7 @@ paths:
       - BearerAuth: []
       - BearerAuth: []
       summary: Get Fm Metrics
-  /api/f/projects/{projectId}/metrics/jvm:
+  /api/v1/projects/{projectId}/metrics/jvm:
     get:
       summary: 获取JVM监控信息
       description: 返回JVM运行时的详细信息，包括类加载、垃圾回收、系统属性等
@@ -3278,7 +3278,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/metrics/memory:
+  /api/v1/projects/{projectId}/metrics/memory:
     get:
       summary: 获取内存监控信息
       description: 返回堆内存、非堆内存、内存池等详细内存使用情况
@@ -3301,7 +3301,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/metrics/network:
+  /api/v1/projects/{projectId}/metrics/network:
     get:
       summary: 获取网络监控信息
       description: 返回网络接口信息、连接状态、IP地址等网络监控数据
@@ -3324,7 +3324,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/metrics/prometheus:
+  /api/v1/projects/{projectId}/metrics/prometheus:
     get:
       summary: 获取Prometheus格式指标
       description: 返回Prometheus格式的监控指标数据，可用于Prometheus服务器采集
@@ -3347,7 +3347,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/metrics/summary:
+  /api/v1/projects/{projectId}/metrics/summary:
     get:
       summary: 获取系统摘要信息
       description: 返回系统运行状态的综合摘要，包括JVM、CPU、内存、线程等关键指标
@@ -3370,7 +3370,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/metrics/threads:
+  /api/v1/projects/{projectId}/metrics/threads:
     get:
       summary: 获取线程监控信息
       description: 返回线程数量、状态统计、线程详细信息等
@@ -3393,7 +3393,7 @@ paths:
       parameters:
       - name: X-Tenant-Id
         in: header
-  /api/f/projects/{projectId}/storages:
+  /api/v1/projects/{projectId}/storages:
     get:
       summary: 获取所有存储配置
       tags:
@@ -3453,7 +3453,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/storages/{storageName}:
+  /api/v1/projects/{projectId}/storages/{storageName}:
     put:
       summary: 更新存储配置
       tags:
@@ -3552,7 +3552,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/storages/{storageName}/files:
+  /api/v1/projects/{projectId}/storages/{storageName}/files:
     get:
       summary: 列出文件
       tags:
@@ -3592,7 +3592,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/storages/{storageName}/files/delete:
+  /api/v1/projects/{projectId}/storages/{storageName}/files/delete:
     delete:
       summary: 删除文件
       tags:
@@ -3628,7 +3628,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/storages/{storageName}/files/exists:
+  /api/v1/projects/{projectId}/storages/{storageName}/files/exists:
     get:
       summary: 检查文件是否存在
       tags:
@@ -3670,7 +3670,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/storages/{storageName}/files/info:
+  /api/v1/projects/{projectId}/storages/{storageName}/files/info:
     get:
       summary: 获取文件信息
       tags:
@@ -3710,7 +3710,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/storages/{storageName}/files/size:
+  /api/v1/projects/{projectId}/storages/{storageName}/files/size:
     get:
       summary: 获取文件大小
       tags:
@@ -3752,7 +3752,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/storages/{storageName}/files/upload:
+  /api/v1/projects/{projectId}/storages/{storageName}/files/upload:
     post:
       summary: 上传文件
       tags:
@@ -3804,7 +3804,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/storages/{storageName}/folders/create:
+  /api/v1/projects/{projectId}/storages/{storageName}/folders/create:
     post:
       summary: 创建文件夹
       tags:
@@ -3840,7 +3840,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/triggers:
+  /api/v1/projects/{projectId}/triggers:
     get:
       summary: 获取触发器列表
       tags:
@@ -3925,7 +3925,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/triggers/{id}:
+  /api/v1/projects/{projectId}/triggers/{id}:
     put:
       summary: 更新触发器
       tags:
@@ -4054,7 +4054,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/projects/{projectId}/triggers/{id}/execute:
+  /api/v1/projects/{projectId}/triggers/{id}/execute:
     post:
       summary: 立即执行触发器
       tags:
@@ -4085,7 +4085,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/f/settings:
+  /api/v1/settings:
     patch:
       summary: 保存设置
       tags:

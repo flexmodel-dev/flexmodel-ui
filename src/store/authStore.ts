@@ -22,8 +22,6 @@ export const useAuthStore = create<AuthStore>()(
           try {
             const response = await authService.login({ username, password });
 
-            // 存储token到本地，refreshToken通过cookie管理
-            authService.storeToken(response.token);
             set({
               isAuthenticated: true,
               user: response.user,
@@ -58,7 +56,6 @@ export const useAuthStore = create<AuthStore>()(
 
         // 退出登录
         logout: () => {
-          authService.clearStoredToken();
           set({
             isAuthenticated: false,
             user: null,
@@ -71,9 +68,6 @@ export const useAuthStore = create<AuthStore>()(
         refreshAuthToken: async () => {
           try {
             const response = await authService.refreshToken();
-
-            // 更新存储的token，refreshToken通过cookie管理
-            authService.storeToken(response.token);
 
             set({
               token: response.token
@@ -104,8 +98,6 @@ export const useAuthStore = create<AuthStore>()(
 
         // 设置token
         setToken: (token: string) => {
-          // 存储token，refreshToken通过cookie管理
-          authService.storeToken(token);
           set({ token });
         },
 

@@ -1,6 +1,7 @@
 import type {AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios'
 import axios from 'axios'
 import * as authService from '@/services/auth'
+import {useAuthStore} from '@/store/authStore'
 
 // 错误类型
 type ApiError = {
@@ -32,7 +33,7 @@ const ERROR_CODES = {
 } as const
 
 // API 基础路径
-export const BASE_URI = "/api/f"
+export const BASE_URI = "/api/v1"
 
 // 标记是否正在刷新token
 let isRefreshing = false
@@ -105,7 +106,9 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
     try {
       // 尝试刷新token，refreshToken通过cookie自动传递
       const response = await authService.refreshToken()
-      localStorage.setItem('token', response.token)
+      
+      // 更新store中的token
+      useAuthStore.getState().setToken(response.token)
 
       // 更新当前请求的Authorization头
       if (config.headers) {
@@ -119,7 +122,7 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
       return axiosInstance(config)
     } catch (refreshError) {
       // 刷新token失败，清除认证状态
-      authService.clearStoredToken()
+      useAuthStore.getState().logout()
       processQueue(refreshError, null)
       isRefreshing = false
       return Promise.reject(apiError)
@@ -153,7 +156,7 @@ const axiosInstance = axios.create({
  */
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token')
+    const token = useAuthStore.getState().token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }

@@ -137,7 +137,7 @@ const DatasourceManagement: React.FC = () => {
   return (
     <>
       <PageContainer
-        title={activeDs?.name || t('datasource_management')}
+        title={activeDs?.name || t('datasource')}
         extra={
           <>
             {isEditing ? (

@@ -5,9 +5,9 @@ window.onload = function() {
   function getOpenApiUrl() {
     const projectId = localStorage.getItem('projectId');
     if (projectId) {
-      return `/api/f/projects/${projectId}/docs/openapi.json`;
+      return `/api/v1/projects/${projectId}/docs/openapi.json`;
     }
-    return '/api/f/docs/openapi.json';
+    return '/api/v1/docs/openapi.json';
   }
 
   // 获取URL参数中的主题设置
@@ -39,7 +39,7 @@ window.onload = function() {
         name: 'Project Definition API'
       },
       {
-        url: '/api/f/openapi',
+        url: '/api/v1/openapi',
         name: 'Platform API'
       }
     ],

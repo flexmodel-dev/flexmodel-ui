@@ -9,8 +9,9 @@ import * as appStore from "./store/appStore.ts";
 import {useAuth} from "./store/authStore.ts";
 import {initializeDarkMode} from "./utils/darkMode.ts";
 import {RenderProjectRoutes} from "./routes";
-import ProjectList from "./pages/ProjectList";
+import Project from "./pages/Project/index.tsx";
 import Settings from "./pages/Settings";
+import Team from "./pages/Team/index.tsx";
 
 const App = () => {
   const { fetchConfig } = appStore.useConfig();
@@ -67,7 +68,15 @@ const App = () => {
               <PlatformLayout />
             </ProtectedRoute>
           }>
-            <Route index element={<ProjectList />} />
+            <Route index element={<Project />} />
+          </Route>
+          
+          <Route path="/team" element={
+            <ProtectedRoute>
+              <PlatformLayout />
+            </ProtectedRoute>
+          }>
+            <Route index element={<Team />} />
           </Route>
           
           <Route path="/settings" element={

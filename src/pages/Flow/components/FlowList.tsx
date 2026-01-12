@@ -126,7 +126,7 @@ const FlowList: React.FC = () => {
         setCreateModalVisible(false);
         form.resetFields();
         // 跳转到编辑页面
-        navigate(`/flow/design/${response.flowModuleId}`);
+        navigate(`/project/${projectId}/flow/design/${response.flowModuleId}`);
         // 刷新列表
         fetchFlowList();
     } catch (error) {
@@ -226,7 +226,7 @@ const FlowList: React.FC = () => {
               icon={<EditOutlined/>}
               size="small"
               onClick={() => {
-                navigate(`/flow/design/${record.flowModuleId}`);
+                navigate(`/project/${projectId}/flow/design/${record.flowModuleId}`);
               }}
             />
           </Tooltip>

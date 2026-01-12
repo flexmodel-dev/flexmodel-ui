@@ -63,7 +63,7 @@ const StorageManagement: React.FC = () => {
   return (
     <>
       <PageContainer
-        title={activeStorage?.name || t('storage_management')}
+        title={activeStorage?.name || t('storage')}
         extra={
           <>
             {isEditing ? (

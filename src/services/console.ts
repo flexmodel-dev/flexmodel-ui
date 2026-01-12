@@ -37,12 +37,12 @@ class ConsoleWebSocketService {
     // 在开发环境中，使用Vite代理的WebSocket URL
     if (import.meta.env.DEV) {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      return `${protocol}//${window.location.host}/api/f/json-rpc-ws`;
+      return `${protocol}//${window.location.host}/api/v1/json-rpc-ws`;
     }
 
     // 生产环境中，根据页面协议选择 ws/wss，并与当前 host 保持一致
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    return `${protocol}//${window.location.host}/api/f/json-rpc-ws`;
+    return `${protocol}//${window.location.host}/api/v1/json-rpc-ws`;
   }
 
   private connect(): void {
