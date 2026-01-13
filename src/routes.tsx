@@ -61,7 +61,7 @@ export const platformRoutes: RouteConfig[] = [
     translationKey: "platform.project",
   },
   {
-    path: "/members",
+    path: "/member",
     element: <Member />,
     icon: UserOutlined,
     translationKey: "platform.member",

@@ -71,7 +71,7 @@ const App = () => {
             <Route index element={<Project />} />
           </Route>
 
-          <Route path="/members" element={
+          <Route path="/member" element={
             <ProtectedRoute>
               <PlatformLayout />
             </ProtectedRoute>
