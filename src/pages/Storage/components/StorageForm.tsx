@@ -1,6 +1,6 @@
 import React from 'react';
-import {Form, Input, InputNumber, Radio, Switch} from 'antd';
-import {useTranslation} from "react-i18next";
+import { Form, Input, InputNumber, Radio, Switch } from 'antd';
+import { useTranslation } from "react-i18next";
 
 interface StorageFormProps {
   readOnly?: boolean;
@@ -35,7 +35,7 @@ const StorageForm: React.FC<StorageFormProps> = ({ readOnly = false }) => {
       {storageType === 'S3' && (
         <>
           <Form.Item
-            name={['config', 's3', 'accessKey']}
+            name={['config', 'accessKey']}
             label={t('s3_access_key')}
             rules={[{ required: true, message: t('s3_access_key_required') }]}
           >
@@ -43,7 +43,7 @@ const StorageForm: React.FC<StorageFormProps> = ({ readOnly = false }) => {
           </Form.Item>
 
           <Form.Item
-            name={['config', 's3', 'secretKey']}
+            name={['config', 'secretKey']}
             label={t('s3_secret_key')}
             rules={[{ required: true, message: t('s3_secret_key_required') }]}
           >
@@ -51,7 +51,7 @@ const StorageForm: React.FC<StorageFormProps> = ({ readOnly = false }) => {
           </Form.Item>
 
           <Form.Item
-            name={['config', 's3', 'bucket']}
+            name={['config', 'bucket']}
             label={t('s3_bucket')}
             rules={[{ required: true, message: t('s3_bucket_required') }]}
           >
@@ -59,7 +59,7 @@ const StorageForm: React.FC<StorageFormProps> = ({ readOnly = false }) => {
           </Form.Item>
 
           <Form.Item
-            name={['config', 's3', 'region']}
+            name={['config', 'region']}
             label={t('s3_region')}
             rules={[{ required: true, message: t('s3_region_required') }]}
           >
@@ -67,14 +67,14 @@ const StorageForm: React.FC<StorageFormProps> = ({ readOnly = false }) => {
           </Form.Item>
 
           <Form.Item
-            name={['config', 's3', 'endpoint']}
+            name={['config', 'endpoint']}
             label={t('s3_endpoint')}
           >
             <Input readOnly={readOnly} placeholder={t('s3_endpoint_placeholder')} />
           </Form.Item>
 
           <Form.Item
-            name={['config', 's3', 'pathStyle']}
+            name={['config', 'pathStyle']}
             label={t('s3_path_style')}
             valuePropName="checked"
           >
@@ -86,7 +86,7 @@ const StorageForm: React.FC<StorageFormProps> = ({ readOnly = false }) => {
       {storageType === 'LOCAL' && (
         <>
           <Form.Item
-            name={['config', 'local', 'basePath']}
+            name={['config', 'basePath']}
             label={t('local_base_path')}
             rules={[{ required: true, message: t('local_base_path_required') }]}
           >
@@ -94,7 +94,7 @@ const StorageForm: React.FC<StorageFormProps> = ({ readOnly = false }) => {
           </Form.Item>
 
           <Form.Item
-            name={['config', 'local', 'maxFileSize']}
+            name={['config', 'maxFileSize']}
             label={t('local_max_file_size')}
             rules={[{ required: true, message: t('local_max_file_size_required') }]}
           >

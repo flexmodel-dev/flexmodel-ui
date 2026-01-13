@@ -15,7 +15,7 @@ import DetailPanel from "./components/DetailPanel.tsx";
 import {useTranslation} from "react-i18next";
 import {ApiDefinition, ApiDefinitionHistory, ApiMeta, GraphQLData, TreeNode} from "@/types/api-management";
 import BatchCreateDrawer from "./components/BatchCreateDrawer.tsx";
-import {useAppStore, useConfig, useProject} from "@/store/appStore.ts";
+import {useConfig, useProject} from "@/store/appStore.ts";
 import DebugPanel from "./components/DebugPanel";
 import EditPanel from "./components/EditPanel/index.tsx";
 import APIExplorer from "./components/APIExplorer";
@@ -33,7 +33,6 @@ const methodOptions = [
 const CustomAPI: React.FC = () => {
   const { t } = useTranslation();
   const { config } = useConfig();
-  const {currentTenant} = useAppStore();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
   // 状态定义
@@ -529,7 +528,7 @@ const CustomAPI: React.FC = () => {
     const normalizedPath = debugPath.startsWith("/")
       ? debugPath
       : `/${debugPath}`;
-    const tenantId = currentTenant?.id;
+    const tenantId = currentProject?.id;
     const apiRootPathWithTenant = `${config?.apiRootPath || ''}/${tenantId}`;
     const url = `${apiRootPathWithTenant}${normalizedPath}`;
 

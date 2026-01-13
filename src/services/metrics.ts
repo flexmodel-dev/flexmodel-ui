@@ -255,6 +255,14 @@ export const getAllMetrics = (projectId: string): Promise<AllMetricsResponse> =>
 };
 
 /**
+ * 获取所有监控指标
+ */
+export const getFmMetrics = (projectId: string): Promise<FmMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/fm`);
+};
+
+
+/**
  * 获取CPU监控信息
  */
 export const getCpuMetrics = (projectId: string): Promise<CpuMetricsResponse> => {

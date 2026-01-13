@@ -8,6 +8,10 @@ export interface Project {
   updatedAt: string;
   createdBy: string;
   updatedBy: string;
+  apiCount: number;
+  datasourceCount: number;
+  flowCount: number;
+  storageCount: number;
 }
 
 export interface ProjectCreateRequest {

@@ -11,7 +11,7 @@ import {initializeDarkMode} from "./utils/darkMode.ts";
 import {RenderProjectRoutes} from "./routes";
 import Project from "./pages/Project/index.tsx";
 import Settings from "./pages/Settings";
-import Team from "./pages/Team/index.tsx";
+import Team from "./pages/Member/index.tsx";
 
 const App = () => {
   const { fetchConfig } = appStore.useConfig();
@@ -60,9 +60,9 @@ const App = () => {
       <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           <Route path="/login" element={<Login />} />
-          
+
           <Route path="/" element={<Navigate to="/project" replace />} />
-          
+
           <Route path="/project" element={
             <ProtectedRoute>
               <PlatformLayout />
@@ -70,15 +70,15 @@ const App = () => {
           }>
             <Route index element={<Project />} />
           </Route>
-          
-          <Route path="/team" element={
+
+          <Route path="/members" element={
             <ProtectedRoute>
               <PlatformLayout />
             </ProtectedRoute>
           }>
             <Route index element={<Team />} />
           </Route>
-          
+
           <Route path="/settings" element={
             <ProtectedRoute>
               <PlatformLayout />
@@ -86,7 +86,7 @@ const App = () => {
           }>
             <Route index element={<Settings />} />
           </Route>
-          
+
           <Route path="/project/:projectId/*" element={
             <ProtectedRoute>
               <ProjectLayout />
@@ -94,7 +94,7 @@ const App = () => {
           }>
             <Route path="*" element={<RenderProjectRoutes />} />
           </Route>
-          
+
           {/* <Route path="/*" element={
             <ProtectedRoute>
               <PageLayout/>

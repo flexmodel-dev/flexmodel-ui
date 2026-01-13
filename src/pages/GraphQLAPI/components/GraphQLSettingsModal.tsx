@@ -70,7 +70,7 @@ const GraphQLSettingsModal: React.FC<GraphQLSettingsModalProps> = ({
         }
       };
 
-      await saveSettings(projectId, updatedSettings);
+      await saveSettings(updatedSettings);
       message.success(t('config_save_success'));
       onSuccess(updatedSettings);
     } catch (error) {

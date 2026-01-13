@@ -11,10 +11,10 @@ interface Member {
   createdAt: string;
 }
 
-const TeamManagement: React.FC = () => {
+const Member: React.FC = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const [teams, setTeams] = useState<Member[]>([
+  const [members, setTeams] = useState<Member[]>([
     {
       id: "1",
       username: "admin",
@@ -46,19 +46,19 @@ const TeamManagement: React.FC = () => {
     setModalVisible(true);
   };
 
-  const handleEdit = (team: Member) => {
-    setEditingTeam(team);
-    form.setFieldsValue(team);
+  const handleEdit = (member: Member) => {
+    setEditingTeam(member);
+    form.setFieldsValue(member);
     setModalVisible(true);
   };
 
   const handleDelete = (id: string) => {
     Modal.confirm({
-      title: t("team.member_delete_confirm"),
-      content: t("team.member_delete_confirm_desc"),
+      title: t("member.user_delete_confirm"),
+      content: t("member.user_delete_confirm_desc"),
       onOk: () => {
-        setTeams(teams.filter(m => m.id !== id));
-        message.success(t("team.member_delete_success"));
+        setTeams(members.filter(m => m.id !== id));
+        message.success(t("member.user_delete_success"));
       }
     });
   };
@@ -67,18 +67,18 @@ const TeamManagement: React.FC = () => {
     try {
       const values = await form.validateFields();
       if (editingTeam) {
-        setTeams(teams.map(m =>
+        setTeams(members.map(m =>
           m.id === editingTeam.id ? { ...m, ...values } : m
         ));
-        message.success(t("team.member_update_success"));
+        message.success(t("member.user_update_success"));
       } else {
         const newTeam: Member = {
           id: Date.now().toString(),
           ...values,
           createdAt: new Date().toLocaleString("zh-CN", { hour12: false })
         };
-        setTeams([...teams, newTeam]);
-        message.success(t("team.member_create_success"));
+        setTeams([...members, newTeam]);
+        message.success(t("member.user_create_success"));
       }
       setModalVisible(false);
       form.resetFields();
@@ -91,19 +91,19 @@ const TeamManagement: React.FC = () => {
     setSearchKeyword(value);
   };
 
-  const filteredTeams = teams.filter(team =>
-    team.username.toLowerCase().includes(searchKeyword.toLowerCase())
+  const filteredTeams = members.filter(member =>
+    member.username.toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
   const columns: ColumnsType<Member> = [
     {
-      title: t("team.member_username"),
+      title: t("member.user_username"),
       dataIndex: "username",
       key: "username",
       sorter: (a, b) => a.username.localeCompare(b.username)
     },
     {
-      title: t("team.member_created_at"),
+      title: t("member.user_created_at"),
       dataIndex: "createdAt",
       key: "createdAt",
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt)
@@ -138,19 +138,19 @@ const TeamManagement: React.FC = () => {
   return (
     <>
       <PageContainer
-        title={t("platform.team")}
+        title={t("platform.member")}
         extra={
           <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-            {t("team.member_add")}
+            {t("member.user_add")}
           </Button>
         }
       >
         <div style={{ paddingLeft: 10, paddingRight: 10 }}>
           <Tabs>
-            <Tabs.TabPane key="member" tab={t('team.member')}>
+            <Tabs.TabPane key="user" tab={t('member.user')}>
               <div style={{ marginBottom: 16 }}>
                 <Input
-                  placeholder={t("team.member_search_placeholder")}
+                  placeholder={t("member.user_search_placeholder")}
                   prefix={<SearchOutlined />}
                   allowClear
                   onChange={(e) => handleSearch(e.target.value)}
@@ -179,7 +179,7 @@ const TeamManagement: React.FC = () => {
       </PageContainer>
 
       <Modal
-        title={editingTeam ? t("team.member_edit") : t("team.member_add")}
+        title={editingTeam ? t("member.user_edit") : t("member.user_add")}
         open={modalVisible}
         onOk={handleSubmit}
         onCancel={() => {
@@ -193,13 +193,13 @@ const TeamManagement: React.FC = () => {
         <Form form={form} layout="vertical">
           <Form.Item
             name="username"
-            label={t("team.member_username")}
+            label={t("member.user_username")}
             rules={[
-              { required: true, message: t("team.member_username_required") },
-              { min: 3, message: t("team.member_username_min_length") }
+              { required: true, message: t("member.user_username_required") },
+              { min: 3, message: t("member.user_username_min_length") }
             ]}
           >
-            <Input placeholder={t("team.member_username_placeholder")} />
+            <Input placeholder={t("member.user_username_placeholder")} />
           </Form.Item>
         </Form>
       </Modal>
@@ -207,4 +207,4 @@ const TeamManagement: React.FC = () => {
   );
 };
 
-export default TeamManagement;
+export default Member;

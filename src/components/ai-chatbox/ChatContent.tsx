@@ -22,16 +22,7 @@ const items: PromptsProps['items'] = [
     description: '获取[数据源名称]中[模型名称]的详细信息',
     disabled: false,
   },
-  {
-    key: '3',
-    description: '帮我在[xxx]数据源下面创建财务系统模型',
-    disabled: false,
-  },
-  {
-    key: '4',
-    description: '帮我创建一个查询学生列表的接口',
-    disabled: false,
-  }
+ 
 ];
 
 const ChatContent: React.FC<ChatContentProps> = ({

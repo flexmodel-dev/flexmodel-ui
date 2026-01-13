@@ -2,7 +2,7 @@ import {api} from "@/utils/request";
 import type {Project, ProjectCreateRequest, ProjectUpdateRequest} from "@/types/project";
 
 export const getProjects = (): Promise<Project[]> => {
-  return api.get("/projects");
+  return api.get("/projects?include=stats");
 };
 
 export const getProject = (projectId: string): Promise<Project> => {

@@ -9,7 +9,7 @@ import DataSource from "./pages/DataSource";
 import ERView from "./pages/DataView/components/ERView";
 import APILog from "./pages/APILog";
 import Storage from "./pages/Storage";
-import Team from "./pages/Team";
+import Member from "./pages/Member";
 
 import {
   ApiOutlined,
@@ -61,10 +61,10 @@ export const platformRoutes: RouteConfig[] = [
     translationKey: "platform.project",
   },
   {
-    path: "/team",
-    element: <Team />,
+    path: "/members",
+    element: <Member />,
     icon: UserOutlined,
-    translationKey: "platform.team",
+    translationKey: "platform.member",
   },
   {
     path: "/settings",

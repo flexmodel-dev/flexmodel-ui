@@ -18,7 +18,7 @@ const LogSettings: React.FC<LogSettingsProps> = ({visible, onConfirm, onCancel})
 
   useEffect(() => {
     if (!projectId) return;
-    getSettings(projectId).then(res => {
+    getSettings().then(res => {
       setSettings(res);
     });
   }, [projectId]);
@@ -29,7 +29,7 @@ const LogSettings: React.FC<LogSettingsProps> = ({visible, onConfirm, onCancel})
     if (!projectId) return;
     const values = await form.validateFields();
     const newSettings = {...settings, log: values};
-    await saveSettings(projectId, newSettings);
+    await saveSettings(newSettings);
     setSettings(newSettings);
     if (onConfirm) {
       onConfirm(values);

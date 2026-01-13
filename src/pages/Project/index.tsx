@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Button, Typography, Space, Tag, Modal, Form, Input, message, Empty, Spin } from 'antd';
-import { PlusOutlined, SettingOutlined, DatabaseOutlined, CloudServerOutlined, SearchOutlined } from '@ant-design/icons';
+import { Card, Row, Col, Button, Typography, Space, Tag, Modal, Form, Input, message, Empty } from 'antd';
+import { PlusOutlined, SettingOutlined, DatabaseOutlined, CloudServerOutlined, SearchOutlined, BranchesOutlined, CloudOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useProject } from '@/store/appStore';
 import { createProject, getProjects } from '@/services/project';
@@ -86,32 +86,6 @@ const Project: React.FC = () => {
     navigate(`/project/${projectId}/settings`);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'green';
-      case 'inactive':
-        return 'default';
-      case 'archived':
-        return 'orange';
-      default:
-        return 'default';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'active':
-        return '活跃';
-      case 'inactive':
-        return '停用';
-      case 'archived':
-        return '归档';
-      default:
-        return status;
-    }
-  };
-
   return (
     <PageContainer loading={loading}>
       <div style={{ padding: '24px', minHeight: '100vh' }}>
@@ -169,15 +143,26 @@ const Project: React.FC = () => {
                     </div>
 
                     <Space size="small" wrap>
-                      <Tag color={getStatusColor(project.status)}>
-                        {getStatusText(project.status)}
-                      </Tag>
-                      <Tag icon={<DatabaseOutlined />} color="blue">
-                        {project.modelCount} 个模型
-                      </Tag>
-                      <Tag icon={<CloudServerOutlined />} color="purple">
-                        {project.apiCount} 个API
-                      </Tag>
+                      {project.apiCount > 0 && (
+                        <Tag icon={<CloudServerOutlined />} color="blue">
+                          {project.apiCount} 个API
+                        </Tag>
+                      )}
+                      {project.datasourceCount > 0 && (
+                        <Tag icon={<DatabaseOutlined />} color="green">
+                          {project.datasourceCount} 个数据源
+                        </Tag>
+                      )}
+                      {project.flowCount > 0 && (
+                        <Tag icon={<BranchesOutlined />} color="purple">
+                          {project.flowCount} 个流程
+                        </Tag>
+                      )}
+                      {project.storageCount > 0 && (
+                        <Tag icon={<CloudOutlined />} color="orange">
+                          {project.storageCount} 个存储
+                        </Tag>
+                      )}
                     </Space>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

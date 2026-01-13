@@ -4,7 +4,7 @@ import {SettingOutlined} from "@ant-design/icons";
 import GraphQL from "./components/GraphQL";
 import {getSettings} from "@/services/settings";
 import {Settings} from "@/types/settings";
-import {useAppStore, useConfig, useProject} from "@/store/appStore";
+import {useConfig, useProject} from "@/store/appStore";
 import GraphQLSettingsModal from "./components/GraphQLSettingsModal";
 import PageContainer from "@/components/common/PageContainer";
 import {useTranslation} from "react-i18next";
@@ -15,7 +15,6 @@ const GraphQLAPI: React.FC = () => {
   const {t} = useTranslation();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  const {currentTenant} = useAppStore();
 
   const projectId = currentProject?.id || '';
 
@@ -24,7 +23,7 @@ const GraphQLAPI: React.FC = () => {
     const loadSettings = async () => {
       if (!projectId) return;
       try {
-        const settingsData = await getSettings(projectId);
+        const settingsData = await getSettings();
         setSettings(settingsData);
       } catch (error) {
         console.error(t('config_load_failed'), error);
@@ -44,7 +43,7 @@ const GraphQLAPI: React.FC = () => {
   return (
     <PageContainer
       title={settings?.security.graphqlEndpointPath ?
-        `${t('graphql_endpoint')}: ${config?.apiRootPath + "/" + currentTenant?.id || ''}${settings.security.graphqlEndpointPath}` :
+        `${t('graphql_endpoint')}: ${config?.apiRootPath + "/" + currentProject?.id || ''}${settings.security.graphqlEndpointPath}` :
         t('graphql_api_title')
       }
       extra={

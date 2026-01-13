@@ -41,8 +41,8 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
   onBodyChange,
   onSend,
 }) => {
-  const { currentTenant } = useAppStore();
-  const fullApiRootPath = `${apiRootPath || ''}/${currentTenant?.id}`;
+  const { currentProject } = useAppStore();
+  const fullApiRootPath = `${apiRootPath || ''}/${currentProject?.id}`;
 
   const shouldShowRequestBody = !["GET", "HEAD"].includes(
     method.toUpperCase()
