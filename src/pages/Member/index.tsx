@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, message, Modal, Space, Table, Tabs } from "antd";
+import { Button, Form, Input, message, Modal, Space, Table } from "antd";
 import { useTranslation } from "react-i18next";
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import PageContainer from "@/components/common/PageContainer";
@@ -140,15 +140,13 @@ const Member: React.FC = () => {
       <PageContainer
         title={t("platform.member")}
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+          <Button type="primary" size="small" icon={<PlusOutlined />} onClick={handleAdd}>
             {t("member.user_add")}
           </Button>
         }
       >
         <div style={{ paddingLeft: 10, paddingRight: 10 }}>
-          <Tabs>
-            <Tabs.TabPane key="user" tab={t('member.user')}>
-              <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 16 }}>
                 <Input
                   placeholder={t("member.user_search_placeholder")}
                   prefix={<SearchOutlined />}
@@ -172,8 +170,6 @@ const Member: React.FC = () => {
                   })
                 }}
               />
-            </Tabs.TabPane>
-          </Tabs>
         </div>
 
       </PageContainer>

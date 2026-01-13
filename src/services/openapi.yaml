@@ -23,9 +23,6 @@ paths:
       summary: Send Message
       tags:
       - Ai Resource
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
   /api/v1/ai/chat/conversations:
@@ -46,9 +43,6 @@ paths:
       summary: Get All Conversations
       tags:
       - Ai Resource
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
     post:
@@ -72,9 +66,6 @@ paths:
       summary: Create Conversation
       tags:
       - Ai Resource
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
   /api/v1/ai/chat/conversations/{id}:
@@ -85,8 +76,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -110,8 +99,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -126,6 +113,8 @@ paths:
       - BearerAuth: []
   /api/v1/auth/login:
     post:
+      tags:
+      - 认证
       requestBody:
         content:
           application/json:
@@ -140,22 +129,17 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       summary: Login
-      tags:
-      - Auth Resource
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
   /api/v1/auth/refresh:
     post:
+      tags:
+      - 认证
       parameters:
       - name: refreshToken
         in: cookie
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -164,12 +148,12 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       summary: Refresh
-      tags:
-      - Auth Resource
       security:
       - BearerAuth: []
   /api/v1/auth/whoami:
     get:
+      tags:
+      - 认证
       responses:
         "200":
           description: OK
@@ -178,11 +162,6 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       summary: Get User Info
-      tags:
-      - Auth Resource
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
   /api/v1/codegen/templates:
@@ -203,9 +182,6 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       summary: Get Templates
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
   /api/v1/codegen/{template}.zip:
@@ -222,12 +198,14 @@ paths:
         in: query
         schema:
           type: string
+      - name: projectId
+        in: query
+        schema:
+          type: string
       - name: variables
         in: query
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -262,13 +240,13 @@ paths:
           $ref: "#/components/responses/InternalError"
         "400":
           $ref: "#/components/responses/BadRequest"
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
-  /api/v1/projects:
+  /api/v1/members:
     get:
+      summary: 获取成员列表
+      tags:
+      - 成员
       responses:
         "200":
           description: OK
@@ -277,29 +255,146 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Project"
+                  $ref: "#/components/schemas/MemberResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建成员
+      tags:
+      - 成员
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/members/{userId}:
+    put:
+      summary: 更新成员
+      tags:
+      - 成员
+      parameters:
+      - description: 成员ID
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    get:
+      summary: 获取成员详情
+      tags:
+      - 成员
+      parameters:
+      - description: 成员ID
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除成员
+      tags:
+      - 成员
+      parameters:
+      - description: 成员ID
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects:
+    get:
+      tags:
+      - 项目
+      parameters:
+      - name: include
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectResponse"
         "500":
           $ref: "#/components/responses/InternalError"
         "400":
           $ref: "#/components/responses/BadRequest"
       summary: Find Projects
-      tags:
-      - Project Resource
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
   /api/v1/projects/{projectId}:
     get:
+      tags:
+      - 项目
       parameters:
       - name: projectId
         in: path
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -312,8 +407,6 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       summary: Find Project
-      tags:
-      - Project Resource
       security:
       - BearerAuth: []
   /api/v1/projects/{projectId}/apis:
@@ -327,8 +420,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -352,8 +443,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -384,8 +473,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -416,8 +503,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -455,8 +540,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -486,8 +569,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -522,8 +603,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -558,8 +637,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -580,8 +657,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -607,8 +682,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -652,9 +725,6 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalError"
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
   /api/v1/projects/{projectId}/datasources/validate:
@@ -668,8 +738,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -712,8 +780,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -749,8 +815,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -777,8 +841,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -810,8 +872,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -917,8 +977,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1107,8 +1165,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1153,8 +1209,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1348,8 +1402,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -1461,8 +1513,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -1494,8 +1544,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1543,8 +1591,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1591,8 +1637,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -1624,8 +1668,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1675,8 +1717,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1725,8 +1765,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -1792,8 +1830,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -1834,8 +1870,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1906,8 +1940,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -1977,8 +2009,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2054,8 +2084,6 @@ paths:
         schema:
           type: boolean
           default: false
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -2097,8 +2125,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -2125,8 +2151,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2167,8 +2191,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2263,8 +2285,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -2314,8 +2334,6 @@ paths:
           type: integer
           format: int32
           default: "20"
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -2339,8 +2357,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2411,8 +2427,6 @@ paths:
         schema:
           type: integer
           format: int32
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -2437,8 +2451,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2475,8 +2487,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -2507,8 +2517,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2547,8 +2555,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: 成功返回历史元素列表
@@ -2581,8 +2587,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2625,8 +2629,6 @@ paths:
         schema:
           type: boolean
           default: true
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -2666,8 +2668,6 @@ paths:
         schema:
           type: boolean
           default: true
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: 成功返回历史用户任务列表
@@ -2700,8 +2700,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2742,8 +2740,6 @@ paths:
         name: flowDeployId
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -2772,8 +2768,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -2801,8 +2795,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2833,8 +2825,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2854,7 +2844,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/v1/projects/{projectId}/authentication:
+  /api/v1/projects/{projectId}/identity-providers:
     get:
       summary: 获取身份源列表
       tags:
@@ -2865,8 +2855,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -2892,8 +2880,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2930,8 +2916,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -2967,8 +2951,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -3024,8 +3006,6 @@ paths:
         in: query
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3090,8 +3070,6 @@ paths:
           type: integer
           format: int32
           default: 50
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3142,8 +3120,6 @@ paths:
         in: query
         schema:
           type: boolean
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3179,9 +3155,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/metrics/cpu:
     get:
       summary: 获取CPU监控信息
@@ -3202,9 +3175,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/metrics/disk:
     get:
       summary: 获取磁盘监控信息
@@ -3225,9 +3195,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/metrics/fm:
     get:
       tags:
@@ -3238,8 +3205,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3275,9 +3240,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/metrics/memory:
     get:
       summary: 获取内存监控信息
@@ -3298,9 +3260,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/metrics/network:
     get:
       summary: 获取网络监控信息
@@ -3321,9 +3280,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/metrics/prometheus:
     get:
       summary: 获取Prometheus格式指标
@@ -3344,9 +3300,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/metrics/summary:
     get:
       summary: 获取系统摘要信息
@@ -3367,9 +3320,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/metrics/threads:
     get:
       summary: 获取线程监控信息
@@ -3390,9 +3340,6 @@ paths:
       security:
       - BearerAuth: []
       - BearerAuth: []
-      parameters:
-      - name: X-Tenant-Id
-        in: header
   /api/v1/projects/{projectId}/storages:
     get:
       summary: 获取所有存储配置
@@ -3404,8 +3351,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3432,8 +3377,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -3471,8 +3414,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -3509,8 +3450,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3541,8 +3480,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3575,8 +3512,6 @@ paths:
         name: path
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3617,8 +3552,6 @@ paths:
         schema:
           type: string
           pattern: \S
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3653,8 +3586,6 @@ paths:
         schema:
           type: string
           pattern: \S
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3695,8 +3626,6 @@ paths:
         schema:
           type: string
           pattern: \S
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3735,8 +3664,6 @@ paths:
         schema:
           type: string
           pattern: \S
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3777,8 +3704,6 @@ paths:
         schema:
           type: string
           pattern: \S
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           multipart/form-data:
@@ -3829,8 +3754,6 @@ paths:
         schema:
           type: string
           pattern: \S
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3879,8 +3802,6 @@ paths:
           type: integer
           format: int32
           default: "15"
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -3904,8 +3825,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -3941,8 +3860,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -3977,8 +3894,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       requestBody:
         content:
           application/json:
@@ -4013,8 +3928,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -4043,8 +3956,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "204":
           description: No Content
@@ -4070,8 +3981,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: X-Tenant-Id
-        in: header
       responses:
         "200":
           description: OK
@@ -4107,9 +4016,6 @@ paths:
           $ref: "#/components/responses/InternalError"
         "400":
           $ref: "#/components/responses/BadRequest"
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
     get:
@@ -4127,9 +4033,6 @@ paths:
           $ref: "#/components/responses/InternalError"
         "400":
           $ref: "#/components/responses/BadRequest"
-      parameters:
-      - name: X-Tenant-Id
-        in: header
       security:
       - BearerAuth: []
 components:
@@ -4628,6 +4531,8 @@ components:
     CreateConversationRequest:
       type: object
       properties:
+        projectId:
+          type: string
         title:
           type: string
     CreateFlowParamSchema:
@@ -5090,8 +4995,8 @@ components:
     FileType:
       type: string
       enum:
-      - FILE
-      - FOLDER
+      - file
+      - folder
     FlowElement:
       type: object
       properties:
@@ -5623,6 +5528,60 @@ components:
           type: string
         password:
           type: string
+    MemberRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+    MemberRequestSchema:
+      type: object
+      description: 成员请求
+      properties:
+        id:
+          type: string
+          description: ID
+        username:
+          type: string
+          description: 用户名
+        email:
+          type: string
+          description: 邮箱
+        password:
+          type: string
+          description: 密码（明文，创建或更新时可选）
+        createdBy:
+          type: string
+          description: 创建人
+        updatedBy:
+          type: string
+          description: 更新人
+    MemberResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
     MemoryInfo:
       type: object
       properties:
@@ -5984,6 +5943,39 @@ components:
           $ref: "#/components/schemas/LocalDateTime"
         updatedAt:
           $ref: "#/components/schemas/LocalDateTime"
+    ProjectResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        enabled:
+          type: boolean
+        ownerId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        apiCount:
+          type: integer
+          format: int32
+        datasourceCount:
+          type: integer
+          format: int32
+        flowCount:
+          type: integer
+          format: int32
+        storageCount:
+          type: integer
+          format: int32
     PrometheusMetricsResponse:
       type: object
       properties:
@@ -6723,6 +6715,8 @@ tags:
   description: GraphQL接口信息
 - name: 任务
   description: 任务管理
+- name: 成员
+  description: 成员管理
 - name: 接口定义
   description: 接口定义管理
 - name: 接口文档
@@ -6745,9 +6739,13 @@ tags:
   description: 系统监控相关接口，包括JVM、CPU、内存、线程、磁盘（含I/O）、网络等监控信息
 - name: 触发器
   description: 触发器管理
+- name: 认证
+  description: 认证授权管理
 - name: 记录
   description: 模型数据记录管理
 - name: 设置
   description: 系统设置
 - name: 身份源
   description: 身份源管理
+- name: 项目
+  description: 项目管理
