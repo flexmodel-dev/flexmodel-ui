@@ -85,7 +85,6 @@ const Member: React.FC = () => {
       await fetchMembers();
     } catch (error) {
       console.error("Failed to save member:", error);
-      message.error(t("form_save_failed"));
     }
   };
 
