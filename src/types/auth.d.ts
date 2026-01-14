@@ -11,7 +11,7 @@ export interface LoginRequest {
  */
 export interface UserInfo {
   id: string;
-  username: string;
+  name: string;
   permissions?: string[];
   createdAt?: string;
   updatedAt?: string;

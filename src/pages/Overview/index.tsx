@@ -15,9 +15,7 @@ const StatisticsPage: React.FC = () => {
   const projectId = currentProject?.id || '';
 
   const [stats, setStats] = useState<FmMetricsResponse>({
-    queryCount: 0,
-    mutationCount: 0,
-    subscribeCount: 0,
+    customApiCount: 0,
     dataSourceCount: 0,
     modelCount: 0,
     flowDefCount: 0,

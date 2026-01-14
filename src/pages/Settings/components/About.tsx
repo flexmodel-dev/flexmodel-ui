@@ -61,7 +61,7 @@ const About: React.FC = () => {
                 type="primary"
                 icon={<GithubOutlined />}
                 size="middle"
-                href="https://github.com/flexmodel-projects"
+                href="https://github.com/flexmodel-devs"
                 target="_blank"
                 style={{ borderRadius: '6px' }}
               >

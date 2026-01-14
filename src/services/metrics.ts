@@ -146,9 +146,7 @@ export interface JvmMetricsResponse {
 }
 
 export interface FmMetricsResponse {
-  queryCount: number;
-  mutationCount: number;
-  subscribeCount: number;
+  customApiCount: number;
   requestCount: number;
   dataSourceCount: number;
   modelCount: number;

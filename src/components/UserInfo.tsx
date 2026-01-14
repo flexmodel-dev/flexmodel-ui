@@ -16,7 +16,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
   const { user, logout } = useAuth();
 
   // 使用认证store中的用户信息，如果没有则使用默认值
-  const userName = user?.username || "超级管理员";
+  const userName = user?.name || "未知用户";
   const { token } = antdTheme.useToken();
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
