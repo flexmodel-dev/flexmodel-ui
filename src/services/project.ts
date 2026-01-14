@@ -1,12 +1,15 @@
-import {api} from "@/utils/request";
-import type {Project, ProjectCreateRequest, ProjectUpdateRequest} from "@/types/project";
+import { api } from "@/utils/request";
+import type { Project, ProjectCreateRequest, ProjectUpdateRequest } from "@/types/project";
 
 /**
  * 获取项目列表
  * @returns 项目列表
  */
-export const getProjects = (): Promise<Project[]> => {
-  return api.get("/projects?include=stats");
+export const getProjects = ({ include }: { include?: string | null }): Promise<Project[]> => {
+  if (include) {
+    return api.get(`/projects?include=${include}`);
+  }
+  return api.get(`/projects`);
 };
 
 /**

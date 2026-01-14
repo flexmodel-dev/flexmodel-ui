@@ -67,7 +67,7 @@ const ProjectLayout: React.FC = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const projectsData = await getProjects();
+        const projectsData = await getProjects({ include: null });
         setProjects(projectsData);
       } catch (error) {
         console.error('Failed to fetch projects:', error);

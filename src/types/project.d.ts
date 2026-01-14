@@ -9,11 +9,13 @@ export interface Project {
   updatedAt: string;
   createdBy?: string;
   updatedBy?: string;
+  ownerId?: string;
   stats?: {
     apiCount: number;
     modelCount: number;
     flowCount: number;
     dataSourceCount: number;
+    storageCount: number;
   };
 }
 

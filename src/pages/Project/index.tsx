@@ -28,7 +28,7 @@ const Project: React.FC = () => {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const projects = await getProjects();
+      const projects = await getProjects({ include: 'stats' });
       setProjects(projects);
       setFilteredProjects(projects);
     } catch (error) {
@@ -42,7 +42,7 @@ const Project: React.FC = () => {
     if (searchKeyword) {
       const filtered = projects.filter(project =>
         project.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchKeyword.toLowerCase())
+        (project.description?.toLowerCase().includes(searchKeyword.toLowerCase()) ?? false)
       );
       setFilteredProjects(filtered);
     } else {
@@ -143,24 +143,24 @@ const Project: React.FC = () => {
                     </div>
 
                     <Space size="small" wrap>
-                      {project.apiCount > 0 && (
+                      {(project.stats?.apiCount ?? 0) > 0 && (
                         <Tag icon={<CloudServerOutlined />} color="blue">
-                          {project.apiCount} 个API
+                          {project.stats?.apiCount} 个API
                         </Tag>
                       )}
-                      {project.datasourceCount > 0 && (
+                      {(project.stats?.dataSourceCount ?? 0) > 0 && (
                         <Tag icon={<DatabaseOutlined />} color="green">
-                          {project.datasourceCount} 个数据源
+                          {project.stats?.dataSourceCount} 个数据源
                         </Tag>
                       )}
-                      {project.flowCount > 0 && (
+                      {(project.stats?.flowCount ?? 0) > 0 && (
                         <Tag icon={<BranchesOutlined />} color="purple">
-                          {project.flowCount} 个流程
+                          {project.stats?.flowCount} 个流程
                         </Tag>
                       )}
-                      {project.storageCount > 0 && (
+                      {(project.stats?.storageCount ?? 0) > 0 && (
                         <Tag icon={<CloudOutlined />} color="orange">
-                          {project.storageCount} 个存储
+                          {project.stats?.storageCount} 个存储
                         </Tag>
                       )}
                     </Space>

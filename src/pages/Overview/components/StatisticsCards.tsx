@@ -35,9 +35,7 @@ const metricItemStyle: React.CSSProperties = {
 
 // 统计数据接口
 interface Statistics {
-  queryCount: number;
-  mutationCount: number;
-  subscribeCount: number;
+  customApiCount: number;
   requestCount: number;
   dataSourceCount: number;
   modelCount: number;
@@ -144,26 +142,10 @@ const ApiInfoCard: React.FC<{ stats: Statistics; color: string }> = ({ stats, co
         <div style={metricsContainerStyle}>
           <div style={metricItemStyle}>
             <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
-              {t("query")}
+              {t("api")}
             </div>
             <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
-              {stats.queryCount}
-            </div>
-          </div>
-          <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
-              {t("mutation")}
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
-              {stats.mutationCount}
-            </div>
-          </div>
-          <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
-              {t("subscription")}
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
-              {stats.subscribeCount}
+              {stats.customApiCount}
             </div>
           </div>
           <div style={metricItemStyle}>
