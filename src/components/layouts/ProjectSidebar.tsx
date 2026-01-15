@@ -18,18 +18,33 @@ const ProjectSidebar: React.FC = () => {
       .map(route => {
         const IconComponent = route.icon;
         const path = route.path.replace(':projectId', projectId || '').replace(/\/$/, '');
-        return {
+        const menuItem: any = {
           key: path,
           icon: <IconComponent />,
           label: t(route.translationKey),
         };
+
+        if (route.children && route.children.length > 0) {
+          menuItem.children = route.children
+            .filter(child => !child?.hideInMenu)
+            .map(child => {
+              const ChildIconComponent = child.icon;
+              const childPath = child.path.replace(':projectId', projectId || '').replace(/\/$/, '');
+              return {
+                key: childPath,
+                icon: <ChildIconComponent />,
+                label: t(child.translationKey),
+              };
+            });
+        }
+
+        return menuItem;
       });
   }, [t, projectId]);
 
   const selectedKeys = useMemo(() => {
     const pathname = location.pathname.replace(/\/$/, '');
     const routeMap = new Map<string, string>();
-    const childRouteMap = new Map<string, string>();
 
     routes.forEach(route => {
       const path = route.path.replace(':projectId', projectId || '').replace(/\/$/, '');
@@ -37,7 +52,7 @@ const ProjectSidebar: React.FC = () => {
       if (route.children) {
         route.children.forEach(child => {
           const childPath = child.path.replace(':projectId', projectId || '').replace(/\/$/, '');
-          childRouteMap.set(childPath, path);
+          routeMap.set(childPath, childPath);
         });
       }
     });
@@ -46,11 +61,26 @@ const ProjectSidebar: React.FC = () => {
       return [routeMap.get(pathname)!];
     }
 
-    if (childRouteMap.has(pathname)) {
-      return [childRouteMap.get(pathname)!];
-    }
-
     return [];
+  }, [location.pathname, projectId]);
+
+  const defaultOpenKeys = useMemo(() => {
+    const pathname = location.pathname.replace(/\/$/, '');
+    const openKeys: string[] = [];
+
+    routes.forEach(route => {
+      if (route.children && route.children.length > 0) {
+        const parentPath = route.path.replace(':projectId', projectId || '').replace(/\/$/, '');
+        route.children.forEach(child => {
+          const childPath = child.path.replace(':projectId', projectId || '').replace(/\/$/, '');
+          if (pathname.startsWith(childPath) || pathname.startsWith(parentPath)) {
+            openKeys.push(parentPath);
+          }
+        });
+      }
+    });
+
+    return [...new Set(openKeys)];
   }, [location.pathname, projectId]);
 
   const handleMenuClick = useCallback(({ key }: { key: string }) => {
@@ -87,6 +117,7 @@ const ProjectSidebar: React.FC = () => {
         <Menu
           mode="inline"
           selectedKeys={selectedKeys}
+          defaultOpenKeys={defaultOpenKeys}
           onClick={handleMenuClick}
           inlineCollapsed={isSidebarCollapsed}
           style={menuStyle}

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {Button, Col, Form, Layout, message, Modal, Row, Space, Typography, theme} from "antd";
+import {Button, Col, Form, message, Modal, Row, Space, Splitter, Typography, theme} from "antd";
 import {useTranslation} from "react-i18next";
 import type {IdentityProvider} from "@/types/identity-provider";
 import IdPExplorer from "@/pages/IdentityProvider/components/IdPExplorer";
@@ -87,8 +87,6 @@ const IdPManagement: React.FC = () => {
     }
   };
 
-  const { Sider, Content } = Layout;
-
   return (
     <>
       <PageContainer>
@@ -96,9 +94,9 @@ const IdPManagement: React.FC = () => {
           <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Title level={2} style={{ margin: 0 }}>{t("identity_provider")}</Title>
           </div>
-          <Layout style={{ height: "100%", background: "transparent" }}>
-            <Sider width={320} style={{ background: "transparent", borderRight: "1px solid var(--ant-color-border)" }}>
-              <div style={{ height: "100%", overflow: "auto" }}>
+          <Splitter>
+            <Splitter.Panel max="20%" collapsible>
+              <div style={{ height: "80vh", overflow: "auto" }}>
                 <IdPExplorer
                   idPList={idPList}
                   activeIdP={activeIdP}
@@ -109,8 +107,9 @@ const IdPManagement: React.FC = () => {
                   t={t}
                 />
               </div>
-            </Sider>
-            <Content style={{ padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto" }}>
+            </Splitter.Panel>
+            <Splitter.Panel>
+              <div style={{ padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto" }}>
               <div style={{ marginBottom: token.marginMD, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Title level={3} style={{ margin: 0 }}>{activeIdP?.name || t("identity_provider")}</Title>
                 <Space>
@@ -146,8 +145,9 @@ const IdPManagement: React.FC = () => {
                   </Col>
                 </Row>
               )}
-            </Content>
-          </Layout>
+              </div>
+            </Splitter.Panel>
+          </Splitter>
         </div>
       </PageContainer>
       <CreateIdP

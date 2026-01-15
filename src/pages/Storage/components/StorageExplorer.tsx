@@ -123,7 +123,7 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
 
   return (
     <Spin spinning={loading}>
-      <div style={{minWidth: 200, margin: token.paddingXS}}>
+      <div style={{margin: token.paddingXS}}>
         <Tree
           tree={treeData}
           selected={selectedItem}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Col, Form, Layout, message, Modal, Row, Space, Tabs, Typography, theme } from "antd";
+import { Button, Col, Form, message, Modal, Row, Space, Splitter, Tabs, Typography, theme } from "antd";
 import { useTranslation } from "react-i18next";
 import PageContainer from "@/components/common/PageContainer";
 import type { StorageSchema } from "@/types/storage";
@@ -60,8 +60,6 @@ const StorageManagement: React.FC = () => {
     }
   };
 
-  const { Sider, Content } = Layout;
-
   return (
     <>
       <PageContainer>
@@ -69,9 +67,9 @@ const StorageManagement: React.FC = () => {
           <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Title level={2} style={{ margin: 0 }}>{t('storage')}</Title>
           </div>
-          <Layout style={{ height: "100%", background: "transparent" }}>
-            <Sider width={320} style={{ background: "transparent", borderRight: "1px solid var(--ant-color-border)" }}>
-              <div style={{ height: "100%", overflow: "auto" }}>
+          <Splitter>
+            <Splitter.Panel max="20%" collapsible>
+              <div style={{ height: "80vh", overflow: "auto" }}>
                 <StorageExplorer
                   onSelect={handleSelect}
                   setDeleteVisible={setDeleteVisible}
@@ -79,57 +77,59 @@ const StorageManagement: React.FC = () => {
                   selectedStorage={activeStorage?.name}
                 />
               </div>
-            </Sider>
-            <Content style={{ padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto" }}>
-              <div style={{ marginBottom: token.marginMD, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Title level={3} style={{ margin: 0 }}>{activeStorage?.name || t('storage')}</Title>
-                <Space>
-                  {isEditing ? (
-                    <Space>
-                      <Button onClick={() => {
-                        setIsEditing(false);
-                        form.resetFields();
-                      }}>{t("cancel")}</Button>
-                      <Button type="primary" onClick={async () => {
-                        const values = await form.validateFields();
-                        await handleEditStorage(values);
-                      }}>{t("save")}</Button>
-                    </Space>
-                  ) : (
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        setIsEditing(true);
-                        form.setFieldsValue(activeStorage);
-                      }}
-                    >
-                      {t("edit")}
-                    </Button>
-                  )}
-                </Space>
-              </div>
-              {activeStorage && (
-                <Row>
-                  <Col span={24}>
+            </Splitter.Panel>
+            <Splitter.Panel>
+              <div style={{ padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto" }}>
+                <div style={{ marginBottom: token.marginMD, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Title level={3} style={{ margin: 0 }}>{activeStorage?.name || t('storage')}</Title>
+                  <Space>
                     {isEditing ? (
-                      <Form form={form} layout="vertical">
-                        <StorageForm />
-                      </Form>
+                      <Space>
+                        <Button onClick={() => {
+                          setIsEditing(false);
+                          form.resetFields();
+                        }}>{t("cancel")}</Button>
+                        <Button type="primary" onClick={async () => {
+                          const values = await form.validateFields();
+                          await handleEditStorage(values);
+                        }}>{t("save")}</Button>
+                      </Space>
                     ) : (
-                      <Tabs activeKey={activeTab} onChange={setActiveTab}>
-                        <Tabs.TabPane key="browser" tab={t('file_browser')}>
-                          <FileBrowser storageName={activeStorage.name} projectId={projectId} />
-                        </Tabs.TabPane>
-                        <Tabs.TabPane key="config" tab={t('configuration')}>
-                          <StorageView data={activeStorage} />
-                        </Tabs.TabPane>
-                      </Tabs>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          setIsEditing(true);
+                          form.setFieldsValue(activeStorage);
+                        }}
+                      >
+                        {t("edit")}
+                      </Button>
                     )}
-                  </Col>
-                </Row>
-              )}
-            </Content>
-          </Layout>
+                  </Space>
+                </div>
+                {activeStorage && (
+                  <Row>
+                    <Col span={24}>
+                      {isEditing ? (
+                        <Form form={form} layout="vertical">
+                          <StorageForm />
+                        </Form>
+                      ) : (
+                        <Tabs activeKey={activeTab} onChange={setActiveTab}>
+                          <Tabs.TabPane key="browser" tab={t('file_browser')}>
+                            <FileBrowser storageName={activeStorage.name} projectId={projectId} />
+                          </Tabs.TabPane>
+                          <Tabs.TabPane key="config" tab={t('configuration')}>
+                            <StorageView data={activeStorage} />
+                          </Tabs.TabPane>
+                        </Tabs>
+                      )}
+                    </Col>
+                  </Row>
+                )}
+              </div>
+            </Splitter.Panel>
+          </Splitter>
         </div>
 
       </PageContainer>
