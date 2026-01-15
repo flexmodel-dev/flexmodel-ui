@@ -37,5 +37,5 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.PAT }}
-          repository: flexmodel-devs/flexmodel-server
+          repository: flexmodel-dev/flexmodel-server
           event-type: ui_deploy

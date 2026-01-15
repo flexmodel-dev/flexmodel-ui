@@ -30,7 +30,7 @@ FlexModel UI 是一个开源的、免费的统一数据访问层解决方案，�
 
 ```bash
 # 克隆仓库
-git clone https://github.com/flexmodel-devs/flexmodel-ui.git
+git clone https://github.com/flexmodel-dev/flexmodel-ui.git
 cd flexmodel-ui
 
 # 安装依赖
