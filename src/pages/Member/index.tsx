@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Form, Input, message, Modal, Space, Table } from "antd";
+import { Button, Form, Input, message, Modal, Space, Table, Typography, theme } from "antd";
 import { useTranslation } from "react-i18next";
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import PageContainer from "@/components/common/PageContainer";
 import type { ColumnsType } from "antd/es/table";
 import { getMembers, createMember, updateMember, deleteMember } from "@/services/member";
 import type { MemberResponse } from "@/types/member.d";
+const { Title } = Typography;
 
 const Member: React.FC = () => {
+  const { token } = theme.useToken();
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [members, setTeams] = useState<MemberResponse[]>([]);
@@ -151,44 +153,43 @@ const Member: React.FC = () => {
 
   return (
     <>
-      <PageContainer
-        title={t("platform.member")}
-        extra={
-          <Button type="primary" size="small" icon={<PlusOutlined />} onClick={handleAdd}>
-            {t("member.user_add")}
-          </Button>
-        }
-        loading={loading}
-      >
-        <div style={{ paddingLeft: 10, paddingRight: 10 }}>
-          <div style={{ marginBottom: 16 }}>
-                <Input
-                  placeholder={t("member.user_search_placeholder")}
-                  prefix={<SearchOutlined />}
-                  allowClear
-                  onChange={(e) => handleSearch(e.target.value)}
-                  style={{ width: 300 }}
-                />
-              </div>
-              <Table
-                columns={columns}
-                dataSource={filteredTeams}
-                rowKey="id"
-                pagination={{
-                  total: filteredTeams.length,
-                  pageSize: 10,
-                  showSizeChanger: true,
-                  showTotal: (total) => t("pagination_total_text", {
-                    start: 1,
-                    end: Math.min(10, total),
-                    total
-                  })
-                }}
+      <PageContainer loading={loading}>
+        <div style={{ padding: token.padding, minHeight: '100vh' }}>
+          <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Title level={2} style={{ margin: 0 }}>{t("platform.member")}</Title>
+            <Space>
+              <Input
+                placeholder={t("member.user_search_placeholder")}
+                prefix={<SearchOutlined />}
+                allowClear
+                onChange={(e) => handleSearch(e.target.value)}
+                style={{ width: 200 }}
               />
+              <Space>
+                <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+                  {t("member.user_add")}
+                </Button>
+              </Space>
+            </Space>
+          </div>
+          <Table
+            columns={columns}
+            dataSource={filteredTeams}
+            rowKey="id"
+            pagination={{
+              total: filteredTeams.length,
+              pageSize: 10,
+              showSizeChanger: true,
+              showTotal: (total) => t("pagination_total_text", {
+                start: 1,
+                end: Math.min(10, total),
+                total
+              })
+            }}
+          />
+
         </div>
-
       </PageContainer>
-
       <Modal
         title={editingTeam ? t("member.user_edit") : t("member.user_add")}
         open={modalVisible}

@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Divider, Dropdown, Spin} from "antd";
+import {Button, Divider, Dropdown, Spin, theme} from "antd";
 import type {MenuProps} from "antd";
 import {KeyOutlined, MoreOutlined, PlusOutlined, SafetyCertificateOutlined, UserOutlined} from "@ant-design/icons";
 // 导入Tree组件
@@ -29,6 +29,8 @@ const IdPExplorer: React.FC<IdPExplorerProps> = ({
   setDrawerVisible,
   t,
 }) => {
+  const { token } = theme.useToken();
+  
   // 将身份提供商列表转换为Tree组件需要的数据结构
   const treeData = {
     children: idPList.map((idp) => ({
@@ -105,7 +107,7 @@ const IdPExplorer: React.FC<IdPExplorerProps> = ({
           renderMore={renderMore}
         />
       </Spin>
-      <Divider style={{ margin: "8px 0" }} />
+      <Divider style={{ margin: `${token.paddingXS}px 0` }} />
       <Button
         type="primary"
         icon={<PlusOutlined />}

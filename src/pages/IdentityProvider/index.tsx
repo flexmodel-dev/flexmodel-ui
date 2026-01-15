@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {Button, Col, Form, Layout, message, Modal, Row, Space} from "antd";
+import {Button, Col, Form, Layout, message, Modal, Row, Space, Typography, theme} from "antd";
 import {useTranslation} from "react-i18next";
 import type {IdentityProvider} from "@/types/identity-provider";
 import IdPExplorer from "@/pages/IdentityProvider/components/IdPExplorer";
@@ -15,8 +15,10 @@ import JsIdPForm from "@/pages/IdentityProvider/components/JsIdPForm.tsx";
 import IdpView from "@/pages/IdentityProvider/components/IdPView";
 import {PageContainer} from "@/components/common";
 import {useProject} from "@/store/appStore";
+const { Title } = Typography;
 
 const IdPManagement: React.FC = () => {
+  const { token } = theme.useToken();
   const { t } = useTranslation();
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
@@ -89,56 +91,64 @@ const IdPManagement: React.FC = () => {
 
   return (
     <>
-      <PageContainer
-        title={activeIdP ? activeIdP.name : t("identity_provider")}
-        extra={
-          activeIdP && (
-            isEditing ? (
-              <Space>
-                <Button onClick={() => { setIsEditing(false); form.resetFields(); }}>{t("cancel")}</Button>
-                <Button type="primary" onClick={async () => { const values = await form.validateFields(); await handleEditProvider(values); }}>{t("save")}</Button>
-              </Space>
-            ) : (
-              <Button type="primary" onClick={() => { setIsEditing(true); form.setFieldsValue(normalizeIdentityProvider(activeIdP)); }}>{t("edit")}</Button>
-            )
-          )
-        }
-        loading={idPLoading}
-      >
-        <Layout style={{ height: "100%", background: "transparent" }}>
-          <Sider width={320} style={{ background: "transparent", borderRight: "1px solid var(--ant-color-border)" }}>
-            <div style={{ height: "100%", overflow: "auto" }}>
-              <IdPExplorer
-                idPList={idPList}
-                activeIdP={activeIdP}
-                loading={idPLoading}
-                setActiveIdP={setActiveIdP}
-                setDeleteVisible={setDeleteVisible}
-                setDrawerVisible={setDrawerVisible}
-                t={t}
-              />
-            </div>
-          </Sider>
-          <Content style={{ padding: "12px 20px", overflow: "auto" }}>
-            {idPList.length > 0 && activeIdP && (
-              <Row>
-                <Col span={24}>
+      <PageContainer>
+        <div style={{ padding: token.padding }}>
+          <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Title level={2} style={{ margin: 0 }}>{t("identity_provider")}</Title>
+          </div>
+          <Layout style={{ height: "100%", background: "transparent" }}>
+            <Sider width={320} style={{ background: "transparent", borderRight: "1px solid var(--ant-color-border)" }}>
+              <div style={{ height: "100%", overflow: "auto" }}>
+                <IdPExplorer
+                  idPList={idPList}
+                  activeIdP={activeIdP}
+                  loading={idPLoading}
+                  setActiveIdP={setActiveIdP}
+                  setDeleteVisible={setDeleteVisible}
+                  setDrawerVisible={setDrawerVisible}
+                  t={t}
+                />
+              </div>
+            </Sider>
+            <Content style={{ padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto" }}>
+              <div style={{ marginBottom: token.marginMD, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Title level={3} style={{ margin: 0 }}>{activeIdP?.name || t("identity_provider")}</Title>
+                <Space>
                   {isEditing ? (
-                    <Form form={form} layout="vertical">
-                      {(form.getFieldValue('type') ?? activeIdP.type ?? activeIdP.provider?.type) === 'script' ? (
-                        <JsIdPForm />
-                      ) : (
-                        <OIDCIdPForm />
-                      )}
-                    </Form>
+                    <Space>
+                      <Button onClick={() => { setIsEditing(false); form.resetFields(); }}>{t("cancel")}</Button>
+                      <Button type="primary" onClick={async () => { const values = await form.validateFields(); await handleEditProvider(values); }}>{t("save")}</Button>
+                    </Space>
                   ) : (
-                    <IdpView data={activeIdP} />
+                    <Button
+                      type="primary"
+                      onClick={() => { setIsEditing(true); form.setFieldsValue(normalizeIdentityProvider(activeIdP)); }}
+                    >
+                      {t("edit")}
+                    </Button>
                   )}
-                </Col>
-              </Row>
-            )}
-          </Content>
-        </Layout>
+                </Space>
+              </div>
+              {idPList.length > 0 && activeIdP && (
+                <Row>
+                  <Col span={24}>
+                    {isEditing ? (
+                      <Form form={form} layout="vertical">
+                        {(form.getFieldValue('type') ?? activeIdP.type ?? activeIdP.provider?.type) === 'script' ? (
+                          <JsIdPForm />
+                        ) : (
+                          <OIDCIdPForm />
+                        )}
+                      </Form>
+                    ) : (
+                      <IdpView data={activeIdP} />
+                    )}
+                  </Col>
+                </Row>
+              )}
+            </Content>
+          </Layout>
+        </div>
       </PageContainer>
       <CreateIdP
         open={drawerVisible}

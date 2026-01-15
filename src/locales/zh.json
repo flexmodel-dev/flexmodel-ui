@@ -833,5 +833,38 @@
     "member_role_viewer": "访客",
     "member_status_active": "活跃",
     "member_status_inactive": "未激活"
+  },
+  "project": {
+    "searchPlaceholder": "搜索项目...",
+    "create": "创建项目",
+    "noResults": "未找到匹配的项目",
+    "empty": "暂无项目",
+    "name": "项目名称",
+    "owner": "所有者",
+    "stats": "统计信息",
+    "createdAt": "创建时间",
+    "settings": "设置",
+    "delete": "删除",
+    "deleteConfirm": "确认删除",
+    "deleteConfirmDesc": "确定要删除这个项目吗？",
+    "createModalTitle": "创建新项目",
+    "description": "项目描述",
+    "nameRequired": "请输入项目名称",
+    "descriptionRequired": "请输入项目描述",
+    "namePlaceholder": "请输入项目名称",
+    "descriptionPlaceholder": "请输入项目描述",
+    "createSuccess": "项目创建成功",
+    "createFailed": "项目创建失败",
+    "deleteSuccess": "项目删除成功",
+    "deleteFailed": "项目删除失败",
+    "api": "个API",
+    "dataSource": "个数据源",
+    "flow": "个流程",
+    "storage": "个存储"
+  },
+  "common": {
+    "confirm": "确定",
+    "cancel": "取消",
+    "create": "创建"
   }
 }
