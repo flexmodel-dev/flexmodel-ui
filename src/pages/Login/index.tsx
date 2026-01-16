@@ -99,13 +99,11 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleDemoLogin = () => {
-    // 填充表单
-    form.setFieldsValue({
-      username: 'admin',
-      password: 'admin123',
-      remember: false
-    });
+  const handleDemoLogin = async () => {
+    const success = await login('admin', 'admin123');
+    if (success) {
+      // 登录成功后的处理在useEffect中完成
+    }
   };
 
   return (
