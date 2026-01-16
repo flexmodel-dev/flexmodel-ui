@@ -23,6 +23,7 @@ export interface Project {
  * 项目创建请求接口
  */
 export interface ProjectCreateRequest {
+  id?: string;
   name: string;
   description?: string;
 }

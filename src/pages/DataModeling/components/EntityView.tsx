@@ -24,7 +24,7 @@ const EntityView = ({datasource, model}: Props) => {
     {label: t("index"), value: "index"},
     {label: t("record"), value: "record"},
     {label: t("trigger.title"), value: "trigger"},
-    {label: t("coding"), value: "code"},
+    {label: t("coding"), value: "coding"},
   ];
 
   const renderContent = () => {

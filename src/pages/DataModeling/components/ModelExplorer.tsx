@@ -394,7 +394,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} className="pr-2">
       <div style={selectRowStyle}>
         <Select
           value={activeDs}
@@ -419,7 +419,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
                 width: "100%",
                 padding: 0,
               }}
-              onClick={() => navigate("/data/source")}
+              onClick={() => navigate(`/project/${projectId}/data/source`)}
             >
               {t("management")}
             </Button>
