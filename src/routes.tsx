@@ -6,7 +6,6 @@ import DataView from "./pages/DataView";
 import ApiView from "./pages/APIView";
 import DataModeling from "./pages/DataModeling";
 import DataSource from "./pages/DataSource";
-import ERView from "./pages/DataView/components/ERView";
 import APILog from "./pages/APILog";
 import Storage from "./pages/Storage";
 import Member from "./pages/Member";
@@ -131,12 +130,6 @@ export const projectRoutes: RouteConfig[] = [
         element: <DataSource />,
         icon: DatabaseOutlined,
         translationKey: "data_source",
-      },
-      {
-        path: "/project/:projectId/data/er",
-        element: <ERView />,
-        icon: BranchesOutlined,
-        translationKey: "er_view",
       },
     ],
   },

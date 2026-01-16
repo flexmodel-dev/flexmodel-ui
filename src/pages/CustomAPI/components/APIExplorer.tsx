@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from "react";
-import {Button, Dropdown, Flex, Input} from "antd";
+import {Button, Dropdown, Input, Spin} from "antd";
 import {MoreOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import type {MenuProps} from "antd";
 import Tree from "@/components/explore/explore/Tree.jsx";
@@ -115,90 +115,120 @@ const APIExplorer: React.FC<APIExplorerProps> = ({
     },
   ];
 
+  const searchRowStyle = {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    paddingBottom: "5px",
+  };
+
+  const treeContainerStyle = {
+    flex: 1,
+    minHeight: 0,
+    maxHeight: "calc(100vh - 200px)",
+    overflow: "auto",
+  };
+
+  const inputStyle = {
+    flex: 1,
+    marginRight: "5px",
+  };
+
+  const containerStyle = {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column" as const,
+  };
+
   return (
-    <div className="pr-2">
-      <Flex gap="small" align="center">
+    <div style={containerStyle}>
+      <div style={searchRowStyle}>
         <Input
           placeholder={t("search_apis")}
           value={searchText}
           onChange={handleSearchChange}
           allowClear
           prefix={<SearchOutlined/>}
-          className="flex-1"
+          style={inputStyle}
         />
         <Dropdown menu={{items: createMenuItems}}>
           <Button icon={<PlusOutlined/>}/>
         </Dropdown>
-      </Flex>
-      <div className="flex-1 overflow-auto">
-        <Tree
-          tree={treeData}
-          selected={selectedApiId ? {path: selectedApiId} : {path: ""}}
-          onClickItem={onSelectItem}
-          renderMore={(item: any) => {
-            const moreMenuItems: MenuProps["items"] = [];
-            
-            if (item.type === "folder") {
-              moreMenuItems.push(
-                {
-                  key: "new_api",
-                  label: t("new_api"),
-                  onClick: () => onShowCreateApiDialog(item.data.id),
-                },
-                {
-                  key: "new_folder",
-                  label: t("new_folder"),
-                  onClick: () => onShowCreateFolderDialog(item.data.id),
-                },
-                {
-                  type: "divider",
+      </div>
+      <div style={treeContainerStyle}>
+        <div style={{height: '100%', overflow: 'auto', maxHeight: '100%'}}>
+          <Spin spinning={false} size="small">
+            <Tree
+              tree={treeData}
+              selected={selectedApiId ? {path: selectedApiId} : {path: ""}}
+              onClickItem={onSelectItem}
+              renderMore={(item: any) => {
+                const moreMenuItems: MenuProps["items"] = [];
+                
+                if (item.type === "folder") {
+                  moreMenuItems.push(
+                    {
+                      key: "new_api",
+                      label: t("new_api"),
+                      onClick: () => onShowCreateApiDialog(item.data.id),
+                    },
+                    {
+                      key: "new_folder",
+                      label: t("new_folder"),
+                      onClick: () => onShowCreateFolderDialog(item.data.id),
+                    },
+                    {
+                      type: "divider",
+                    }
+                  );
                 }
-              );
-            }
-            
-            moreMenuItems.push(
-              {
-                key: "rename",
-                label: t("rename"),
-                onClick: () => onRename(item.data),
-              },
-              {
-                key: "delete",
-                label: t("delete"),
-                danger: true,
-                onClick: (e) => {
-                  e?.domEvent?.stopPropagation();
-                  onDelete(item.data.id, item.data.name);
-                },
-              }
-            );
+                
+                moreMenuItems.push(
+                  {
+                    key: "rename",
+                    label: t("rename"),
+                    onClick: () => onRename(item.data),
+                  },
+                  {
+                    key: "delete",
+                    label: t("delete"),
+                    danger: true,
+                    onClick: (e) => {
+                      e?.domEvent?.stopPropagation();
+                      onDelete(item.data.id, item.data.name);
+                    },
+                  }
+                );
 
-            return (
-              <Dropdown
-                menu={{items: moreMenuItems}}
-                trigger={["hover"]}
-              >
-                <MoreOutlined onClick={(e) => e.stopPropagation()}/>
-              </Dropdown>
-            );
-          }}
-          renderIcon={(item: any, nodeType: any) => {
-            if (nodeType === "file") {
-              const method = item.data?.method;
-              if (method === "GET") return <ApiMethodGet key={`get${item.path}`}/>;
-              if (method === "POST") return <ApiMethodPost key={`post${item.path}`}/>;
-              if (method === "PUT") return <ApiMethodPut key={`put${item.path}`}/>;
-              if (method === "DELETE")
-                return <ApiMethodDelete key={`delete${item.path}`}/>;
-              if (method === "PATCH")
-                return <ApiMethodPatch key={`patch${item.path}`}/>;
-              return <IconFile key={`file${item.path}`}/>;
-            }
-            if (item.data && item.data.type === "FOLDER")
-              return <ApiFolder key={`apifolder${item.path}`}/>;
-            return <IconFolder key={`folder${item.path}`}/>;
-          }}
-        />
+                return (
+                  <Dropdown
+                    menu={{items: moreMenuItems}}
+                    trigger={["hover"]}
+                  >
+                    <MoreOutlined onClick={(e) => e.stopPropagation()}/>
+                  </Dropdown>
+                );
+              }}
+              renderIcon={(item: any, nodeType: any) => {
+                if (nodeType === "file") {
+                  const method = item.data?.method;
+                  if (method === "GET") return <ApiMethodGet key={`get${item.path}`}/>;
+                  if (method === "POST") return <ApiMethodPost key={`post${item.path}`}/>;
+                  if (method === "PUT") return <ApiMethodPut key={`put${item.path}`}/>;
+                  if (method === "DELETE")
+                    return <ApiMethodDelete key={`delete${item.path}`}/>;
+                  if (method === "PATCH")
+                    return <ApiMethodPatch key={`patch${item.path}`}/>;
+                  return <IconFile key={`file${item.path}`}/>;
+                }
+                if (item.data && item.data.type === "FOLDER")
+                  return <ApiFolder key={`apifolder${item.path}`}/>;
+                return <IconFolder key={`folder${item.path}`}/>;
+              }}
+              compact={true}
+            />
+          </Spin>
+        </div>
       </div>
     </div>
   );

@@ -47,6 +47,7 @@
   },
   "api": "接口",
   "open_api": "Open API",
+  "open_api_try_it_out": "新窗口打开",
   "api_log": "接口日志",
   "custom_api": "定制接口",
   "graphql_api": "GraphQL",

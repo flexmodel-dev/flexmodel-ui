@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState, useCallback} from "react";
-import {Button, Form, Input, message, Modal, Select, Splitter, Tabs, TabsProps, Typography,} from "antd";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { Button, Form, Input, message, Modal, Select, Splitter, Tabs, TabsProps, Typography, } from "antd";
 import PageContainer from "@/components/common/PageContainer";
 import {
   createApi,
@@ -12,15 +12,15 @@ import {
   updateApiStatus,
 } from "@/services/api-info.ts";
 import DetailPanel from "./components/DetailPanel.tsx";
-import {useTranslation} from "react-i18next";
-import {ApiDefinition, ApiDefinitionHistory, ApiMeta, GraphQLData, TreeNode} from "@/types/api-management";
+import { useTranslation } from "react-i18next";
+import { ApiDefinition, ApiDefinitionHistory, ApiMeta, GraphQLData, TreeNode } from "@/types/api-management";
 import BatchCreateDrawer from "./components/BatchCreateDrawer.tsx";
-import {useConfig, useProject} from "@/store/appStore.ts";
+import { useConfig, useProject } from "@/store/appStore.ts";
 import DebugPanel from "./components/DebugPanel";
 import EditPanel from "./components/EditPanel/index.tsx";
 import APIExplorer from "./components/APIExplorer";
-import {HistoryOutlined} from "@ant-design/icons";
-import HistoryModal, {HistoryRecord} from "./components/HistoryModal";
+import { HistoryOutlined } from "@ant-design/icons";
+import HistoryModal, { HistoryRecord } from "./components/HistoryModal";
 
 const methodOptions = [
   { value: "GET", label: "GET" },
@@ -33,7 +33,7 @@ const methodOptions = [
 const CustomAPI: React.FC = () => {
   const { t } = useTranslation();
   const { config } = useConfig();
-  const {currentProject} = useProject();
+  const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
   // 状态定义
   const [apiList, setApiList] = useState<ApiDefinition[]>([]);
@@ -613,25 +613,27 @@ const CustomAPI: React.FC = () => {
     <PageContainer>
       <Splitter>
         <Splitter.Panel defaultSize="20%" max="40%" collapsible>
-          <APIExplorer
-            apiList={apiList}
-            selectedApiId={selectedNode?.data.id}
-            onSelectItem={(item: any) => {
-              setSelectedNode({
-                children: [],
-                data: item.data,
-                isLeaf: item.type === "file",
-                key: item.path,
-                settingVisible: false,
-                title: item.filename,
-              });
-            }}
-            onShowCreateApiDialog={showCreateApiDialog}
-            onShowCreateFolderDialog={showCreateFolderDialog}
-            onShowBatchCreate={() => setBatchCreateDrawerVisible(true)}
-            onRename={showEditInput}
-            onDelete={showDeleteConfirm}
-          />
+          <div className="pr-2">
+            <APIExplorer
+              apiList={apiList}
+              selectedApiId={selectedNode?.data.id}
+              onSelectItem={(item: any) => {
+                setSelectedNode({
+                  children: [],
+                  data: item.data,
+                  isLeaf: item.type === "file",
+                  key: item.path,
+                  settingVisible: false,
+                  title: item.filename,
+                });
+              }}
+              onShowCreateApiDialog={showCreateApiDialog}
+              onShowCreateFolderDialog={showCreateFolderDialog}
+              onShowBatchCreate={() => setBatchCreateDrawerVisible(true)}
+              onRename={showEditInput}
+              onDelete={showDeleteConfirm}
+            />
+          </div>
         </Splitter.Panel>
         <Splitter.Panel>
           {editForm?.type == "API" ? (

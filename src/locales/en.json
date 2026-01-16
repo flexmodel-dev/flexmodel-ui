@@ -46,6 +46,7 @@
   },
   "api": "API",
   "open_api": "Open API",
+  "open_api_try_it_out": "Try It Out",
   "api_log": "API Log",
   "custom_api": "Custom API",
   "graphql_api": "GraphQL",
