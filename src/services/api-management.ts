@@ -4,15 +4,15 @@ import {GraphQLIntrospectionResponse, GraphQLQueryParams, GraphQLResponse} from 
 /**
  * 执行 GraphQL 查询
  */
-export const executeQuery = (data: GraphQLQueryParams): Promise<GraphQLResponse> => {
-  return api.post('/graphql', data)
+export const executeQuery = (projectId: string, data: GraphQLQueryParams): Promise<GraphQLResponse> => {
+  return api.post(`/projects/${projectId}/graphql`, data)
 }
 
 /**
  * 执行 GraphQL 内省查询
  */
-export const executeIntrospectionQuery = (data: GraphQLQueryParams): Promise<GraphQLIntrospectionResponse> => {
-  return api.post('/graphql', data)
+export const executeIntrospectionQuery = (projectId: string, data: GraphQLQueryParams): Promise<GraphQLIntrospectionResponse> => {
+  return api.post(`/projects/${projectId}/graphql`, data)
 }
 
 /**

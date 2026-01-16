@@ -1,24 +1,27 @@
-import React, {useEffect, useState} from "react";
-import {Button, message, Space} from "antd";
-import {SettingOutlined} from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Button, message, Space } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
 import GraphQL from "./components/GraphQL";
-import {getSettings} from "@/services/settings";
-import {Settings} from "@/types/settings";
-import {useAppStore, useConfig} from "@/store/appStore";
+import { getSettings } from "@/services/settings";
+import { Settings } from "@/types/settings";
+import { useConfig, useProject } from "@/store/appStore";
 import GraphQLSettingsModal from "./components/GraphQLSettingsModal";
 import PageContainer from "@/components/common/PageContainer";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const GraphQLAPI: React.FC = () => {
-  const {config} = useConfig();
-  const {t} = useTranslation();
+  const { config } = useConfig();
+  const { currentProject } = useProject();
+  const { t } = useTranslation();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  const {currentTenant} = useAppStore();
+
+  const projectId = currentProject?.id || '';
 
   // 加载设置
   useEffect(() => {
     const loadSettings = async () => {
+      if (!projectId) return;
       try {
         const settingsData = await getSettings();
         setSettings(settingsData);
@@ -29,7 +32,7 @@ const GraphQLAPI: React.FC = () => {
     };
 
     loadSettings();
-  }, [t]);
+  }, [projectId, t]);
 
   // 设置更新回调
   const handleSettingsUpdate = (updatedSettings: Settings) => {
@@ -40,14 +43,14 @@ const GraphQLAPI: React.FC = () => {
   return (
     <PageContainer
       title={settings?.security.graphqlEndpointPath ?
-        `${t('graphql_endpoint')}: ${config?.apiRootPath + "/" + currentTenant?.id || ''}${settings.security.graphqlEndpointPath}` :
+        `${t('graphql_api')} (${t('graphql_endpoint')}: ${config?.apiRootPath + "/" + currentProject?.id || ''}${settings.security.graphqlEndpointPath})` :
         t('graphql_api_title')
       }
       extra={
         <Space>
           <Button
             type="text"
-            icon={<SettingOutlined/>}
+            icon={<SettingOutlined />}
             onClick={() => setSettingsModalVisible(true)}
           >
             {t('graphql_settings')}
@@ -55,6 +58,8 @@ const GraphQLAPI: React.FC = () => {
         </Space>
       }
     >
+
+
       <GraphQL
         data={{
           query: `

@@ -35,6 +35,7 @@ import {FlowElementType} from '@/pages/FlowDesign/types/flow.ts';
 import {generateId} from '@/pages/FlowDesign/utils/flow';
 import {PageContainer} from '@/components/common';
 import {deployFlow, getFlowModule, updateFlow, UpdateFlowRequest} from '@/services/flow';
+import {useProject} from '@/store/appStore';
 
 const {Sider, Content} = Layout;
 
@@ -73,6 +74,8 @@ const FlowDesign: React.FC = () => {
   const navigate = useNavigate();
   const {flowModuleId: routeFlowModuleId} = useParams<{ flowModuleId: string }>();
   const {token} = theme.useToken();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<CustomEdge>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -278,7 +281,7 @@ const FlowDesign: React.FC = () => {
   const loadFlowDetail = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const detail = await getFlowModule(id);
+      const detail = await getFlowModule(projectId, id);
       setFlowName(detail.flowName);
       setFlowKey(detail.flowKey || '');
       setFlowRemark(detail.remark || '');
@@ -587,7 +590,7 @@ const FlowDesign: React.FC = () => {
           remark: flowRemark,
           flowModel: JSON.stringify(flowModel),
         };
-        await updateFlow(flowModuleId, updateData);
+        await updateFlow(projectId, flowModuleId, updateData);
         message.success('流程更新成功');
       } catch (error) {
         console.error('更新流程失败:', error);
@@ -699,8 +702,8 @@ const FlowDesign: React.FC = () => {
         remark: flowRemark,
         flowModel: JSON.stringify(flowModel),
       };
-      await updateFlow(flowModuleId, updateData);
-      const res = await deployFlow(flowModuleId, {flowModuleId});
+      await updateFlow(projectId, flowModuleId, updateData);
+      const res = await deployFlow(projectId, flowModuleId, {flowModuleId});
       if (res?.flowDeployId) {
         message.success('发布成功');
       } else {

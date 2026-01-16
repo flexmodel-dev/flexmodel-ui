@@ -1,6 +1,7 @@
-// 假设data-modeling.d.ts有MRecord，如果没有，可以在这里定义或导入
-
-// 已经存在PagedResult<T>
+/**
+ * 分页结果接口
+ * @template T 数据类型
+ */
 export interface PagedResult<T> {
   list: T[];
   total: number;

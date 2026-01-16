@@ -2,6 +2,7 @@ import {Form, InputNumber, Modal, Switch} from "antd";
 import React, {useEffect, useState} from "react";
 import {getSettings, saveSettings} from "@/services/settings.ts";
 import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
 
 interface LogSettingsProps {
   onConfirm?: (data: any) => void;
@@ -11,17 +12,21 @@ interface LogSettingsProps {
 
 const LogSettings: React.FC<LogSettingsProps> = ({visible, onConfirm, onCancel}) => {
   const {t} = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [settings, setSettings] = useState<any>();
 
   useEffect(() => {
+    if (!projectId) return;
     getSettings().then(res => {
       setSettings(res);
     });
-  }, []);
+  }, [projectId]);
 
   const [form] = Form.useForm();
 
   const handleSubmit = async () => {
+    if (!projectId) return;
     const values = await form.validateFields();
     const newSettings = {...settings, log: values};
     await saveSettings(newSettings);

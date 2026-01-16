@@ -146,9 +146,7 @@ export interface JvmMetricsResponse {
 }
 
 export interface FmMetricsResponse {
-  queryCount: number;
-  mutationCount: number;
-  subscribeCount: number;
+  customApiCount: number;
   requestCount: number;
   dataSourceCount: number;
   modelCount: number;
@@ -250,62 +248,70 @@ export interface AllMetricsResponse {
 /**
  * 获取所有监控指标
  */
-export const getAllMetrics = (): Promise<AllMetricsResponse> => {
-  return api.get("/metrics/all");
+export const getAllMetrics = (projectId: string): Promise<AllMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/all`);
 };
+
+/**
+ * 获取所有监控指标
+ */
+export const getFmMetrics = (projectId: string): Promise<FmMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/fm`);
+};
+
 
 /**
  * 获取CPU监控信息
  */
-export const getCpuMetrics = (): Promise<CpuMetricsResponse> => {
-  return api.get("/metrics/cpu");
+export const getCpuMetrics = (projectId: string): Promise<CpuMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/cpu`);
 };
 
 /**
  * 获取JVM监控信息
  */
-export const getJvmMetrics = (): Promise<JvmMetricsResponse> => {
-  return api.get("/metrics/jvm");
+export const getJvmMetrics = (projectId: string): Promise<JvmMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/jvm`);
 };
 
 /**
  * 获取内存监控信息
  */
-export const getMemoryMetrics = (): Promise<MemoryMetricsResponse> => {
-  return api.get("/metrics/memory");
+export const getMemoryMetrics = (projectId: string): Promise<MemoryMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/memory`);
 };
 
 /**
  * 获取磁盘监控信息
  */
-export const getDiskMetrics = (): Promise<DiskMetricsResponse> => {
-  return api.get("/metrics/disk");
+export const getDiskMetrics = (projectId: string): Promise<DiskMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/disk`);
 };
 
 /**
  * 获取网络监控信息
  */
-export const getNetworkMetrics = (): Promise<NetworkMetricsResponse> => {
-  return api.get("/metrics/network");
+export const getNetworkMetrics = (projectId: string): Promise<NetworkMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/network`);
 };
 
 /**
  * 获取线程监控信息
  */
-export const getThreadMetrics = (): Promise<ThreadMetricsResponse> => {
-  return api.get("/metrics/threads");
+export const getThreadMetrics = (projectId: string): Promise<ThreadMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/threads`);
 };
 
 /**
  * 获取Prometheus格式指标
  */
-export const getPrometheusMetrics = (): Promise<PrometheusMetricsResponse> => {
-  return api.get("/metrics/prometheus");
+export const getPrometheusMetrics = (projectId: string): Promise<PrometheusMetricsResponse> => {
+  return api.get(`/projects/${projectId}/metrics/prometheus`);
 };
 
 /**
  * 获取系统摘要信息
  */
-export const getSystemSummary = (): Promise<SystemSummaryResponse> => {
-  return api.get("/metrics/summary");
+export const getSystemSummary = (projectId: string): Promise<SystemSummaryResponse> => {
+  return api.get(`/projects/${projectId}/metrics/summary`);
 };

@@ -1,3 +1,6 @@
+/**
+ * 执行接口
+ */
 export interface Execution {
   preScript?: string;
   postScript?: string;
@@ -9,6 +12,9 @@ export interface Execution {
   headers?: Record<string, any>;
 }
 
+/**
+ * GraphQL数据接口
+ */
 export interface GraphQLData {
   operationName?: string;
   query: string;
@@ -16,30 +22,37 @@ export interface GraphQLData {
   headers?: Record<string, any> | null;
 }
 
+/**
+ * 文档IO配置接口
+ */
 export interface DocumentIOConfig {
-  schema?: Record<string, any>; // json schema格式的数据
+  schema?: Record<string, any>;
 }
 
+/**
+ * 文档配置接口
+ */
 export interface DocumentConfig {
   input?: DocumentIOConfig;
   output?: DocumentIOConfig;
 }
 
+/**
+ * API元数据接口
+ */
 export interface ApiMeta {
-  // 接口鉴权
   auth?: boolean;
-  // 身份源
   identityProvider?: string;
-  // 是否启用限流
   rateLimitingEnabled?: boolean;
-  // 最大请求数
   maxRequestCount?: number;
-  // 间隔时间
   intervalInSeconds?: number;
   execution?: Execution;
   document?: DocumentConfig;
 }
 
+/**
+ * API定义接口
+ */
 export interface ApiDefinition {
   id: string;
   name: string;
@@ -59,6 +72,9 @@ export interface ApiDefinition {
   updatedAt: string;
 }
 
+/**
+ * API定义历史接口
+ */
 export interface ApiDefinitionHistory {
   id: string;
   name: string;
@@ -75,6 +91,9 @@ export interface ApiDefinitionHistory {
   updatedAt: string;
 }
 
+/**
+ * 树节点接口
+ */
 export interface TreeNode {
   title: string;
   key: string;
@@ -84,19 +103,25 @@ export interface TreeNode {
   data: ApiDefinition;
 }
 
+/**
+ * API定义模式接口
+ */
 export interface ApiDefinitionSchema {
   id: string;
   type: ApiType;
   path: string;
   meta: ApiMeta;
   name: string;
-  createdAt: string; // 使用ISO日期字符串
+  createdAt: string;
   updatedAt: string;
   parentId: string;
   enabled: boolean;
   method: string;
 }
 
+/**
+ * API定义树DTO接口
+ */
 export interface ApiDefinitionTreeDTO {
   id: string;
   name: string;
@@ -111,10 +136,16 @@ export interface ApiDefinitionTreeDTO {
   children: ApiDefinitionTreeDTO[];
 }
 
+/**
+ * API定义树模式接口
+ */
 export interface ApiDefinitionTreeSchema extends ApiDefinitionSchema {
   children: ApiDefinitionTreeDTO[];
 }
 
+/**
+ * 生成APIs DTO接口
+ */
 export interface GenerateAPIsDTO {
   datasourceName: string;
   modelName: string;
@@ -123,9 +154,14 @@ export interface GenerateAPIsDTO {
   generateAPIs: string[];
 }
 
+/**
+ * API类型
+ */
 export type ApiType = 'FOLDER' | 'API';
 
-// GraphQL 响应类型定义
+/**
+ * GraphQL响应接口
+ */
 export interface GraphQLResponse<T = any> {
   errors: any[];
   data: T;
@@ -133,11 +169,16 @@ export interface GraphQLResponse<T = any> {
   dataPresent: boolean;
 }
 
+/**
+ * GraphQL内省响应类型
+ */
 export type GraphQLIntrospectionResponse = GraphQLResponse<{
   __schema: any;
 }>;
 
-// GraphQL 查询参数类型
+/**
+ * GraphQL查询参数接口
+ */
 export interface GraphQLQueryParams {
   query: string;
   variables?: Record<string, any>;

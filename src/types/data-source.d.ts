@@ -1,9 +1,12 @@
 export type Db = { name: string; icon: any; }; 
 
+/**
+ * 数据源配置接口
+ */
 export interface DatasourceSchema {
   name: string;
-  type: DatasourceType;
-  config: any; // 根据具体配置细化，如 { dbKind: string; url?: string; username?: string; password?: string; }
+  type: string;
+  config: Record<string, any>;
   enabled: boolean;
   createdAt: string;
   updatedAt: string;
@@ -25,6 +28,9 @@ export type ScriptImportForm = {
 };
 
 /**
- * 导入模型 API payload 类型
+ * 脚本导入负载接口
  */
-export type ScriptImportPayload = ScriptImportForm; 
+export interface ScriptImportPayload {
+  script: string;
+  variables?: Record<string, any>;
+} 

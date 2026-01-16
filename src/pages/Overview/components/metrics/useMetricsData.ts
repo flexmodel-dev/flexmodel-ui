@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 import {AllMetricsResponse, getAllMetrics} from '@/services/metrics'
+import {useProject} from '@/store/appStore'
 
 interface MetricsData extends AllMetricsResponse {
   history: {
@@ -14,17 +15,26 @@ interface MetricsData extends AllMetricsResponse {
 }
 
 export const useMetricsData = () => {
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [data, setData] = useState<MetricsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [updateKey, setUpdateKey] = useState(0)
 
   const fetchMetrics = useCallback(async () => {
+    if (!projectId) {
+      setError('Project ID is required');
+      setLoading(false);
+      return;
+    }
+    
     try {
       setLoading(true)
       setError(null)
 
-      const metricsData = await getAllMetrics()
+      const metricsData = await getAllMetrics(projectId)
 
       // 更新历史数据
       const now = new Date()

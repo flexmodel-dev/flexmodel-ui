@@ -9,9 +9,14 @@ import {useTranslation} from "react-i18next";
 import EnumForm from "@/pages/DataModeling/components/EnumForm";
 import type {Enum} from "@/types/data-modeling.d.ts";
 import ERDiagram from "@/pages/DataModeling/components/ERDiagramView";
+import {useProject} from "@/store/appStore";
+import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
+import ERView from "@/pages/DataView/components/ERView.tsx";
 
 const ModelingPage: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
 
   const [activeDs, setActiveDs] = useState("");
   const [activeModel, setActiveModel] = useState<any>({});
@@ -20,6 +25,7 @@ const ModelingPage: React.FC = () => {
   const [nativeQueryIsEditing, setNativeQueryIsEditing] = useState(false);
   const enumFormRef = useRef<any>(null);
   const nativeQueryFormRef = useRef<any>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'er'>('list');
 
   // 处理选择的模型变化并同步到URL参数
   const handleItemChange = (ds: string, item: any) => {
@@ -68,7 +74,7 @@ const ModelingPage: React.FC = () => {
     console.log("active:", activeModel);
     switch (true) {
       case activeModel?.type === "entity":
-        return <EntityView datasource={activeDs} model={activeModel} />;
+        return <EntityView datasource={activeDs} model={activeModel}/>;
       case activeModel?.type === "enum":
         return (
           <EnumForm
@@ -78,7 +84,7 @@ const ModelingPage: React.FC = () => {
             model={activeModel}
             onConfirm={async (anEnum: Enum) => {
               try {
-                await modifyModel(activeDs, anEnum);
+                await modifyModel(projectId, activeDs, anEnum);
                 message.success(t("form_save_success"));
                 setSelectModelVersion(selectModelVersion + 1);
                 setIsEditing(false); // 保存成功后退出编辑状态
@@ -98,7 +104,7 @@ const ModelingPage: React.FC = () => {
             model={activeModel}
             onConfirm={async (data) => {
               try {
-                await modifyModel(activeDs, data);
+                await modifyModel(projectId, activeDs, data);
                 message.success(t("form_save_success"));
                 setSelectModelVersion(selectModelVersion + 1);
                 setNativeQueryIsEditing(false); // 保存成功后退出编辑状态
@@ -110,92 +116,115 @@ const ModelingPage: React.FC = () => {
           />
         );
       case activeModel?.type?.endsWith("_group"):
-        return <ERDiagram data={activeModel?.children} />;
+        return <ERDiagram data={activeModel?.children}/>;
       default:
         return <div>Please select a model to operate.</div>;
     }
   };
 
   return (
-    <PageContainer>
-      <Splitter>
-        <Splitter.Panel
-          defaultSize="20%"
-          max="40%"
-          collapsible
-        >
-          <div className="pr-2">
-            <ModelExplorer
-              datasource={activeDs}
-              editable
-              onSelect={handleItemChange}
-              version={selectModelVersion}
-            />
-          </div>
-        </Splitter.Panel>
-        <Splitter.Panel>
-          <div className="pl-2">
-            {/* 编辑控制按钮 */}
-            {activeModel?.type === "enum" && (
-              <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
-                <Space>
-                  {!isEditing ? (
-                    <Button
-                      type="primary"
-                      onClick={handleToggleEdit}
-                    >
-                      {t('edit')}
-                    </Button>
-                  ) : (
-                    <>
-                      <Button
-                        onClick={handleCancelEdit}
-                      >
-                        {t('cancel')}
-                      </Button>
-                      <Button
-                        type="primary"
-                        onClick={handleSave}
-                      >
-                        {t('save')}
-                      </Button>
-                    </>
-                  )}
-                </Space>
-              </div>
-            )}
-            {activeModel?.type === "native_query" && (
-              <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
-                <Space>
-                  {!nativeQueryIsEditing ? (
-                    <Button
-                      type="primary"
-                      onClick={handleToggleNativeQueryEdit}
-                    >
-                      {t('edit')}
-                    </Button>
-                  ) : (
-                    <>
-                      <Button
-                        onClick={handleCancelNativeQueryEdit}
-                      >
-                        {t('cancel')}
-                      </Button>
+    <PageContainer
+      title={t('data_modeling')}
+      extra={[
+        <Space>
+          <Button
+            type={viewMode === 'list' ? 'default' : 'text'}
+            icon={<UnorderedListOutlined/>}
+            onClick={() => setViewMode('list')}
+            style={{borderTopRightRadius: 4, borderBottomRightRadius: 4, marginLeft: -1}}
+          />
+          <Button
+            type={viewMode === 'er' ? 'default' : 'text'}
+            icon={<AppstoreOutlined/>}
+            onClick={() => setViewMode('er')}
+            style={{borderTopLeftRadius: 4, borderBottomLeftRadius: 4}}
+          />
+
+        </Space>
+      ]}
+    >
+      {viewMode === 'list' ? (<>
+        <Splitter>
+          <Splitter.Panel
+            defaultSize="20%"
+            max="40%"
+            collapsible
+          >
+
+            <div className="pr-2">
+              <ModelExplorer
+                datasource={activeDs}
+                editable
+                onSelect={handleItemChange}
+                version={selectModelVersion}
+              />
+            </div>
+          </Splitter.Panel>
+          <Splitter.Panel>
+            <div className="pl-2">
+              {/* 编辑控制按钮 */}
+              {activeModel?.type === "enum" && (
+                <div style={{marginBottom: 16, display: 'flex', justifyContent: 'flex-end'}}>
+                  <Space>
+                    {!isEditing ? (
                       <Button
                         type="primary"
-                        onClick={handleSaveNativeQuery}
+                        onClick={handleToggleEdit}
                       >
-                        {t('save')}
+                        {t('edit')}
                       </Button>
-                    </>
-                  )}
-                </Space>
-              </div>
-            )}
-            {renderModelView()}
-          </div>
-        </Splitter.Panel>
-      </Splitter>
+                    ) : (
+                      <>
+                        <Button
+                          onClick={handleCancelEdit}
+                        >
+                          {t('cancel')}
+                        </Button>
+                        <Button
+                          type="primary"
+                          onClick={handleSave}
+                        >
+                          {t('save')}
+                        </Button>
+                      </>
+                    )}
+                  </Space>
+                </div>
+              )}
+              {activeModel?.type === "native_query" && (
+                <div style={{marginBottom: 16, display: 'flex', justifyContent: 'flex-end'}}>
+                  <Space>
+                    {!nativeQueryIsEditing ? (
+                      <Button
+                        type="primary"
+                        onClick={handleToggleNativeQueryEdit}
+                      >
+                        {t('edit')}
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          onClick={handleCancelNativeQueryEdit}
+                        >
+                          {t('cancel')}
+                        </Button>
+                        <Button
+                          type="primary"
+                          onClick={handleSaveNativeQuery}
+                        >
+                          {t('save')}
+                        </Button>
+                      </>
+                    )}
+                  </Space>
+                </div>
+              )}
+              {renderModelView()}
+            </div>
+          </Splitter.Panel>
+        </Splitter>
+      </>) : (<ERView/>)}
+
     </PageContainer>
   );
 };

@@ -1,4 +1,5 @@
 import {api} from '@/utils/request'
+import {useAuthStore} from '@/store/authStore'
 
 // 聊天消息类型
 export interface ChatMessage {
@@ -39,18 +40,13 @@ export interface Conversation {
  * 发送聊天消息（流式响应）
  */
 export const sendChatMessage = async (params: ChatRequest, signal?: AbortSignal): Promise<Response> => {
+  const token = useAuthStore.getState().token
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
+    'Authorization': `Bearer ${token}`
   };
 
-  // 添加X-Tenant-Id请求头
-  const tenantId = localStorage.getItem('tenantId');
-  if (tenantId) {
-    headers['X-Tenant-Id'] = tenantId;
-  }
-
-  return fetch('/api/f/ai/chat/completions', {
+  return fetch('/api/v1/ai/chat/completions', {
     method: 'POST',
     headers,
     body: JSON.stringify(params),
@@ -97,18 +93,13 @@ export const getConversationMessages = async (id: string): Promise<ChatMessage[]
  * 向对话发送消息
  */
 export const sendMessage = async (params: SendMessageRequest, signal?: AbortSignal): Promise<Response> => {
+  const token = useAuthStore.getState().token
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
+    'Authorization': `Bearer ${token}`
   };
 
-  // 添加X-Tenant-Id请求头
-  const tenantId = localStorage.getItem('tenantId');
-  if (tenantId) {
-    headers['X-Tenant-Id'] = tenantId;
-  }
-
-  return fetch(`/api/f/ai/chat/completions`, {
+  return fetch(`/api/v1/ai/chat/completions`, {
     method: 'POST',
     headers,
     body: JSON.stringify(params),

@@ -6,8 +6,10 @@ import DataView from "./pages/DataView";
 import ApiView from "./pages/APIView";
 import DataModeling from "./pages/DataModeling";
 import DataSource from "./pages/DataSource";
-import ERView from "./pages/DataView/components/ERView";
 import APILog from "./pages/APILog";
+import Storage from "./pages/Storage";
+import Member from "./pages/Member";
+
 import {
   ApiOutlined,
   BranchesOutlined,
@@ -23,6 +25,8 @@ import {
   SettingOutlined,
   ThunderboltOutlined,
   UserOutlined,
+  CloudUploadOutlined,
+  FolderOutlined,
 } from "@ant-design/icons";
 import GraphQLAPI from "@/pages/GraphQLAPI";
 import CustomAPI from "@/pages/CustomAPI";
@@ -35,6 +39,7 @@ import Schedule from "@/pages/Schedule/index.tsx";
 import TriggerList from "./pages/Schedule/components/TriggerList";
 import JobExecutionLogList from "./pages/Schedule/components/JobExecutionLogList";
 import FlowDetail from "./pages/FlowDetail";
+import Project from "./pages/Project";
 
 export interface RouteConfig {
   path: string;
@@ -43,43 +48,64 @@ export interface RouteConfig {
   translationKey: string;
   children?: RouteConfig[];
   defaultChild?: string;
-  hideInMenu?: boolean; // 是否在左侧菜单
-  hideLayout?: boolean; // 是否在页面布局中隐藏
+  hideInMenu?: boolean;
+  hideLayout?: boolean;
 }
 
-export const routes: RouteConfig[] = [
+export const platformRoutes: RouteConfig[] = [
   {
-    path: "/",
+    path: "/project",
+    element: <Project />,
+    icon: FolderOutlined,
+    translationKey: "platform.project",
+  },
+  {
+    path: "/member",
+    element: <Member />,
+    icon: UserOutlined,
+    translationKey: "platform.member",
+  },
+  {
+    path: "/settings",
+    element: <Settings />,
+    icon: SettingOutlined,
+    translationKey: "platform.settings",
+  },
+];
+
+export const projectRoutes: RouteConfig[] = [
+  {
+    path: "/project/:projectId/",
     element: <Overview />,
     icon: HomeOutlined,
     translationKey: "overview",
   },
   {
-    path: "/api",
+    path: "/project/:projectId/api",
     element: <ApiView />,
     icon: ApiOutlined,
     translationKey: "api",
     children: [
       {
-        path: "/api/custom-api",
+        path: "/project/:projectId/api/custom-api",
         element: <CustomAPI />,
         icon: DeploymentUnitOutlined,
         translationKey: "custom_api",
       },
       {
-        path: "/api/graphql",
+        path: "/project/:projectId/api/graphql",
         element: <GraphQLAPI />,
         icon: DeploymentUnitOutlined,
         translationKey: "graphql_api",
       },
       {
-        path: "/api/open-api",
+        path: "/project/:projectId/api/open-api",
         element: <OpenAPI />,
         icon: FileTextOutlined,
         translationKey: "open_api",
       },
       {
-        path: "/api/log",
+        path: "/project/:projectId/api/log",
         element: <APILog />,
         icon: LineChartOutlined,
         translationKey: "api_log",
@@ -87,46 +113,40 @@ export const routes: RouteConfig[] = [
     ],
   },
   {
-    path: "/data",
+    path: "/project/:projectId/data",
     element: <DataView />,
     icon: CloudServerOutlined,
     translationKey: "data",
     defaultChild: "modeling",
     children: [
       {
-        path: "/data/modeling",
+        path: "/project/:projectId/data/modeling",
         element: <DataModeling />,
         icon: ContainerOutlined,
         translationKey: "data_modeling",
       },
       {
-        path: "/data/source",
+        path: "/project/:projectId/data/source",
         element: <DataSource />,
         icon: DatabaseOutlined,
         translationKey: "data_source",
       },
-      {
-        path: "/data/er",
-        element: <ERView />,
-        icon: BranchesOutlined,
-        translationKey: "er_view",
-      },
     ],
   },
   {
-    path: "/flow",
+    path: "/project/:projectId/flow",
     element: <Flow />,
     icon: NodeIndexOutlined,
     translationKey: "flow",
     children: [
       {
-        path: "/flow/mgr",
+        path: "/project/:projectId/flow/definition",
         element: <FlowList />,
         icon: BranchesOutlined,
-        translationKey: "flow_mgr",
+        translationKey: "flow_definition",
       },
       {
-        path: "/flow/instance",
+        path: "/project/:projectId/flow/instance",
         element: <FlowInstanceList />,
         icon: PlayCircleOutlined,
         translationKey: "flow_instance",
@@ -134,7 +154,7 @@ export const routes: RouteConfig[] = [
     ],
   },
   {
-    path: "/flow/instance/:flowInstanceId",
+    path: "/project/:projectId/flow/instance/:flowInstanceId",
     element: <FlowDetail />,
     icon: PlayCircleOutlined,
     translationKey: "flow_instance_detail",
@@ -142,7 +162,7 @@ export const routes: RouteConfig[] = [
     hideLayout: true,
   },
   {
-    path: "/flow/design/:flowModuleId",
+    path: "/project/:projectId/flow/design/:flowModuleId",
     element: <FlowDesign />,
     icon: DatabaseOutlined,
     translationKey: "flow_design",
@@ -150,19 +170,19 @@ export const routes: RouteConfig[] = [
     hideLayout: true,
   },
   {
-    path: "/schedule",
+    path: "/project/:projectId/schedule",
     element: <Schedule />,
     icon: ThunderboltOutlined,
     translationKey: "schedule",
     children: [
       {
-        path: "/schedule/trigger",
+        path: "/project/:projectId/schedule/trigger",
         element: <TriggerList />,
         icon: ThunderboltOutlined,
         translationKey: "trigger.title",
       },
       {
-        path: "/schedule/job-execution-log",
+        path: "/project/:projectId/schedule/job-execution-log",
         element: <JobExecutionLogList />,
         icon: PlayCircleOutlined,
         translationKey: "job_execution_log",
@@ -170,27 +190,26 @@ export const routes: RouteConfig[] = [
     ]
   },
   {
-    path: "/identity-providers",
+    path: "/project/:projectId/storage",
+    element: <Storage />,
+    icon: CloudUploadOutlined,
+    translationKey: "storage",
+  },
+  {
+    path: "/project/:projectId/authentication",
     element: <IdentityProvider />,
     icon: UserOutlined,
     translationKey: "identity_providers",
   },
-  {
-    path: "/settings",
-    element: <Settings />,
-    icon: SettingOutlined,
-    translationKey: "settings",
-  },
 ];
 
-// 根据路径获取路由配置
-export const getRouteByPath = (path: string): RouteConfig | undefined => {
-  // 先查找精确匹配
-  const route = routes.find(route => route.path === path);
+export const routes = projectRoutes;
 
-  // 如果没有找到，查找子路由
+export const getRouteByPath = (path: string, routeList: RouteConfig[] = routes): RouteConfig | undefined => {
+  const route = routeList.find(route => route.path === path);
+
   if (!route) {
-    for (const parentRoute of routes) {
+    for (const parentRoute of routeList) {
       if (parentRoute.children) {
         const childRoute = parentRoute.children.find(child => child.path === path);
         if (childRoute) {
@@ -203,14 +222,11 @@ export const getRouteByPath = (path: string): RouteConfig | undefined => {
   return route;
 };
 
-// 检查当前路径是否应该隐藏布局
-export const shouldHideLayout = (currentPath: string): boolean => {
-  // 处理动态路由参数（如 /flow/design/:flowModuleId）
-  const route = routes.find(route => {
+export const shouldHideLayout = (currentPath: string, routeList: RouteConfig[] = routes): boolean => {
+  const route = routeList.find(route => {
     if (route.path === currentPath) {
       return true;
     }
-    // 检查是否匹配动态路由
     if (route.path.includes(':')) {
       const routePattern = route.path.replace(/:[^/]+/g, '[^/]+');
       const regex = new RegExp(`^${routePattern}$`);
@@ -222,15 +238,14 @@ export const shouldHideLayout = (currentPath: string): boolean => {
   return route?.hideLayout || false;
 };
 
-// 获取路由的完整路径（包括父路由）
-export const getFullRoutePath = (path: string): RouteConfig[] => {
+export const getFullRoutePath = (path: string, routeList: RouteConfig[] = routes): RouteConfig[] => {
   const pathSegments = path.split('/').filter(Boolean);
   const result: RouteConfig[] = [];
 
   let currentPath = '';
   for (const segment of pathSegments) {
     currentPath += `/${segment}`;
-    const route = getRouteByPath(currentPath);
+    const route = getRouteByPath(currentPath, routeList);
     if (route) {
       result.push(route);
     }
@@ -239,12 +254,11 @@ export const getFullRoutePath = (path: string): RouteConfig[] => {
   return result;
 };
 
-// 获取所有路由路径（包括子路由）
-export const getAllRoutePaths = (): string[] => {
+export const getAllRoutePaths = (routeList: RouteConfig[] = routes): string[] => {
   const paths: string[] = [];
 
-  const addPaths = (routeList: RouteConfig[]) => {
-    routeList.forEach(route => {
+  const addPaths = (routes: RouteConfig[]) => {
+    routes.forEach(route => {
       paths.push(route.path);
       if (route.children) {
         addPaths(route.children);
@@ -252,11 +266,10 @@ export const getAllRoutePaths = (): string[] => {
     });
   };
 
-  addPaths(routes);
+  addPaths(routeList);
   return paths;
 };
 
-// 为 react-router-dom 提供纯路由配置
 export const routerRoutes = routes.map(({ path, element, children }) => {
   const route: any = { path, element };
   if (children) {
@@ -268,4 +281,23 @@ export const routerRoutes = routes.map(({ path, element, children }) => {
   return route;
 });
 
+export const projectRouterRoutes = routes.map(({ path, element, children }) => {
+  const relativePath = path.replace('/project/:projectId', '');
+  const route: any = { path: relativePath || '/', element };
+  if (children) {
+    route.children = children.map(({ path: childPath, element: childElement }) => ({
+      path: childPath.replace('/project/:projectId', ''),
+      element: childElement,
+    }));
+  }
+  return route;
+});
+
+export const platformRouterRoutes = platformRoutes.map(({ path, element }) => ({
+  path,
+  element,
+}));
+
 export const RenderRoutes = () => useRoutes(routerRoutes);
+export const RenderPlatformRoutes = () => useRoutes(platformRouterRoutes);
+export const RenderProjectRoutes = () => useRoutes(projectRouterRoutes);

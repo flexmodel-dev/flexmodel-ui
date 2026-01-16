@@ -14,9 +14,12 @@ import {
 } from '@/services/flow';
 import dayjs from 'dayjs';
 import {t} from 'i18next';
+import {useProject} from '@/store/appStore';
 
 const FlowInstanceList: React.FC = () => {
   const navigate = useNavigate();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   // 状态管理
   const [loading, setLoading] = useState(false);
   const [terminatingIds, setTerminatingIds] = useState<Set<string>>(new Set());
@@ -39,7 +42,7 @@ const FlowInstanceList: React.FC = () => {
   const fetchFlowInstanceList = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getFlowInstanceList(searchParams);
+      const response = await getFlowInstanceList(projectId, searchParams);
       setFlowInstanceList(response.list);
       setTotal(response.total);
     } catch (error) {
@@ -48,7 +51,7 @@ const FlowInstanceList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchParams]);
+  }, [projectId, searchParams]);
 
   useEffect(() => {
     fetchFlowInstanceList();
@@ -59,7 +62,7 @@ const FlowInstanceList: React.FC = () => {
     if (!container) return;
 
     const updateHeight = () => {
-      setTableScrollY(container.clientHeight-80);
+      setTableScrollY(container.clientHeight - 80);
     };
 
     updateHeight();
@@ -78,7 +81,7 @@ const FlowInstanceList: React.FC = () => {
   const handleTerminateFlowInstance = async (flowInstanceId: string) => {
     setTerminatingIds(prev => new Set(prev).add(flowInstanceId));
     try {
-      await terminateFlowInstance(flowInstanceId);
+      await terminateFlowInstance(projectId, flowInstanceId);
       message.success('流程实例终止成功');
       fetchFlowInstanceList();
     } catch (error) {
@@ -100,7 +103,7 @@ const FlowInstanceList: React.FC = () => {
     setHistoryLoading(true);
 
     try {
-      const tasks = await getFlowUserTasks(record.flowInstanceId);
+      const tasks = await getFlowUserTasks(projectId, record.flowInstanceId);
       setUserTasks(tasks);
     } catch (error) {
       console.error('获取用户任务失败:', error);
@@ -231,7 +234,7 @@ const FlowInstanceList: React.FC = () => {
                 onConfirm={() => handleTerminateFlowInstance(record.flowInstanceId)}
                 okText="确定终止"
                 cancelText="取消"
-                okButtonProps={{ danger: true }}
+                okButtonProps={{danger: true}}
               >
                 <Button
                   type="link"
@@ -249,96 +252,91 @@ const FlowInstanceList: React.FC = () => {
   ];
 
   return (
-    <PageContainer>
-      <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-        {/* 搜索和操作区域 */}
-        <div style={{marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Space>
-            <Input
-              placeholder="搜索流程实例ID"
-              prefix={<SearchOutlined/>}
-              style={{width: 200}}
-              onChange={(e) => {
-                setSearchParams({
-                  ...searchParams,
-                  flowInstanceId: e.target.value || undefined,
-                  page: 1
-                });
-              }}
-            />
-            <Select
-              placeholder="选择状态"
-              style={{width: 120}}
-              allowClear
-              onChange={(value) => {
-                setSearchParams({
-                  ...searchParams,
-                  status: value,
-                  page: 1
-                });
-              }}
-            >
-              <Select.Option value={1}>已完成</Select.Option>
-              <Select.Option value={2}>运行中</Select.Option>
-              <Select.Option value={3}>已终止</Select.Option>
-              <Select.Option value={4}>已结束</Select.Option>
-            </Select>
-          </Space>
-        </div>
-        {/* 流程实例列表表格 */}
-        <div ref={tableContainerRef} style={{flex: 1, overflow: 'hidden'}}>
-          <Table
-            columns={columns}
-            dataSource={flowInstanceList}
-            rowKey="flowInstanceId"
-            loading={loading}
-            scroll={{y: tableScrollY || undefined}}
-            pagination={{
-              current: searchParams.page,
-              pageSize: searchParams.size,
-              total: total,
-              showTotal: (total: number, range: any) =>
-                t("pagination_total_text", {
-                  start: range[0],
-                  end: range[1],
-                  total: total,
-                }),
-              onChange: (page: number, size: number) => {
-                setSearchParams({
-                  ...searchParams,
-                  page,
-                  size
-                });
-              }
+    <PageContainer
+      title={t("flow_instance")}
+      extra={[
+        <Space>
+          <Input
+            placeholder="搜索流程实例ID"
+            prefix={<SearchOutlined/>}
+            onChange={(e) => {
+              setSearchParams({
+                ...searchParams,
+                flowInstanceId: e.target.value || undefined,
+                page: 1
+              });
             }}
           />
-        </div>
-
-        {/* 用户任务 Drawer */}
-        <UserTasksDrawer
-          visible={historyDrawerVisible}
-          loading={historyLoading}
-          currentFlowInstance={currentFlowInstance}
-          userTasks={userTasks}
-          onClose={() => setHistoryDrawerVisible(false)}
-          onCommitted={async () => {
-            // 刷新用户任务
-            if (currentFlowInstance) {
-              try {
-                setHistoryLoading(true);
-                const tasks = await getFlowUserTasks(currentFlowInstance.flowInstanceId);
-                setUserTasks(tasks);
-              } catch {
-                // 忽略错误提示，保持最小打扰
-              } finally {
-                setHistoryLoading(false);
-              }
+          <Select
+            placeholder="选择状态"
+            style={{width: 120}}
+            allowClear
+            onChange={(value) => {
+              setSearchParams({
+                ...searchParams,
+                status: value,
+                page: 1
+              });
+            }}
+          >
+            <Select.Option value={1}>已完成</Select.Option>
+            <Select.Option value={2}>运行中</Select.Option>
+            <Select.Option value={3}>已终止</Select.Option>
+            <Select.Option value={4}>已结束</Select.Option>
+          </Select>
+        </Space>
+      ]}
+    >
+      <Table
+        columns={columns}
+        dataSource={flowInstanceList}
+        rowKey="flowInstanceId"
+        loading={loading}
+        scroll={{y: tableScrollY || undefined}}
+        pagination={{
+          current: searchParams.page,
+          pageSize: searchParams.size,
+          total: total,
+          showTotal: (total: number, range: any) =>
+            t("pagination_total_text", {
+              start: range[0],
+              end: range[1],
+              total: total,
+            }),
+          onChange: (page: number, size: number) => {
+            setSearchParams({
+              ...searchParams,
+              page,
+              size
+            });
+          }
+        }}
+      />
+      {/* 用户任务 Drawer */}
+      <UserTasksDrawer
+        visible={historyDrawerVisible}
+        loading={historyLoading}
+        currentFlowInstance={currentFlowInstance}
+        userTasks={userTasks}
+        projectId={projectId}
+        onClose={() => setHistoryDrawerVisible(false)}
+        onCommitted={async () => {
+          // 刷新用户任务
+          if (currentFlowInstance) {
+            try {
+              setHistoryLoading(true);
+              const tasks = await getFlowUserTasks(projectId, currentFlowInstance.flowInstanceId);
+              setUserTasks(tasks);
+            } catch {
+              // 忽略错误提示，保持最小打扰
+            } finally {
+              setHistoryLoading(false);
             }
-            // 刷新实例列表
-            fetchFlowInstanceList();
-          }}
-        />
-      </div>
+          }
+          // 刷新实例列表
+          fetchFlowInstanceList();
+        }}
+      />
     </PageContainer>
   );
 };

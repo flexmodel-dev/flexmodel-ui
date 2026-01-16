@@ -7,11 +7,14 @@ import {useTranslation} from "react-i18next";
 import type {Field, MRecord, RecordListProps} from '@/types/data-modeling.d.ts';
 import RecordForm from './RecordForm';
 import dayjs from 'dayjs';
+import {useProject} from "@/store/appStore";
 
 const { TextArea } = Input;
 
 const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
   const { t } = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
 
   const [dialogFormVisible, setDialogFormVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +35,7 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
         ...query,
         sort: query.sort.length > 0 ? JSON.stringify(query.sort) : undefined
       };
-      const data = await getRecordList(datasource, model.name, apiQuery);
+      const data = await getRecordList(projectId, datasource, model.name, apiQuery);
       setRecords(data as { list: MRecord[]; total: number });
     } catch (error) {
       console.error('Failed to fetch records:', error);
@@ -41,7 +44,7 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
     } finally {
       setLoading(false);
     }
-  }, [datasource, model.name, query]);
+  }, [projectId, datasource, model.name, query]);
 
   useEffect(() => {
     if (model) fetchRecords();
@@ -59,7 +62,7 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
       return;
     }
     try {
-      await deleteRecord(datasource, model.name, record[idField.name]);
+      await deleteRecord(projectId, datasource, model.name, record[idField.name]);
       message.success(t('record_delete_success') || 'Record deleted successfully');
       await fetchRecords();
     } catch (error) {
@@ -289,9 +292,9 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
           message.warning(t('record_edit_no_id_warning'));
           return;
         }
-        await updateRecord(datasource, model.name, currentRecord[idField.name], formattedValues);
+        await updateRecord(projectId, datasource, model.name, currentRecord[idField.name], formattedValues);
       } else {
-        await createRecord(datasource, model.name, formattedValues);
+        await createRecord(projectId, datasource, model.name, formattedValues);
       }
 
       setDialogFormVisible(false);

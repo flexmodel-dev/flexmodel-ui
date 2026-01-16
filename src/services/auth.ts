@@ -32,34 +32,8 @@ export const refreshToken = (): Promise<RefreshResponse> => {
  * @returns 登出结果
  */
 export const logout = (): Promise<void> => {
-  // 清除本地存储的token，refreshToken通过cookie管理
-  localStorage.removeItem('token')
-
   // 如果有登出API，可以调用
   // return api.post('/auth/logout')
 
   return Promise.resolve()
-}
-
-/**
- * 获取存储的token
- * @returns token字符串或null
- */
-export const getStoredToken = (): string | null => {
-  return localStorage.getItem('token')
-}
-
-/**
- * 存储token到本地
- * @param token 访问令牌
- */
-export const storeToken = (token: string): void => {
-  localStorage.setItem('token', token)
-}
-
-/**
- * 清除存储的token
- */
-export const clearStoredToken = (): void => {
-  localStorage.removeItem('token')
 }

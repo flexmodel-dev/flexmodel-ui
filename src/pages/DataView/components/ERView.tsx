@@ -7,9 +7,13 @@ import {getModelList} from "@/services/model";
 import ERDiagram from "@/pages/DataModeling/components/ERDiagramView";
 import type {DatasourceSchema} from "@/types/data-source";
 import type {Entity} from "@/types/data-modeling";
+import {useProject} from "@/store/appStore";
 
 const ERView: React.FC = () => {
   const { t } = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+
   const [datasources, setDatasources] = useState<DatasourceSchema[]>([]);
   const [selectedDatasource, setSelectedDatasource] = useState<string>("");
   const [models, setModels] = useState<Entity[]>([]);
@@ -19,7 +23,7 @@ const ERView: React.FC = () => {
   useEffect(() => {
     const fetchDatasources = async () => {
       try {
-        const dsList = await getDatasourceList();
+        const dsList = await getDatasourceList(projectId);
         setDatasources(dsList);
         if (dsList.length > 0) {
           setSelectedDatasource(dsList[0].name);
@@ -33,7 +37,7 @@ const ERView: React.FC = () => {
       }
     };
     fetchDatasources();
-  }, [t]);
+  }, [t, projectId]);
 
   // 获取模型列表
   useEffect(() => {
@@ -42,7 +46,7 @@ const ERView: React.FC = () => {
     const fetchModels = async () => {
       setLoading(true);
       try {
-        const modelList = await getModelList(selectedDatasource);
+        const modelList = await getModelList(projectId, selectedDatasource);
         // 过滤出实体类型的模型
         const entityModels = modelList.filter(model => model.type === "entity") as Entity[];
         setModels(entityModels);
@@ -59,7 +63,7 @@ const ERView: React.FC = () => {
     };
 
     fetchModels();
-  }, [selectedDatasource, t]);
+  }, [selectedDatasource, t, projectId]);
 
   const handleDatasourceChange = (value: string) => {
     setSelectedDatasource(value);
@@ -68,7 +72,6 @@ const ERView: React.FC = () => {
   return (
     <PageContainer
       loading={loading}
-      title={t("er_view")}
       extra={
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <Select

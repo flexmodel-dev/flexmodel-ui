@@ -287,101 +287,149 @@ export type NodeInstanceStatusType = typeof NodeInstanceStatus[keyof typeof Node
 
 /**
  * 获取流程列表
+ * @param projectId 项目ID
+ * @param params 查询参数
+ * @returns 流程列表
  */
 export const getFlowList = (
+  projectId: string,
   params?: FlowListParams,
 ): Promise<PagedResult<FlowModule>> => {
-  return api.get("/flows", { ...params });
+  return api.get(`/projects/${projectId}/flows`, { ...params });
 };
 
 /**
  * 创建流程
+ * @param projectId 项目ID
+ * @param data 流程信息
+ * @returns 创建的流程
  */
 export const createFlow = (
+  projectId: string,
   data: CreateFlowRequest,
 ): Promise<CreateFlowResponse> => {
-  return api.post("/flows", data);
+  return api.post(`/projects/${projectId}/flows`, data);
 };
 
 /**
  * 获取流程模块信息
+ * @param projectId 项目ID
+ * @param flowModuleId 流程模块ID
+ * @param flowDeployId 流程部署ID（可选）
+ * @returns 流程模块详情
  */
 export const getFlowModule = (
+  projectId: string,
   flowModuleId: string,
   flowDeployId?: string,
 ): Promise<FlowModuleDetail> => {
-  return api.get(`/flows/${flowModuleId}`, flowDeployId ? { flowDeployId } : undefined);
+  return api.get(`/projects/${projectId}/flows/${flowModuleId}`, flowDeployId ? { flowDeployId } : undefined);
 };
 
 /**
  * 部署流程
+ * @param projectId 项目ID
+ * @param flowModuleId 流程模块ID
+ * @param data 部署参数
+ * @returns 部署结果
  */
 export const deployFlow = (
+  projectId: string,
   flowModuleId: string,
   data: DeployFlowRequest,
 ): Promise<DeployFlowResponse> => {
-  return api.post(`/flows/${flowModuleId}/deploy`, data);
+  return api.post(`/projects/${projectId}/flows/${flowModuleId}/deploy`, data);
 };
 
 /**
  * 更新流程
+ * @param projectId 项目ID
+ * @param flowModuleId 流程模块ID
+ * @param data 更新参数
+ * @returns 更新结果
  */
 export const updateFlow = (
+  projectId: string,
   flowModuleId: string,
   data: UpdateFlowRequest,
 ): Promise<UpdateFlowResponse> => {
-  return api.put(`/flows/${flowModuleId}`, data);
+  return api.put(`/projects/${projectId}/flows/${flowModuleId}`, data);
 };
 
 /**
  * 获取流程实例列表
+ * @param projectId 项目ID
+ * @param params 查询参数
+ * @returns 流程实例列表
  */
 export const getFlowInstanceList = (
+  projectId: string,
   params?: FlowInstanceListParams,
 ): Promise<PagedResult<FlowInstance>> => {
-  return api.get("/flows/instances", { ...params });
+  return api.get(`/projects/${projectId}/flows/instances`, { ...params });
 };
 
 /**
  * 启动流程实例
+ * @param projectId 项目ID
+ * @param data 启动参数
+ * @returns 启动结果
  */
 export const startProcess = (
+  projectId: string,
   data: StartProcessRequest,
 ): Promise<StartProcessResponse> => {
-  return api.post("/flows/instances/start", data);
+  return api.post(`/projects/${projectId}/flows/instances/start`, data);
 };
 
 /**
  * 获取流程实例信息
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @returns 流程实例详情
  */
 export const getFlowInstance = (
+  projectId: string,
   flowInstanceId: string,
 ): Promise<FlowInstance> => {
-  return api.get(`/flows/instances/${flowInstanceId}`);
+  return api.get(`/projects/${projectId}/flows/instances/${flowInstanceId}`);
 };
 
 /**
  * 提交任务
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @param data 任务参数
+ * @returns 提交结果
  */
 export const commitTask = (
+  projectId: string,
   flowInstanceId: string,
   data: CommitTaskRequest,
 ): Promise<CommitTaskResponse> => {
-  return api.post(`/flows/instances/${flowInstanceId}/commit`, data);
+  return api.post(`/projects/${projectId}/flows/instances/${flowInstanceId}/commit`, data);
 };
 
 /**
  * 回滚任务
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @param data 回滚参数
+ * @returns 回滚结果
  */
 export const rollbackTask = (
+  projectId: string,
   flowInstanceId: string,
   data: RollbackTaskRequest,
 ): Promise<RollbackTaskResponse> => {
-  return api.post(`/flows/instances/${flowInstanceId}/rollback`, data);
+  return api.post(`/projects/${projectId}/flows/instances/${flowInstanceId}/rollback`, data);
 };
 
 /**
  * 删除流程模块
+ * @param projectId 项目ID
+ * @param flowModuleId 流程模块ID
+ * @returns 删除结果
  */
 export interface DeleteFlowResponse {
   errCode: number;
@@ -389,38 +437,60 @@ export interface DeleteFlowResponse {
 }
 
 export const deleteFlow = (
+  projectId: string,
   flowModuleId: string,
 ): Promise<DeleteFlowResponse> => {
-  return api.delete(`/flows/${flowModuleId}`);
+  return api.delete(`/projects/${projectId}/flows/${flowModuleId}`);
 };
 
 /**
  * 终止流程实例
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @param effectiveForSubFlowInstance 是否对子流程实例生效
+ * @returns 终止结果
  */
 export const terminateFlowInstance = (
+  projectId: string,
   flowInstanceId: string,
   effectiveForSubFlowInstance: boolean = true,
 ): Promise<TerminateResponse> => {
   return api.post(
-    `/flows/instances/${flowInstanceId}/terminate?effectiveForSubFlowInstance=${effectiveForSubFlowInstance}`,
+    `/projects/${projectId}/flows/instances/${flowInstanceId}/terminate?effectiveForSubFlowInstance=${effectiveForSubFlowInstance}`,
   );
 };
 
 /**
  * 获取流程实例的用户任务列表
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @returns 用户任务列表
  */
 export const getFlowUserTasks = (
+  projectId: string,
   flowInstanceId: string,
 ): Promise<NodeInstance[]> => {
-  return api.get(`/flows/instances/${flowInstanceId}/user-tasks`);
+  return api.get(`/projects/${projectId}/flows/instances/${flowInstanceId}/user-tasks`);
 };
 
+/**
+ * 判断是否成功
+ * @param errCode 错误码
+ * @returns 是否成功
+ */
 export const isSuccess = (errCode: number): boolean => {
   return errCode >= 1000 && errCode < 2000;
 }
 
+/**
+ * 获取元素实例列表
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @returns 元素实例列表
+ */
 export const getElementInstances= (
+  projectId: string,
   flowInstanceId: string,
 ): Promise<NodeInstance[]> => {
-  return api.get(`/flows/instances/${flowInstanceId}/elements`);
+  return api.get(`/projects/${projectId}/flows/instances/${flowInstanceId}/elements`);
 };

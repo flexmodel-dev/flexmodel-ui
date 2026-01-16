@@ -5,6 +5,7 @@ import {createIndex, dropIndex, modifyIndex} from '@/services/model.ts';
 import IndexForm from "./IndexForm";
 import {Entity, Index} from "@/types/data-modeling";
 import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
 
 interface IndexListProps {
   datasource: string;
@@ -13,6 +14,8 @@ interface IndexListProps {
 
 const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
   const {t} = useTranslation();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [indexList, setIndexList] = useState<Index[]>([]);
   const [filteredIndexList, setFilteredIndexList] = useState<Index[]>([]);
   const [searchKeyword, setSearchKeyword] = useState<string>('');
@@ -80,10 +83,10 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
         modelName: model?.name,
       };
       if (selectedIndexKey === -1) {
-        await createIndex(datasource, model?.name as string, indexSchema);
+        await createIndex(projectId, datasource, model?.name as string, indexSchema);
         setIndexList([...indexList, values]);
       } else {
-        await modifyIndex(datasource, model?.name as string, values.name, indexSchema);
+        await modifyIndex(projectId, datasource, model?.name as string, values.name, indexSchema);
         const updatedIndexes = [...indexList];
         updatedIndexes[selectedIndexKey] = values;
         setIndexList(updatedIndexes);
@@ -112,7 +115,7 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
   const delIndex = async (key: number) => {
     try {
       const index = indexList[key];
-      await dropIndex(datasource, model?.name as string, index.name);
+      await dropIndex(projectId, datasource, model?.name as string, index.name);
       setIndexList(indexList.filter((_, i) => i !== key));
       message.success(t('index_delete_success'));
     } catch (error) {

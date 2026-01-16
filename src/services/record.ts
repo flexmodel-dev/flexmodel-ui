@@ -15,34 +15,34 @@ import {PagedResult} from '@/types/record'
  *  sort: [{ "field": "name", "order": "ASC" }, { "field": "id", "order": "DESC" }] }
  * const records = await getRecordList('datasourceName', 'modelName', query)
  */
-export const getRecordList = (datasourceName: string, modelName: string, query?: { page: number, size: number, filter?: string, nestedQuery?: boolean, sort?: string }): Promise<PagedResult<MRecord>> => {
-  return api.get(`/datasources/${datasourceName}/models/${modelName}/records`, query)
+export const getRecordList = (projectId: string, datasourceName: string, modelName: string, query?: { page: number, size: number, filter?: string, nestedQuery?: boolean, sort?: string }): Promise<PagedResult<MRecord>> => {
+  return api.get(`/projects/${projectId}/datasources/${datasourceName}/models/${modelName}/records`, query)
 }
 
 /**
  * 获取单条记录
  */
-export const getOneRecord = (datasourceName: string, modelName: string, id: string): Promise<MRecord> => {
-  return api.get(`/datasources/${datasourceName}/models/${modelName}/records/${id}`)
+export const getOneRecord = (projectId: string, datasourceName: string, modelName: string, id: string): Promise<MRecord> => {
+  return api.get(`/projects/${projectId}/datasources/${datasourceName}/models/${modelName}/records/${id}`)
 }
 
 /**
  * 新建记录
  */
-export const createRecord = (datasourceName: string, modelName: string, data: MRecord): Promise<MRecord> => {
-  return api.post(`/datasources/${datasourceName}/models/${modelName}/records`, data)
+export const createRecord = (projectId: string, datasourceName: string, modelName: string, data: MRecord): Promise<MRecord> => {
+  return api.post(`/projects/${projectId}/datasources/${datasourceName}/models/${modelName}/records`, data)
 }
 
 /**
  * 更新记录
  */
-export const updateRecord = (datasourceName: string, modelName: string, id: string, data: MRecord): Promise<MRecord> => {
-  return api.put(`/datasources/${datasourceName}/models/${modelName}/records/${id}`, data)
+export const updateRecord = (projectId: string, datasourceName: string, modelName: string, id: string, data: MRecord): Promise<MRecord> => {
+  return api.put(`/projects/${projectId}/datasources/${datasourceName}/models/${modelName}/records/${id}`, data)
 }
 
 /**
  * 删除记录
  */
-export const deleteRecord = (datasourceName: string, modelName: string, id: string): Promise<void> => {
-  return api.delete(`/datasources/${datasourceName}/models/${modelName}/records/${id}`)
+export const deleteRecord = (projectId: string, datasourceName: string, modelName: string, id: string): Promise<void> => {
+  return api.delete(`/projects/${projectId}/datasources/${datasourceName}/models/${modelName}/records/${id}`)
 }

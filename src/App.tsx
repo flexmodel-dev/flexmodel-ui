@@ -1,36 +1,34 @@
-import {HashRouter, Route, Routes} from "react-router-dom";
+import {HashRouter, Route, Routes, Navigate} from "react-router-dom";
 import {ConfigProvider, theme as antdTheme} from "antd";
-import PageLayout from "./components/layouts/PageLayout";
+import PlatformLayout from "./components/layouts/PlatformLayout";
+import ProjectLayout from "./components/layouts/ProjectLayout";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import {useEffect} from "react";
-import {useConfig, useLocale, useTenant, useTheme} from "./store/appStore.ts";
+import * as appStore from "./store/appStore.ts";
 import {useAuth} from "./store/authStore.ts";
 import {initializeDarkMode} from "./utils/darkMode.ts";
+import {RenderProjectRoutes} from "./routes";
+import Project from "./pages/Project/index.tsx";
+import Settings from "./pages/Settings";
+import Team from "./pages/Member/index.tsx";
 
 const App = () => {
-  const { fetchConfig } = useConfig();
-  const { isDark } = useTheme();
-  const { locale } = useLocale();
+  const { fetchConfig } = appStore.useConfig();
+  const { isDark } = appStore.useTheme();
+  const { locale } = appStore.useLocale();
   const { isAuthenticated, getCurrentUser, refreshAuthToken } = useAuth();
-  const { fetchTenants } = useTenant();
 
   useEffect(() => {
-    // 初始化主题设置
     initializeDarkMode();
     fetchConfig();
   }, [fetchConfig]);
 
-  // 初始化认证状态
   useEffect(() => {
     const initializeAuth = async () => {
       if (isAuthenticated) {
         try {
-          // 并行获取当前用户信息和租户列表，提升性能
-          await Promise.all([
-            getCurrentUser(),
-            fetchTenants()
-          ]);
+          await getCurrentUser();
         } catch (error) {
           console.error('Failed to initialize auth:', error);
         }
@@ -38,12 +36,10 @@ const App = () => {
     };
 
     initializeAuth();
-  }, [isAuthenticated, getCurrentUser, fetchTenants]);
+  }, [isAuthenticated, getCurrentUser]);
 
-  // 设置自动刷新token
   useEffect(() => {
     if (isAuthenticated) {
-      // 每15分钟刷新一次token
       const interval = setInterval(() => {
         refreshAuthToken().catch(error => {
           console.error('Failed to refresh token:', error);
@@ -59,16 +55,53 @@ const App = () => {
       locale={locale}
       theme={{
         algorithm: isDark ? [antdTheme.darkAlgorithm, antdTheme.compactAlgorithm] : [antdTheme.compactAlgorithm],
+        // algorithm: isDark ? [antdTheme.darkAlgorithm] : [],
+
       }}
     >
       <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/*" element={
+
+          <Route path="/" element={<Navigate to="/project" replace />} />
+
+          <Route path="/project" element={
+            <ProtectedRoute>
+              <PlatformLayout />
+            </ProtectedRoute>
+          }>
+            <Route index element={<Project />} />
+          </Route>
+
+          <Route path="/member" element={
+            <ProtectedRoute>
+              <PlatformLayout />
+            </ProtectedRoute>
+          }>
+            <Route index element={<Team />} />
+          </Route>
+
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <PlatformLayout />
+            </ProtectedRoute>
+          }>
+            <Route index element={<Settings />} />
+          </Route>
+
+          <Route path="/project/:projectId/*" element={
+            <ProtectedRoute>
+              <ProjectLayout />
+            </ProtectedRoute>
+          }>
+            <Route path="*" element={<RenderProjectRoutes />} />
+          </Route>
+
+          {/* <Route path="/*" element={
             <ProtectedRoute>
               <PageLayout/>
             </ProtectedRoute>
-          } />
+          } /> */}
         </Routes>
       </HashRouter>
     </ConfigProvider>

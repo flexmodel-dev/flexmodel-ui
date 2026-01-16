@@ -24,6 +24,7 @@ import {getModelList} from '@/services/model';
 import {getApis} from '@/services/api-info';
 import {DatasourceSchema} from '@/types/data-source';
 import {EntitySchema, EnumSchema, NativeQuerySchema} from '@/types/data-modeling';
+import {useProject} from '@/store/appStore';
 
 const { Option } = Select;
 
@@ -139,6 +140,9 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   nodes,
   onValidationChange,
 }, ref) => {
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [form] = Form.useForm();
   const [nodeProperties, setNodeProperties] = React.useState<Record<string, any>>({});
   const [datasources, setDatasources] = React.useState<DatasourceSchema[]>([]);
@@ -219,39 +223,49 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   // 获取数据源列表
   React.useEffect(() => {
     const fetchDatasources = async () => {
+      if (!projectId) {
+        setDatasources([]);
+        return;
+      }
+      
       try {
-        const dsList = await getDatasourceList();
+        const dsList = await getDatasourceList(projectId);
         setDatasources(dsList);
       } catch (error) {
         console.error('获取数据源列表失败:', error);
       }
     };
     fetchDatasources();
-  }, []);
+  }, [projectId]);
 
   // 获取API列表
   React.useEffect(() => {
     const fetchApis = async () => {
+      if (!projectId) {
+        setApiList([]);
+        return;
+      }
+      
       try {
-        const apis = await getApis();
+        const apis = await getApis(projectId);
         setApiList(apis);
       } catch (error) {
         console.error('获取API列表失败:', error);
       }
     };
     fetchApis();
-  }, []);
+  }, [projectId]);
 
   // 获取模型列表
   React.useEffect(() => {
-    if (!selectedDatasource) {
+    if (!selectedDatasource || !projectId) {
       setModels([]);
       return;
     }
 
     const fetchModels = async () => {
       try {
-        const modelList = await getModelList(selectedDatasource);
+        const modelList = await getModelList(projectId, selectedDatasource);
         // 过滤出type='entity'的模型
         const entityModels = modelList.filter(model => model.type === 'entity');
         setModels(entityModels);
@@ -261,7 +275,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       }
     };
     fetchModels();
-  }, [selectedDatasource]);
+  }, [selectedDatasource, projectId]);
 
   // 当选中节点变化时，更新选中的数据源和模型
   React.useEffect(() => {

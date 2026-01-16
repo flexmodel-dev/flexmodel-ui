@@ -4,6 +4,7 @@ import type {SelectProps} from "antd/es/select";
 import {getIdentityProviders} from "@/services/identity-provider.ts";
 import {useTranslation} from "react-i18next";
 import {ApiMeta} from "@/types/api-management";
+import {useProject} from "@/store/appStore";
 
 interface AuthProps {
   data: ApiMeta;
@@ -14,13 +15,16 @@ const AuthorizationForm: React.FC<AuthProps> = ({ data, onChange }: AuthProps) =
   const [formData, setFormData] = useState<ApiMeta>(data);
   const [form] = Form.useForm();
   const prevDataRef = useRef<ApiMeta>(data);
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
 
   const [options, setOptions] = useState<SelectProps["options"]>([]);
   const { t } = useTranslation();
 
   // 获取身份源列表
   useEffect(() => {
-    getIdentityProviders().then((res) =>
+    if (!projectId) return;
+    getIdentityProviders(projectId).then((res) =>
       setOptions(
         res.map((d: { name: string }) => ({
           value: d.name,
@@ -28,7 +32,7 @@ const AuthorizationForm: React.FC<AuthProps> = ({ data, onChange }: AuthProps) =
         }))
       )
     );
-  }, []);
+  }, [projectId]);
 
   const sanitizeMeta = useCallback((meta: ApiMeta): ApiMeta => {
     const result: ApiMeta = {

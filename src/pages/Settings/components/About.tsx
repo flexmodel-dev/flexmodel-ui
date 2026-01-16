@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Divider, Space, Typography} from 'antd';
+import {Button, Divider, Space, Typography, theme} from 'antd';
 import {BookOutlined, GithubOutlined, GlobalOutlined} from '@ant-design/icons';
 import {useTranslation} from "react-i18next";
 
@@ -7,11 +7,12 @@ const { Title, Paragraph, Text } = Typography;
 
 const About: React.FC = () => {
   const { t } = useTranslation();
+  const { token } = theme.useToken();
   return (
     <div style={{
       width: '100%',
       minHeight: '100%',
-      padding: '16px',
+      padding: token.paddingMD,
       overflowY: 'auto'
     }}>
       <div style={{
@@ -19,13 +20,13 @@ const About: React.FC = () => {
         margin: '0 auto'
       }}>
         {/* Logo和标题区域 */}
-        <div style={{ textAlign: 'center', padding: '32px 0' }}>
+        <div style={{ textAlign: 'center', padding: `${token.paddingXL}px 0` }}>
             <div style={{
               display: 'inline-block',
-              padding: '20px',
+              padding: token.paddingLG,
               borderRadius: '16px',
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              marginBottom: '20px'
+              marginBottom: token.marginLG
             }}>
               <img
                 style={{
@@ -61,7 +62,7 @@ const About: React.FC = () => {
                 type="primary"
                 icon={<GithubOutlined />}
                 size="middle"
-                href="https://github.com/flexmodel-projects"
+                href="https://github.com/flexmodel-dev"
                 target="_blank"
                 style={{ borderRadius: '6px' }}
               >
@@ -81,7 +82,7 @@ const About: React.FC = () => {
                 size="middle"
                 href="https://flexmodel.wetech.tech"
                 target="_blank"
-                style={{ borderRadius: '6px' }}
+                style={{ borderRadius: token.borderRadius }}
               >
                 官网
               </Button>
@@ -91,12 +92,12 @@ const About: React.FC = () => {
           {/* 版权信息 */}
           <div style={{
             textAlign: 'center',
-            marginTop: '24px',
-            padding: '12px',
+            marginTop: token.marginLG,
+            padding: token.paddingSM,
             background: 'var(--ant-color-bg-layout)',
-            borderRadius: '6px'
+            borderRadius: token.borderRadius
           }}>
-            <Text type="secondary" style={{ fontSize: '12px' }}>
+            <Text type="secondary" style={{ fontSize: token.fontSizeSM }}>
               © 2025 Flexmodel. All rights reserved.
             </Text>
           </div>

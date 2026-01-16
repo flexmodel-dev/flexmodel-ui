@@ -5,13 +5,13 @@ info:
   version: 0.0.1
   description: FlexModel服务器API，提供模型管理和系统监控功能
 paths:
-  /api/f/ai/chat/completions:
+  /api/v1/ai/chat/completions:
     post:
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChatRequest"
+              $ref: "#/components/schemas/SendMessageRequest"
         required: true
       responses:
         "200":
@@ -20,12 +20,12 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalError"
-      summary: Chat Completions
+      summary: Send Message
       tags:
-        - Ai Chat Resource
+      - Ai Resource
       security:
-        - BearerAuth: []
-  /api/f/ai/chat/conversations:
+      - BearerAuth: []
+  /api/v1/ai/chat/conversations:
     get:
       responses:
         "200":
@@ -40,11 +40,11 @@ paths:
           $ref: "#/components/responses/InternalError"
         "400":
           $ref: "#/components/responses/BadRequest"
-      summary: List Conversations
+      summary: Get All Conversations
       tags:
-        - Ai Chat Resource
+      - Ai Resource
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     post:
       requestBody:
         content:
@@ -65,17 +65,17 @@ paths:
           $ref: "#/components/responses/InternalError"
       summary: Create Conversation
       tags:
-        - Ai Chat Resource
+      - Ai Resource
       security:
-        - BearerAuth: []
-  /api/f/ai/chat/conversations/{id}:
+      - BearerAuth: []
+  /api/v1/ai/chat/conversations/{id}:
     get:
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -89,16 +89,16 @@ paths:
           $ref: "#/components/responses/BadRequest"
       summary: Get Conversation
       tags:
-        - Ai Chat Resource
+      - Ai Resource
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     delete:
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "204":
           description: No Content
@@ -108,201 +108,13 @@ paths:
           $ref: "#/components/responses/BadRequest"
       summary: Delete Conversation
       tags:
-        - Ai Chat Resource
+      - Ai Resource
       security:
-        - BearerAuth: []
-  /api/f/ai/chat/conversations/{id}/messages:
+      - BearerAuth: []
+  /api/v1/auth/login:
     post:
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SendMessageRequest"
-        required: true
-      responses:
-        "200":
-          description: OK
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      summary: Send Message
       tags:
-        - Ai Chat Resource
-      security:
-        - BearerAuth: []
-    get:
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/AiChatMessage"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      summary: List Messages
-      tags:
-        - Ai Chat Resource
-      security:
-        - BearerAuth: []
-  /api/f/apis:
-    get:
-      summary: 获取接口定义列表
-      tags:
-        - 【Flexmodel】接口定义
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiDefinitionTreeSchema"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-    post:
-      summary: 创建接口定义
-      tags:
-        - 【Flexmodel】接口定义
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ApiDefinitionSchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiDefinitionSchema"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-  /api/f/apis/generate:
-    post:
-      summary: 根据模型生成接口定义
-      tags:
-        - 【Flexmodel】接口定义
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GenerateAPIsDTO"
-        required: true
-      responses:
-        "201":
-          description: Created
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-  /api/f/apis/{id}:
-    patch:
-      summary: 更新接口定义(局部更新)
-      tags:
-        - 【Flexmodel】接口定义
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ApiDefinitionSchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiDefinitionSchema"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-    put:
-      summary: 更新接口定义
-      tags:
-        - 【Flexmodel】接口定义
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ApiDefinitionSchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiDefinitionSchema"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-    delete:
-      summary: 删除接口定义
-      tags:
-        - 【Flexmodel】接口定义
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: No Content
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-  /api/f/auth/login:
-    post:
+      - 认证
       requestBody:
         content:
           application/json:
@@ -317,31 +129,17 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       summary: Login
-      tags:
-        - Auth Resource
       security:
-        - BearerAuth: []
-  /api/f/auth/me:
-    get:
-      responses:
-        "200":
-          description: OK
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      summary: Get User Info
-      tags:
-        - Auth Resource
-      security:
-        - BearerAuth: []
-  /api/f/auth/refresh:
+      - BearerAuth: []
+  /api/v1/auth/refresh:
     post:
+      tags:
+      - 认证
       parameters:
-        - name: refreshToken
-          in: cookie
-          schema:
-            type: string
+      - name: refreshToken
+        in: cookie
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -350,14 +148,26 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       summary: Refresh
-      tags:
-        - Auth Resource
       security:
-        - BearerAuth: []
-  /api/f/codegen/templates:
+      - BearerAuth: []
+  /api/v1/auth/whoami:
     get:
       tags:
-        - 【Flexmodel】生成器
+      - 认证
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      summary: Get User Info
+      security:
+      - BearerAuth: []
+  /api/v1/codegen/templates:
+    get:
+      tags:
+      - 生成器
       responses:
         "200":
           description: OK
@@ -373,26 +183,29 @@ paths:
           $ref: "#/components/responses/BadRequest"
       summary: Get Templates
       security:
-        - BearerAuth: []
-  /api/f/codegen/{datasource}_{template}.zip:
+      - BearerAuth: []
+  /api/v1/codegen/{template}.zip:
     get:
       tags:
-        - 【Flexmodel】生成器
+      - 生成器
       parameters:
-        - name: datasource
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: template
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: variables
-          in: query
-          schema:
-            type: string
+      - name: template
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: datasource
+        in: query
+        schema:
+          type: string
+      - name: projectId
+        in: query
+        schema:
+          type: string
+      - name: variables
+        in: query
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -402,12 +215,448 @@ paths:
           $ref: "#/components/responses/BadRequest"
       summary: Generate
       security:
-        - BearerAuth: []
-  /api/f/datasources:
+      - BearerAuth: []
+  /api/v1/global/profile:
+    get:
+      summary: 获取系统配置
+      tags:
+      - 系统
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  env:
+                    description: 环境变量
+                  properties:
+                    description: 配置属性
+                  application:
+                    description: 应用程序配置
+                  settings:
+                    description: 系统设置
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/members:
+    get:
+      summary: 获取成员列表
+      tags:
+      - 成员
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MemberResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建成员
+      tags:
+      - 成员
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/members/{userId}:
+    put:
+      summary: 更新成员
+      tags:
+      - 成员
+      parameters:
+      - description: 成员ID
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    get:
+      summary: 获取成员详情
+      tags:
+      - 成员
+      parameters:
+      - description: 成员ID
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除成员
+      tags:
+      - 成员
+      parameters:
+      - description: 成员ID
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects:
+    get:
+      tags:
+      - 项目
+      parameters:
+      - name: include
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      summary: Find Projects
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}:
+    get:
+      tags:
+      - 项目
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      summary: Find Project
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/apis:
+    get:
+      summary: 获取接口定义列表
+      tags:
+      - 接口定义
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDefinitionTreeSchema"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建接口定义
+      tags:
+      - 接口定义
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiDefinitionSchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDefinitionSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/apis/generate:
+    post:
+      summary: 根据模型生成接口定义
+      tags:
+      - 接口定义
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateAPIsDTO"
+        required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/apis/{apiDefinitionId}/histories:
+    get:
+      tags:
+      - 接口定义
+      parameters:
+      - name: apiDefinitionId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiDefinitionHistory"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      summary: Find Api Definition Histories
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/apis/{apiDefinitionId}/histories/{historyId}/restore:
+    post:
+      summary: 恢复接口定义
+      tags:
+      - 接口定义
+      parameters:
+      - name: apiDefinitionId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: historyId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDefinitionHistory"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/apis/{id}:
+    patch:
+      summary: 更新接口定义(局部更新)
+      tags:
+      - 接口定义
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiDefinitionSchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDefinitionSchema"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    put:
+      summary: 更新接口定义
+      tags:
+      - 接口定义
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiDefinitionSchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDefinitionSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除接口定义
+      tags:
+      - 接口定义
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources:
     get:
       summary: 获取所有数据源
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -422,11 +671,17 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     post:
       summary: 创建数据源
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -445,12 +700,12 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/datasources/physics/names:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/physics/names:
     post:
       summary: 获取物理数据库表名称
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
       requestBody:
         content:
           application/json:
@@ -471,12 +726,18 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/datasources/validate:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/validate:
     post:
       summary: 验证数据源连接
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -501,19 +762,24 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}:
     put:
       summary: 更新数据源
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
       parameters:
-        - description: 数据源名称
-          in: path
-          name: datasourceName
-          required: true
-          schema:
-            type: string
+      - description: 数据源名称
+        in: path
+        name: datasourceName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -532,18 +798,23 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     delete:
       summary: 删除数据源
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
       parameters:
-        - description: 数据源名称
-          in: path
-          name: datasourceName
-          required: true
-          schema:
-            type: string
+      - description: 数据源名称
+        in: path
+        name: datasourceName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "204":
           description: No Content
@@ -552,19 +823,24 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/import:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/import:
     post:
       summary: 导入模型到数据源
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
       parameters:
-        - description: 数据源名称
-          in: path
-          name: datasourceName
-          required: true
-          schema:
-            type: string
+      - description: 数据源名称
+        in: path
+        name: datasourceName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -579,19 +855,23 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models:
-    parameters:
-      - description: 数据源名称
-        in: path
-        name: datasourceName
-        required: true
-        schema:
-          type: string
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models:
     get:
       summary: 获取模型列表
       tags:
-        - 【Flexmodel】模型
+      - 模型
+      parameters:
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -600,101 +880,9 @@ paths:
               examples:
                 实体:
                   value:
-                    - type: entity
-                      name: Student
-                      fields:
-                        - name: id
-                          type: Long
-                          identity: true
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: studentName
-                          type: String
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                          length: 255
-                        - name: gender
-                          type: EnumRef
-                          from: UserGender
-                          multiple: false
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: interest
-                          type: EnumRef
-                          from: user_interest
-                          multiple: true
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: age
-                          type: Int
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: classId
-                          type: Long
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: studentDetail
-                          type: Relation
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                          multiple: false
-                          from: StudentDetail
-                          localField: id
-                          foreignField: studentId
-                          cascadeDelete: true
-                      indexes:
-                        - modelName: Student
-                          name: IDX_studentName
-                          fields:
-                            - fieldName: studentName
-                              direction: ASC
-                          unique: false
-                枚举:
-                  value:
-                    - name: UserGender
-                      type: enum
-                      elements:
-                        - UNKNOWN
-                        - MALE
-                        - FEMALE
-                      comment: 性别
-                本地查询:
-                  value:
-                    - name: 分组查询
-                      type: native_query
-                      statement: "select count(id) as total, gender, max(age) as ageSum\
-                      \ from Student group by gender"
-              schema:
-                anyOf:
-                  - $ref: "#/components/schemas/EnumSchema"
-                  - $ref: "#/components/schemas/NativeQuerySchema"
-                  - $ref: "#/components/schemas/EntitySchema"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-    post:
-      summary: 创建模型
-      tags:
-        - 【Flexmodel】模型
-      requestBody:
-        content:
-          application/json:
-            examples:
-              实体:
-                value:
-                  type: entity
-                  name: Student
-                  fields:
+                  - type: entity
+                    name: Student
+                    fields:
                     - name: id
                       type: Long
                       identity: true
@@ -741,21 +929,124 @@ paths:
                       localField: id
                       foreignField: studentId
                       cascadeDelete: true
-                  indexes:
+                    indexes:
                     - modelName: Student
                       name: IDX_studentName
                       fields:
-                        - fieldName: studentName
-                          direction: ASC
+                      - fieldName: studentName
+                        direction: ASC
                       unique: false
+                枚举:
+                  value:
+                  - name: UserGender
+                    type: enum
+                    elements:
+                    - UNKNOWN
+                    - MALE
+                    - FEMALE
+                    comment: 性别
+                本地查询:
+                  value:
+                  - name: 分组查询
+                    type: native_query
+                    statement: "select count(id) as total, gender, max(age) as ageSum\
+                      \ from Student group by gender"
+              schema:
+                anyOf:
+                - $ref: "#/components/schemas/EnumSchema"
+                - $ref: "#/components/schemas/NativeQuerySchema"
+                - $ref: "#/components/schemas/EntitySchema"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建模型
+      tags:
+      - 模型
+      parameters:
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              实体:
+                value:
+                  type: entity
+                  name: Student
+                  fields:
+                  - name: id
+                    type: Long
+                    identity: true
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: studentName
+                    type: String
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                    length: 255
+                  - name: gender
+                    type: EnumRef
+                    from: UserGender
+                    multiple: false
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: interest
+                    type: EnumRef
+                    from: user_interest
+                    multiple: true
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: age
+                    type: Int
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: classId
+                    type: Long
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: studentDetail
+                    type: Relation
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                    multiple: false
+                    from: StudentDetail
+                    localField: id
+                    foreignField: studentId
+                    cascadeDelete: true
+                  indexes:
+                  - modelName: Student
+                    name: IDX_studentName
+                    fields:
+                    - fieldName: studentName
+                      direction: ASC
+                    unique: false
               枚举:
                 value:
                   name: UserGender
                   type: enum
                   elements:
-                    - UNKNOWN
-                    - MALE
-                    - FEMALE
+                  - UNKNOWN
+                  - MALE
+                  - FEMALE
                   comment: 性别
               本地查询:
                 value:
@@ -765,9 +1056,9 @@ paths:
                     \ from Student group by gender"
             schema:
               anyOf:
-                - $ref: "#/components/schemas/EnumSchema"
-                - $ref: "#/components/schemas/NativeQuerySchema"
-                - $ref: "#/components/schemas/EntitySchema"
+              - $ref: "#/components/schemas/EnumSchema"
+              - $ref: "#/components/schemas/NativeQuerySchema"
+              - $ref: "#/components/schemas/EntitySchema"
         required: true
       responses:
         "200":
@@ -780,67 +1071,67 @@ paths:
                     type: entity
                     name: Student
                     fields:
-                      - name: id
-                        type: Long
-                        identity: true
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: studentName
-                        type: String
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                        length: 255
-                      - name: gender
-                        type: EnumRef
-                        from: UserGender
-                        multiple: false
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: interest
-                        type: EnumRef
-                        from: user_interest
-                        multiple: true
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: age
-                        type: Int
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: classId
-                        type: Long
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: studentDetail
-                        type: Relation
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                        multiple: false
-                        from: StudentDetail
-                        localField: id
-                        foreignField: studentId
-                        cascadeDelete: true
+                    - name: id
+                      type: Long
+                      identity: true
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: studentName
+                      type: String
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                      length: 255
+                    - name: gender
+                      type: EnumRef
+                      from: UserGender
+                      multiple: false
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: interest
+                      type: EnumRef
+                      from: user_interest
+                      multiple: true
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: age
+                      type: Int
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: classId
+                      type: Long
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: studentDetail
+                      type: Relation
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                      multiple: false
+                      from: StudentDetail
+                      localField: id
+                      foreignField: studentId
+                      cascadeDelete: true
                     indexes:
-                      - modelName: Student
-                        name: IDX_studentName
-                        fields:
-                          - fieldName: studentName
-                            direction: ASC
-                        unique: false
+                    - modelName: Student
+                      name: IDX_studentName
+                      fields:
+                      - fieldName: studentName
+                        direction: ASC
+                      unique: false
                 枚举:
                   value:
                     name: UserGender
                     type: enum
                     elements:
-                      - UNKNOWN
-                      - MALE
-                      - FEMALE
+                    - UNKNOWN
+                    - MALE
+                    - FEMALE
                     comment: 性别
                 本地查询:
                   value:
@@ -850,26 +1141,30 @@ paths:
                       \ from Student group by gender"
               schema:
                 anyOf:
-                  - $ref: "#/components/schemas/EnumSchema"
-                  - $ref: "#/components/schemas/NativeQuerySchema"
-                  - $ref: "#/components/schemas/EntitySchema"
+                - $ref: "#/components/schemas/EnumSchema"
+                - $ref: "#/components/schemas/NativeQuerySchema"
+                - $ref: "#/components/schemas/EntitySchema"
         "400":
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models/idl/execute:
-    parameters:
-      - description: 数据源名称
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/idl/execute:
+    post:
+      tags:
+      - 模型
+      parameters:
+      - name: datasourceName
         in: path
-        name: datasourceName
         required: true
         schema:
           type: string
-    post:
-      tags:
-        - 【Flexmodel】模型
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -891,26 +1186,29 @@ paths:
           $ref: "#/components/responses/InternalError"
       summary: Execute Idl
       security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models/{modelName}:
-    parameters:
-      - description: 数据源名称
-        in: path
-        name: datasourceName
-        required: true
-        schema:
-          type: string
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}:
     put:
       summary: 更新模型
       tags:
-        - 【Flexmodel】模型
+      - 模型
       parameters:
-        - description: 模型名称
-          in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 模型名称
+        in: path
+        name: modelName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -920,6 +1218,91 @@ paths:
                   type: entity
                   name: Student
                   fields:
+                  - name: id
+                    type: Long
+                    identity: true
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: studentName
+                    type: String
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                    length: 255
+                  - name: gender
+                    type: EnumRef
+                    from: UserGender
+                    multiple: false
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: interest
+                    type: EnumRef
+                    from: user_interest
+                    multiple: true
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: age
+                    type: Int
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: classId
+                    type: Long
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                  - name: studentDetail
+                    type: Relation
+                    modelName: Student
+                    unique: false
+                    nullable: true
+                    multiple: false
+                    from: StudentDetail
+                    localField: id
+                    foreignField: studentId
+                    cascadeDelete: true
+                  indexes:
+                  - modelName: Student
+                    name: IDX_studentName
+                    fields:
+                    - fieldName: studentName
+                      direction: ASC
+                    unique: false
+              枚举:
+                value:
+                  name: UserGender
+                  type: enum
+                  elements:
+                  - UNKNOWN
+                  - MALE
+                  - FEMALE
+                  comment: 性别
+              本地查询:
+                value:
+                  name: 分组查询
+                  type: native_query
+                  statement: "select count(id) as total, gender, max(age) as ageSum\
+                    \ from Student group by gender"
+            schema:
+              anyOf:
+              - $ref: "#/components/schemas/EnumSchema"
+              - $ref: "#/components/schemas/NativeQuerySchema"
+              - $ref: "#/components/schemas/EntitySchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                实体:
+                  value:
+                    type: entity
+                    name: Student
+                    fields:
                     - name: id
                       type: Long
                       identity: true
@@ -966,469 +1349,46 @@ paths:
                       localField: id
                       foreignField: studentId
                       cascadeDelete: true
-                  indexes:
+                    indexes:
                     - modelName: Student
                       name: IDX_studentName
                       fields:
-                        - fieldName: studentName
-                          direction: ASC
+                      - fieldName: studentName
+                        direction: ASC
                       unique: false
-              枚举:
-                value:
-                  name: UserGender
-                  type: enum
-                  elements:
+                枚举:
+                  value:
+                    name: UserGender
+                    type: enum
+                    elements:
                     - UNKNOWN
                     - MALE
                     - FEMALE
-                  comment: 性别
-              本地查询:
-                value:
-                  name: 分组查询
-                  type: native_query
-                  statement: "select count(id) as total, gender, max(age) as ageSum\
-                    \ from Student group by gender"
-            schema:
-              anyOf:
+                    comment: 性别
+                本地查询:
+                  value:
+                    name: 分组查询
+                    type: native_query
+                    statement: "select count(id) as total, gender, max(age) as ageSum\
+                      \ from Student group by gender"
+              schema:
+                anyOf:
                 - $ref: "#/components/schemas/EnumSchema"
                 - $ref: "#/components/schemas/NativeQuerySchema"
                 - $ref: "#/components/schemas/EntitySchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              examples:
-                实体:
-                  value:
-                    type: entity
-                    name: Student
-                    fields:
-                      - name: id
-                        type: Long
-                        identity: true
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: studentName
-                        type: String
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                        length: 255
-                      - name: gender
-                        type: EnumRef
-                        from: UserGender
-                        multiple: false
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: interest
-                        type: EnumRef
-                        from: user_interest
-                        multiple: true
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: age
-                        type: Int
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: classId
-                        type: Long
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: studentDetail
-                        type: Relation
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                        multiple: false
-                        from: StudentDetail
-                        localField: id
-                        foreignField: studentId
-                        cascadeDelete: true
-                    indexes:
-                      - modelName: Student
-                        name: IDX_studentName
-                        fields:
-                          - fieldName: studentName
-                            direction: ASC
-                        unique: false
-                枚举:
-                  value:
-                    name: UserGender
-                    type: enum
-                    elements:
-                      - UNKNOWN
-                      - MALE
-                      - FEMALE
-                    comment: 性别
-                本地查询:
-                  value:
-                    name: 分组查询
-                    type: native_query
-                    statement: "select count(id) as total, gender, max(age) as ageSum\
-                      \ from Student group by gender"
-              schema:
-                anyOf:
-                  - $ref: "#/components/schemas/EnumSchema"
-                  - $ref: "#/components/schemas/NativeQuerySchema"
-                  - $ref: "#/components/schemas/EntitySchema"
         "400":
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     get:
       summary: 获取单个模型
       tags:
-        - 【Flexmodel】模型
+      - 模型
       parameters:
-        - name: modelName
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              examples:
-                实体:
-                  value:
-                    type: entity
-                    name: Student
-                    fields:
-                      - name: id
-                        type: Long
-                        identity: true
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: studentName
-                        type: String
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                        length: 255
-                      - name: gender
-                        type: EnumRef
-                        from: UserGender
-                        multiple: false
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: interest
-                        type: EnumRef
-                        from: user_interest
-                        multiple: true
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: age
-                        type: Int
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: classId
-                        type: Long
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                      - name: studentDetail
-                        type: Relation
-                        modelName: Student
-                        unique: false
-                        nullable: true
-                        multiple: false
-                        from: StudentDetail
-                        localField: id
-                        foreignField: studentId
-                        cascadeDelete: true
-                    indexes:
-                      - modelName: Student
-                        name: IDX_studentName
-                        fields:
-                          - fieldName: studentName
-                            direction: ASC
-                        unique: false
-                枚举:
-                  value:
-                    name: UserGender
-                    type: enum
-                    elements:
-                      - UNKNOWN
-                      - MALE
-                      - FEMALE
-                    comment: 性别
-                本地查询:
-                  value:
-                    name: 分组查询
-                    type: native_query
-                    statement: "select count(id) as total, gender, max(age) as ageSum\
-                      \ from Student group by gender"
-              schema:
-                anyOf:
-                  - $ref: "#/components/schemas/EnumSchema"
-                  - $ref: "#/components/schemas/NativeQuerySchema"
-                  - $ref: "#/components/schemas/EntitySchema"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-    delete:
-      summary: 删除模型
-      tags:
-        - 【Flexmodel】模型
-      parameters:
-        - description: 模型名称
-          in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: No Content
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models/{modelName}/fields:
-    parameters:
-      - description: 数据源名称
+      - name: datasourceName
         in: path
-        name: datasourceName
-        required: true
-        schema:
-          type: string
-    post:
-      summary: 创建字段
-      tags:
-        - 【Flexmodel】模型
-      parameters:
-        - description: 模型名称
-          in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TypedFieldSchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TypedFieldSchema"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models/{modelName}/fields/{fieldName}:
-    parameters:
-      - description: 数据源名称
-        in: path
-        name: datasourceName
-        required: true
-        schema:
-          type: string
-    put:
-      summary: 更新字段
-      tags:
-        - 【Flexmodel】模型
-      parameters:
-        - description: 模型名称
-          in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-        - description: 字段名称
-          in: path
-          name: fieldName
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TypedFieldSchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TypedFieldSchema"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-    delete:
-      summary: 删除字段
-      tags:
-        - 【Flexmodel】模型
-      parameters:
-        - description: 模型名称
-          in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-        - description: 字段名称
-          in: path
-          name: fieldName
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: No Content
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models/{modelName}/indexes:
-    parameters:
-      - description: 数据源名称
-        in: path
-        name: datasourceName
-        required: true
-        schema:
-          type: string
-    post:
-      summary: 创建索引
-      tags:
-        - 【Flexmodel】模型
-      parameters:
-        - description: 模型名称
-          in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            examples: {}
-            schema:
-              $ref: "#/components/schemas/IndexSchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              examples: {}
-              schema:
-                $ref: "#/components/schemas/IndexSchema"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models/{modelName}/indexes/{indexName}:
-    parameters:
-      - description: 数据源名称
-        in: path
-        name: datasourceName
-        required: true
-        schema:
-          type: string
-    put:
-      summary: 更新索引
-      tags:
-        - 【Flexmodel】模型
-      parameters:
-        - description: 模型名称
-          in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-        - description: 索引名称
-          in: path
-          name: indexName
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            examples: {}
-            schema:
-              $ref: "#/components/schemas/IndexSchema"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              examples: {}
-              schema:
-                $ref: "#/components/schemas/IndexSchema"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-    delete:
-      summary: 删除索引
-      tags:
-        - 【Flexmodel】模型
-      parameters:
-        - description: 模型名称
-          in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-        - description: 索引名称
-          in: path
-          name: indexName
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: No Content
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models/{modelName}/records:
-    parameters:
-      - description: 模型名称
-        in: path
-        name: datasourceName
         required: true
         schema:
           type: string
@@ -1437,46 +1397,439 @@ paths:
         required: true
         schema:
           type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                实体:
+                  value:
+                    type: entity
+                    name: Student
+                    fields:
+                    - name: id
+                      type: Long
+                      identity: true
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: studentName
+                      type: String
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                      length: 255
+                    - name: gender
+                      type: EnumRef
+                      from: UserGender
+                      multiple: false
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: interest
+                      type: EnumRef
+                      from: user_interest
+                      multiple: true
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: age
+                      type: Int
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: classId
+                      type: Long
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: studentDetail
+                      type: Relation
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                      multiple: false
+                      from: StudentDetail
+                      localField: id
+                      foreignField: studentId
+                      cascadeDelete: true
+                    indexes:
+                    - modelName: Student
+                      name: IDX_studentName
+                      fields:
+                      - fieldName: studentName
+                        direction: ASC
+                      unique: false
+                枚举:
+                  value:
+                    name: UserGender
+                    type: enum
+                    elements:
+                    - UNKNOWN
+                    - MALE
+                    - FEMALE
+                    comment: 性别
+                本地查询:
+                  value:
+                    name: 分组查询
+                    type: native_query
+                    statement: "select count(id) as total, gender, max(age) as ageSum\
+                      \ from Student group by gender"
+              schema:
+                anyOf:
+                - $ref: "#/components/schemas/EnumSchema"
+                - $ref: "#/components/schemas/NativeQuerySchema"
+                - $ref: "#/components/schemas/EntitySchema"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除模型
+      tags:
+      - 模型
+      parameters:
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 模型名称
+        in: path
+        name: modelName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/fields:
+    post:
+      summary: 创建字段
+      tags:
+      - 模型
+      parameters:
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 模型名称
+        in: path
+        name: modelName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TypedFieldSchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TypedFieldSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/fields/{fieldName}:
+    put:
+      summary: 更新字段
+      tags:
+      - 模型
+      parameters:
+      - description: 模型名称
+        in: path
+        name: modelName
+        required: true
+        schema:
+          type: string
+      - description: 字段名称
+        in: path
+        name: fieldName
+        required: true
+        schema:
+          type: string
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TypedFieldSchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TypedFieldSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除字段
+      tags:
+      - 模型
+      parameters:
+      - description: 模型名称
+        in: path
+        name: modelName
+        required: true
+        schema:
+          type: string
+      - description: 字段名称
+        in: path
+        name: fieldName
+        required: true
+        schema:
+          type: string
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/indexes:
+    post:
+      summary: 创建索引
+      tags:
+      - 模型
+      parameters:
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 模型名称
+        in: path
+        name: modelName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: "#/components/schemas/IndexSchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples: {}
+              schema:
+                $ref: "#/components/schemas/IndexSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/indexes/{indexName}:
+    put:
+      summary: 更新索引
+      tags:
+      - 模型
+      parameters:
+      - description: 模型名称
+        in: path
+        name: modelName
+        required: true
+        schema:
+          type: string
+      - description: 索引名称
+        in: path
+        name: indexName
+        required: true
+        schema:
+          type: string
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: "#/components/schemas/IndexSchema"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples: {}
+              schema:
+                $ref: "#/components/schemas/IndexSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除索引
+      tags:
+      - 模型
+      parameters:
+      - description: 模型名称
+        in: path
+        name: modelName
+        required: true
+        schema:
+          type: string
+      - description: 索引名称
+        in: path
+        name: indexName
+        required: true
+        schema:
+          type: string
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/records:
     get:
       summary: 获取模型数据记录列表
       tags:
-        - 【Flexmodel】记录
+      - 记录
       parameters:
-        - description: 当前页，默认值：1
-          examples: {}
-          in: query
-          name: page
-          schema:
-            type: integer
-            format: int32
-            default: 1
-        - description: 第几页，默认值：15
-          examples: {}
-          in: query
-          name: size
-          schema:
-            type: integer
-            format: int32
-            default: 15
-        - description: 查询条件，更多信息见查询条件文档
-          examples: {}
-          in: query
-          name: filter
-          schema:
-            type: string
-        - description: 是否开启嵌套子查询，开启则查询关联数据，只查询5层，默认值false
-          examples: {}
-          in: query
-          name: nestedQuery
-          schema:
-            type: boolean
-            default: false
-        - description: 排序
-          examples: {}
-          in: query
-          name: sort
-          schema:
-            type: string
+      - description: 当前页，默认值：1
+        examples: {}
+        in: query
+        name: page
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - description: 第几页，默认值：15
+        examples: {}
+        in: query
+        name: size
+        schema:
+          type: integer
+          format: int32
+          default: 15
+      - description: 查询条件，更多信息见查询条件文档
+        examples: {}
+        in: query
+        name: filter
+        schema:
+          type: string
+      - description: 是否开启嵌套子查询，开启则查询关联数据，只查询5层，默认值false
+        examples: {}
+        in: query
+        name: nestedQuery
+        schema:
+          type: boolean
+          default: false
+      - description: 排序
+        examples: {}
+        in: query
+        name: sort
+        schema:
+          type: string
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: modelName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -1496,58 +1849,14 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     post:
       summary: 创建模型数据记录
       tags:
-        - 【Flexmodel】记录
-      requestBody:
-        content:
-          application/json:
-            examples:
-              请求示例，可包含关联数据，关联数据有Id字段则更新这条关联记录:
-                value:
-                  studentName: 张三
-                  gender: MALE
-                  interest:
-                    - chang
-                    - tiao
-                    - rap
-                    - daLanQiu
-                  age: 10
-                  classId: 1
-                  studentDetail:
-                    description: 张三的描述
-                  courses:
-                    - courseNo: Math
-                      courseName: 数学
-                    - courseNo: YuWen
-                      courseName: 语文
-                    - courseNo: Eng
-                      courseName: 英语
-            schema:
-              type: object
-              additionalProperties: {}
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: {}
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/models/{modelName}/records/{id}:
-    parameters:
-      - description: 模型名称
+      - 记录
+      parameters:
+      - name: datasourceName
         in: path
-        name: datasourceName
         required: true
         schema:
           type: string
@@ -1556,18 +1865,11 @@ paths:
         required: true
         schema:
           type: string
-    patch:
-      summary: 更新模型数据记录(局部更新)
-      tags:
-        - 【Flexmodel】记录
-      parameters:
-        - description: ID
-          examples: {}
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -1577,21 +1879,91 @@ paths:
                   studentName: 张三
                   gender: MALE
                   interest:
-                    - chang
-                    - tiao
-                    - rap
-                    - daLanQiu
+                  - chang
+                  - tiao
+                  - rap
+                  - daLanQiu
                   age: 10
                   classId: 1
                   studentDetail:
                     description: 张三的描述
                   courses:
-                    - courseNo: Math
-                      courseName: 数学
-                    - courseNo: YuWen
-                      courseName: 语文
-                    - courseNo: Eng
-                      courseName: 英语
+                  - courseNo: Math
+                    courseName: 数学
+                  - courseNo: YuWen
+                    courseName: 语文
+                  - courseNo: Eng
+                    courseName: 英语
+            schema:
+              type: object
+              additionalProperties: {}
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/models/{modelName}/records/{id}:
+    patch:
+      summary: 更新模型数据记录(局部更新)
+      tags:
+      - 记录
+      parameters:
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: ID
+        examples: {}
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - name: modelName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              请求示例，可包含关联数据，关联数据有Id字段则更新这条关联记录:
+                value:
+                  studentName: 张三
+                  gender: MALE
+                  interest:
+                  - chang
+                  - tiao
+                  - rap
+                  - daLanQiu
+                  age: 10
+                  classId: 1
+                  studentDetail:
+                    description: 张三的描述
+                  courses:
+                  - courseNo: Math
+                    courseName: 数学
+                  - courseNo: YuWen
+                    courseName: 语文
+                  - courseNo: Eng
+                    courseName: 英语
             schema:
               type: object
               additionalProperties: {}
@@ -1609,19 +1981,34 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     put:
       summary: 更新模型数据记录
       tags:
-        - 【Flexmodel】记录
+      - 记录
       parameters:
-        - description: ID
-          examples: {}
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: ID
+        examples: {}
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - name: modelName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -1632,21 +2019,21 @@ paths:
                   studentName: 张三
                   gender: MALE
                   interest:
-                    - chang
-                    - tiao
-                    - rap
-                    - daLanQiu
+                  - chang
+                  - tiao
+                  - rap
+                  - daLanQiu
                   age: 10
                   classId: 1
                   studentDetail:
                     description: 张三的描述
                   courses:
-                    - courseNo: Math
-                      courseName: 数学
-                    - courseNo: YuWen
-                      courseName: 语文
-                    - courseNo: Eng
-                      courseName: 英语
+                  - courseNo: Math
+                    courseName: 数学
+                  - courseNo: YuWen
+                    courseName: 语文
+                  - courseNo: Eng
+                    courseName: 英语
             schema:
               type: object
               additionalProperties: {}
@@ -1664,24 +2051,39 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     get:
       summary: 获取单条模型数据记录
       tags:
-        - 【Flexmodel】记录
+      - 记录
       parameters:
-        - description: ID
-          examples: {}
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-        - name: nestedQuery
-          in: query
-          schema:
-            type: boolean
-            default: false
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: ID
+        examples: {}
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - name: modelName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: nestedQuery
+        in: query
+        schema:
+          type: boolean
+          default: false
       responses:
         "200":
           description: OK
@@ -1695,19 +2097,34 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     delete:
       summary: 删除模型数据记录
       tags:
-        - 【Flexmodel】记录
+      - 记录
       parameters:
-        - description: ID
-          examples: {}
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
+      - name: datasourceName
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: ID
+        examples: {}
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - name: modelName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "204":
           description: No Content
@@ -1716,19 +2133,24 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/native-query:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/native-query:
     post:
       summary: 执行原生查询
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
       parameters:
-        - description: 数据源名称
-          in: path
-          name: datasourceName
-          required: true
-          schema:
-            type: string
+      - description: 数据源名称
+        in: path
+        name: datasourceName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -1751,19 +2173,24 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/datasources/{datasourceName}/sync:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/datasources/{datasourceName}/sync:
     post:
       summary: 从数据源同步物理表到建模
       tags:
-        - 【Flexmodel】数据源
+      - 数据源
       parameters:
-        - description: 数据源名称
-          in: path
-          name: datasourceName
-          required: true
-          schema:
-            type: string
+      - description: 数据源名称
+        in: path
+        name: datasourceName
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -1781,62 +2208,62 @@ paths:
               examples:
                 实体:
                   value:
-                    - type: entity
-                      name: Student
+                  - type: entity
+                    name: Student
+                    fields:
+                    - name: id
+                      type: Long
+                      identity: true
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: studentName
+                      type: String
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                      length: 255
+                    - name: gender
+                      type: EnumRef
+                      from: UserGender
+                      multiple: false
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: interest
+                      type: EnumRef
+                      from: user_interest
+                      multiple: true
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: age
+                      type: Int
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: classId
+                      type: Long
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                    - name: studentDetail
+                      type: Relation
+                      modelName: Student
+                      unique: false
+                      nullable: true
+                      multiple: false
+                      from: StudentDetail
+                      localField: id
+                      foreignField: studentId
+                      cascadeDelete: true
+                    indexes:
+                    - modelName: Student
+                      name: IDX_studentName
                       fields:
-                        - name: id
-                          type: Long
-                          identity: true
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: studentName
-                          type: String
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                          length: 255
-                        - name: gender
-                          type: EnumRef
-                          from: UserGender
-                          multiple: false
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: interest
-                          type: EnumRef
-                          from: user_interest
-                          multiple: true
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: age
-                          type: Int
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: classId
-                          type: Long
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                        - name: studentDetail
-                          type: Relation
-                          modelName: Student
-                          unique: false
-                          nullable: true
-                          multiple: false
-                          from: StudentDetail
-                          localField: id
-                          foreignField: studentId
-                          cascadeDelete: true
-                      indexes:
-                        - modelName: Student
-                          name: IDX_studentName
-                          fields:
-                            - fieldName: studentName
-                              direction: ASC
-                          unique: false
+                      - fieldName: studentName
+                        direction: ASC
+                      unique: false
               schema:
                 type: array
                 items:
@@ -1846,12 +2273,18 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/docs/openapi.json:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/docs/openapi.json:
     get:
       summary: 获取接口文档
       tags:
-        - 【Flexmodel】接口文档
+      - 接口文档
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -1865,41 +2298,42 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/flows:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows:
     get:
       summary: 获取流程列表
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程模块ID
-          in: query
-          name: flowKey
-          schema:
-            type: string
-        - name: flowModuleId
-          in: query
-          schema:
-            type: string
-        - description: 流程名称
-          in: query
-          name: flowName
-          schema:
-            type: string
-        - description: 页码
-          in: query
-          name: page
-          schema:
-            type: integer
-            format: int32
-            default: "1"
-        - description: 每页大小
-          in: query
-          name: size
-          schema:
-            type: integer
-            format: int32
-            default: "20"
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 流程模块ID
+        in: query
+        name: flowKey
+        schema:
+          type: string
+      - description: 流程名称
+        in: query
+        name: flowName
+        schema:
+          type: string
+      - description: 页码
+        in: query
+        name: page
+        schema:
+          type: integer
+          format: int32
+          default: "1"
+      - description: 每页大小
+        in: query
+        name: size
+        schema:
+          type: integer
+          format: int32
+          default: "20"
       responses:
         "200":
           description: OK
@@ -1912,11 +2346,17 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     post:
       summary: 创建流程
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -1935,53 +2375,58 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/flows/instances:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/instances:
     get:
       summary: 获取流程实例列表
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 调用者
-          in: query
-          name: caller
-          schema:
-            type: string
-        - description: 流程部署ID
-          in: query
-          name: flowDeployId
-          schema:
-            type: string
-        - description: 流程实例ID
-          in: query
-          name: flowInstanceId
-          schema:
-            type: string
-        - description: 流程模块ID
-          in: query
-          name: flowModuleId
-          schema:
-            type: string
-        - description: 页码
-          in: query
-          name: page
-          schema:
-            type: integer
-            format: int32
-            default: "1"
-        - description: 每页大小
-          in: query
-          name: size
-          schema:
-            type: integer
-            format: int32
-            default: "20"
-        - description: 流程实例状态
-          in: query
-          name: status
-          schema:
-            type: integer
-            format: int32
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 调用者
+        in: query
+        name: caller
+        schema:
+          type: string
+      - description: 流程部署ID
+        in: query
+        name: flowDeployId
+        schema:
+          type: string
+      - description: 流程实例ID
+        in: query
+        name: flowInstanceId
+        schema:
+          type: string
+      - description: 流程模块ID
+        in: query
+        name: flowModuleId
+        schema:
+          type: string
+      - description: 页码
+        in: query
+        name: page
+        schema:
+          type: integer
+          format: int32
+          default: "1"
+      - description: 每页大小
+        in: query
+        name: size
+        schema:
+          type: integer
+          format: int32
+          default: "20"
+      - description: 流程实例状态
+        in: query
+        name: status
+        schema:
+          type: integer
+          format: int32
       responses:
         "200":
           description: OK
@@ -1994,12 +2439,18 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/flows/instances/start:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/instances/start:
     post:
       summary: 启动流程实例
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -2018,19 +2469,24 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/flows/instances/{flowInstanceId}:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}:
     get:
       summary: 获取流程实例信息
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程实例ID
-          in: path
-          name: flowInstanceId
-          required: true
-          schema:
-            type: string
+      - description: 流程实例ID
+        in: path
+        name: flowInstanceId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -2043,19 +2499,24 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/flows/instances/{flowInstanceId}/commit:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/commit:
     post:
       summary: 提交任务
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程实例ID
-          in: path
-          name: flowInstanceId
-          required: true
-          schema:
-            type: string
+      - description: 流程实例ID
+        in: path
+        name: flowInstanceId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -2074,21 +2535,26 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/flows/instances/{flowInstanceId}/elements:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/elements:
     get:
       summary: 获取流程实例历史元素列表
       description: 获取指定流程实例的历史元素列表，主要用于显示流程快照视图。包含流程中已执行的所有节点信息。
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程实例ID
-          example: flow_inst_001
-          in: path
-          name: flowInstanceId
-          required: true
-          schema:
-            type: string
+      - description: 流程实例ID
+        example: flow_inst_001
+        in: path
+        name: flowInstanceId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: 成功返回历史元素列表
@@ -2103,19 +2569,24 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/flows/instances/{flowInstanceId}/rollback:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/rollback:
     post:
       summary: 回滚任务
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程实例ID
-          in: path
-          name: flowInstanceId
-          required: true
-          schema:
-            type: string
+      - description: 流程实例ID
+        in: path
+        name: flowInstanceId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -2134,25 +2605,30 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/flows/instances/{flowInstanceId}/terminate:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/terminate:
     post:
       summary: 终止流程实例
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程实例ID
-          in: path
-          name: flowInstanceId
-          required: true
-          schema:
-            type: string
-        - description: 是否对子流程实例生效
-          in: query
-          name: effectiveForSubFlowInstance
-          schema:
-            type: boolean
-            default: true
+      - description: 流程实例ID
+        in: path
+        name: flowInstanceId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 是否对子流程实例生效
+        in: query
+        name: effectiveForSubFlowInstance
+        schema:
+          type: boolean
+          default: true
       responses:
         "200":
           description: OK
@@ -2165,28 +2641,33 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/flows/instances/{flowInstanceId}/user-tasks:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/instances/{flowInstanceId}/user-tasks:
     get:
       summary: 获取流程实例历史用户任务列表
       description: 获取指定流程实例的历史用户任务列表，按处理时间倒序排列。包含活跃和已完成的任务，不包含已禁用的任务。
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程实例ID
-          example: flow_inst_001
-          in: path
-          name: flowInstanceId
-          required: true
-          schema:
-            type: string
-        - description: 是否对子流程实例生效
-          example: true
-          in: query
-          name: effectiveForSubFlowInstance
-          schema:
-            type: boolean
-            default: true
+      - description: 流程实例ID
+        example: flow_inst_001
+        in: path
+        name: flowInstanceId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 是否对子流程实例生效
+        example: true
+        in: query
+        name: effectiveForSubFlowInstance
+        schema:
+          type: boolean
+          default: true
       responses:
         "200":
           description: 成功返回历史用户任务列表
@@ -2201,19 +2682,24 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/flows/{flowModuleId}:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/{flowModuleId}:
     put:
       summary: 更新流程
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程模块ID
-          in: path
-          name: flowModuleId
-          required: true
-          schema:
-            type: string
+      - description: 流程模块ID
+        in: path
+        name: flowModuleId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -2232,23 +2718,28 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     get:
       summary: 获取流程模块信息
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程模块ID
-          in: path
-          name: flowModuleId
-          required: true
-          schema:
-            type: string
-        - description: 流程部署ID
-          in: query
-          name: flowDeployId
-          schema:
-            type: string
+      - description: 流程模块ID
+        in: path
+        name: flowModuleId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 流程部署ID
+        in: query
+        name: flowDeployId
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -2261,17 +2752,22 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     delete:
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程模块ID
-          in: path
-          name: flowModuleId
-          required: true
-          schema:
-            type: string
+      - description: 流程模块ID
+        in: path
+        name: flowModuleId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "204":
           description: No Content
@@ -2281,19 +2777,24 @@ paths:
           $ref: "#/components/responses/BadRequest"
       summary: Delete Flow
       security:
-        - BearerAuth: []
-  /api/f/flows/{flowModuleId}/deploy:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/flows/{flowModuleId}/deploy:
     post:
       summary: 部署流程
       tags:
-        - 【Flexmodel】服务编排
+      - 服务编排
       parameters:
-        - description: 流程模块ID
-          in: path
-          name: flowModuleId
-          required: true
-          schema:
-            type: string
+      - description: 流程模块ID
+        in: path
+        name: flowModuleId
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -2312,38 +2813,18 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/global/profile:
-    get:
-      summary: 获取系统配置
-      tags:
-        - 【Flexmodel】系统
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                properties:
-                  env:
-                    description: 环境变量
-                  properties:
-                    description: 配置属性
-                  application:
-                    description: 应用程序配置
-                  settings:
-                    description: 系统设置
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-  /api/f/graphql:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/graphql:
     post:
       summary: 执行GraphQL查询
       tags:
-        - 【Flexmodel】GraphQL
+      - GraphQL
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -2362,12 +2843,18 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/identity-providers:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/identity-providers:
     get:
       summary: 获取身份源列表
       tags:
-        - 【Flexmodel】身份源
+      - 身份源
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -2382,11 +2869,17 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     post:
       summary: 创建身份源
       tags:
-        - 【Flexmodel】身份源
+      - 身份源
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -2405,19 +2898,24 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
-  /api/f/identity-providers/{name}:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/identity-providers/{name}:
     put:
       summary: 更新身份源
       tags:
-        - 【Flexmodel】身份源
+      - 身份源
       parameters:
-        - description: 名称
-          in: path
-          name: name
-          required: true
-          schema:
-            type: string
+      - description: 名称
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -2436,18 +2934,23 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     delete:
       summary: 删除身份源
       tags:
-        - 【Flexmodel】身份源
+      - 身份源
       parameters:
-        - description: 名称
-          in: path
-          name: name
-          required: true
-          schema:
-            type: string
+      - description: 名称
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "204":
           description: No Content
@@ -2456,48 +2959,53 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/jobs/logs:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/jobs/logs:
     get:
       tags:
-        - 【Flexmodel】任务
+      - 任务
       parameters:
-        - name: endTime
-          in: query
-          schema:
-            $ref: "#/components/schemas/LocalDateTime"
-        - name: isSuccess
-          in: query
-          schema:
-            type: boolean
-        - name: jobId
-          in: query
-          schema:
-            type: string
-        - name: page
-          in: query
-          schema:
-            type: integer
-            format: int32
-            default: "1"
-        - name: size
-          in: query
-          schema:
-            type: integer
-            format: int32
-            default: "20"
-        - name: startTime
-          in: query
-          schema:
-            $ref: "#/components/schemas/LocalDateTime"
-        - name: status
-          in: query
-          schema:
-            type: string
-        - name: triggerId
-          in: query
-          schema:
-            type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: endTime
+        in: query
+        schema:
+          $ref: "#/components/schemas/LocalDateTime"
+      - name: isSuccess
+        in: query
+        schema:
+          type: boolean
+      - name: jobId
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: "1"
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: "20"
+      - name: startTime
+        in: query
+        schema:
+          $ref: "#/components/schemas/LocalDateTime"
+      - name: status
+        in: query
+        schema:
+          type: string
+      - name: triggerId
+        in: query
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -2511,52 +3019,57 @@ paths:
           $ref: "#/components/responses/BadRequest"
       summary: Find Log Page
       security:
-        - BearerAuth: []
-  /api/f/logs:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/logs:
     get:
       summary: 获取接口日志列表
       tags:
-        - 【Flexmodel】接口日志
+      - 接口日志
       parameters:
-        - description: 当前页，默认值：1
-          examples: {}
-          in: query
-          name: current
-        - description: 第几页，默认值：15
-          examples: {}
-          in: query
-          name: pageSize
-        - description: 关键字
-          in: query
-          name: keyword
-          schema:
-            type: string
-        - description: 日期范围
-          examples: {}
-          in: query
-          name: dateRange
-          schema:
-            type: string
-        - description: 日志等级
-          examples: {}
-          in: query
-          name: level
-        - name: isSuccess
-          in: query
-          schema:
-            type: boolean
-        - name: page
-          in: query
-          schema:
-            type: integer
-            format: int32
-            default: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            format: int32
-            default: 50
+      - description: 当前页，默认值：1
+        examples: {}
+        in: query
+        name: current
+      - description: 第几页，默认值：15
+        examples: {}
+        in: query
+        name: pageSize
+      - description: 关键字
+        in: query
+        name: keyword
+        schema:
+          type: string
+      - description: 日期范围
+        examples: {}
+        in: query
+        name: dateRange
+        schema:
+          type: string
+      - description: 日志等级
+        examples: {}
+        in: query
+        name: level
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: isSuccess
+        in: query
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 50
       responses:
         "200":
           description: OK
@@ -2569,74 +3082,44 @@ paths:
                   list:
                     type: array
                     items:
-                      type: object
-                      description: 接口日志
-                      properties:
-                        id:
-                          type: string
-                          description: ID
-                        uri:
-                          description: 请求标识
-                        level:
-                          description: 等级
-                        createdAt:
-                          $ref: "#/components/schemas/LocalDateTime"
-                          type: string
-                          readOnly: true
-                          description: 创建日期
-                        data:
-                          description: 数据
-                        url:
-                          type: string
-                        httpMethod:
-                          type: string
-                        path:
-                          type: string
-                        requestBody: {}
-                        requestHeaders: {}
-                        statusCode:
-                          type: integer
-                          format: int32
-                        responseTime:
-                          type: integer
-                          format: int32
-                        clientIp:
-                          type: string
-                        isSuccess:
-                          type: boolean
-                        errorMessage: {}
+                      $ref: "#/components/schemas/ApiLogSchema"
                     description: 日志列表
         "500":
           $ref: "#/components/responses/InternalError"
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/logs/stat:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/logs/stat:
     get:
       summary: 统计接口日志
       tags:
-        - 【Flexmodel】接口日志
+      - 接口日志
       parameters:
-        - description: 关键字
-          in: query
-          name: keyword
-          schema:
-            type: string
-        - description: 日期范围
-          examples: {}
-          in: query
-          name: dateRange
-          schema:
-            type: string
-        - description: "日志等级，支持传多个通过\",\"分隔"
-          examples: {}
-          in: query
-          name: level
-        - name: isSuccess
-          in: query
-          schema:
-            type: boolean
+      - description: 关键字
+        in: query
+        name: keyword
+        schema:
+          type: string
+      - description: 日期范围
+        examples: {}
+        in: query
+        name: dateRange
+        schema:
+          type: string
+      - description: "日志等级，支持传多个通过\",\"分隔"
+        examples: {}
+        in: query
+        name: level
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: isSuccess
+        in: query
+        schema:
+          type: boolean
       responses:
         "200":
           description: OK
@@ -2651,13 +3134,13 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/metrics/all:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/all:
     get:
       summary: 获取所有监控指标
       description: 获取JVM、CPU、内存、线程、磁盘、网络等所有监控信息，提供系统完整状态
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取所有监控指标
@@ -2670,14 +3153,14 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/metrics/cpu:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/cpu:
     get:
       summary: 获取CPU监控信息
       description: 返回CPU使用率、系统负载、物理内存等系统资源信息
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取CPU信息
@@ -2690,14 +3173,14 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/metrics/disk:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/disk:
     get:
       summary: 获取磁盘监控信息
       description: 返回磁盘使用情况、文件系统信息、磁盘I/O统计等存储设备监控数据
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取磁盘信息
@@ -2710,12 +3193,18 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/metrics/fm:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/fm:
     get:
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -2728,15 +3217,15 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
+      - BearerAuth: []
+      - BearerAuth: []
       summary: Get Fm Metrics
-  /api/f/metrics/jvm:
+  /api/v1/projects/{projectId}/metrics/jvm:
     get:
       summary: 获取JVM监控信息
       description: 返回JVM运行时的详细信息，包括类加载、垃圾回收、系统属性等
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取JVM信息
@@ -2749,14 +3238,14 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/metrics/memory:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/memory:
     get:
       summary: 获取内存监控信息
       description: 返回堆内存、非堆内存、内存池等详细内存使用情况
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取内存信息
@@ -2769,14 +3258,14 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/metrics/network:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/network:
     get:
       summary: 获取网络监控信息
       description: 返回网络接口信息、连接状态、IP地址等网络监控数据
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取网络信息
@@ -2789,14 +3278,14 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/metrics/prometheus:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/prometheus:
     get:
       summary: 获取Prometheus格式指标
       description: 返回Prometheus格式的监控指标数据，可用于Prometheus服务器采集
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取Prometheus指标
@@ -2809,14 +3298,14 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/metrics/summary:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/summary:
     get:
       summary: 获取系统摘要信息
       description: 返回系统运行状态的综合摘要，包括JVM、CPU、内存、线程等关键指标
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取系统摘要
@@ -2829,14 +3318,14 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/metrics/threads:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/metrics/threads:
     get:
       summary: 获取线程监控信息
       description: 返回线程数量、状态统计、线程详细信息等
       tags:
-        - 【Flexmodel】系统监控
+      - 系统监控
       responses:
         "200":
           description: 成功获取线程信息
@@ -2849,13 +3338,667 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-        - BearerAuth: []
-  /api/f/settings:
+      - BearerAuth: []
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages:
+    get:
+      summary: 获取所有存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StorageSchema"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Storage"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StorageSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages/{storageName}:
+    put:
+      summary: 更新存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Storage"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StorageSchema"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    get:
+      summary: 获取单个存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StorageSchema"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除存储配置
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages/{storageName}/files:
+    get:
+      summary: 列出文件
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FileItem"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages/{storageName}/files/delete:
+    delete:
+      summary: 删除文件
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages/{storageName}/files/exists:
+    get:
+      summary: 检查文件是否存在
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  exists:
+                    description: 是否存在
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages/{storageName}/files/info:
+    get:
+      summary: 获取文件信息
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileItem"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages/{storageName}/files/size:
+    get:
+      summary: 获取文件大小
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  size:
+                    description: 文件大小
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages/{storageName}/files/upload:
+    post:
+      summary: 上传文件
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                fileSize:
+                  type: integer
+                  format: int64
+            encoding:
+              file:
+                contentType: application/octet-stream
+        required: true
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/storages/{storageName}/folders/create:
+    post:
+      summary: 创建文件夹
+      tags:
+      - 文件存储
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      - description: 存储名称
+        in: path
+        name: storageName
+        required: true
+        schema:
+          type: string
+      - description: 文件夹路径
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/triggers:
+    get:
+      summary: 获取触发器列表
+      tags:
+      - 触发器
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: jobGroup
+        in: query
+        schema:
+          type: string
+      - name: jobId
+        in: query
+        schema:
+          type: string
+      - name: jobType
+        in: query
+        schema:
+          type: string
+      - name: name
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: "1"
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: "15"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageDTOTriggerDTO"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建触发器
+      tags:
+      - 触发器
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Trigger"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trigger"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/triggers/{id}:
+    put:
+      summary: 更新触发器
+      tags:
+      - 触发器
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Trigger"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trigger"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    patch:
+      summary: 部分更新触发器
+      tags:
+      - 触发器
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Trigger"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trigger"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    get:
+      summary: 获取单个触发器
+      tags:
+      - 触发器
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TriggerDTO"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除触发器
+      tags:
+      - 触发器
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/projects/{projectId}/triggers/{id}/execute:
+    post:
+      summary: 立即执行触发器
+      tags:
+      - 触发器
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trigger"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/settings:
     patch:
       summary: 保存设置
       tags:
-        - 【Flexmodel】设置
+      - 设置
       requestBody:
         content:
           application/json:
@@ -2874,11 +4017,11 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
+      - BearerAuth: []
     get:
       summary: 获取设置
       tags:
-        - 【Flexmodel】设置
+      - 设置
       responses:
         "200":
           description: OK
@@ -2891,198 +4034,7 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
       security:
-        - BearerAuth: []
-  /api/f/triggers:
-    get:
-      summary: 获取触发器列表
-      tags:
-        - 【Flexmodel】触发器
-      parameters:
-        - name: jobGroup
-          in: query
-          schema:
-            type: string
-        - name: jobId
-          in: query
-          schema:
-            type: string
-        - name: jobType
-          in: query
-          schema:
-            type: string
-        - name: name
-          in: query
-          schema:
-            type: string
-        - name: page
-          in: query
-          schema:
-            type: integer
-            format: int32
-            default: "1"
-        - name: size
-          in: query
-          schema:
-            type: integer
-            format: int32
-            default: "15"
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PageDTOTriggerDTO"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-    post:
-      summary: 创建触发器
-      tags:
-        - 【Flexmodel】触发器
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Trigger"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Trigger"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-  /api/f/triggers/{id}:
-    put:
-      summary: 更新触发器
-      tags:
-        - 【Flexmodel】触发器
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Trigger"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Trigger"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      security:
-        - BearerAuth: []
-    patch:
-      summary: 部分更新触发器
-      tags:
-        - 【Flexmodel】触发器
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Trigger"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Trigger"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-    get:
-      summary: 获取单个触发器
-      tags:
-        - 【Flexmodel】触发器
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TriggerDTO"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-    delete:
-      summary: 删除触发器
-      tags:
-        - 【Flexmodel】触发器
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: No Content
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
-  /api/f/triggers/{id}/execute:
-    post:
-      summary: 立即执行触发器
-      tags:
-        - 【Flexmodel】触发器
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "201":
-          description: Created
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      security:
-        - BearerAuth: []
+      - BearerAuth: []
 components:
   securitySchemes:
     BearerAuth:
@@ -3141,8 +4093,8 @@ components:
                 message: 参数验证异常
                 success: false
                 errors:
-                  - field: name
-                    message: 不能为空
+                - field: name
+                  message: 不能为空
   schemas:
     AddressInfo:
       type: object
@@ -3163,12 +4115,20 @@ components:
           type: string
         title:
           type: string
-        createdAt:
-          $ref: "#/components/schemas/LocalDateTime"
         messages:
           type: array
           items:
             $ref: "#/components/schemas/AiChatMessage"
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
     AiChatMessage:
       type: object
       properties:
@@ -3180,7 +4140,15 @@ components:
           type: string
         content:
           type: string
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
         createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
           $ref: "#/components/schemas/LocalDateTime"
     AllMetricsResponse:
       type: object
@@ -3211,13 +4179,43 @@ components:
           format: int64
         error:
           type: string
+    ApiDefinitionHistory:
+      type: object
+      properties:
+        id:
+          type: string
+        apiDefinitionId:
+          type: string
+        name:
+          type: string
+        parentId:
+          type: string
+        type:
+          $ref: "#/components/schemas/ApiType"
+        method:
+          type: string
+        path:
+          type: string
+        meta: {}
+        enabled:
+          type: boolean
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
     ApiDefinitionSchema:
       type: object
       properties:
         id:
           type: string
           examples:
-            - -1
+          - -1
           description: 唯一标识
         type:
           $ref: "#/components/schemas/ApiType"
@@ -3251,8 +4249,16 @@ components:
         method:
           type: string
           examples:
-            - GET
+          - GET
           description: HTTP请求方法
+        projectId:
+          type: string
+          readOnly: true
+          description: 项目ID
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
     ApiDefinitionTreeDTO:
       type: object
       properties:
@@ -3268,13 +4274,19 @@ components:
           type: string
         path:
           type: string
+        meta: {}
+        enabled:
+          type: boolean
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
         createdAt:
           $ref: "#/components/schemas/LocalDateTime"
         updatedAt:
           $ref: "#/components/schemas/LocalDateTime"
-        meta: {}
-        enabled:
-          type: boolean
         children:
           type: array
           items:
@@ -3285,7 +4297,7 @@ components:
         id:
           type: string
           examples:
-            - -1
+          - -1
           description: 唯一标识
         type:
           $ref: "#/components/schemas/ApiType"
@@ -3319,13 +4331,21 @@ components:
         method:
           type: string
           examples:
-            - GET
+          - GET
           description: HTTP请求方法
         children:
           type: array
           items:
             $ref: "#/components/schemas/ApiDefinitionTreeDTO"
           description: 子节点
+        projectId:
+          type: string
+          readOnly: true
+          description: 项目ID
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
     ApiLogSchema:
       type: object
       description: 接口日志
@@ -3363,6 +4383,8 @@ components:
         isSuccess:
           type: boolean
         errorMessage: {}
+        projectId:
+          type: string
     ApiLogStatSchema:
       type: object
       description: 日志统计
@@ -3377,61 +4399,38 @@ components:
     ApiType:
       type: string
       enum:
-        - FOLDER
-        - API
-    ChatMessage:
-      type: object
-      properties:
-        role:
-          type: string
-        content:
-          type: string
-    ChatRequest:
-      type: object
-      properties:
-        conversationId:
-          type: string
-        model:
-          type: string
-        messages:
-          type: array
-          items:
-            $ref: "#/components/schemas/ChatMessage"
-        temperature:
-          type: number
-          format: double
-        maxTokens:
-          type: integer
-          format: int32
+      - FOLDER
+      - API
     CommitTaskParamSchema:
       type: object
       properties:
         flowInstanceId:
           type: string
           examples:
-            - flow_inst_001
+          - flow_inst_001
           description: 流程实例ID
         nodeInstanceId:
           examples:
-            - node_inst_001
+          - node_inst_001
           description: 节点实例ID
         variables:
           type:
-            - object
-            - array
+          - object
+          - array
           additionalProperties: {}
           description: 流程变量
-        tenant:
+        projectId:
+          type: string
           examples:
-            - default
-          description: 租户
+          - default
+          description: 项目ID
         caller:
           examples:
-            - admin
+          - admin
           description: 调用者
         operator:
           examples:
-            - admin
+          - admin
           description: 操作者
         taskInstanceId:
           type: string
@@ -3449,24 +4448,26 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         flowInstanceId:
           type: string
           examples:
-            - flow_inst_001
+          - flow_inst_001
           description: 流程实例ID
         status:
           type: integer
           format: int32
           examples:
-            - 1
+          - 1
           description: 状态
+        projectId:
+          type: string
         nodeExecuteResults:
           type: array
           items:
@@ -3530,6 +4531,8 @@ components:
     CreateConversationRequest:
       type: object
       properties:
+        projectId:
+          type: string
         title:
           type: string
     CreateFlowParamSchema:
@@ -3538,32 +4541,32 @@ components:
         flowKey:
           type: string
           examples:
-            - order_process
+          - order_process
           description: 流程键
         flowName:
           type: string
           examples:
-            - 订单处理流程
+          - 订单处理流程
           description: 流程名称
         remark:
           type: string
           examples:
-            - 处理订单的完整业务流程
+          - 处理订单的完整业务流程
           description: 备注
-        tenant:
+        projectId:
           type: string
           examples:
-            - default
-          description: 租户
+          - default
+          description: 项目ID
         caller:
           type: string
           examples:
-            - admin
+          - admin
           description: 调用者
         operator:
           type: string
           examples:
-            - admin
+          - admin
           description: 操作者
     CreateFlowResultSchema:
       type: object
@@ -3572,18 +4575,20 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
+        projectId:
+          type: string
     DatasourceSchema:
       type: object
       description: 接口日志
@@ -3611,11 +4616,17 @@ components:
           type: string
           readOnly: true
           description: 更新日期
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
     DatasourceType:
       type: string
       enum:
-        - SYSTEM
-        - USER
+      - SYSTEM
+      - USER
     DefaultValue:
       type: object
       properties:
@@ -3634,22 +4645,22 @@ components:
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
-        tenant:
+        projectId:
           type: string
           examples:
-            - default
-          description: 租户
+          - default
+          description: 项目ID
         caller:
           type: string
           examples:
-            - admin
+          - admin
           description: 调用者
         operator:
           type: string
           examples:
-            - admin
+          - admin
           description: 操作者
     DeployFlowResultSchema:
       type: object
@@ -3658,28 +4669,30 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         flowDeployId:
           type: string
           examples:
-            - flow_deploy_001
+          - flow_deploy_001
           description: 流程部署ID
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
+        projectId:
+          type: string
     Direction:
       type: string
       enum:
-        - ASC
-        - DESC
+      - ASC
+      - DESC
     DiskIoInfo:
       type: object
       properties:
@@ -3749,18 +4762,18 @@ components:
       properties:
         Key:
           examples:
-            - start_event_001
+          - start_event_001
           description: 键
         name:
           type: string
           examples:
-            - 开始事件
+          - 开始事件
           description: 名称
         status:
           type: integer
           format: int32
           examples:
-            - 2
+          - 2
           description: 元素状态：1-待处理，2-已完成，3-已跳过，4-已禁用
         properties:
           type: object
@@ -3769,7 +4782,7 @@ components:
         nodeInstanceId:
           type: string
           examples:
-            - node_inst_001
+          - node_inst_001
           description: 节点实例ID
         subFlowInstanceIdList:
           type: array
@@ -3784,7 +4797,7 @@ components:
         instanceDataId:
           type: string
           examples:
-            - data_001
+          - data_001
           description: 实例数据ID
         key:
           type: string
@@ -3906,6 +4919,20 @@ components:
           type: string
         direction:
           $ref: "#/components/schemas/Direction"
+    FileItem:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/FileType"
+        size:
+          type: integer
+          format: int64
+        lastModified:
+          $ref: "#/components/schemas/Instant"
+        path:
+          type: string
     FileSystemInfo:
       type: object
       properties:
@@ -3965,6 +4992,11 @@ components:
         spaceUtilization:
           type: number
           format: double
+    FileType:
+      type: string
+      enum:
+      - file
+      - folder
     FlowElement:
       type: object
       properties:
@@ -3996,7 +5028,7 @@ components:
           type: integer
           format: int64
           examples:
-            - 100
+          - 100
           description: 总记录数
     FlowInstanceSchema:
       type: object
@@ -4004,42 +5036,41 @@ components:
         flowInstanceId:
           type: string
           examples:
-            - flow_inst_001
+          - flow_inst_001
           description: 流程实例ID
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
         flowDeployId:
           type: string
           examples:
-            - flow_deploy_001
+          - flow_deploy_001
           description: 流程部署ID
         status:
           type: integer
           format: int32
           examples:
-            - 1
+          - 1
           description: 流程实例状态：1-运行中，2-已完成，3-已终止，4-已暂停
         parentFlowInstanceId:
           type: string
           examples:
-            - parent_inst_001
+          - parent_inst_001
           description: 父流程实例ID
-        tenant:
-          type: string
+        projectId:
           examples:
-            - default
-          description: 租户
+          - default
+          description: 项目ID
         caller:
           type: string
           examples:
-            - admin
+          - admin
           description: 调用者
         operator:
           examples:
-            - admin
+          - admin
           description: 操作者
         createTime:
           $ref: "#/components/schemas/LocalDateTime"
@@ -4051,6 +5082,8 @@ components:
           type: string
           readOnly: true
           description: 修改时间
+        tenant:
+          type: string
     FlowModuleListResponseSchema:
       type: object
       properties:
@@ -4063,7 +5096,7 @@ components:
           type: integer
           format: int64
           examples:
-            - 100
+          - 100
           description: 总记录数
     FlowModuleResponseSchema:
       type: object
@@ -4071,43 +5104,43 @@ components:
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
         flowName:
           type: string
           examples:
-            - 订单处理流程
+          - 订单处理流程
           description: 流程名称
         flowKey:
           type: string
           examples:
-            - order_process
+          - order_process
           description: 流程键
         status:
           type: integer
           format: int32
           examples:
-            - 4
+          - 4
           description: 状态：1-草稿，2-设计，3-测试，4-已发布
         remark:
           type: string
           examples:
-            - 处理订单的完整业务流程
+          - 处理订单的完整业务流程
           description: 备注
-        tenant:
+        projectId:
           type: string
           examples:
-            - default
-          description: 租户
+          - default
+          description: 项目ID
         caller:
           type: string
           examples:
-            - admin
+          - admin
           description: 调用者
         operator:
           type: string
           examples:
-            - admin
+          - admin
           description: 操作者
         modifyTime:
           $ref: "#/components/schemas/LocalDateTime"
@@ -4121,22 +5154,24 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
         flowDeployId:
           examples:
-            - flow_deploy_001
+          - flow_deploy_001
           description: 流程部署ID
+        projectId:
+          type: string
         flowName:
           type: string
         flowKey:
@@ -4207,11 +5242,11 @@ components:
     GenerateAPIsDTO:
       type: object
       required:
-        - datasourceName
-        - modelName
-        - apiFolder
-        - idFieldOfPath
-        - generateAPIs
+      - datasourceName
+      - modelName
+      - apiFolder
+      - idFieldOfPath
+      - generateAPIs
       properties:
         datasourceName:
           type: string
@@ -4280,6 +5315,12 @@ components:
           type: string
           readOnly: true
           description: 更新日期
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
     IdlRequest:
       type: object
       properties:
@@ -4288,7 +5329,7 @@ components:
     ImportScriptRequest:
       type: object
       required:
-        - script
+      - script
       properties:
         script:
           type: string
@@ -4301,8 +5342,8 @@ components:
     ImportScriptType:
       type: string
       enum:
-        - JSON
-        - IDL
+      - JSON
+      - IDL
     IndexDefinition:
       type: object
       properties:
@@ -4333,6 +5374,11 @@ components:
           description: 是否唯一
         modelName:
           type: string
+    Instant:
+      type: string
+      format: date-time
+      examples:
+      - 2022-03-10T16:15:50Z
     JobExecutionLog:
       type: object
       properties:
@@ -4380,7 +5426,11 @@ components:
         scheduledTime:
           type: integer
           format: int64
-        tenantId:
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
           type: string
         createdAt:
           $ref: "#/components/schemas/LocalDateTime"
@@ -4437,7 +5487,7 @@ components:
       type: string
       format: date-time
       examples:
-        - 2022-03-10T12:15:50
+      - 2022-03-10T12:15:50
     LocalhostInfo:
       type: object
       properties:
@@ -4477,6 +5527,60 @@ components:
         username:
           type: string
         password:
+          type: string
+    MemberRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+    MemberRequestSchema:
+      type: object
+      description: 成员请求
+      properties:
+        id:
+          type: string
+          description: ID
+        username:
+          type: string
+          description: 用户名
+        email:
+          type: string
+          description: 邮箱
+        password:
+          type: string
+          description: 密码（明文，创建或更新时可选）
+        createdBy:
+          type: string
+          description: 创建人
+        updatedBy:
+          type: string
+          description: 更新人
+    MemberResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
           type: string
     MemoryInfo:
       type: object
@@ -4627,6 +5731,8 @@ components:
     NodeExecuteResult:
       type: object
       properties:
+        projectId:
+          type: string
         errCode:
           type: integer
           format: int32
@@ -4644,12 +5750,12 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         activeTaskInstance:
           $ref: "#/components/schemas/NodeInstance"
@@ -4657,10 +5763,12 @@ components:
           description: 活跃任务实例
         variables:
           type:
-            - object
-            - array
+          - object
+          - array
           additionalProperties: {}
           description: 流程变量列表
+        projectId:
+          type: string
     NodeInstance:
       type: object
       properties:
@@ -4728,27 +5836,27 @@ components:
         nodeInstanceId:
           type: string
           examples:
-            - node_inst_001
+          - node_inst_001
           description: 节点实例ID
         Key:
           examples:
-            - user_task_001
+          - user_task_001
           description: 模型键
         modelName:
           examples:
-            - 用户审批任务
+          - 用户审批任务
           description: 模型名称
         status:
           type: integer
           format: int32
           examples:
-            - 2
+          - 2
           description: 节点状态：1-待处理，2-已完成，3-已跳过，4-已禁用
         flowElementType:
           type: integer
           format: int32
           examples:
-            - 1
+          - 1
           description: 流程元素类型：1-用户任务，2-服务任务，3-网关，4-事件
         properties:
           type: object
@@ -4772,7 +5880,7 @@ components:
         instanceDataId:
           type: string
           examples:
-            - data_001
+          - data_001
           description: 实例数据ID
         createTime:
           $ref: "#/components/schemas/LocalDateTime"
@@ -4814,6 +5922,60 @@ components:
         committedVirtualMemoryMB:
           type: integer
           format: int64
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        enabled:
+          type: boolean
+        ownerId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+    ProjectResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        enabled:
+          type: boolean
+        ownerId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        apiCount:
+          type: integer
+          format: int32
+        datasourceCount:
+          type: integer
+          format: int32
+        flowCount:
+          type: integer
+          format: int32
+        storageCount:
+          type: integer
+          format: int32
     PrometheusMetricsResponse:
       type: object
       properties:
@@ -4845,23 +6007,24 @@ components:
         flowInstanceId:
           type: string
           examples:
-            - flow_inst_001
+          - flow_inst_001
           description: 流程实例ID
         nodeInstanceId:
           examples:
-            - node_inst_001
+          - node_inst_001
           description: 节点实例ID
-        tenant:
+        projectId:
+          type: string
           examples:
-            - default
-          description: 租户
+          - default
+          description: 项目ID
         caller:
           examples:
-            - admin
+          - admin
           description: 调用者
         operator:
           examples:
-            - admin
+          - admin
           description: 操作者
         taskInstanceId:
           type: string
@@ -4877,24 +6040,26 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         flowInstanceId:
           type: string
           examples:
-            - flow_inst_001
+          - flow_inst_001
           description: 流程实例ID
         status:
           type: integer
           format: int32
           examples:
-            - 1
+          - 1
           description: 状态
+        projectId:
+          type: string
         nodeExecuteResults:
           type: array
           items:
@@ -4923,7 +6088,7 @@ components:
           type: string
         flowModuleId:
           type: string
-        tenant:
+        projectId:
           type: string
         caller:
           type: string
@@ -4974,6 +6139,8 @@ components:
     RuntimeResult:
       type: object
       properties:
+        projectId:
+          type: string
         errCode:
           type: integer
           format: int32
@@ -5003,23 +6170,23 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         flowInstanceId:
           type: string
           examples:
-            - flow_inst_001
+          - flow_inst_001
           description: 流程实例ID
         status:
           type: integer
           format: int32
           examples:
-            - 2
+          - 2
           description: 流程状态：1-运行中，2-已完成，3-已终止，4-已暂停
         nodeExecuteResults:
           type: array
@@ -5030,6 +6197,8 @@ components:
           type: object
           additionalProperties: {}
           description: 扩展属性
+        projectId:
+          type: string
         activeTaskInstance:
           $ref: "#/components/schemas/NodeInstance"
         variables:
@@ -5059,13 +6228,18 @@ components:
           type: string
         graphqlEndpointIdentityProvider:
           type: string
+        systemIdentityProvider:
+          type: string
     SendMessageRequest:
       type: object
+      required:
+      - content
       properties:
+        conversationId:
+          type: string
         content:
           type: string
-        model:
-          type: string
+          pattern: \S
     Settings:
       type: object
       properties:
@@ -5094,21 +6268,23 @@ components:
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
         flowDeployId:
           type: string
           examples:
-            - flow_deploy_001
+          - flow_deploy_001
           description: 流程部署ID
         variables:
           type:
-            - object
-            - array
+          - object
+          - array
           additionalProperties: {}
           description: 流程变量
         runtimeContext:
           $ref: "#/components/schemas/RuntimeContext"
+        projectId:
+          type: string
     StartProcessResultSchema:
       type: object
       properties:
@@ -5116,34 +6292,36 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         flowInstanceId:
           type: string
           examples:
-            - flow_inst_001
+          - flow_inst_001
           description: 流程实例ID
         status:
           type: integer
           format: int32
           examples:
-            - 1
+          - 1
           description: 状态
         flowDeployId:
           type: string
           examples:
-            - flow_deploy_001
+          - flow_deploy_001
           description: 流程部署ID
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
+        projectId:
+          type: string
         nodeExecuteResults:
           type: array
           items:
@@ -5156,6 +6334,41 @@ components:
         variables:
           type: object
           additionalProperties: {}
+    Storage:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/StorageType"
+        config: {}
+        enabled:
+          type: boolean
+        projectId:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+    StorageSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        config: {}
+        enabled:
+          type: boolean
+    StorageType:
+      type: string
+      enum:
+      - S3
+      - LOCAL
     SystemSummaryResponse:
       type: object
       properties:
@@ -5255,24 +6468,26 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
         flowInstanceId:
           type: string
           examples:
-            - flow_inst_001
+          - flow_inst_001
           description: 流程实例ID
         status:
           type: integer
           format: int32
           examples:
-            - 1
+          - 1
           description: 状态
+        projectId:
+          type: string
         nodeExecuteResults:
           type: array
           items:
@@ -5368,6 +6583,12 @@ components:
           $ref: "#/components/schemas/LocalDateTime"
         updatedAt:
           $ref: "#/components/schemas/LocalDateTime"
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        projectId:
+          type: string
     TriggerDTO:
       type: object
       properties:
@@ -5392,6 +6613,12 @@ components:
           $ref: "#/components/schemas/LocalDateTime"
         updatedAt:
           $ref: "#/components/schemas/LocalDateTime"
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        projectId:
+          type: string
         jobName:
           type: string
         nextFireTime:
@@ -5401,8 +6628,8 @@ components:
     TriggerType:
       type: string
       enum:
-        - EVENT
-        - SCHEDULED
+      - EVENT
+      - SCHEDULED
     TurboException:
       type: object
       properties:
@@ -5450,22 +6677,22 @@ components:
         flowModuleId:
           type: string
           examples:
-            - flow_module_001
+          - flow_module_001
           description: 流程模块ID
-        tenant:
+        projectId:
           type: string
           examples:
-            - default
-          description: 租户
+          - default
+          description: 项目ID
         caller:
           type: string
           examples:
-            - admin
+          - admin
           description: 调用者
         operator:
           type: string
           examples:
-            - admin
+          - admin
           description: 操作者
     UpdateFlowResultSchema:
       type: object
@@ -5474,41 +6701,51 @@ components:
           type: integer
           format: int32
           examples:
-            - 0
+          - 0
           description: 错误码
         errMsg:
           type: string
           examples:
-            - success
+          - success
           description: 错误信息
+        projectId:
+          type: string
 tags:
-  - name: 【Flexmodel】GraphQL
-    description: GraphQL接口信息
-  - name: 【Flexmodel】任务
-    description: 任务管理
-  - name: 【Flexmodel】接口定义
-    description: 接口定义管理
-  - name: 【Flexmodel】接口文档
-    description: 接口文档管理
-  - name: 【Flexmodel】接口日志
-    description: 接口日志管理
-  - name: 【Flexmodel】数据源
-    description: 数据源管理
-  - name: 【Flexmodel】服务编排
-    description: 服务编排管理
-  - name: 【Flexmodel】模型
-    description: 模型管理
-  - name: 【Flexmodel】生成器
-    description: 生成器管理
-  - name: 【Flexmodel】系统
-    description: 系统信息
-  - name: 【Flexmodel】系统监控
-    description: 系统监控相关接口，包括JVM、CPU、内存、线程、磁盘（含I/O）、网络等监控信息
-  - name: 【Flexmodel】触发器
-    description: 触发器管理
-  - name: 【Flexmodel】记录
-    description: 模型数据记录管理
-  - name: 【Flexmodel】设置
-    description: 系统设置
-  - name: 【Flexmodel】身份源
-    description: 身份源管理
+- name: GraphQL
+  description: GraphQL接口信息
+- name: 任务
+  description: 任务管理
+- name: 成员
+  description: 成员管理
+- name: 接口定义
+  description: 接口定义管理
+- name: 接口文档
+  description: 接口文档管理
+- name: 接口日志
+  description: 接口日志管理
+- name: 数据源
+  description: 数据源管理
+- name: 文件存储
+  description: 文件存储管理
+- name: 服务编排
+  description: 服务编排管理
+- name: 模型
+  description: 模型管理
+- name: 生成器
+  description: 生成器管理
+- name: 系统
+  description: 系统信息
+- name: 系统监控
+  description: 系统监控相关接口，包括JVM、CPU、内存、线程、磁盘（含I/O）、网络等监控信息
+- name: 触发器
+  description: 触发器管理
+- name: 认证
+  description: 认证授权管理
+- name: 记录
+  description: 模型数据记录管理
+- name: 设置
+  description: 系统设置
+- name: 身份源
+  description: 身份源管理
+- name: 项目
+  description: 项目管理

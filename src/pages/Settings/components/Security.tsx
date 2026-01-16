@@ -36,7 +36,7 @@ const Security: React.FC<SecurityProps> = ({settings, onChange}) => {
   const [options, setOptions] = useState<SelectProps['options']>([]);
 
   useEffect(() => {
-    getIdentityProviders()
+    getIdentityProviders("default")
       .then(res => setOptions(res.map((d: { name: string }) => ({
         value: d.name,
         label: d.name,

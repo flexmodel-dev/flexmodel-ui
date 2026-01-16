@@ -84,7 +84,6 @@ const HistoryModal: React.FC<HistoryModalProps> = ({
       <div style={{
         top: 20,
         overflow: "auto",
-        height: "calc(100vh - 240px)",
       }}>
         <List
           itemLayout="vertical"

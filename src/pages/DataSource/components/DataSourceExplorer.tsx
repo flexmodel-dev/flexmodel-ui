@@ -1,13 +1,11 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import {Button, Divider, Dropdown, Spin} from "antd";
 import type {MenuProps} from "antd";
 import Icon, {BlockOutlined, DeleteOutlined, MoreOutlined} from "@ant-design/icons";
 // 导入Tree组件
 import Tree from "@/components/explore/explore/Tree.jsx";
-// 导入Tree样式
 import "@/components/explore/styles/explore.scss";
 import type {DatasourceSchema} from "@/types/data-source";
-import {getDatasourceList} from "@/services/datasource.ts";
 // 数据库图标映射
 import MySQL from "@/assets/icons/svg/mysql.svg?react";
 import MariaDB from "@/assets/icons/svg/mariadb.svg?react";
@@ -41,6 +39,8 @@ interface DataSourceExplorerProps {
   setDeleteVisible: (visible: boolean) => void;
   setDrawerVisible: (visible: boolean) => void;
   selectedDataSource?: string; // 可选的选中数据源名称
+  dsList: DatasourceSchema[]; // 外部传入的数据源列表
+  loading?: boolean; // 外部传入的加载状态
 }
 
 const DataSourceExplorer: React.FC<DataSourceExplorerProps> = ({
@@ -48,54 +48,16 @@ const DataSourceExplorer: React.FC<DataSourceExplorerProps> = ({
                                                                  setDeleteVisible,
                                                                  setDrawerVisible,
                                                                  selectedDataSource,
+                                                                 dsList,
+                                                                 loading = false,
                                                                }) => {
   const {t} = useTranslation();
-  // 内部管理数据源列表和当前选中的数据源
-  const [dsList, setDsList] = useState<DatasourceSchema[]>([]);
-  const [activeDs, setActiveDs] = useState<DatasourceSchema | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  
+  // 根据选中的数据源名称获取当前数据源
+  const activeDs = selectedDataSource 
+    ? dsList.find(ds => ds.name === selectedDataSource) || null
+    : dsList[0] || null;
 
-  // 获取数据源列表
-  const getDatasourceListHandler = async () => {
-    try {
-      setLoading(true);
-      const list = await getDatasourceList();
-      setDsList(list);
-
-      // 设置初始选中的数据源
-      let initialActiveDs = null;
-      if (selectedDataSource) {
-        initialActiveDs = list.find(ds => ds.name === selectedDataSource) || null;
-      } else {
-        initialActiveDs = list[0] || null;
-      }
-
-      setActiveDs(initialActiveDs);
-      if (initialActiveDs) {
-        onSelect(initialActiveDs);
-      }
-    } catch (error) {
-      console.error("Failed to load datasource list:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 组件挂载时获取数据源列表
-  useEffect(() => {
-    getDatasourceListHandler();
-  }, []);
-
-  // 当selectedDataSource变化时更新选中状态
-  useEffect(() => {
-    if (selectedDataSource && dsList.length > 0) {
-      const ds = dsList.find(ds => ds.name === selectedDataSource) || null;
-      setActiveDs(ds);
-      if (ds) {
-        onSelect(ds);
-      }
-    }
-  }, [selectedDataSource, dsList, onSelect]);
   // 将数据源列表转换为Tree组件需要的数据结构
   const treeData = {
     children: dsList.map((ds) => ({
@@ -132,7 +94,6 @@ const DataSourceExplorer: React.FC<DataSourceExplorerProps> = ({
           danger: true,
           onClick: (e) => {
             e?.domEvent?.stopPropagation();
-            setActiveDs(item.datasource);
             setDeleteVisible(true);
           },
         },
@@ -161,7 +122,6 @@ const DataSourceExplorer: React.FC<DataSourceExplorerProps> = ({
           tree={treeData}
           selected={selectedItem}
           onClickItem={(item) => {
-            setActiveDs(item.datasource);
             onSelect(item.datasource);
           }}
           renderIcon={renderIcon}

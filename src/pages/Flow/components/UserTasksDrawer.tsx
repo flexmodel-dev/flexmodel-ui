@@ -30,6 +30,7 @@ interface FlowInstanceHistoryDrawerProps {
   loading: boolean;
   currentFlowInstance: FlowInstance | null;
   userTasks: NodeInstance[];
+  projectId: string;
   onClose: () => void;
   onCommitted?: () => void;
 }
@@ -39,6 +40,7 @@ const UserTasksDrawer: React.FC<FlowInstanceHistoryDrawerProps> = ({
                                                                      loading,
                                                                      currentFlowInstance,
                                                                      userTasks,
+                                                                     projectId,
                                                                      onClose,
                                                                      onCommitted,
                                                                    }) => {
@@ -194,7 +196,7 @@ const UserTasksDrawer: React.FC<FlowInstanceHistoryDrawerProps> = ({
             variables: variables,
           };
 
-          const {errCode, errMsg} = await commitTask(currentFlowInstance.flowInstanceId, commitData);
+          const {errCode, errMsg} = await commitTask(projectId, currentFlowInstance.flowInstanceId, commitData);
           if (!isSuccess(errCode)) {
             message.warning(errMsg);
             return;
@@ -262,7 +264,7 @@ const UserTasksDrawer: React.FC<FlowInstanceHistoryDrawerProps> = ({
             flowInstanceId: currentFlowInstance.flowInstanceId,
             taskInstanceId: selectedTaskInstanceId,
           };
-          const {errCode, errMsg} = await rollbackTask(currentFlowInstance.flowInstanceId, data);
+          const {errCode, errMsg} = await rollbackTask(projectId, currentFlowInstance.flowInstanceId, data);
           if (!isSuccess(errCode)) {
             message.warning(errMsg);
             return;

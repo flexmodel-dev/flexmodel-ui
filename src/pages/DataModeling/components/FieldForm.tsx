@@ -4,6 +4,7 @@ import {getModelList} from "@/services/model.ts";
 import {useTranslation} from "react-i18next";
 import DefaultValueInput from "./DefaultValueInput";
 import {Field} from "@/types/data-modeling";
+import {useProject} from "@/store/appStore";
 
 
 interface FieldFormProps {
@@ -143,6 +144,8 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
 }, ref) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
 
   // 将表单实例暴露给父组件
   React.useImperativeHandle(ref, () => ({
@@ -157,11 +160,11 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
   const [tmpType, setTmpType] = useState<string>("");
 
   const reqModelList = React.useCallback(async () => {
-    const data = await getModelList(datasource);
+    const data = await getModelList(projectId, datasource);
     console.log('ModelList data:', data);
     console.log('Enum models:', data.filter(item => item.type === "enum"));
     setModelList(data);
-  }, [datasource]);
+  }, [projectId, datasource]);
 
   const initialValues = React.useMemo(() => ({
     name: "",

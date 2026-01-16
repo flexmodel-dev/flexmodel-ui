@@ -45,9 +45,9 @@ const EditPanel: React.FC<EditPanelProps> = ({
                                                onAuthorizationChange,
                                                ondocumentChange,
                                              }) => {
-  const {currentTenant} = useAppStore();
-  const tenantId = currentTenant?.id;
-  const fullApiRootPath = `${apiRootPath || ''}/${tenantId}`;
+  const {currentProject} = useAppStore();
+  const projectId = currentProject?.id;
+  const fullApiRootPath = `${apiRootPath || ''}/${projectId}`;
 
   // State for inner tabs
   const [activeInnerTab, setActiveInnerTab] = useState<string>('execution_config');

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {Button, Col, Drawer, Form, Input, message, Radio, Row, Steps} from 'antd';
+import {Button, Col, Drawer, Form, Input, message, Radio, Row, Space, Steps} from 'antd';
 import {createIdentityProvider} from "@/services/identity-provider.ts";
 import {useTranslation} from "react-i18next";
 import OIDCIdPForm from "@/pages/IdentityProvider/components/OIDCIdPForm";
 import JsIdPForm from "@/pages/IdentityProvider/components/JsIdPForm.tsx";
+import {useProject} from "@/store/appStore";
 
 interface CreateIdPProps {
   open: boolean;
@@ -14,6 +15,8 @@ interface CreateIdPProps {
 const CreateIdP: React.FC<CreateIdPProps> = ({ open, onClose, onConfirm }) => {
 
   const { t } = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
 
   const [form] = Form.useForm();
   const JAVASCRIPT_TEMPLATE = `/**
@@ -56,6 +59,11 @@ const CreateIdP: React.FC<CreateIdPProps> = ({ open, onClose, onConfirm }) => {
   const prev = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   const handleCreateProvider = async () => {
+    if (!projectId) {
+      message.error('Project ID is required');
+      return;
+    }
+    
     try {
       const values = await form.validateFields();
       const newProvider = {
@@ -64,7 +72,7 @@ const CreateIdP: React.FC<CreateIdPProps> = ({ open, onClose, onConfirm }) => {
         createdAt: '',
         updatedAt: ''
       };
-      const res = await createIdentityProvider(newProvider);
+      const res = await createIdentityProvider(projectId, newProvider);
       setFormData(res);
       message.success('Provider created successfully');
       next();
@@ -80,27 +88,30 @@ const CreateIdP: React.FC<CreateIdPProps> = ({ open, onClose, onConfirm }) => {
   return (
     <Drawer
       title={t('idp_new_provider')}
-      size={800}
-      open={open}
+      width={600}
+      placement="right"
       onClose={onClose}
+      open={open}
       footer={
-        <>
-          {currentStep !== 0 && currentStep !== 2 && (
-            <Button onClick={prev} style={{ marginRight: 8 }}>
-              {t('idp_btn_go_back')}
-            </Button>
-          )}
-          {currentStep === 0 && (
-            <Button type="primary" onClick={next}>
-              {t('idp_btn_select_provider')}
-            </Button>
-          )}
-          {currentStep === 1 && (
-            <Button type="primary" onClick={handleCreateProvider}>
-              {t('idp_btn_create_provider')}
-            </Button>
-          )}
-        </>
+        <div style={{textAlign: 'right'}}>
+          <Space>
+            {currentStep !== 0 && currentStep !== 2 && (
+              <Button onClick={prev}>
+                {t('idp_btn_go_back')}
+              </Button>
+            )}
+            {currentStep === 0 && (
+              <Button type="primary" onClick={next}>
+                {t('idp_btn_select_provider')}
+              </Button>
+            )}
+            {currentStep === 1 && (
+              <Button type="primary" onClick={handleCreateProvider}>
+                {t('idp_btn_create_provider')}
+              </Button>
+            )}
+          </Space>
+        </div>
       }
     >
       <Steps

@@ -1,6 +1,7 @@
 import type {AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios'
 import axios from 'axios'
 import * as authService from '@/services/auth'
+import {useAuthStore} from '@/store/authStore'
 
 // 错误类型
 type ApiError = {
@@ -31,11 +32,8 @@ const ERROR_CODES = {
   SERVER_ERROR: 500
 } as const
 
-// 不需要X-Tenant-Id请求头的全局接口路径
-const GLOBAL_PATHS = ['/global/profile', '/auth/whoami', '/auth/login', '/auth/refresh', '/tenants']
-
 // API 基础路径
-export const BASE_URI = "/api/f"
+export const BASE_URI = "/api/v1"
 
 // 标记是否正在刷新token
 let isRefreshing = false
@@ -108,7 +106,9 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
     try {
       // 尝试刷新token，refreshToken通过cookie自动传递
       const response = await authService.refreshToken()
-      localStorage.setItem('token', response.token)
+      
+      // 更新store中的token
+      useAuthStore.getState().setToken(response.token)
 
       // 更新当前请求的Authorization头
       if (config.headers) {
@@ -122,7 +122,7 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
       return axiosInstance(config)
     } catch (refreshError) {
       // 刷新token失败，清除认证状态
-      authService.clearStoredToken()
+      useAuthStore.getState().logout()
       processQueue(refreshError, null)
       isRefreshing = false
       return Promise.reject(apiError)
@@ -156,20 +156,10 @@ const axiosInstance = axios.create({
  */
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token')
+    const token = useAuthStore.getState().token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-
-    // 添加X-Tenant-Id请求头
-    const tenantId = localStorage.getItem('tenantId')
-    const url = config.url || ''
-    const shouldAddTenant = !GLOBAL_PATHS.some(path => url.includes(path))
-
-    if (tenantId && shouldAddTenant) {
-      config.headers['X-Tenant-Id'] = tenantId
-    }
-
     return config
   },
   (error: AxiosError) => Promise.reject(error)

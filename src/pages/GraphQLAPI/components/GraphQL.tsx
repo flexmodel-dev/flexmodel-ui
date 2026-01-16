@@ -10,7 +10,7 @@ import {GraphiQL} from "graphiql";
 import {GraphQLData} from "@/types/api-management";
 import {useGraphiQL} from "@graphiql/react";
 import {theme} from "antd";
-import {useTheme} from "@/store/appStore.ts";
+import {useTheme, useProject} from "@/store/appStore.ts";
 
 interface GraphQLProps {
   data: GraphQLData | undefined;
@@ -124,8 +124,21 @@ const GraphiQLInitializer: React.FC<{
 const GraphQL: React.FC<GraphQLProps> = ({ data, onChange }: GraphQLProps) => {
   const { token } = theme.useToken();
   const { isDark } = useTheme();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   // 使用useMemo缓存explorer插件，避免重复创建
   const explorer = useMemo(() => explorerPlugin(), []);
+
+  // 创建一个包装函数来提供projectId
+  const fetcher = useMemo(() => {
+    return (graphQLParams: any) => {
+      if (!projectId) {
+        return Promise.reject(new Error('Project ID is required'));
+      }
+      return executeQuery(projectId, graphQLParams);
+    };
+  }, [projectId]);
 
   // 简化数据传递，避免频繁重新渲染
   const graphqlData = useMemo(() => ({
@@ -208,7 +221,7 @@ const GraphQL: React.FC<GraphQLProps> = ({ data, onChange }: GraphQLProps) => {
     <>
       <GraphiQL
         forcedTheme={isDark ? "dark" : "light"}
-        fetcher={executeQuery as any}
+        fetcher={fetcher as any}
         plugins={[explorer, HISTORY_PLUGIN]}
       >
         <GraphiQLInitializer data={graphqlData} onChange={onChange} />

@@ -4,28 +4,28 @@ import {IdentityProviderSchema} from '@/types/identity-provider'
 /**
  * 获取身份提供商列表
  */
-export const getIdentityProviders = (): Promise<IdentityProviderSchema[]> => {
-  return api.get('/identity-providers')
+export const getIdentityProviders = (projectId: string): Promise<IdentityProviderSchema[]> => {
+  return api.get(`/projects/${projectId}/identity-providers`)
 }
 
 /**
  * 新建身份提供商
  */
-export const createIdentityProvider = (data: IdentityProviderSchema): Promise<IdentityProviderSchema> => {
-  return api.post('/identity-providers', data)
+export const createIdentityProvider = (projectId: string, data: IdentityProviderSchema): Promise<IdentityProviderSchema> => {
+  return api.post(`/projects/${projectId}/identity-providers`, data)
 }
 
 /**
  * 更新身份提供商
  */
-export const updateIdentityProvider = (id: string, data: IdentityProviderSchema): Promise<IdentityProviderSchema> => {
-  return api.put(`/identity-providers/${id}`, data)
+export const updateIdentityProvider = (projectId: string, id: string, data: IdentityProviderSchema): Promise<IdentityProviderSchema> => {
+  return api.put(`/projects/${projectId}/identity-providers/${id}`, data)
 }
 
 /**
  * 删除身份提供商
  */
-export const deleteIdentityProvider = (id: string): Promise<void> => {
-  return api.delete(`/identity-providers/${id}`)
+export const deleteIdentityProvider = (projectId: string, id: string): Promise<void> => {
+  return api.delete(`/projects/${projectId}/identity-providers/${id}`)
 }
 

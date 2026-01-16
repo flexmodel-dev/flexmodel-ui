@@ -18,6 +18,7 @@ import '@xyflow/react/dist/style.css';
 import FlowNode from './components/FlowNode';
 import {useFlowParser} from './hooks/useFlowParser';
 import {useElementInstanceMerger} from './hooks/useElementInstanceMerger';
+import {useProject} from "@/store/appStore";
 
 
 const nodeTypes = {
@@ -27,6 +28,8 @@ const nodeTypes = {
 const FlowDetail: React.FC = () => {
   const navigate = useNavigate();
   const { flowInstanceId } = useParams<{ flowInstanceId: string }>();
+  const {currentProject} = useProject();
+  const projectId = currentProject?.id || '';
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState<string>('');
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -52,14 +55,13 @@ const FlowDetail: React.FC = () => {
     if (!flowInstanceId) return;
     setLoading(true);
     try {
-      const instance = await getFlowInstance(flowInstanceId);
-      const moduleDetail: FlowModuleDetail = await getFlowModule(instance.flowModuleId, instance.flowDeployId);
+      const instance = await getFlowInstance(projectId, flowInstanceId);
+      const moduleDetail: FlowModuleDetail = await getFlowModule(projectId, instance.flowModuleId, instance.flowDeployId);
       setTitle(moduleDetail.flowName + ` (${instance.flowInstanceId})`);
       if (moduleDetail?.flowModel) {
         parseFlowModel(moduleDetail.flowModel);
       }
-      // 独立获取元素实例状态，等待节点就绪后再合并
-      const instances = await getElementInstances(flowInstanceId);
+      const instances = await getElementInstances(projectId, flowInstanceId);
       setElementInstances(instances || []);
     } catch (e) {
       console.error('加载流程实例详情失败', e);
@@ -67,7 +69,7 @@ const FlowDetail: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [flowInstanceId, parseFlowModel]);
+  }, [flowInstanceId, parseFlowModel, projectId]);
 
   useEffect(() => {
     loadData();

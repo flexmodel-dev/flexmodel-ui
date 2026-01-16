@@ -9,6 +9,7 @@ import {getModelList} from '@/services/model';
 import {FlowModule, getFlowList} from '@/services/flow';
 import {DatasourceSchema} from '@/types/data-source';
 import {EntitySchema, EnumSchema, NativeQuerySchema} from '@/types/data-modeling';
+import {useProject} from '@/store/appStore';
 
 const { Option } = Select;
 
@@ -39,6 +40,9 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
   eventOnly = false
 }) => {
   const { t } = useTranslation();
+  const { currentProject } = useProject();
+  const projectId = currentProject?.id || '';
+  
   const [internalForm] = Form.useForm();
   const form = externalForm || internalForm;
   const [triggerFormType, setTriggerFormType] = useState<TriggerFormType>(eventOnly ? 'event' : 'interval');
@@ -52,7 +56,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
     if (!eventOnly) {
       const fetchDatasources = async () => {
         try {
-          const dsList = await getDatasourceList();
+          const dsList = await getDatasourceList(projectId);
           setDatasources(dsList);
         } catch (error) {
           console.error('获取数据源列表失败:', error);
@@ -63,20 +67,20 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
       // 在eventOnly模式下，如果有传入的datasource，设置为选中的数据源
       setSelectedDatasource(datasource);
     }
-  }, [eventOnly, datasource]);
+  }, [eventOnly, datasource, projectId]);
 
   // 获取流程列表
   useEffect(() => {
     const fetchFlows = async () => {
       try {
-        const flowList = await getFlowList({ size: 1000 });
+        const flowList = await getFlowList(projectId, { size: 1000 });
         setFlows(flowList.list);
       } catch (error) {
         console.error('获取流程列表失败:', error);
       }
     };
     fetchFlows();
-  }, []);
+  }, [projectId]);
 
   // 获取模型列表
   useEffect(() => {
@@ -93,7 +97,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
 
     const fetchModels = async () => {
       try {
-        const modelList = await getModelList(selectedDatasource);
+        const modelList = await getModelList(projectId, selectedDatasource);
         console.log('获取到的模型列表:', modelList);
         // 过滤出type='entity'的模型
         const entityModels = modelList.filter(model => model.type === 'entity');
@@ -105,7 +109,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
       }
     };
     fetchModels();
-  }, [selectedDatasource, eventOnly, model]);
+  }, [selectedDatasource, eventOnly, model, projectId]);
 
   // 初始化表单值
   useEffect(() => {
