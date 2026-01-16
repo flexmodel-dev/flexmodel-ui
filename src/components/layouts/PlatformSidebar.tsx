@@ -1,12 +1,14 @@
-import React, {useCallback, useMemo, useState} from "react";
-import {Layout, Menu} from "antd";
-import {useLocation, useNavigate} from "react-router-dom";
-import {useTranslation} from "react-i18next";
-import {platformRoutes} from "@/routes";
-import {useSidebar} from "@/store/appStore";
+import React, { useCallback, useMemo, useState } from "react";
+import { Layout, Menu, Button, theme, Space } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { platformRoutes } from "@/routes";
+import { useSidebar } from "@/store/appStore";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const PlatformSidebar: React.FC = () => {
   const { t } = useTranslation();
+  const { token } = theme.useToken();
   const navigate = useNavigate();
   const location = useLocation();
   const { isSidebarCollapsed, toggleSidebar } = useSidebar();
@@ -121,7 +123,19 @@ const PlatformSidebar: React.FC = () => {
           style={menuStyle}
           items={menuData}
         />
-
+        <div style={{
+          padding: token.padding,
+          display: "flex",
+          justifyContent: isSidebarCollapsed ? "center" : "right"
+        }}>
+          <Space>
+            <Button
+              type="text"
+              icon={isSidebarCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={toggleSidebar}
+            />
+          </Space>
+        </div>
       </div>
     </Layout.Sider>
   );
