@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {Layout, Menu} from "antd";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
@@ -11,6 +11,24 @@ const ProjectSidebar: React.FC = () => {
   const location = useLocation();
   const { isSidebarCollapsed, toggleSidebar } = useSidebar();
   const { projectId } = useParams<{ projectId: string }>();
+  const [openKeys, setOpenKeys] = useState<string[]>(() => {
+    const pathname = location.pathname.replace(/\/$/, '');
+    const initialOpenKeys: string[] = [];
+
+    routes.forEach(route => {
+      if (route.children && route.children.length > 0) {
+        const parentPath = route.path.replace(':projectId', projectId || '').replace(/\/$/, '');
+        route.children.forEach(child => {
+          const childPath = child.path.replace(':projectId', projectId || '').replace(/\/$/, '');
+          if (pathname.startsWith(childPath) || pathname.startsWith(parentPath)) {
+            initialOpenKeys.push(parentPath);
+          }
+        });
+      }
+    });
+
+    return [...new Set(initialOpenKeys)];
+  });
 
   const menuData = useMemo(() => {
     return routes
@@ -64,30 +82,20 @@ const ProjectSidebar: React.FC = () => {
     return [];
   }, [location.pathname, projectId]);
 
-  const defaultOpenKeys = useMemo(() => {
-    const pathname = location.pathname.replace(/\/$/, '');
-    const openKeys: string[] = [];
-
-    routes.forEach(route => {
-      if (route.children && route.children.length > 0) {
-        const parentPath = route.path.replace(':projectId', projectId || '').replace(/\/$/, '');
-        route.children.forEach(child => {
-          const childPath = child.path.replace(':projectId', projectId || '').replace(/\/$/, '');
-          if (pathname.startsWith(childPath) || pathname.startsWith(parentPath)) {
-            openKeys.push(parentPath);
-          }
-        });
-      }
-    });
-
-    return [...new Set(openKeys)];
-  }, [location.pathname, projectId]);
-
   const handleMenuClick = useCallback(({ key }: { key: string }) => {
     if (location.pathname !== key) {
       navigate(key);
     }
   }, [location.pathname, navigate]);
+
+  const handleOpenChange = useCallback((keys: string[]) => {
+    const latestOpenKey = keys.find(key => !openKeys.includes(key));
+    if (latestOpenKey) {
+      setOpenKeys([latestOpenKey]);
+    } else {
+      setOpenKeys(keys);
+    }
+  }, [openKeys]);
 
   const siderStyle = useMemo(() => ({
     minHeight: "100%",
@@ -117,7 +125,8 @@ const ProjectSidebar: React.FC = () => {
         <Menu
           mode="inline"
           selectedKeys={selectedKeys}
-          defaultOpenKeys={defaultOpenKeys}
+          openKeys={openKeys}
+          onOpenChange={handleOpenChange}
           onClick={handleMenuClick}
           inlineCollapsed={isSidebarCollapsed}
           style={menuStyle}
