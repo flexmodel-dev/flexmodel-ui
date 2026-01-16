@@ -1,6 +1,5 @@
 import React from "react";
-import {theme, Typography} from "antd";
-import {useTranslation} from "react-i18next";
+import { Spin, theme, Typography } from "antd";
 
 interface PageContainerProps {
   children: React.ReactNode;
@@ -22,7 +21,6 @@ const PageContainer: React.FC<PageContainerProps> = ({
   bodyStyle,
 }) => {
   const { token } = theme.useToken();
-  const { t } = useTranslation();
 
   const containerStyle: React.CSSProperties = {
     height: '100%',
@@ -75,7 +73,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
               height: '100%',
             }}
           >
-            <div>{t('loading')}</div>
+            <Spin size="large" />
           </div>
         ) : (
           children
