@@ -24,7 +24,7 @@ interface TriggerListProps {
   eventOnly?: boolean;
 }
 
-const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly = false }) => {
+const TriggerList: React.FC<TriggerListProps> = ({datasource, model, eventOnly = false}) => {
   const {t} = useTranslation();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
@@ -44,7 +44,7 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
   const loadTriggers = async () => {
     setLoading(true);
     try {
-      const { getTriggerPage } = await import('@/services/trigger');
+      const {getTriggerPage} = await import('@/services/trigger');
       const params: any = {
         page: currentPage,
         size: pageSize
@@ -76,7 +76,7 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
 
   const handleDelete = async (id: string) => {
     try {
-      const { deleteTrigger } = await import('@/services/trigger');
+      const {deleteTrigger} = await import('@/services/trigger');
       await deleteTrigger(projectId, id);
       message.success(t('delete_success'));
       loadTriggers();
@@ -87,7 +87,7 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
 
   const handleToggleStatus = async (trigger: TriggerDTO) => {
     try {
-      const { patchTrigger } = await import('@/services/trigger');
+      const {patchTrigger} = await import('@/services/trigger');
       await patchTrigger(projectId, trigger.id!, {
         ...trigger,
         state: !trigger.state
@@ -101,7 +101,7 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
 
   const handleSubmit = async (values: any) => {
     try {
-      const { createTrigger, updateTrigger } = await import('@/services/trigger');
+      const {createTrigger, updateTrigger} = await import('@/services/trigger');
       if (editingTrigger) {
         await updateTrigger(projectId, editingTrigger.id!, {
           ...values,
@@ -124,7 +124,7 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
 
   const handleExecute = async (id: string) => {
     try {
-      const { executeTrigger } = await import('@/services/trigger');
+      const {executeTrigger} = await import('@/services/trigger');
       await executeTrigger(projectId, id);
       message.success(t('trigger.execute_success'));
     } catch {
@@ -263,50 +263,48 @@ const TriggerList: React.FC<TriggerListProps> = ({ datasource, model, eventOnly 
 
   // 直接使用API返回的数据，不需要客户端分页
   return (
-    <PageContainer title={t('trigger.title')}
-                   extra={
-                     <Button
-                       type="primary"
-                       size="small"
-                       icon={<PlusOutlined/>}
-                       onClick={handleCreate}
-                     >
-                       {t('trigger.create')}
-                     </Button>
-                   }
+    <PageContainer
+      title={t('trigger.title')
+      }
+      extra={
+        <Button
+          type="primary"
+          icon={<PlusOutlined/>}
+          onClick={handleCreate}
+        >
+          {t('trigger.create')}
+        </Button>
+      }
+      loading={loading}
     >
-      <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-        <div style={{flex: 1, overflow: 'auto'}}>
-          <Table
-            columns={columns}
-            dataSource={triggers}
-            loading={loading}
-            rowKey="id"
-            scroll={{ y: '60vh' }}
-            pagination={{
-              current: currentPage,
-              pageSize: pageSize,
-              total: total,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              showTotal: (total, range) =>
-                t('pagination_total_text', {
-                  start: range[0],
-                  end: range[1],
-                  total: total
-                }),
-              onChange: (page, size) => {
-                setCurrentPage(page);
-                setPageSize(size || 10);
-              },
-              onShowSizeChange: (_current: number, size: number) => {
-                setCurrentPage(1);
-                setPageSize(size);
-              }
-            }}
-          />
-        </div>
-      </div>
+      <Table
+        columns={columns}
+        dataSource={triggers}
+        loading={loading}
+        rowKey="id"
+        scroll={{y: '60vh'}}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total, range) =>
+            t('pagination_total_text', {
+              start: range[0],
+              end: range[1],
+              total: total
+            }),
+          onChange: (page, size) => {
+            setCurrentPage(page);
+            setPageSize(size || 10);
+          },
+          onShowSizeChange: (_current: number, size: number) => {
+            setCurrentPage(1);
+            setPageSize(size);
+          }
+        }}
+      />
 
       <Modal
         title={editingTrigger ? t('trigger.edit') : t('trigger.create')}

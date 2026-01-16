@@ -1,19 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Button, Typography, Space, Tag, Modal, Form, Input, message, Empty, Dropdown, Popconfirm, Table, theme } from 'antd';
-import { PlusOutlined, SettingOutlined, DatabaseOutlined, CloudServerOutlined, SearchOutlined, BranchesOutlined, CloudOutlined, MoreOutlined, DeleteOutlined, AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import { useProject } from '@/store/appStore';
-import { createProject, getProjects, deleteProject } from '@/services/project';
-import type { Project } from '@/types/project';
-import { PageContainer } from '@/components/common';
-import { t } from 'i18next';
+import React, {useState, useEffect} from 'react';
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Typography,
+  Space,
+  Tag,
+  Modal,
+  Form,
+  Input,
+  message,
+  Empty,
+  Dropdown,
+  Popconfirm,
+  Table,
+  theme
+} from 'antd';
+import {
+  PlusOutlined,
+  SettingOutlined,
+  DatabaseOutlined,
+  CloudServerOutlined,
+  SearchOutlined,
+  BranchesOutlined,
+  CloudOutlined,
+  MoreOutlined,
+  DeleteOutlined,
+  AppstoreOutlined,
+  UnorderedListOutlined
+} from '@ant-design/icons';
+import {useNavigate} from 'react-router-dom';
+import {useProject} from '@/store/appStore';
+import {createProject, getProjects, deleteProject} from '@/services/project';
+import type {Project} from '@/types/project';
+import {PageContainer} from '@/components/common';
+import {t} from 'i18next';
 
-const { Title, Text } = Typography;
+const {Title, Text} = Typography;
 
 const Project: React.FC = () => {
-  const { token } = theme.useToken();
+  const {token} = theme.useToken();
   const navigate = useNavigate();
-  const { setCurrentProject } = useProject();
+  const {setCurrentProject} = useProject();
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -30,7 +59,7 @@ const Project: React.FC = () => {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const projects = await getProjects({ include: 'stats' });
+      const projects = await getProjects({include: 'stats'});
       setProjects(projects);
       setFilteredProjects(projects);
     } catch (error) {
@@ -100,291 +129,289 @@ const Project: React.FC = () => {
   };
 
   return (
-    <PageContainer loading={loading}>
-      <div style={{ padding: token.padding, minHeight: '100vh' }}>
-        <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Title level={2} style={{ margin: 0 }}>{t('platform.project')}</Title>
+    <PageContainer
+      title={t('platform.project')}
+      extra={[
+        <Space>
+          <Input
+            placeholder={t('project.searchPlaceholder')}
+            prefix={<SearchOutlined/>}
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            style={{width: 200}}
+            allowClear
+          />
           <Space>
-            <Input
-              placeholder={t('project.searchPlaceholder')}
-              prefix={<SearchOutlined />}
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              style={{ width: 200 }}
-              allowClear
+            <Button
+              type={viewMode === 'card' ? 'default' : 'text'}
+              icon={<AppstoreOutlined/>}
+              onClick={() => setViewMode('card')}
+              style={{borderTopLeftRadius: 4, borderBottomLeftRadius: 4}}
             />
-            <Space>
-              <Button
-                type={viewMode === 'card' ? 'default' : 'text'}
-                icon={<AppstoreOutlined />}
-                onClick={() => setViewMode('card')}
-                style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
-              />
-              <Button
-                type={viewMode === 'list' ? 'default' : 'text'}
-                icon={<UnorderedListOutlined />}
-                onClick={() => setViewMode('list')}
-                style={{ borderTopRightRadius: 4, borderBottomRightRadius: 4, marginLeft: -1 }}
-              />
-            </Space>
-            <Button type="primary" icon={<PlusOutlined />} onClick={handleCreateProject}>
-              {t('project.create')}
-            </Button>
+            <Button
+              type={viewMode === 'list' ? 'default' : 'text'}
+              icon={<UnorderedListOutlined/>}
+              onClick={() => setViewMode('list')}
+              style={{borderTopRightRadius: 4, borderBottomRightRadius: 4, marginLeft: -1}}
+            />
           </Space>
-        </div>
-
-        {filteredProjects.length === 0 ? (
-          <Empty
-            description={searchKeyword ? t('project.noResults') : t('project.empty')}
-            style={{ marginTop: '100px' }}
-          />
-        ) : viewMode === 'list' ? (
-          <Table
-            dataSource={filteredProjects}
-            rowKey="id"
-            onRow={(record) => ({
-              onClick: () => handleProjectClick(record.id)
-            })}
-            style={{ cursor: 'pointer' }}
-            pagination={false}
-            bordered
-            rowClassName={() => 'table-row'}
-            columns={[
-              {
-                title: t('project.name'),
-                dataIndex: 'name',
-                key: 'name',
-                render: (text, record) => (
-                  <div>
-                    <div style={{ fontWeight: '500' }}>{text}</div>
-                    <div style={{ color: '#8c8c8c', fontSize: '12px' }}>{record.description}</div>
-                  </div>
-                )
-              },
-              {
-                title: t('project.owner'),
-                dataIndex: 'ownerId',
-                key: 'ownerId',
-                render: (text) => text || '-'
-              },
-              {
-                  title: t('project.stats'),
-                  key: 'stats',
-                  render: (_, record) => (
-                    <Space size="small" wrap>
-                      {(record.stats?.apiCount ?? 0) > 0 && (
-                        <Tag icon={<CloudServerOutlined />} color="blue">
-                          {record.stats?.apiCount} {t('project.api')}
-                        </Tag>
-                      )}
-                      {(record.stats?.dataSourceCount ?? 0) > 0 && (
-                        <Tag icon={<DatabaseOutlined />} color="green">
-                          {record.stats?.dataSourceCount} {t('project.dataSource')}
-                        </Tag>
-                      )}
-                      {(record.stats?.flowCount ?? 0) > 0 && (
-                        <Tag icon={<BranchesOutlined />} color="purple">
-                          {record.stats?.flowCount} {t('project.flow')}
-                        </Tag>
-                      )}
-                      {(record.stats?.storageCount ?? 0) > 0 && (
-                        <Tag icon={<CloudOutlined />} color="orange">
-                          {record.stats?.storageCount} {t('project.storage')}
-                        </Tag>
-                      )}
-                    </Space>
-                  )
-                },
-              {
-                title: t('project.createdAt'),
-                dataIndex: 'createdAt',
-                key: 'createdAt',
-                render: (text) => new Date(text).toLocaleString('zh-CN')
-              },
-              {
-                title: '',
-                key: 'actions',
-                render: (_, record) => (
-                  <Dropdown
-                    menu={{
-                      items: [
-                        {
-                          key: 'settings',
-                          label: t('project.settings'),
-                          icon: <SettingOutlined />,
-                          onClick: (e) => {
-                            e.domEvent.stopPropagation();
-                            handleSettingsClick(e.domEvent as React.MouseEvent, record.id);
-                          }
-                        },
-                        {
-                          key: 'delete',
-                          label: (
-                            <Popconfirm
-                              title={t('project.deleteConfirm')}
-                              description={t('project.deleteConfirmDesc')}
-                              onConfirm={(e) => {
-                                e?.stopPropagation();
-                                handleDeleteProject(record.id);
-                              }}
-                              onCancel={(e) => e?.stopPropagation()}
-                              okText={t('common.confirm')}
-                              cancelText={t('common.cancel')}
-                            >
-                              <span onClick={(e) => e.stopPropagation()}>{t('project.delete')}</span>
-                            </Popconfirm>
-                          ),
-                          icon: <DeleteOutlined />,
-                          danger: true
+          <Button type="primary" icon={<PlusOutlined/>} onClick={handleCreateProject}>
+            {t('project.create')}
+          </Button>
+        </Space>
+      ]}
+      loading={loading}>
+      {filteredProjects.length === 0 ? (
+        <Empty
+          description={searchKeyword ? t('project.noResults') : t('project.empty')}
+          style={{marginTop: '100px'}}
+        />
+      ) : viewMode === 'list' ? (
+        <Table
+          dataSource={filteredProjects}
+          rowKey="id"
+          onRow={(record) => ({
+            onClick: () => handleProjectClick(record.id)
+          })}
+          style={{cursor: 'pointer'}}
+          pagination={false}
+          bordered
+          rowClassName={() => 'table-row'}
+          columns={[
+            {
+              title: t('project.name'),
+              dataIndex: 'name',
+              key: 'name',
+              render: (text, record) => (
+                <div>
+                  <div style={{fontWeight: '500'}}>{text}</div>
+                  <div style={{color: '#8c8c8c', fontSize: '12px'}}>{record.description}</div>
+                </div>
+              )
+            },
+            {
+              title: t('project.owner'),
+              dataIndex: 'ownerId',
+              key: 'ownerId',
+              render: (text) => text || '-'
+            },
+            {
+              title: t('project.stats'),
+              key: 'stats',
+              render: (_, record) => (
+                <Space size="small" wrap>
+                  {(record.stats?.apiCount ?? 0) > 0 && (
+                    <Tag icon={<CloudServerOutlined/>} color="blue">
+                      {record.stats?.apiCount} {t('project.api')}
+                    </Tag>
+                  )}
+                  {(record.stats?.dataSourceCount ?? 0) > 0 && (
+                    <Tag icon={<DatabaseOutlined/>} color="green">
+                      {record.stats?.dataSourceCount} {t('project.dataSource')}
+                    </Tag>
+                  )}
+                  {(record.stats?.flowCount ?? 0) > 0 && (
+                    <Tag icon={<BranchesOutlined/>} color="purple">
+                      {record.stats?.flowCount} {t('project.flow')}
+                    </Tag>
+                  )}
+                  {(record.stats?.storageCount ?? 0) > 0 && (
+                    <Tag icon={<CloudOutlined/>} color="orange">
+                      {record.stats?.storageCount} {t('project.storage')}
+                    </Tag>
+                  )}
+                </Space>
+              )
+            },
+            {
+              title: t('project.createdAt'),
+              dataIndex: 'createdAt',
+              key: 'createdAt',
+              render: (text) => new Date(text).toLocaleString('zh-CN')
+            },
+            {
+              title: '',
+              key: 'actions',
+              render: (_, record) => (
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        key: 'settings',
+                        label: t('project.settings'),
+                        icon: <SettingOutlined/>,
+                        onClick: (e) => {
+                          e.domEvent.stopPropagation();
+                          handleSettingsClick(e.domEvent as React.MouseEvent, record.id);
                         }
-                      ]
-                    }}
-                    trigger={['hover']}
-                    placement="bottomRight"
-                  >
-                    <Button
-                      type="text"
-                      icon={<MoreOutlined />}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </Dropdown>
-                )
-              }
-            ]}
-          />
-        ) : (
-          <Row gutter={[24, 24]}>
-            {filteredProjects.map(project => (
-              <Col xs={24} sm={12} lg={8} xl={6} key={project.id}>
-                <Card
-                  hoverable
-                  style={{ height: '100%', cursor: 'pointer' }}
-                  onClick={() => handleProjectClick(project.id)}
-                  styles={{
-                    body: { padding: token.paddingLG }
+                      },
+                      {
+                        key: 'delete',
+                        label: (
+                          <Popconfirm
+                            title={t('project.deleteConfirm')}
+                            description={t('project.deleteConfirmDesc')}
+                            onConfirm={(e) => {
+                              e?.stopPropagation();
+                              handleDeleteProject(record.id);
+                            }}
+                            onCancel={(e) => e?.stopPropagation()}
+                            okText={t('common.confirm')}
+                            cancelText={t('common.cancel')}
+                          >
+                            <span onClick={(e) => e.stopPropagation()}>{t('project.delete')}</span>
+                          </Popconfirm>
+                        ),
+                        icon: <DeleteOutlined/>,
+                        danger: true
+                      }
+                    ]
                   }}
+                  trigger={['hover']}
+                  placement="bottomRight"
                 >
-                  <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div style={{ flex: 1 }}>
-                        <Title level={4} style={{ margin: 0, marginBottom: token.marginMD }}>
-                          {project.name}
-                        </Title>
-                        <Text type="secondary" style={{ fontSize: token.fontSizeSM }}>
-                          {project.description}
-                        </Text>
-                      </div>
-                      <Dropdown
-                        menu={{
-                          items: [
-                            {
-                              key: 'settings',
-                              label: t('project.settings'),
-                              icon: <SettingOutlined />,
-                              onClick: (e) => {
-                                e.domEvent.stopPropagation();
-                                handleSettingsClick(e.domEvent as React.MouseEvent, project.id);
-                              }
-                            },
-                            {
-                              key: 'delete',
-                              label: (
-                                <Popconfirm
-                                  title={t('project.deleteConfirm')}
-                                  description={t('project.deleteConfirmDesc')}
-                                  onConfirm={(e) => {
-                                    e?.stopPropagation();
-                                    handleDeleteProject(project.id);
-                                  }}
-                                  onCancel={(e) => e?.stopPropagation()}
-                                  okText={t('common.confirm')}
-                                  cancelText={t('common.cancel')}
-                                >
-                                  <span onClick={(e) => e.stopPropagation()}>{t('project.delete')}</span>
-                                </Popconfirm>
-                              ),
-                              icon: <DeleteOutlined />,
-                              danger: true
+                  <Button
+                    type="text"
+                    icon={<MoreOutlined/>}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </Dropdown>
+              )
+            }
+          ]}
+        />
+      ) : (
+        <Row gutter={[24, 24]}>
+          {filteredProjects.map(project => (
+            <Col xs={24} sm={12} lg={8} xl={6} key={project.id}>
+              <Card
+                hoverable
+                style={{height: '100%', cursor: 'pointer'}}
+                onClick={() => handleProjectClick(project.id)}
+                styles={{
+                  body: {padding: token.paddingLG}
+                }}
+              >
+                <Space direction="vertical" size="middle" style={{width: '100%'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+                    <div style={{flex: 1}}>
+                      <Title level={4} style={{margin: 0, marginBottom: token.marginMD}}>
+                        {project.name}
+                      </Title>
+                      <Text type="secondary" style={{fontSize: token.fontSizeSM}}>
+                        {project.description}
+                      </Text>
+                    </div>
+                    <Dropdown
+                      menu={{
+                        items: [
+                          {
+                            key: 'settings',
+                            label: t('project.settings'),
+                            icon: <SettingOutlined/>,
+                            onClick: (e) => {
+                              e.domEvent.stopPropagation();
+                              handleSettingsClick(e.domEvent as React.MouseEvent, project.id);
                             }
-                          ]
-                        }}
-                        trigger={['hover']}
-                        placement="bottomRight"
-                      >
-                        <Button
-                          type="text"
-                          icon={<MoreOutlined />}
-                          onClick={(e) => e.stopPropagation()}
-                          style={{ flexShrink: 0 }}
-                        />
-                      </Dropdown>
-                    </div>
+                          },
+                          {
+                            key: 'delete',
+                            label: (
+                              <Popconfirm
+                                title={t('project.deleteConfirm')}
+                                description={t('project.deleteConfirmDesc')}
+                                onConfirm={(e) => {
+                                  e?.stopPropagation();
+                                  handleDeleteProject(project.id);
+                                }}
+                                onCancel={(e) => e?.stopPropagation()}
+                                okText={t('common.confirm')}
+                                cancelText={t('common.cancel')}
+                              >
+                                <span onClick={(e) => e.stopPropagation()}>{t('project.delete')}</span>
+                              </Popconfirm>
+                            ),
+                            icon: <DeleteOutlined/>,
+                            danger: true
+                          }
+                        ]
+                      }}
+                      trigger={['hover']}
+                      placement="bottomRight"
+                    >
+                      <Button
+                        type="text"
+                        icon={<MoreOutlined/>}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{flexShrink: 0}}
+                      />
+                    </Dropdown>
+                  </div>
 
-                    <Space size="small" wrap>
-                      {(project.stats?.apiCount ?? 0) > 0 && (
-                        <Tag icon={<CloudServerOutlined />} color="blue">
-                          {project.stats?.apiCount} {t('project.api')}
-                        </Tag>
-                      )}
-                      {(project.stats?.dataSourceCount ?? 0) > 0 && (
-                        <Tag icon={<DatabaseOutlined />} color="green">
-                          {project.stats?.dataSourceCount} {t('project.dataSource')}
-                        </Tag>
-                      )}
-                      {(project.stats?.flowCount ?? 0) > 0 && (
-                        <Tag icon={<BranchesOutlined />} color="purple">
-                          {project.stats?.flowCount} {t('project.flow')}
-                        </Tag>
-                      )}
-                      {(project.stats?.storageCount ?? 0) > 0 && (
-                        <Tag icon={<CloudOutlined />} color="orange">
-                          {project.stats?.storageCount} {t('project.storage')}
-                        </Tag>
-                      )}
-                    </Space>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text type="secondary" style={{ fontSize: '12px' }}>
-                        {t('project.owner')}: {project.ownerId}
-                      </Text>
-                      <Text type="secondary" style={{ fontSize: '12px' }}>
-                        {t('project.createdAt')}: {new Date(project.createdAt).toLocaleDateString('zh-CN')}
-                      </Text>
-                    </div>
+                  <Space size="small" wrap>
+                    {(project.stats?.apiCount ?? 0) > 0 && (
+                      <Tag icon={<CloudServerOutlined/>} color="blue">
+                        {project.stats?.apiCount} {t('project.api')}
+                      </Tag>
+                    )}
+                    {(project.stats?.dataSourceCount ?? 0) > 0 && (
+                      <Tag icon={<DatabaseOutlined/>} color="green">
+                        {project.stats?.dataSourceCount} {t('project.dataSource')}
+                      </Tag>
+                    )}
+                    {(project.stats?.flowCount ?? 0) > 0 && (
+                      <Tag icon={<BranchesOutlined/>} color="purple">
+                        {project.stats?.flowCount} {t('project.flow')}
+                      </Tag>
+                    )}
+                    {(project.stats?.storageCount ?? 0) > 0 && (
+                      <Tag icon={<CloudOutlined/>} color="orange">
+                        {project.stats?.storageCount} {t('project.storage')}
+                      </Tag>
+                    )}
                   </Space>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        )}
 
-        <Modal
-          title={t('project.createModalTitle')}
-          open={isCreateModalVisible}
-          onOk={handleCreateModalOk}
-          onCancel={handleCreateModalCancel}
-          okText={t('common.create')}
-          cancelText={t('common.cancel')}
-          width={600}
-        >
-          <Form form={form} layout="vertical">
-            <Form.Item
-              label={t('project.name')}
-              name="name"
-              rules={[{ required: true, message: t('project.nameRequired') }]}
-            >
-              <Input placeholder={t('project.namePlaceholder')} />
-            </Form.Item>
-            <Form.Item
-              label={t('project.description')}
-              name="description"
-              rules={[{ required: true, message: t('project.descriptionRequired') }]}
-            >
-              <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')} />
-            </Form.Item>
-          </Form>
-        </Modal>
-      </div>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Text type="secondary" style={{fontSize: '12px'}}>
+                      {t('project.owner')}: {project.ownerId}
+                    </Text>
+                    <Text type="secondary" style={{fontSize: '12px'}}>
+                      {t('project.createdAt')}: {new Date(project.createdAt).toLocaleDateString('zh-CN')}
+                    </Text>
+                  </div>
+                </Space>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
+
+      <Modal
+        title={t('project.createModalTitle')}
+        open={isCreateModalVisible}
+        onOk={handleCreateModalOk}
+        onCancel={handleCreateModalCancel}
+        okText={t('common.create')}
+        cancelText={t('common.cancel')}
+        width={600}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label={t('project.name')}
+            name="name"
+            rules={[{required: true, message: t('project.nameRequired')}]}
+          >
+            <Input placeholder={t('project.namePlaceholder')}/>
+          </Form.Item>
+          <Form.Item
+            label={t('project.description')}
+            name="description"
+            rules={[{required: true, message: t('project.descriptionRequired')}]}
+          >
+            <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')}/>
+          </Form.Item>
+        </Form>
+      </Modal>
     </PageContainer>
 
   );

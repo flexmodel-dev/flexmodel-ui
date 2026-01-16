@@ -15,14 +15,15 @@ import JsIdPForm from "@/pages/IdentityProvider/components/JsIdPForm.tsx";
 import IdpView from "@/pages/IdentityProvider/components/IdPView";
 import {PageContainer} from "@/components/common";
 import {useProject} from "@/store/appStore";
-const { Title } = Typography;
+
+const {Title} = Typography;
 
 const IdPManagement: React.FC = () => {
-  const { token } = theme.useToken();
-  const { t } = useTranslation();
-  const { currentProject } = useProject();
+  const {token} = theme.useToken();
+  const {t} = useTranslation();
+  const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
-  
+
   const [idPList, setIdPList] = useState<IdentityProvider[]>([]);
   const [activeIdP, setActiveIdP] = useState<IdentityProvider | null>(null);
   const [idPLoading, setIdPLoading] = useState<boolean>(false);
@@ -36,7 +37,7 @@ const IdPManagement: React.FC = () => {
       setIdPLoading(false);
       return;
     }
-    
+
     try {
       setIdPLoading(true);
       const data = await getIdentityProvidersApi(projectId);
@@ -71,7 +72,7 @@ const IdPManagement: React.FC = () => {
       message.error('Project ID is required');
       return;
     }
-    
+
     try {
       const payload = buildUpdatePayload(formData);
       await updateIdentityProvider(projectId, formData.name, payload);
@@ -89,39 +90,52 @@ const IdPManagement: React.FC = () => {
 
   return (
     <>
-      <PageContainer>
-        <div style={{ padding: token.padding }}>
-          <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Title level={2} style={{ margin: 0 }}>{t("identity_provider")}</Title>
-          </div>
-          <Splitter>
-            <Splitter.Panel max="20%" collapsible>
-              <div style={{ height: "80vh", overflow: "auto" }}>
-                <IdPExplorer
-                  idPList={idPList}
-                  activeIdP={activeIdP}
-                  loading={idPLoading}
-                  setActiveIdP={setActiveIdP}
-                  setDeleteVisible={setDeleteVisible}
-                  setDrawerVisible={setDrawerVisible}
-                  t={t}
-                />
-              </div>
-            </Splitter.Panel>
-            <Splitter.Panel>
-              <div style={{ padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto" }}>
-              <div style={{ marginBottom: token.marginMD, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Title level={3} style={{ margin: 0 }}>{activeIdP?.name || t("identity_provider")}</Title>
+      <PageContainer
+        title={t("identity_provider")}
+        extra={[]}
+        loading={idPLoading}>
+        <Splitter>
+          <Splitter.Panel max="20%" collapsible>
+            <div style={{height: "80vh", overflow: "auto"}}>
+              <IdPExplorer
+                idPList={idPList}
+                activeIdP={activeIdP}
+                loading={idPLoading}
+                setActiveIdP={setActiveIdP}
+                setDeleteVisible={setDeleteVisible}
+                setDrawerVisible={setDrawerVisible}
+                t={t}
+              />
+            </div>
+          </Splitter.Panel>
+          <Splitter.Panel>
+            <div style={{padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto"}}>
+              <div style={{
+                marginBottom: token.marginMD,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <Title level={3} style={{margin: 0}}>{activeIdP?.name || t("identity_provider")}</Title>
                 <Space>
                   {isEditing ? (
                     <Space>
-                      <Button onClick={() => { setIsEditing(false); form.resetFields(); }}>{t("cancel")}</Button>
-                      <Button type="primary" onClick={async () => { const values = await form.validateFields(); await handleEditProvider(values); }}>{t("save")}</Button>
+                      <Button onClick={() => {
+                        setIsEditing(false);
+                        form.resetFields();
+                      }}>{t("cancel")}</Button>
+                      <Button type="primary" onClick={async () => {
+                        const values = await form.validateFields();
+                        await handleEditProvider(values);
+                      }}>{t("save")}</Button>
                     </Space>
                   ) : (
                     <Button
                       type="primary"
-                      onClick={() => { setIsEditing(true); form.setFieldsValue(normalizeIdentityProvider(activeIdP)); }}
+                      onClick={() => {
+                        setIsEditing(true);
+                        form.setFieldsValue(normalizeIdentityProvider(activeIdP));
+                      }}
                     >
                       {t("edit")}
                     </Button>
@@ -134,21 +148,20 @@ const IdPManagement: React.FC = () => {
                     {isEditing ? (
                       <Form form={form} layout="vertical">
                         {(form.getFieldValue('type') ?? activeIdP.type ?? activeIdP.provider?.type) === 'script' ? (
-                          <JsIdPForm />
+                          <JsIdPForm/>
                         ) : (
-                          <OIDCIdPForm />
+                          <OIDCIdPForm/>
                         )}
                       </Form>
                     ) : (
-                      <IdpView data={activeIdP} />
+                      <IdpView data={activeIdP}/>
                     )}
                   </Col>
                 </Row>
               )}
-              </div>
-            </Splitter.Panel>
-          </Splitter>
-        </div>
+            </div>
+          </Splitter.Panel>
+        </Splitter>
       </PageContainer>
       <CreateIdP
         open={drawerVisible}
@@ -159,15 +172,15 @@ const IdPManagement: React.FC = () => {
       />
       <Modal
         open={deleteVisible}
-        title={t("identity_provider_delete_confirm", { name: activeIdP?.name })}
+        title={t("identity_provider_delete_confirm", {name: activeIdP?.name})}
         onCancel={() => setDeleteVisible(false)}
         onOk={handleDelete}
         okText={t("delete")}
-        okButtonProps={{ danger: true }}
+        okButtonProps={{danger: true}}
       >
         <p
           dangerouslySetInnerHTML={{
-            __html: t("identity_provider_delete_confirm_desc", { name: activeIdP?.name })
+            __html: t("identity_provider_delete_confirm_desc", {name: activeIdP?.name})
           }}
         />
       </Modal>

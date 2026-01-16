@@ -26,6 +26,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
 
   const containerStyle: React.CSSProperties = {
     height: '100%',
+    padding: token.padding,
     width: '100%',
     background: token.colorBgContainer,
     borderRadius: token.borderRadius,
@@ -42,7 +43,6 @@ const PageContainer: React.FC<PageContainerProps> = ({
         <div
           style={{
             padding: `${token.padding}px ${token.paddingLG}px`,
-            borderBottom: `1px solid ${token.colorBorderSecondary}`,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -50,7 +50,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
           }}
         >
           {title && (
-            <Typography.Title style={{ margin: 0 }} level={5}>
+            <Typography.Title level={3}>
               {typeof title === 'string' ? title : title}
             </Typography.Title>
           )}

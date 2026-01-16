@@ -147,10 +147,10 @@ export const projectRoutes: RouteConfig[] = [
     translationKey: "flow",
     children: [
       {
-        path: "/project/:projectId/flow/mgr",
+        path: "/project/:projectId/flow/definition",
         element: <FlowList />,
         icon: BranchesOutlined,
-        translationKey: "flow_mgr",
+        translationKey: "flow_definition",
       },
       {
         path: "/project/:projectId/flow/instance",

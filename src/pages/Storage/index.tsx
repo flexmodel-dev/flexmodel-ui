@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Button, Col, Form, message, Modal, Row, Space, Splitter, Tabs, Typography, theme } from "antd";
-import { useTranslation } from "react-i18next";
+import React, {useState} from "react";
+import {Button, Col, Form, message, Modal, Row, Space, Splitter, Tabs, Typography, theme} from "antd";
+import {useTranslation} from "react-i18next";
 import PageContainer from "@/components/common/PageContainer";
-import type { StorageSchema } from "@/types/storage";
+import type {StorageSchema} from "@/types/storage";
 import StorageExplorer from "@/pages/Storage/components/StorageExplorer";
 import {
   deleteStorage,
@@ -12,13 +12,14 @@ import CreateStorageDrawer from "@/pages/Storage/components/CreateStorageDrawer"
 import StorageView from "@/pages/Storage/components/StorageView";
 import StorageForm from "@/pages/Storage/components/StorageForm";
 import FileBrowser from "@/pages/Storage/components/FileBrowser";
-import { useProject } from "@/store/appStore";
-const { Title } = Typography;
+import {useProject} from "@/store/appStore";
+
+const {Title} = Typography;
 
 const StorageManagement: React.FC = () => {
-  const { token } = theme.useToken();
-  const { t } = useTranslation();
-  const { currentProject } = useProject();
+  const {token} = theme.useToken();
+  const {t} = useTranslation();
+  const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
   const [activeStorage, setActiveStorage] = useState<StorageSchema | null>(null);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
@@ -62,75 +63,77 @@ const StorageManagement: React.FC = () => {
 
   return (
     <>
-      <PageContainer>
-        <div style={{ padding: token.padding }}>
-          <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Title level={2} style={{ margin: 0 }}>{t('storage')}</Title>
-          </div>
-          <Splitter>
-            <Splitter.Panel max="20%" collapsible>
-              <div style={{ height: "80vh", overflow: "auto" }}>
-                <StorageExplorer
-                  onSelect={handleSelect}
-                  setDeleteVisible={setDeleteVisible}
-                  setDrawerVisible={setDrawerVisible}
-                  selectedStorage={activeStorage?.name}
-                />
+      <PageContainer
+        title={t("storage")}
+      >
+        <Splitter>
+          <Splitter.Panel max="20%" collapsible>
+            <div style={{height: "80vh", overflow: "auto"}}>
+              <StorageExplorer
+                onSelect={handleSelect}
+                setDeleteVisible={setDeleteVisible}
+                setDrawerVisible={setDrawerVisible}
+                selectedStorage={activeStorage?.name}
+              />
+            </div>
+          </Splitter.Panel>
+          <Splitter.Panel>
+            <div style={{padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto"}}>
+              <div style={{
+                marginBottom: token.marginMD,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <Title level={3} style={{margin: 0}}>{activeStorage?.name || t('storage')}</Title>
+                <Space>
+                  {isEditing ? (
+                    <Space>
+                      <Button onClick={() => {
+                        setIsEditing(false);
+                        form.resetFields();
+                      }}>{t("cancel")}</Button>
+                      <Button type="primary" onClick={async () => {
+                        const values = await form.validateFields();
+                        await handleEditStorage(values);
+                      }}>{t("save")}</Button>
+                    </Space>
+                  ) : (
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setIsEditing(true);
+                        form.setFieldsValue(activeStorage);
+                      }}
+                    >
+                      {t("edit")}
+                    </Button>
+                  )}
+                </Space>
               </div>
-            </Splitter.Panel>
-            <Splitter.Panel>
-              <div style={{ padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto" }}>
-                <div style={{ marginBottom: token.marginMD, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Title level={3} style={{ margin: 0 }}>{activeStorage?.name || t('storage')}</Title>
-                  <Space>
+              {activeStorage && (
+                <Row>
+                  <Col span={24}>
                     {isEditing ? (
-                      <Space>
-                        <Button onClick={() => {
-                          setIsEditing(false);
-                          form.resetFields();
-                        }}>{t("cancel")}</Button>
-                        <Button type="primary" onClick={async () => {
-                          const values = await form.validateFields();
-                          await handleEditStorage(values);
-                        }}>{t("save")}</Button>
-                      </Space>
+                      <Form form={form} layout="vertical">
+                        <StorageForm/>
+                      </Form>
                     ) : (
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          setIsEditing(true);
-                          form.setFieldsValue(activeStorage);
-                        }}
-                      >
-                        {t("edit")}
-                      </Button>
+                      <Tabs activeKey={activeTab} onChange={setActiveTab}>
+                        <Tabs.TabPane key="browser" tab={t('file_browser')}>
+                          <FileBrowser storageName={activeStorage.name} projectId={projectId}/>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane key="config" tab={t('configuration')}>
+                          <StorageView data={activeStorage}/>
+                        </Tabs.TabPane>
+                      </Tabs>
                     )}
-                  </Space>
-                </div>
-                {activeStorage && (
-                  <Row>
-                    <Col span={24}>
-                      {isEditing ? (
-                        <Form form={form} layout="vertical">
-                          <StorageForm />
-                        </Form>
-                      ) : (
-                        <Tabs activeKey={activeTab} onChange={setActiveTab}>
-                          <Tabs.TabPane key="browser" tab={t('file_browser')}>
-                            <FileBrowser storageName={activeStorage.name} projectId={projectId} />
-                          </Tabs.TabPane>
-                          <Tabs.TabPane key="config" tab={t('configuration')}>
-                            <StorageView data={activeStorage} />
-                          </Tabs.TabPane>
-                        </Tabs>
-                      )}
-                    </Col>
-                  </Row>
-                )}
-              </div>
-            </Splitter.Panel>
-          </Splitter>
-        </div>
+                  </Col>
+                </Row>
+              )}
+            </div>
+          </Splitter.Panel>
+        </Splitter>
 
       </PageContainer>
       {/* <PageContainer
@@ -209,14 +212,14 @@ const StorageManagement: React.FC = () => {
 
       <Modal
         open={deleteVisible}
-        title={t("delete_storage_confirm", { name: activeStorage?.name })}
+        title={t("delete_storage_confirm", {name: activeStorage?.name})}
         onCancel={() => setDeleteVisible(false)}
         onOk={handleDelete}
         okText={t("delete")}
-        okButtonProps={{ danger: true }}
+        okButtonProps={{danger: true}}
       >
         <p>
-          {t("delete_storage_confirm_desc", { name: activeStorage?.name })}
+          {t("delete_storage_confirm_desc", {name: activeStorage?.name})}
         </p>
       </Modal>
     </>

@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Button, Form, Input, message, Modal, Space, Table, Typography, theme } from "antd";
-import { useTranslation } from "react-i18next";
-import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import React, {useState, useEffect, useCallback} from "react";
+import {Button, Form, Input, message, Modal, Space, Table} from "antd";
+import {useTranslation} from "react-i18next";
+import {DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import PageContainer from "@/components/common/PageContainer";
-import type { ColumnsType } from "antd/es/table";
-import { getMembers, createMember, updateMember, deleteMember } from "@/services/member";
-import type { MemberResponse } from "@/types/member.d";
-const { Title } = Typography;
+import type {ColumnsType} from "antd/es/table";
+import {getMembers, createMember, updateMember, deleteMember} from "@/services/member";
+import type {MemberResponse} from "@/types/member.d";
 
 const Member: React.FC = () => {
-  const { token } = theme.useToken();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [form] = Form.useForm();
   const [members, setTeams] = useState<MemberResponse[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -132,7 +130,7 @@ const Member: React.FC = () => {
           <Button
             type="link"
             size="small"
-            icon={<EditOutlined />}
+            icon={<EditOutlined/>}
             onClick={() => handleEdit(record)}
           >
             {t("edit")}
@@ -141,7 +139,7 @@ const Member: React.FC = () => {
             type="link"
             size="small"
             danger
-            icon={<DeleteOutlined />}
+            icon={<DeleteOutlined/>}
             onClick={() => handleDelete(record.id)}
           >
             {t("delete")}
@@ -153,42 +151,38 @@ const Member: React.FC = () => {
 
   return (
     <>
-      <PageContainer loading={loading}>
-        <div style={{ padding: token.padding, minHeight: '100vh' }}>
-          <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Title level={2} style={{ margin: 0 }}>{t("platform.member")}</Title>
-            <Space>
-              <Input
-                placeholder={t("member.user_search_placeholder")}
-                prefix={<SearchOutlined />}
-                allowClear
-                onChange={(e) => handleSearch(e.target.value)}
-                style={{ width: 200 }}
-              />
-              <Space>
-                <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-                  {t("member.user_add")}
-                </Button>
-              </Space>
-            </Space>
-          </div>
-          <Table
-            columns={columns}
-            dataSource={filteredTeams}
-            rowKey="id"
-            pagination={{
-              total: filteredTeams.length,
-              pageSize: 10,
-              showSizeChanger: true,
-              showTotal: (total) => t("pagination_total_text", {
-                start: 1,
-                end: Math.min(10, total),
-                total
-              })
-            }}
+      <PageContainer
+        title={t("platform.member")}
+        extra={[<Space>
+          <Input
+            placeholder={t("member.user_search_placeholder")}
+            prefix={<SearchOutlined/>}
+            allowClear
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{width: 200}}
           />
-
-        </div>
+          <Space>
+            <Button type="primary" icon={<PlusOutlined/>} onClick={handleAdd}>
+              {t("member.user_add")}
+            </Button>
+          </Space>
+        </Space>]}
+        loading={loading}>
+        <Table
+          columns={columns}
+          dataSource={filteredTeams}
+          rowKey="id"
+          pagination={{
+            total: filteredTeams.length,
+            pageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total) => t("pagination_total_text", {
+              start: 1,
+              end: Math.min(10, total),
+              total
+            })
+          }}
+        />
       </PageContainer>
       <Modal
         title={editingTeam ? t("member.user_edit") : t("member.user_add")}
@@ -208,41 +202,42 @@ const Member: React.FC = () => {
               name="id"
               label={t("member.user_id")}
               rules={[
-                { required: true, message: t("member.user_id_required") }
+                {required: true, message: t("member.user_id_required")}
               ]}
             >
-              <Input placeholder={t("member.user_id_placeholder")} />
+              <Input placeholder={t("member.user_id_placeholder")}/>
             </Form.Item>
           )}
           <Form.Item
             name="name"
             label={t("member.user_name")}
             rules={[
-              { required: true, message: t("member.user_name_required") },
-              { min: 2, message: t("member.user_name_min_length") }
+              {required: true, message: t("member.user_name_required")},
+              {min: 2, message: t("member.user_name_min_length")}
             ]}
           >
-            <Input placeholder={t("member.user_name_placeholder")} />
+            <Input placeholder={t("member.user_name_placeholder")}/>
           </Form.Item>
           <Form.Item
             name="email"
             label={t("member.user_email")}
             rules={[
-              { required: false, message: t("member.user_email_required") },
-              { type: "email", message: t("member.user_email_invalid") }
+              {required: false, message: t("member.user_email_required")},
+              {type: "email", message: t("member.user_email_invalid")}
             ]}
           >
-            <Input placeholder={t("member.user_email_placeholder")} />
+            <Input placeholder={t("member.user_email_placeholder")}/>
           </Form.Item>
           <Form.Item
             name="password"
             label={t("member.user_password")}
             rules={editingTeam ? [] : [
-              { required: true, message: t("member.user_password_required") },
-              { min: 6, message: t("member.user_password_min_length") }
+              {required: true, message: t("member.user_password_required")},
+              {min: 6, message: t("member.user_password_min_length")}
             ]}
           >
-            <Input.Password placeholder={editingTeam ? t("member.user_password_placeholder_optional") : t("member.user_password_placeholder")} />
+            <Input.Password
+              placeholder={editingTeam ? t("member.user_password_placeholder_optional") : t("member.user_password_placeholder")}/>
           </Form.Item>
         </Form>
       </Modal>

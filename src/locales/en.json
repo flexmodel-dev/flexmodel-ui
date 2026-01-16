@@ -588,7 +588,7 @@
   "sort_asc": "Sort Ascending",
   "sort_desc": "Sort Descending",
   "sort_cancel": "Cancel Sort",
-  "flow_mgr": "Flow Management",
+  "flow_definition": "Flow Definition",
   "flow_design": "Flow Design",
   "flow_instance": "Flow Instance Monitoring",
   "flow_instance_detail": "Flow Instance Detail",
