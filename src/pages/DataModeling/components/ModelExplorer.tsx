@@ -419,7 +419,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
                 width: "100%",
                 padding: 0,
               }}
-              onClick={() => navigate("/data/source")}
+              onClick={() => navigate(`/project/${projectId}/data/source`)}
             >
               {t("management")}
             </Button>
