@@ -42,7 +42,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
       {(title || extra) && (
         <div
           style={{
-            padding: `${token.padding}px ${token.paddingLG}px`,
+            padding: `${token.paddingSM}px ${token.paddingLG}px`,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',

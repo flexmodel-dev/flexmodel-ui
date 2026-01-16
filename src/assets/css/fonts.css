@@ -13,15 +13,6 @@
   --font-mono-fallback: Consolas, Monaco, 'Menlo', 'Ubuntu Mono', 'DejaVu Sans Mono', monospace;
 }
 
-/* 全局代码字体应用 */
-code, pre, .code-block, .prism-code {
-  font-family: var(--font-mono-primary);
-  font-feature-settings: 'liga' 1, 'calt' 1;
-  font-variant-ligatures: contextual;
-  -webkit-font-feature-settings: 'liga' 1, 'calt' 1;
-  -moz-font-feature-settings: 'liga' 1, 'calt' 1;
-}
-
 /* 代码编辑器相关元素 */
 .explorer-ul,
 .code-editor,

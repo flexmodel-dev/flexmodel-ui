@@ -205,9 +205,9 @@ const Project: React.FC = () => {
                       {record.stats?.apiCount} {t('project.api')}
                     </Tag>
                   )}
-                  {(record.stats?.dataSourceCount ?? 0) > 0 && (
+                  {(record.stats?.datasourceCount ?? 0) > 0 && (
                     <Tag icon={<DatabaseOutlined/>} color="green">
-                      {record.stats?.dataSourceCount} {t('project.dataSource')}
+                      {record.stats?.datasourceCount} {t('project.dataSource')}
                     </Tag>
                   )}
                   {(record.stats?.flowCount ?? 0) > 0 && (
@@ -281,7 +281,7 @@ const Project: React.FC = () => {
           ]}
         />
       ) : (
-        <Row gutter={[24, 24]}>
+        <Row gutter={[16, 16]}>
           {filteredProjects.map(project => (
             <Col xs={24} sm={12} lg={8} xl={6} key={project.id}>
               <Card
@@ -289,10 +289,10 @@ const Project: React.FC = () => {
                 style={{height: '100%', cursor: 'pointer'}}
                 onClick={() => handleProjectClick(project.id)}
                 styles={{
-                  body: {padding: token.paddingLG}
+                  body: {padding: token.paddingLG, display: 'flex', flexDirection: 'column', height: '100%'}
                 }}
               >
-                <Space direction="vertical" size="middle" style={{width: '100%'}}>
+                <Space direction="vertical" size="middle" style={{width: '100%', flex: 1, display: 'flex', flexDirection: 'column'}}>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                     <div style={{flex: 1}}>
                       <Title level={4} style={{margin: 0, marginBottom: token.marginMD}}>
@@ -347,16 +347,15 @@ const Project: React.FC = () => {
                       />
                     </Dropdown>
                   </div>
-
-                  <Space size="small" wrap>
+                  <Space size="small" style={{overflow: 'hidden', width: '100%'}}>
                     {(project.stats?.apiCount ?? 0) > 0 && (
                       <Tag icon={<CloudServerOutlined/>} color="blue">
                         {project.stats?.apiCount} {t('project.api')}
                       </Tag>
                     )}
-                    {(project.stats?.dataSourceCount ?? 0) > 0 && (
+                    {(project.stats?.datasourceCount ?? 0) > 0 && (
                       <Tag icon={<DatabaseOutlined/>} color="green">
-                        {project.stats?.dataSourceCount} {t('project.dataSource')}
+                        {project.stats?.datasourceCount} {t('project.dataSource')}
                       </Tag>
                     )}
                     {(project.stats?.flowCount ?? 0) > 0 && (
@@ -371,7 +370,7 @@ const Project: React.FC = () => {
                     )}
                   </Space>
 
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <div style={{marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Text type="secondary" style={{fontSize: '12px'}}>
                       {t('project.owner')}: {project.ownerId}
                     </Text>

@@ -14,7 +14,7 @@ export interface Project {
     apiCount: number;
     modelCount: number;
     flowCount: number;
-    dataSourceCount: number;
+    datasourceCount: number;
     storageCount: number;
   };
 }
