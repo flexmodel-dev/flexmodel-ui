@@ -394,7 +394,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} className="pr-2">
       <div style={selectRowStyle}>
         <Select
           value={activeDs}

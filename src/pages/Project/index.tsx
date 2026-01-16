@@ -396,6 +396,13 @@ const Project: React.FC = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
+            label={t('project.projectId')}
+            name="id"
+            tooltip={t('project.projectIdHelp')}
+          >
+            <Input placeholder={t('project.projectIdPlaceholder')}/>
+          </Form.Item>
+          <Form.Item
             label={t('project.name')}
             name="name"
             rules={[{required: true, message: t('project.nameRequired')}]}

@@ -151,14 +151,12 @@ const ModelingPage: React.FC = () => {
             collapsible
           >
 
-            <div className="pr-2">
-              <ModelExplorer
+            <ModelExplorer
                 datasource={activeDs}
                 editable
                 onSelect={handleItemChange}
                 version={selectModelVersion}
               />
-            </div>
           </Splitter.Panel>
           <Splitter.Panel>
             <div className="pl-2">

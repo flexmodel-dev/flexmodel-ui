@@ -45,7 +45,7 @@
     }
   },
   "api": "API",
-  "open_api": "Open API",
+  "open_api": "OpenAPI",
   "open_api_try_it_out": "Try It Out",
   "api_log": "API Log",
   "custom_api": "Custom API",
@@ -531,6 +531,9 @@
     "deleteConfirm": "Confirm Delete",
     "deleteConfirmDesc": "Are you sure you want to delete this project?",
     "createModalTitle": "Create New Project",
+    "projectId": "Project ID",
+    "projectIdPlaceholder": "Please enter project ID (optional)",
+    "projectIdHelp": "If not specified, the system will automatically generate a project ID",
     "description": "Description",
     "nameRequired": "Please enter project name",
     "descriptionRequired": "Please enter project description",

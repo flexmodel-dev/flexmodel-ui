@@ -46,7 +46,7 @@
     }
   },
   "api": "接口",
-  "open_api": "Open API",
+  "open_api": "OpenAPI",
   "open_api_try_it_out": "新窗口打开",
   "api_log": "接口日志",
   "custom_api": "定制接口",
@@ -849,6 +849,9 @@
     "deleteConfirm": "确认删除",
     "deleteConfirmDesc": "确定要删除这个项目吗？",
     "createModalTitle": "创建新项目",
+    "projectId": "项目ID",
+    "projectIdPlaceholder": "请输入项目ID（可选）",
+    "projectIdHelp": "如果不指定，系统将自动生成项目ID",
     "description": "项目描述",
     "nameRequired": "请输入项目名称",
     "descriptionRequired": "请输入项目描述",
