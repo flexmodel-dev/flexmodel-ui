@@ -35,9 +35,7 @@ const metricItemStyle: React.CSSProperties = {
 
 // 统计数据接口
 interface Statistics {
-  queryCount: number;
-  mutationCount: number;
-  subscribeCount: number;
+  customApiCount: number;
   requestCount: number;
   dataSourceCount: number;
   modelCount: number;
@@ -59,7 +57,7 @@ const StatCard: React.FC<{
   icon: React.ReactNode;
   color: string;
   children: React.ReactNode;
-}> = ({ title, icon, color, children }) => {
+}> = ({title, icon, color, children}) => {
   return (
     <Card
       hoverable
@@ -131,46 +129,30 @@ const StatCard: React.FC<{
 };
 
 // API信息卡片组件
-const ApiInfoCard: React.FC<{ stats: Statistics; color: string }> = ({ stats, color }) => {
-  const { t } = useTranslation();
+const ApiInfoCard: React.FC<{ stats: Statistics; color: string }> = ({stats, color}) => {
+  const {t} = useTranslation();
 
   return (
     <StatCard
       title={t("api")}
-      icon={<ApiOutlined style={{ fontSize: '24px', color: '#ffffff' }} />}
+      icon={<ApiOutlined style={{fontSize: '24px', color: '#ffffff'}}/>}
       color={color}
     >
       <div className="stat-card-scroll-container" style={scrollContainerStyle}>
         <div style={metricsContainerStyle}>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
-              {t("query")}
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
+              {t("api")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
-              {stats.queryCount}
-            </div>
-          </div>
-          <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
-              {t("mutation")}
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
-              {stats.mutationCount}
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
+              {stats.customApiCount}
             </div>
           </div>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
-              {t("subscription")}
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
-              {stats.subscribeCount}
-            </div>
-          </div>
-          <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("request_count")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.requestCount}
             </div>
           </div>
@@ -181,30 +163,30 @@ const ApiInfoCard: React.FC<{ stats: Statistics; color: string }> = ({ stats, co
 };
 
 // 服务编排卡片组件
-const FlowOrchestrationCard: React.FC<{ stats: Statistics; color: string }> = ({ stats, color }) => {
-  const { t } = useTranslation();
+const FlowOrchestrationCard: React.FC<{ stats: Statistics; color: string }> = ({stats, color}) => {
+  const {t} = useTranslation();
 
   return (
     <StatCard
       title={t("flow")}
-      icon={<NodeIndexOutlined style={{ fontSize: '24px', color: '#ffffff' }} />}
+      icon={<NodeIndexOutlined style={{fontSize: '24px', color: '#ffffff'}}/>}
       color={color}
     >
       <div className="stat-card-scroll-container" style={scrollContainerStyle}>
         <div style={metricsContainerStyle}>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("flow_count")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.flowDefCount}
             </div>
           </div>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("exec_count")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-success)' }}>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-success)'}}>
               {stats.flowExecCount}
             </div>
           </div>
@@ -215,38 +197,38 @@ const FlowOrchestrationCard: React.FC<{ stats: Statistics; color: string }> = ({
 };
 
 // 任务调度卡片组件
-const TaskSchedulingCard: React.FC<{ stats: Statistics; color: string }> = ({ stats, color }) => {
-  const { t } = useTranslation();
+const TaskSchedulingCard: React.FC<{ stats: Statistics; color: string }> = ({stats, color}) => {
+  const {t} = useTranslation();
 
   return (
     <StatCard
       title={t("schedule")}
-      icon={<ClockCircleOutlined style={{ fontSize: '24px', color: '#ffffff' }} />}
+      icon={<ClockCircleOutlined style={{fontSize: '24px', color: '#ffffff'}}/>}
       color={color}
     >
       <div className="stat-card-scroll-container" style={scrollContainerStyle}>
         <div style={metricsContainerStyle}>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("trigger_count")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.triggerTotalCount}
             </div>
           </div>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("exec_success")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-success)' }}>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-success)'}}>
               {stats.jobSuccessCount}
             </div>
           </div>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("exec_failure")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-error)' }}>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-error)'}}>
               {stats.jobFailureCount}
             </div>
           </div>
@@ -257,30 +239,30 @@ const TaskSchedulingCard: React.FC<{ stats: Statistics; color: string }> = ({ st
 };
 
 // 数据卡片组件
-const DataCard: React.FC<{ stats: Statistics; color: string }> = ({ stats, color }) => {
-  const { t } = useTranslation();
+const DataCard: React.FC<{ stats: Statistics; color: string }> = ({stats, color}) => {
+  const {t} = useTranslation();
 
   return (
     <StatCard
       title={t("data")}
-      icon={<DatabaseOutlined style={{ fontSize: '24px', color: '#ffffff' }} />}
+      icon={<DatabaseOutlined style={{fontSize: '24px', color: '#ffffff'}}/>}
       color={color}
     >
       <div className="stat-card-scroll-container" style={scrollContainerStyle}>
         <div style={metricsContainerStyle}>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("datasource")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.dataSourceCount}
             </div>
           </div>
           <div style={metricItemStyle}>
-            <div style={{ fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px' }}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("model_count")}
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)' }}>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.modelCount}
             </div>
           </div>
@@ -291,8 +273,8 @@ const DataCard: React.FC<{ stats: Statistics; color: string }> = ({ stats, color
 };
 
 // 统计卡片组组件
-const StatisticsCards: React.FC<StatisticsCardsProps> = ({ stats }) => {
-  const { token } = theme.useToken();
+const StatisticsCards: React.FC<StatisticsCardsProps> = ({stats}) => {
+  const {token} = theme.useToken();
 
   return (
     <>
@@ -326,7 +308,7 @@ const StatisticsCards: React.FC<StatisticsCardsProps> = ({ stats }) => {
           }
         `}
       </style>
-      <Row gutter={[8, 8]} className="statistics-cards-row" style={{ marginBottom: '8px'}}>
+      <Row gutter={[8, 8]} className="statistics-cards-row">
         <Col xs={24} sm={12} lg={6}>
           <ApiInfoCard
             stats={stats}

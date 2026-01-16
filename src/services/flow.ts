@@ -287,6 +287,9 @@ export type NodeInstanceStatusType = typeof NodeInstanceStatus[keyof typeof Node
 
 /**
  * 获取流程列表
+ * @param projectId 项目ID
+ * @param params 查询参数
+ * @returns 流程列表
  */
 export const getFlowList = (
   projectId: string,
@@ -297,6 +300,9 @@ export const getFlowList = (
 
 /**
  * 创建流程
+ * @param projectId 项目ID
+ * @param data 流程信息
+ * @returns 创建的流程
  */
 export const createFlow = (
   projectId: string,
@@ -307,6 +313,10 @@ export const createFlow = (
 
 /**
  * 获取流程模块信息
+ * @param projectId 项目ID
+ * @param flowModuleId 流程模块ID
+ * @param flowDeployId 流程部署ID（可选）
+ * @returns 流程模块详情
  */
 export const getFlowModule = (
   projectId: string,
@@ -318,6 +328,10 @@ export const getFlowModule = (
 
 /**
  * 部署流程
+ * @param projectId 项目ID
+ * @param flowModuleId 流程模块ID
+ * @param data 部署参数
+ * @returns 部署结果
  */
 export const deployFlow = (
   projectId: string,
@@ -329,6 +343,10 @@ export const deployFlow = (
 
 /**
  * 更新流程
+ * @param projectId 项目ID
+ * @param flowModuleId 流程模块ID
+ * @param data 更新参数
+ * @returns 更新结果
  */
 export const updateFlow = (
   projectId: string,
@@ -340,6 +358,9 @@ export const updateFlow = (
 
 /**
  * 获取流程实例列表
+ * @param projectId 项目ID
+ * @param params 查询参数
+ * @returns 流程实例列表
  */
 export const getFlowInstanceList = (
   projectId: string,
@@ -350,6 +371,9 @@ export const getFlowInstanceList = (
 
 /**
  * 启动流程实例
+ * @param projectId 项目ID
+ * @param data 启动参数
+ * @returns 启动结果
  */
 export const startProcess = (
   projectId: string,
@@ -360,6 +384,9 @@ export const startProcess = (
 
 /**
  * 获取流程实例信息
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @returns 流程实例详情
  */
 export const getFlowInstance = (
   projectId: string,
@@ -370,6 +397,10 @@ export const getFlowInstance = (
 
 /**
  * 提交任务
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @param data 任务参数
+ * @returns 提交结果
  */
 export const commitTask = (
   projectId: string,
@@ -381,6 +412,10 @@ export const commitTask = (
 
 /**
  * 回滚任务
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @param data 回滚参数
+ * @returns 回滚结果
  */
 export const rollbackTask = (
   projectId: string,
@@ -392,6 +427,9 @@ export const rollbackTask = (
 
 /**
  * 删除流程模块
+ * @param projectId 项目ID
+ * @param flowModuleId 流程模块ID
+ * @returns 删除结果
  */
 export interface DeleteFlowResponse {
   errCode: number;
@@ -407,6 +445,10 @@ export const deleteFlow = (
 
 /**
  * 终止流程实例
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @param effectiveForSubFlowInstance 是否对子流程实例生效
+ * @returns 终止结果
  */
 export const terminateFlowInstance = (
   projectId: string,
@@ -420,6 +462,9 @@ export const terminateFlowInstance = (
 
 /**
  * 获取流程实例的用户任务列表
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @returns 用户任务列表
  */
 export const getFlowUserTasks = (
   projectId: string,
@@ -428,10 +473,21 @@ export const getFlowUserTasks = (
   return api.get(`/projects/${projectId}/flows/instances/${flowInstanceId}/user-tasks`);
 };
 
+/**
+ * 判断是否成功
+ * @param errCode 错误码
+ * @returns 是否成功
+ */
 export const isSuccess = (errCode: number): boolean => {
   return errCode >= 1000 && errCode < 2000;
 }
 
+/**
+ * 获取元素实例列表
+ * @param projectId 项目ID
+ * @param flowInstanceId 流程实例ID
+ * @returns 元素实例列表
+ */
 export const getElementInstances= (
   projectId: string,
   flowInstanceId: string,

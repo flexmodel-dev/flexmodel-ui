@@ -1,44 +1,37 @@
-import React, { useState } from "react";
-import { Button, Form, Input, message, Modal, Space, Table, Tabs } from "antd";
-import { useTranslation } from "react-i18next";
-import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import React, {useState, useEffect, useCallback} from "react";
+import {Button, Form, Input, message, Modal, Space, Table} from "antd";
+import {useTranslation} from "react-i18next";
+import {DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import PageContainer from "@/components/common/PageContainer";
-import type { ColumnsType } from "antd/es/table";
-
-interface Member {
-  id: string;
-  username: string;
-  createdAt: string;
-}
+import type {ColumnsType} from "antd/es/table";
+import {getMembers, createMember, updateMember, deleteMember} from "@/services/member";
+import type {MemberResponse} from "@/types/member.d";
 
 const Member: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [form] = Form.useForm();
-  const [members, setTeams] = useState<Member[]>([
-    {
-      id: "1",
-      username: "admin",
-      createdAt: "2024-01-01 10:00:00"
-    },
-    {
-      id: "2",
-      username: "developer",
-      createdAt: "2024-01-15 14:30:00"
-    },
-    {
-      id: "3",
-      username: "tester",
-      createdAt: "2024-02-01 09:15:00"
-    },
-    {
-      id: "4",
-      username: "viewer",
-      createdAt: "2024-02-10 16:45:00"
-    }
-  ]);
+  const [members, setTeams] = useState<MemberResponse[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [editingTeam, setEditingTeam] = useState<Member | null>(null);
+  const [editingTeam, setEditingTeam] = useState<MemberResponse | null>(null);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchMembers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getMembers();
+      setTeams(data);
+    } catch (error) {
+      console.error("Failed to fetch members:", error);
+      message.error(t("member.user_fetch_failed"));
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
+
+  useEffect(() => {
+    fetchMembers();
+  }, [fetchMembers]);
 
   const handleAdd = () => {
     setEditingTeam(null);
@@ -46,9 +39,13 @@ const Member: React.FC = () => {
     setModalVisible(true);
   };
 
-  const handleEdit = (member: Member) => {
+  const handleEdit = (member: MemberResponse) => {
     setEditingTeam(member);
-    form.setFieldsValue(member);
+    form.setFieldsValue({
+      id: member.id,
+      name: member.name,
+      email: member.email
+    });
     setModalVisible(true);
   };
 
@@ -56,9 +53,15 @@ const Member: React.FC = () => {
     Modal.confirm({
       title: t("member.user_delete_confirm"),
       content: t("member.user_delete_confirm_desc"),
-      onOk: () => {
-        setTeams(members.filter(m => m.id !== id));
-        message.success(t("member.user_delete_success"));
+      onOk: async () => {
+        try {
+          await deleteMember(id);
+          message.success(t("member.user_delete_success"));
+          await fetchMembers();
+        } catch (error) {
+          console.error("Failed to delete member:", error);
+          message.error(t("member.user_delete_failed"));
+        }
       }
     });
   };
@@ -67,23 +70,21 @@ const Member: React.FC = () => {
     try {
       const values = await form.validateFields();
       if (editingTeam) {
-        setTeams(members.map(m =>
-          m.id === editingTeam.id ? { ...m, ...values } : m
-        ));
+        await updateMember(editingTeam.id, {
+          name: values.name,
+          email: values.email,
+          password: values.password
+        });
         message.success(t("member.user_update_success"));
       } else {
-        const newTeam: Member = {
-          id: Date.now().toString(),
-          ...values,
-          createdAt: new Date().toLocaleString("zh-CN", { hour12: false })
-        };
-        setTeams([...members, newTeam]);
+        await createMember(values);
         message.success(t("member.user_create_success"));
       }
       setModalVisible(false);
       form.resetFields();
-    } catch {
-      message.error(t("form_save_failed"));
+      await fetchMembers();
+    } catch (error) {
+      console.error("Failed to save member:", error);
     }
   };
 
@@ -92,21 +93,34 @@ const Member: React.FC = () => {
   };
 
   const filteredTeams = members.filter(member =>
-    member.username.toLowerCase().includes(searchKeyword.toLowerCase())
+    member.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+    member.email.toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
-  const columns: ColumnsType<Member> = [
+  const columns: ColumnsType<MemberResponse> = [
     {
-      title: t("member.user_username"),
-      dataIndex: "username",
-      key: "username",
-      sorter: (a, b) => a.username.localeCompare(b.username)
+      title: t("member.user_id"),
+      dataIndex: "id",
+      key: "id",
+      sorter: (a, b) => a.id.localeCompare(b.id)
+    },
+    {
+      title: t("member.user_name"),
+      dataIndex: "name",
+      key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name)
+    },
+    {
+      title: t("member.user_email"),
+      dataIndex: "email",
+      key: "email",
+      sorter: (a, b) => a.email.localeCompare(b.email)
     },
     {
       title: t("member.user_created_at"),
       dataIndex: "createdAt",
       key: "createdAt",
-      sorter: (a, b) => a.createdAt.localeCompare(b.createdAt)
+      sorter: (a, b) => (a.createdAt || "").localeCompare(b.createdAt || "")
     },
     {
       title: t("operations"),
@@ -116,7 +130,7 @@ const Member: React.FC = () => {
           <Button
             type="link"
             size="small"
-            icon={<EditOutlined />}
+            icon={<EditOutlined/>}
             onClick={() => handleEdit(record)}
           >
             {t("edit")}
@@ -125,7 +139,7 @@ const Member: React.FC = () => {
             type="link"
             size="small"
             danger
-            icon={<DeleteOutlined />}
+            icon={<DeleteOutlined/>}
             onClick={() => handleDelete(record.id)}
           >
             {t("delete")}
@@ -139,45 +153,37 @@ const Member: React.FC = () => {
     <>
       <PageContainer
         title={t("platform.member")}
-        extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-            {t("member.user_add")}
-          </Button>
-        }
-      >
-        <div style={{ paddingLeft: 10, paddingRight: 10 }}>
-          <Tabs>
-            <Tabs.TabPane key="user" tab={t('member.user')}>
-              <div style={{ marginBottom: 16 }}>
-                <Input
-                  placeholder={t("member.user_search_placeholder")}
-                  prefix={<SearchOutlined />}
-                  allowClear
-                  onChange={(e) => handleSearch(e.target.value)}
-                  style={{ width: 300 }}
-                />
-              </div>
-              <Table
-                columns={columns}
-                dataSource={filteredTeams}
-                rowKey="id"
-                pagination={{
-                  total: filteredTeams.length,
-                  pageSize: 10,
-                  showSizeChanger: true,
-                  showTotal: (total) => t("pagination_total_text", {
-                    start: 1,
-                    end: Math.min(10, total),
-                    total
-                  })
-                }}
-              />
-            </Tabs.TabPane>
-          </Tabs>
-        </div>
-
+        extra={[<Space>
+          <Input
+            placeholder={t("member.user_search_placeholder")}
+            prefix={<SearchOutlined/>}
+            allowClear
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{width: 200}}
+          />
+          <Space>
+            <Button type="primary" icon={<PlusOutlined/>} onClick={handleAdd}>
+              {t("member.user_add")}
+            </Button>
+          </Space>
+        </Space>]}
+        loading={loading}>
+        <Table
+          columns={columns}
+          dataSource={filteredTeams}
+          rowKey="id"
+          pagination={{
+            total: filteredTeams.length,
+            pageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total) => t("pagination_total_text", {
+              start: 1,
+              end: Math.min(10, total),
+              total
+            })
+          }}
+        />
       </PageContainer>
-
       <Modal
         title={editingTeam ? t("member.user_edit") : t("member.user_add")}
         open={modalVisible}
@@ -191,15 +197,47 @@ const Member: React.FC = () => {
         width={500}
       >
         <Form form={form} layout="vertical">
+          {!editingTeam && (
+            <Form.Item
+              name="id"
+              label={t("member.user_id")}
+              rules={[
+                {required: true, message: t("member.user_id_required")}
+              ]}
+            >
+              <Input placeholder={t("member.user_id_placeholder")}/>
+            </Form.Item>
+          )}
           <Form.Item
-            name="username"
-            label={t("member.user_username")}
+            name="name"
+            label={t("member.user_name")}
             rules={[
-              { required: true, message: t("member.user_username_required") },
-              { min: 3, message: t("member.user_username_min_length") }
+              {required: true, message: t("member.user_name_required")},
+              {min: 2, message: t("member.user_name_min_length")}
             ]}
           >
-            <Input placeholder={t("member.user_username_placeholder")} />
+            <Input placeholder={t("member.user_name_placeholder")}/>
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label={t("member.user_email")}
+            rules={[
+              {required: false, message: t("member.user_email_required")},
+              {type: "email", message: t("member.user_email_invalid")}
+            ]}
+          >
+            <Input placeholder={t("member.user_email_placeholder")}/>
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label={t("member.user_password")}
+            rules={editingTeam ? [] : [
+              {required: true, message: t("member.user_password_required")},
+              {min: 6, message: t("member.user_password_min_length")}
+            ]}
+          >
+            <Input.Password
+              placeholder={editingTeam ? t("member.user_password_placeholder_optional") : t("member.user_password_placeholder")}/>
           </Form.Item>
         </Form>
       </Modal>

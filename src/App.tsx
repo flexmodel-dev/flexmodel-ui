@@ -55,6 +55,8 @@ const App = () => {
       locale={locale}
       theme={{
         algorithm: isDark ? [antdTheme.darkAlgorithm, antdTheme.compactAlgorithm] : [antdTheme.compactAlgorithm],
+        // algorithm: isDark ? [antdTheme.darkAlgorithm] : [],
+
       }}
     >
       <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -71,7 +73,7 @@ const App = () => {
             <Route index element={<Project />} />
           </Route>
 
-          <Route path="/members" element={
+          <Route path="/member" element={
             <ProtectedRoute>
               <PlatformLayout />
             </ProtectedRoute>

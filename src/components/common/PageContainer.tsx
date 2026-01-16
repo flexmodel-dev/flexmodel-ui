@@ -1,6 +1,5 @@
 import React from "react";
-import {theme, Typography} from "antd";
-import {useTranslation} from "react-i18next";
+import { Spin, theme, Typography } from "antd";
 
 interface PageContainerProps {
   children: React.ReactNode;
@@ -22,10 +21,10 @@ const PageContainer: React.FC<PageContainerProps> = ({
   bodyStyle,
 }) => {
   const { token } = theme.useToken();
-  const { t } = useTranslation();
 
   const containerStyle: React.CSSProperties = {
     height: '100%',
+    padding: token.padding,
     width: '100%',
     background: token.colorBgContainer,
     borderRadius: token.borderRadius,
@@ -41,8 +40,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
       {(title || extra) && (
         <div
           style={{
-            padding: `${token.padding}px ${token.paddingLG}px`,
-            borderBottom: `1px solid ${token.colorBorderSecondary}`,
+            padding: `${token.paddingSM}px ${token.paddingLG}px`,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -50,7 +48,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
           }}
         >
           {title && (
-            <Typography.Title style={{ margin: 0 }} level={5}>
+            <Typography.Title level={3}>
               {typeof title === 'string' ? title : title}
             </Typography.Title>
           )}
@@ -75,7 +73,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
               height: '100%',
             }}
           >
-            <div>{t('loading')}</div>
+            <Spin size="large" />
           </div>
         ) : (
           children

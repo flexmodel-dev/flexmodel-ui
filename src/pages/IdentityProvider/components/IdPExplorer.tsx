@@ -1,12 +1,12 @@
 import React from "react";
-import {Button, Divider, Dropdown, Spin} from "antd";
-import type {MenuProps} from "antd";
-import {KeyOutlined, MoreOutlined, PlusOutlined, SafetyCertificateOutlined, UserOutlined} from "@ant-design/icons";
+import { Button, Divider, Dropdown, Spin, theme } from "antd";
+import type { MenuProps } from "antd";
+import { KeyOutlined, MoreOutlined, PlusOutlined, SafetyCertificateOutlined, UserOutlined } from "@ant-design/icons";
 // 导入Tree组件
 import Tree from "@/components/explore/explore/Tree.jsx";
 // 导入Tree样式
 import "@/components/explore/styles/explore.scss";
-import type {IdentityProvider} from "@/types/identity-provider";
+import type { IdentityProvider } from "@/types/identity-provider";
 
 // removed custom scss usage
 
@@ -29,6 +29,8 @@ const IdPExplorer: React.FC<IdPExplorerProps> = ({
   setDrawerVisible,
   t,
 }) => {
+  const { token } = theme.useToken();
+
   // 将身份提供商列表转换为Tree组件需要的数据结构
   const treeData = {
     children: idPList.map((idp) => ({
@@ -83,7 +85,7 @@ const IdPExplorer: React.FC<IdPExplorerProps> = ({
 
       return (
         <Dropdown
-          menu={{items: menuItems}}
+          menu={{ items: menuItems }}
           trigger={["hover"]}
           placement="bottomRight"
         >
@@ -95,8 +97,8 @@ const IdPExplorer: React.FC<IdPExplorerProps> = ({
   };
 
   return (
-    <div style={{ minWidth: 200 }}>
-      <Spin spinning={loading}>
+    <Spin spinning={loading}>
+      <div style={{ margin: token.paddingXS }}>
         <Tree
           tree={treeData}
           selected={selectedItem}
@@ -104,18 +106,18 @@ const IdPExplorer: React.FC<IdPExplorerProps> = ({
           renderIcon={renderIcon}
           renderMore={renderMore}
         />
-      </Spin>
-      <Divider style={{ margin: "8px 0" }} />
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={() => setDrawerVisible(true)}
-        style={{ width: "100%" }}
-        ghost
-      >
-        {t("idp_new_provider")}
-      </Button>
-    </div>
+        <Divider style={{ margin: `${token.paddingXS}px 0` }} />
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setDrawerVisible(true)}
+          style={{ width: "100%" }}
+          ghost
+        >
+          {t("idp_new_provider")}
+        </Button>
+      </div>
+    </Spin>
   );
 };
 

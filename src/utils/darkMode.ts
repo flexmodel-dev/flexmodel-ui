@@ -3,14 +3,13 @@ const DARK_MODE_KEY = 'darkMode';
 export const getDarkModeFromStorage = (): boolean => {
   try {
     const stored = localStorage.getItem(DARK_MODE_KEY);
-    // 如果本地存储中没有保存过设置，默认使用暗色模式
     if (stored === null) {
-      return true;
+      return false;
     }
     return stored === 'true';
   } catch (error) {
     console.warn('Failed to read dark mode from localStorage:', error);
-    return true; // 出错时也默认使用暗色模式
+    return false;
   }
 };
 

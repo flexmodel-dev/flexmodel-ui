@@ -20,12 +20,12 @@ import {getJobExecutionLogs, JobExecutionLog, JobExecutionLogParams} from '@/ser
 import dayjs from 'dayjs';
 import {useProject} from "@/store/appStore";
 
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
-const { Text } = Typography;
+const {RangePicker} = DatePicker;
+const {TextArea} = Input;
+const {Text} = Typography;
 
 const JobExecutionLogList: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
   const [form] = Form.useForm();
@@ -50,7 +50,7 @@ const JobExecutionLogList: React.FC = () => {
 
     const updateHeight = () => {
       // 直接使用容器可用高度，作为 Table 的滚动高度
-      setTableScrollY(container.clientHeight-80);
+      setTableScrollY(container.clientHeight - 80);
     };
 
     updateHeight();
@@ -120,7 +120,7 @@ const JobExecutionLogList: React.FC = () => {
   const handleReset = () => {
     form.resetFields();
     setCurrentPage(1);
-    loadLogs({ page: 1, size: pageSize });
+    loadLogs({page: 1, size: pageSize});
   };
 
   const handlePageChange = (page: number, size?: number) => {
@@ -208,7 +208,7 @@ const JobExecutionLogList: React.FC = () => {
         <Space size="small">
           <Button
             type="link"
-            icon={<EyeOutlined />}
+            icon={<EyeOutlined/>}
             onClick={() => handleViewDetail(record)}
           >
             详情
@@ -219,83 +219,85 @@ const JobExecutionLogList: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={t('job_execution_log')}>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <div style={{ marginBottom: 16 }}>
-          <Form
-            form={form}
-            layout="inline"
-            onFinish={handleSearch}
-            style={{ marginBottom: 16 }}
-          >
-            <Form.Item name="timeRange" label="时间范围">
-              <RangePicker
-                showTime
-                format="YYYY-MM-DD HH:mm:ss"
-                placeholder={['开始时间', '结束时间']}
-              />
-            </Form.Item>
+    <PageContainer
+      title={t('job_execution_log')}
+      extra={[
 
-            <Form.Item name="isSuccess" label="执行状态">
-              <Select placeholder="选择状态" allowClear style={{ width: 120 }}>
-                <Select.Option value={true}>成功</Select.Option>
-                <Select.Option value={false}>失败</Select.Option>
-              </Select>
-            </Form.Item>
+      ]}
+      loading={loading}
+    >
+      <div style={{marginBottom: 16}}>
+        <Form
+          form={form}
+          layout="inline"
+          onFinish={handleSearch}
+          style={{marginBottom: 16}}
+        >
+          <Form.Item name="timeRange" label="时间范围">
+            <RangePicker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder={['开始时间', '结束时间']}
+            />
+          </Form.Item>
 
-            <Form.Item name="jobId" label="任务ID">
-              <Input placeholder="输入任务ID" style={{ width: 150 }} />
-            </Form.Item>
+          <Form.Item name="isSuccess" label="执行状态">
+            <Select placeholder="选择状态" allowClear style={{width: 120}}>
+              <Select.Option value={true}>成功</Select.Option>
+              <Select.Option value={false}>失败</Select.Option>
+            </Select>
+          </Form.Item>
 
-            <Form.Item name="triggerId" label="触发器ID">
-              <Input placeholder="输入触发器ID" style={{ width: 150 }} />
-            </Form.Item>
+          <Form.Item name="jobId" label="任务ID">
+            <Input placeholder="输入任务ID" style={{width: 150}}/>
+          </Form.Item>
 
-            <Form.Item>
-              <Space>
-                <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
-                  搜索
-                </Button>
-                <Button onClick={handleReset}>
-                  重置
-                </Button>
-                <Button icon={<ReloadOutlined />} onClick={() => loadLogs()}>
-                  刷新
-                </Button>
-              </Space>
-            </Form.Item>
-          </Form>
-        </div>
+          <Form.Item name="triggerId" label="触发器ID">
+            <Input placeholder="输入触发器ID" style={{width: 150}}/>
+          </Form.Item>
 
-        <div ref={tableContainerRef} style={{ flex: 1, overflow: 'hidden' }}>
-          <Table
-            columns={columns}
-            dataSource={logs}
-            loading={loading}
-            rowKey="id"
-            size="small"
-            scroll={{ y: tableScrollY || undefined}}
-            pagination={{
-              current: currentPage,
-              pageSize: pageSize,
-              total: total,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              showTotal: (total, range) =>
-                t("pagination_total_text", {
-                  start: range[0],
-                  end: range[1],
-                  total: total,
-                }),
-              onChange: handlePageChange,
-              onShowSizeChange: (_current, size) => {
-                setCurrentPage(1);
-                setPageSize(size);
-              }
-            }}
-          />
-        </div>
+          <Form.Item>
+            <Space>
+              <Button type="primary" htmlType="submit" icon={<SearchOutlined/>}>
+                搜索
+              </Button>
+              <Button onClick={handleReset}>
+                重置
+              </Button>
+              <Button icon={<ReloadOutlined/>} onClick={() => loadLogs()}>
+                刷新
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
       </div>
+
+      <Table
+        columns={columns}
+        dataSource={logs}
+        loading={loading}
+        rowKey="id"
+        size="small"
+        scroll={{y: tableScrollY || undefined}}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total, range) =>
+            t("pagination_total_text", {
+              start: range[0],
+              end: range[1],
+              total: total,
+            }),
+          onChange: handlePageChange,
+          onShowSizeChange: (_current, size) => {
+            setCurrentPage(1);
+            setPageSize(size);
+          }
+        }}
+      />
 
       <Modal
         title="任务执行日志详情"

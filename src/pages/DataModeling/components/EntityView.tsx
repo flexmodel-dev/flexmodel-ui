@@ -24,7 +24,7 @@ const EntityView = ({datasource, model}: Props) => {
     {label: t("index"), value: "index"},
     {label: t("record"), value: "record"},
     {label: t("trigger.title"), value: "trigger"},
-    {label: t("code"), value: "code"},
+    {label: t("coding"), value: "code"},
   ];
 
   const renderContent = () => {
@@ -35,7 +35,7 @@ const EntityView = ({datasource, model}: Props) => {
         return <IndexList datasource={datasource} model={model}/>;
       case "record":
         return <RecordList datasource={datasource} model={model}/>;
-      case "code":
+      case "coding":
         return <CodeView datasource={datasource} model={model}/>;
       case "trigger":
         return <TriggerWrapper datasource={datasource} model={model}/>;

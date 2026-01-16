@@ -1,16 +1,36 @@
-import React, {useCallback, useMemo} from "react";
-import {Layout, Menu} from "antd";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {useTranslation} from "react-i18next";
-import {routes} from "@/routes";
-import {useSidebar} from "@/store/appStore";
+import React, { useCallback, useMemo, useState } from "react";
+import { Layout, Menu, Button, Space, theme } from "antd";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { routes } from "@/routes";
+import { useSidebar } from "@/store/appStore";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const ProjectSidebar: React.FC = () => {
   const { t } = useTranslation();
+  const { token } = theme.useToken();
   const navigate = useNavigate();
   const location = useLocation();
   const { isSidebarCollapsed, toggleSidebar } = useSidebar();
   const { projectId } = useParams<{ projectId: string }>();
+  const [openKeys, setOpenKeys] = useState<string[]>(() => {
+    const pathname = location.pathname.replace(/\/$/, '');
+    const initialOpenKeys: string[] = [];
+
+    routes.forEach(route => {
+      if (route.children && route.children.length > 0) {
+        const parentPath = route.path.replace(':projectId', projectId || '').replace(/\/$/, '');
+        route.children.forEach(child => {
+          const childPath = child.path.replace(':projectId', projectId || '').replace(/\/$/, '');
+          if (pathname.startsWith(childPath) || pathname.startsWith(parentPath)) {
+            initialOpenKeys.push(parentPath);
+          }
+        });
+      }
+    });
+
+    return [...new Set(initialOpenKeys)];
+  });
 
   const menuData = useMemo(() => {
     return routes
@@ -18,18 +38,33 @@ const ProjectSidebar: React.FC = () => {
       .map(route => {
         const IconComponent = route.icon;
         const path = route.path.replace(':projectId', projectId || '').replace(/\/$/, '');
-        return {
+        const menuItem: any = {
           key: path,
           icon: <IconComponent />,
           label: t(route.translationKey),
         };
+
+        if (route.children && route.children.length > 0) {
+          menuItem.children = route.children
+            .filter(child => !child?.hideInMenu)
+            .map(child => {
+              const ChildIconComponent = child.icon;
+              const childPath = child.path.replace(':projectId', projectId || '').replace(/\/$/, '');
+              return {
+                key: childPath,
+                icon: <ChildIconComponent />,
+                label: t(child.translationKey),
+              };
+            });
+        }
+
+        return menuItem;
       });
   }, [t, projectId]);
 
   const selectedKeys = useMemo(() => {
     const pathname = location.pathname.replace(/\/$/, '');
     const routeMap = new Map<string, string>();
-    const childRouteMap = new Map<string, string>();
 
     routes.forEach(route => {
       const path = route.path.replace(':projectId', projectId || '').replace(/\/$/, '');
@@ -37,17 +72,13 @@ const ProjectSidebar: React.FC = () => {
       if (route.children) {
         route.children.forEach(child => {
           const childPath = child.path.replace(':projectId', projectId || '').replace(/\/$/, '');
-          childRouteMap.set(childPath, path);
+          routeMap.set(childPath, childPath);
         });
       }
     });
 
     if (routeMap.has(pathname)) {
       return [routeMap.get(pathname)!];
-    }
-
-    if (childRouteMap.has(pathname)) {
-      return [childRouteMap.get(pathname)!];
     }
 
     return [];
@@ -58,6 +89,15 @@ const ProjectSidebar: React.FC = () => {
       navigate(key);
     }
   }, [location.pathname, navigate]);
+
+  const handleOpenChange = useCallback((keys: string[]) => {
+    const latestOpenKey = keys.find(key => !openKeys.includes(key));
+    if (latestOpenKey) {
+      setOpenKeys([latestOpenKey]);
+    } else {
+      setOpenKeys(keys);
+    }
+  }, [openKeys]);
 
   const siderStyle = useMemo(() => ({
     minHeight: "100%",
@@ -87,11 +127,26 @@ const ProjectSidebar: React.FC = () => {
         <Menu
           mode="inline"
           selectedKeys={selectedKeys}
+          openKeys={openKeys}
+          onOpenChange={handleOpenChange}
           onClick={handleMenuClick}
           inlineCollapsed={isSidebarCollapsed}
           style={menuStyle}
           items={menuData}
         />
+        <div style={{
+          padding: token.padding,
+          display: "flex",
+          justifyContent: isSidebarCollapsed ? "center" : "right"
+        }}>
+          <Space>
+            <Button
+              type="text"
+              icon={isSidebarCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={toggleSidebar}
+            />
+          </Space>
+        </div>
       </div>
     </Layout.Sider>
   );

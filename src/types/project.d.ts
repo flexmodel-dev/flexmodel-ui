@@ -1,26 +1,36 @@
+/**
+ * 项目接口
+ */
 export interface Project {
   id: string;
   name: string;
-  description: string;
-  enabled: boolean;
-  ownerId: string;
+  description?: string;
   createdAt: string;
   updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-  apiCount: number;
-  datasourceCount: number;
-  flowCount: number;
-  storageCount: number;
+  createdBy?: string;
+  updatedBy?: string;
+  ownerId?: string;
+  stats?: {
+    apiCount: number;
+    modelCount: number;
+    flowCount: number;
+    datasourceCount: number;
+    storageCount: number;
+  };
 }
 
+/**
+ * 项目创建请求接口
+ */
 export interface ProjectCreateRequest {
   name: string;
-  description: string;
+  description?: string;
 }
 
+/**
+ * 项目更新请求接口
+ */
 export interface ProjectUpdateRequest {
   name?: string;
   description?: string;
-  enabled?: boolean;
 }

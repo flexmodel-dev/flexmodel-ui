@@ -13,7 +13,7 @@ const ERView: React.FC = () => {
   const { t } = useTranslation();
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
-  
+
   const [datasources, setDatasources] = useState<DatasourceSchema[]>([]);
   const [selectedDatasource, setSelectedDatasource] = useState<string>("");
   const [models, setModels] = useState<Entity[]>([]);
@@ -72,7 +72,6 @@ const ERView: React.FC = () => {
   return (
     <PageContainer
       loading={loading}
-      title={t("er_view")}
       extra={
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <Select

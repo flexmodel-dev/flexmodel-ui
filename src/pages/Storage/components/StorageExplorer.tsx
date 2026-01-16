@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Button, Divider, Dropdown, Spin} from "antd";
+import {Button, Divider, Dropdown, Spin, theme} from "antd";
 import type {MenuProps} from "antd";
 import {CloudOutlined, DeleteOutlined, FolderOutlined, MoreOutlined} from "@ant-design/icons";
 import Tree from "@/components/explore/explore/Tree.jsx";
@@ -22,6 +22,7 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
   setDrawerVisible,
   selectedStorage,
 }) => {
+  const { token } = theme.useToken();
   const {t} = useTranslation();
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
@@ -122,7 +123,7 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
 
   return (
     <Spin spinning={loading}>
-      <div style={{minWidth: 200, margin: "8px"}}>
+      <div style={{margin: token.paddingXS}}>
         <Tree
           tree={treeData}
           selected={selectedItem}
@@ -134,7 +135,7 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
           renderMore={renderMore}
         />
 
-        <Divider style={{margin: "8px 0"}}/>
+        <Divider style={{margin: `${token.paddingXS}px 0`}}/>
         <Button
           type="primary"
           icon={<CloudOutlined/>}

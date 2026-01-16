@@ -6,7 +6,6 @@ import DataView from "./pages/DataView";
 import ApiView from "./pages/APIView";
 import DataModeling from "./pages/DataModeling";
 import DataSource from "./pages/DataSource";
-import ERView from "./pages/DataView/components/ERView";
 import APILog from "./pages/APILog";
 import Storage from "./pages/Storage";
 import Member from "./pages/Member";
@@ -61,7 +60,7 @@ export const platformRoutes: RouteConfig[] = [
     translationKey: "platform.project",
   },
   {
-    path: "/members",
+    path: "/member",
     element: <Member />,
     icon: UserOutlined,
     translationKey: "platform.member",
@@ -132,12 +131,6 @@ export const projectRoutes: RouteConfig[] = [
         icon: DatabaseOutlined,
         translationKey: "data_source",
       },
-      {
-        path: "/project/:projectId/data/er",
-        element: <ERView />,
-        icon: BranchesOutlined,
-        translationKey: "er_view",
-      },
     ],
   },
   {
@@ -147,10 +140,10 @@ export const projectRoutes: RouteConfig[] = [
     translationKey: "flow",
     children: [
       {
-        path: "/project/:projectId/flow/mgr",
+        path: "/project/:projectId/flow/definition",
         element: <FlowList />,
         icon: BranchesOutlined,
-        translationKey: "flow_mgr",
+        translationKey: "flow_definition",
       },
       {
         path: "/project/:projectId/flow/instance",

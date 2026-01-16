@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import {Button, Breadcrumb, Table, Space, message, Upload, Modal, Input, Popconfirm} from 'antd';
+import {Button, Breadcrumb, Table, Space, message, Upload, Modal, Input, Popconfirm, theme} from 'antd';
 import {
   FolderOutlined,
   FileOutlined,
@@ -26,6 +26,7 @@ interface FileBrowserProps {
 
 const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
   const {t} = useTranslation();
+  const { token } = theme.useToken();
   console.log('FileBrowser for storage:', storageName, 'projectId:', projectId);
   const [currentPath, setCurrentPath] = useState<string>('/');
   const [fileList, setFileList] = useState<FileItem[]>([]);
@@ -208,11 +209,11 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
 
   return (
     <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
-      <div style={{marginBottom: 16}}>
+      <div style={{marginBottom: token.marginMD}}>
         <Breadcrumb items={getBreadcrumbItems()}/>
       </div>
 
-      <div style={{marginBottom: 16}}>
+      <div style={{marginBottom: token.marginMD}}>
         <Space>
           <Button icon={<UploadOutlined/>} onClick={handleUpload}>
             {t('upload')}

@@ -1,3 +1,6 @@
+/**
+ * API日志接口
+ */
 export interface ApiLog {
   id: string;
   url: string;
@@ -13,6 +16,9 @@ export interface ApiLog {
   errorMessage?: string;
 }
 
+/**
+ * API日志模式接口
+ */
 export interface ApiLogSchema {
   id: string;
   uri?: string;
@@ -31,6 +37,9 @@ export interface ApiLogSchema {
   errorMessage?: string;
 }
 
+/**
+ * API日志统计模式接口
+ */
 export interface ApiLogStatSchema {
   apiStatList: {
     date: string;
