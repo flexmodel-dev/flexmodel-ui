@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   Row,
@@ -13,7 +13,6 @@ import {
   message,
   Empty,
   Dropdown,
-  Popconfirm,
   Table,
   theme
 } from 'antd';
@@ -28,21 +27,22 @@ import {
   MoreOutlined,
   DeleteOutlined,
   AppstoreOutlined,
-  UnorderedListOutlined
+  UnorderedListOutlined,
+  ExclamationCircleFilled
 } from '@ant-design/icons';
-import {useNavigate} from 'react-router-dom';
-import {useProject} from '@/store/appStore';
-import {createProject, getProjects, deleteProject} from '@/services/project';
-import type {Project} from '@/types/project';
-import {PageContainer} from '@/components/common';
-import {t} from 'i18next';
+import { useNavigate } from 'react-router-dom';
+import { useProject } from '@/store/appStore';
+import { createProject, getProjects, deleteProject } from '@/services/project';
+import type { Project } from '@/types/project';
+import { PageContainer } from '@/components/common';
+import { t } from 'i18next';
 
-const {Title, Text} = Typography;
+const { Title, Text } = Typography;
 
 const Project: React.FC = () => {
-  const {token} = theme.useToken();
+  const { token } = theme.useToken();
   const navigate = useNavigate();
-  const {setCurrentProject} = useProject();
+  const { setCurrentProject } = useProject();
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -59,7 +59,7 @@ const Project: React.FC = () => {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const projects = await getProjects({include: 'stats'});
+      const projects = await getProjects({ include: 'stats' });
       setProjects(projects);
       setFilteredProjects(projects);
     } catch (error) {
@@ -117,15 +117,26 @@ const Project: React.FC = () => {
     navigate(`/project/${projectId}/settings`);
   };
 
-  const handleDeleteProject = async (projectId: string) => {
-    try {
-      await deleteProject(projectId);
-      message.success(t('project.deleteSuccess'));
-      await fetchProjects();
-    } catch (error) {
-      console.error('Failed to delete project:', error);
-      message.error(t('project.deleteFailed'));
-    }
+  const showDeleteConfirm = (projectId: string, projectName: string) => {
+    Modal.confirm({
+      title: t('project.deleteConfirm'),
+      icon: <ExclamationCircleFilled />,
+      content: `${t('project.deleteConfirmDesc', { name: projectName })}`,
+      okText: t('common.confirm'),
+      okType: 'danger',
+      cancelText: t('common.cancel'),
+      onOk: async () => {
+        try {
+          await deleteProject(projectId);
+          message.success(t('project.deleteSuccess'));
+          await fetchProjects();
+        } catch (error: any) {
+          console.error('Failed to delete project:', error);
+          message.error(error?.message);
+          throw error;
+        }
+      }
+    });
   };
 
   return (
@@ -135,27 +146,27 @@ const Project: React.FC = () => {
         <Space>
           <Input
             placeholder={t('project.searchPlaceholder')}
-            prefix={<SearchOutlined/>}
+            prefix={<SearchOutlined />}
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            style={{width: 200}}
+            style={{ width: 200 }}
             allowClear
           />
           <Space>
             <Button
               type={viewMode === 'card' ? 'default' : 'text'}
-              icon={<AppstoreOutlined/>}
+              icon={<AppstoreOutlined />}
               onClick={() => setViewMode('card')}
-              style={{borderTopLeftRadius: 4, borderBottomLeftRadius: 4}}
+              style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
             />
             <Button
               type={viewMode === 'list' ? 'default' : 'text'}
-              icon={<UnorderedListOutlined/>}
+              icon={<UnorderedListOutlined />}
               onClick={() => setViewMode('list')}
-              style={{borderTopRightRadius: 4, borderBottomRightRadius: 4, marginLeft: -1}}
+              style={{ borderTopRightRadius: 4, borderBottomRightRadius: 4, marginLeft: -1 }}
             />
           </Space>
-          <Button type="primary" icon={<PlusOutlined/>} onClick={handleCreateProject}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleCreateProject}>
             {t('project.create')}
           </Button>
         </Space>
@@ -164,7 +175,7 @@ const Project: React.FC = () => {
       {filteredProjects.length === 0 ? (
         <Empty
           description={searchKeyword ? t('project.noResults') : t('project.empty')}
-          style={{marginTop: '100px'}}
+          style={{ marginTop: '100px' }}
         />
       ) : viewMode === 'list' ? (
         <Table
@@ -173,7 +184,7 @@ const Project: React.FC = () => {
           onRow={(record) => ({
             onClick: () => handleProjectClick(record.id)
           })}
-          style={{cursor: 'pointer'}}
+          style={{ cursor: 'pointer' }}
           pagination={false}
           bordered
           rowClassName={() => 'table-row'}
@@ -184,8 +195,8 @@ const Project: React.FC = () => {
               key: 'name',
               render: (text, record) => (
                 <div>
-                  <div style={{fontWeight: '500'}}>{text}</div>
-                  <div style={{color: '#8c8c8c', fontSize: '12px'}}>{record.description}</div>
+                  <div style={{ fontWeight: '500' }}>{text}</div>
+                  <div style={{ color: '#8c8c8c', fontSize: '12px' }}>{record.description}</div>
                 </div>
               )
             },
@@ -201,22 +212,22 @@ const Project: React.FC = () => {
               render: (_, record) => (
                 <Space size="small" wrap>
                   {(record.stats?.apiCount ?? 0) > 0 && (
-                    <Tag icon={<CloudServerOutlined/>} color="blue">
+                    <Tag icon={<CloudServerOutlined />} color="blue">
                       {record.stats?.apiCount} {t('project.api')}
                     </Tag>
                   )}
                   {(record.stats?.datasourceCount ?? 0) > 0 && (
-                    <Tag icon={<DatabaseOutlined/>} color="green">
+                    <Tag icon={<DatabaseOutlined />} color="green">
                       {record.stats?.datasourceCount} {t('project.dataSource')}
                     </Tag>
                   )}
                   {(record.stats?.flowCount ?? 0) > 0 && (
-                    <Tag icon={<BranchesOutlined/>} color="purple">
+                    <Tag icon={<BranchesOutlined />} color="purple">
                       {record.stats?.flowCount} {t('project.flow')}
                     </Tag>
                   )}
                   {(record.stats?.storageCount ?? 0) > 0 && (
-                    <Tag icon={<CloudOutlined/>} color="orange">
+                    <Tag icon={<CloudOutlined />} color="orange">
                       {record.stats?.storageCount} {t('project.storage')}
                     </Tag>
                   )}
@@ -239,7 +250,7 @@ const Project: React.FC = () => {
                       {
                         key: 'settings',
                         label: t('project.settings'),
-                        icon: <SettingOutlined/>,
+                        icon: <SettingOutlined />,
                         onClick: (e) => {
                           e.domEvent.stopPropagation();
                           handleSettingsClick(e.domEvent as React.MouseEvent, record.id);
@@ -247,23 +258,13 @@ const Project: React.FC = () => {
                       },
                       {
                         key: 'delete',
-                        label: (
-                          <Popconfirm
-                            title={t('project.deleteConfirm')}
-                            description={t('project.deleteConfirmDesc')}
-                            onConfirm={(e) => {
-                              e?.stopPropagation();
-                              handleDeleteProject(record.id);
-                            }}
-                            onCancel={(e) => e?.stopPropagation()}
-                            okText={t('common.confirm')}
-                            cancelText={t('common.cancel')}
-                          >
-                            <span onClick={(e) => e.stopPropagation()}>{t('project.delete')}</span>
-                          </Popconfirm>
-                        ),
-                        icon: <DeleteOutlined/>,
-                        danger: true
+                        label: t('project.delete'),
+                        icon: <DeleteOutlined />,
+                        danger: true,
+                        onClick: (e) => {
+                          e.domEvent.stopPropagation();
+                          showDeleteConfirm(record.id, record.name);
+                        }
                       }
                     ]
                   }}
@@ -272,7 +273,7 @@ const Project: React.FC = () => {
                 >
                   <Button
                     type="text"
-                    icon={<MoreOutlined/>}
+                    icon={<MoreOutlined />}
                     onClick={(e) => e.stopPropagation()}
                   />
                 </Dropdown>
@@ -286,19 +287,19 @@ const Project: React.FC = () => {
             <Col xs={24} sm={12} lg={8} xl={6} key={project.id}>
               <Card
                 hoverable
-                style={{height: '100%', cursor: 'pointer'}}
+                style={{ height: '100%', cursor: 'pointer' }}
                 onClick={() => handleProjectClick(project.id)}
                 styles={{
-                  body: {padding: token.paddingLG, display: 'flex', flexDirection: 'column', height: '100%'}
+                  body: { padding: token.paddingLG, display: 'flex', flexDirection: 'column', height: '100%' }
                 }}
               >
-                <Space direction="vertical" size="middle" style={{width: '100%', flex: 1, display: 'flex', flexDirection: 'column'}}>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-                    <div style={{flex: 1}}>
-                      <Title level={4} style={{margin: 0, marginBottom: token.marginMD}}>
+                <Space direction="vertical" size="middle" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ flex: 1 }}>
+                      <Title level={4} style={{ margin: 0, marginBottom: token.marginMD }}>
                         {project.name}
                       </Title>
-                      <Text type="secondary" style={{fontSize: token.fontSizeSM}}>
+                      <Text type="secondary" style={{ fontSize: token.fontSizeSM }}>
                         {project.description}
                       </Text>
                     </div>
@@ -308,7 +309,7 @@ const Project: React.FC = () => {
                           {
                             key: 'settings',
                             label: t('project.settings'),
-                            icon: <SettingOutlined/>,
+                            icon: <SettingOutlined />,
                             onClick: (e) => {
                               e.domEvent.stopPropagation();
                               handleSettingsClick(e.domEvent as React.MouseEvent, project.id);
@@ -316,23 +317,13 @@ const Project: React.FC = () => {
                           },
                           {
                             key: 'delete',
-                            label: (
-                              <Popconfirm
-                                title={t('project.deleteConfirm')}
-                                description={t('project.deleteConfirmDesc')}
-                                onConfirm={(e) => {
-                                  e?.stopPropagation();
-                                  handleDeleteProject(project.id);
-                                }}
-                                onCancel={(e) => e?.stopPropagation()}
-                                okText={t('common.confirm')}
-                                cancelText={t('common.cancel')}
-                              >
-                                <span onClick={(e) => e.stopPropagation()}>{t('project.delete')}</span>
-                              </Popconfirm>
-                            ),
-                            icon: <DeleteOutlined/>,
-                            danger: true
+                            label: t('project.delete'),
+                            icon: <DeleteOutlined />,
+                            danger: true,
+                            onClick: (e) => {
+                              e.domEvent.stopPropagation();
+                              showDeleteConfirm(project.id, project.name);
+                            }
                           }
                         ]
                       }}
@@ -341,40 +332,40 @@ const Project: React.FC = () => {
                     >
                       <Button
                         type="text"
-                        icon={<MoreOutlined/>}
+                        icon={<MoreOutlined />}
                         onClick={(e) => e.stopPropagation()}
-                        style={{flexShrink: 0}}
+                        style={{ flexShrink: 0 }}
                       />
                     </Dropdown>
                   </div>
-                  <Space size="small" style={{overflow: 'hidden', width: '100%'}}>
+                  <Space size="small" style={{ overflow: 'hidden', width: '100%' }}>
                     {(project.stats?.apiCount ?? 0) > 0 && (
-                      <Tag icon={<CloudServerOutlined/>} color="blue">
+                      <Tag icon={<CloudServerOutlined />} color="blue">
                         {project.stats?.apiCount} {t('project.api')}
                       </Tag>
                     )}
                     {(project.stats?.datasourceCount ?? 0) > 0 && (
-                      <Tag icon={<DatabaseOutlined/>} color="green">
+                      <Tag icon={<DatabaseOutlined />} color="green">
                         {project.stats?.datasourceCount} {t('project.dataSource')}
                       </Tag>
                     )}
                     {(project.stats?.flowCount ?? 0) > 0 && (
-                      <Tag icon={<BranchesOutlined/>} color="purple">
+                      <Tag icon={<BranchesOutlined />} color="purple">
                         {project.stats?.flowCount} {t('project.flow')}
                       </Tag>
                     )}
                     {(project.stats?.storageCount ?? 0) > 0 && (
-                      <Tag icon={<CloudOutlined/>} color="orange">
+                      <Tag icon={<CloudOutlined />} color="orange">
                         {project.stats?.storageCount} {t('project.storage')}
                       </Tag>
                     )}
                   </Space>
 
-                  <div style={{marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <Text type="secondary" style={{fontSize: '12px'}}>
+                  <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text type="secondary" style={{ fontSize: '12px' }}>
                       {t('project.owner')}: {project.ownerId}
                     </Text>
-                    <Text type="secondary" style={{fontSize: '12px'}}>
+                    <Text type="secondary" style={{ fontSize: '12px' }}>
                       {t('project.createdAt')}: {new Date(project.createdAt).toLocaleDateString('zh-CN')}
                     </Text>
                   </div>
@@ -400,21 +391,21 @@ const Project: React.FC = () => {
             name="id"
             tooltip={t('project.projectIdHelp')}
           >
-            <Input placeholder={t('project.projectIdPlaceholder')}/>
+            <Input placeholder={t('project.projectIdPlaceholder')} />
           </Form.Item>
           <Form.Item
             label={t('project.name')}
             name="name"
-            rules={[{required: true, message: t('project.nameRequired')}]}
+            rules={[{ required: true, message: t('project.nameRequired') }]}
           >
-            <Input placeholder={t('project.namePlaceholder')}/>
+            <Input placeholder={t('project.namePlaceholder')} />
           </Form.Item>
           <Form.Item
             label={t('project.description')}
             name="description"
-            rules={[{required: true, message: t('project.descriptionRequired')}]}
+            rules={[{ required: true, message: t('project.descriptionRequired') }]}
           >
-            <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')}/>
+            <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')} />
           </Form.Item>
         </Form>
       </Modal>
