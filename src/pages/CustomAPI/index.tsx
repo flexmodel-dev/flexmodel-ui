@@ -19,7 +19,7 @@ import { useConfig, useProject } from "@/store/appStore.ts";
 import DebugPanel from "./components/DebugPanel";
 import EditPanel from "./components/EditPanel/index.tsx";
 import APIExplorer from "./components/APIExplorer";
-import { HistoryOutlined } from "@ant-design/icons";
+import { HistoryOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import HistoryModal, { HistoryRecord } from "./components/HistoryModal";
 
 const methodOptions = [
@@ -201,24 +201,24 @@ const CustomAPI: React.FC = () => {
   };
 
   const showDeleteConfirm = (id: string, name: string) => {
-    setDeleteTarget({ id, name });
-    setDeleteConfirmVisible(true);
-  };
-
-  const handleDelete = async () => {
-    if (deleteTarget) {
-      setDeleteLoading(true);
-      try {
-        await deleteApi(projectId, deleteTarget.id);
-        message.success(t("delete_success"));
-        reqApiList();
-        setDeleteConfirmVisible(false);
-      } catch {
-        message.error(t("delete_failed"));
-      } finally {
-        setDeleteLoading(false);
+    Modal.confirm({
+      title: t("delete"),
+      icon: <ExclamationCircleFilled />,
+      content: t("delete_dialog_text", { name }),
+      okText: t("delete"),
+      okType: "danger",
+      cancelText: t("cancel"),
+      onOk: async () => {
+        try {
+          await deleteApi(projectId, id);
+          message.success(t("delete_success"));
+          reqApiList();
+        } catch {
+          message.error(t("delete_failed"));
+          throw new Error();
+        }
       }
-    }
+    });
   };
 
   const showEditInput = (data: ApiDefinition) => {
@@ -559,9 +559,6 @@ const CustomAPI: React.FC = () => {
     }
   };
 
-  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<any>(null);
-  const [deleteLoading, setDeleteLoading] = useState(false);
   // 还原历史版本
   const handleRestoreHistory = async (record: HistoryRecord) => {
     if (!editForm?.id) {
@@ -674,21 +671,6 @@ const CustomAPI: React.FC = () => {
           )}
         </Splitter.Panel>
       </Splitter>
-      {/* 删除确认弹窗 */}
-      <Modal
-        title={t("delete")}
-        open={deleteConfirmVisible}
-        onOk={handleDelete}
-        onCancel={() => setDeleteConfirmVisible(false)}
-        confirmLoading={deleteLoading}
-        okText={t("delete")}
-        okButtonProps={{ danger: true }}
-        cancelText={t("cancel")}
-      >
-        <span>
-          {t("delete_dialog_text", { name: deleteTarget?.name || "" })}
-        </span>
-      </Modal>
       <HistoryModal
         open={historyVisible}
         onClose={() => setHistoryVisible(false)}

@@ -170,7 +170,7 @@ const DatasourceManagement: React.FC = () => {
       loading={false}>
       <Splitter>
         <Splitter.Panel max="20%" collapsible>
-          <div style={{ height: "80vh", overflow: "auto" }}>
+          <div style={{ height: "80vh", overflow: "auto", paddingRight: token.padding }}>
             <DataSourceExplorer
               onSelect={handleSelect}
               setDeleteVisible={setDeleteVisible}
