@@ -118,7 +118,7 @@ const Sidebar: React.FC = () => {
 
   // 处理用户相关事件
   const handleHelpClick = useCallback(() => {
-    window.open('https://flexmodel.wetech.tech/', '_blank', 'noopener,noreferrer');
+    window.open('https://flexmodel.dev/', '_blank', 'noopener,noreferrer');
   }, []);
 
   return (

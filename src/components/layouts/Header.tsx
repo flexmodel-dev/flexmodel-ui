@@ -174,7 +174,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleAIChat, onToggleConsole }) => {
           <a href={`${import.meta.env.BASE_URL}/swagger-ui/index.html`} target="_blank" rel="noopener noreferrer">
             <FileSearchOutlined style={{ fontSize: token.fontSizeLG }} />
           </a>
-          <a href="https://flexmodel.wetech.tech" target="_blank" rel="noopener noreferrer">
+          <a href="https://flexmodel.dev" target="_blank" rel="noopener noreferrer">
             <QuestionCircleOutlined style={{ fontSize: token.fontSizeLG }} />
           </a>
         </Space>

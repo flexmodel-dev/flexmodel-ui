@@ -68,7 +68,7 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
   onChange,
   readOnly = false,
   showDocLink = false,
-  docUrl = 'https://flexmodel.wetech.tech/docs/api/model-schema/#idl-%E5%AF%B9%E8%B1%A1%E9%85%8D%E7%BD%AE',
+  docUrl = 'https://flexmodel.dev/docs/api/model-schema/#idl-%E5%AF%B9%E8%B1%A1%E9%85%8D%E7%BD%AE',
 }) => {
   const { isDark } = useTheme();
   const { t } = useTranslation();

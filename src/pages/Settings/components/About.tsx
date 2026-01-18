@@ -71,7 +71,7 @@ const About: React.FC = () => {
               <Button
                 icon={<BookOutlined />}
                 size="middle"
-                href="https://flexmodel.wetech.tech/docs"
+                href="https://flexmodel.dev/docs"
                 target="_blank"
                 style={{ borderRadius: '6px' }}
               >
@@ -80,7 +80,7 @@ const About: React.FC = () => {
               <Button
                 icon={<GlobalOutlined />}
                 size="middle"
-                href="https://flexmodel.wetech.tech"
+                href="https://flexmodel.dev"
                 target="_blank"
                 style={{ borderRadius: token.borderRadius }}
               >
