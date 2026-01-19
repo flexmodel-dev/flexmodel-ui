@@ -41,6 +41,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
         <div
           style={{
             padding: `${token.paddingSM}px ${token.paddingLG}px`,
+            paddingBottom: 0,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
