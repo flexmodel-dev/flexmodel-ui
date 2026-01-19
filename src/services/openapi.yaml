@@ -362,6 +362,7 @@ paths:
       - BearerAuth: []
   /api/v1/projects:
     get:
+      summary: 获取项目列表
       tags:
       - 项目
       parameters:
@@ -382,11 +383,94 @@ paths:
           $ref: "#/components/responses/InternalError"
         "400":
           $ref: "#/components/responses/BadRequest"
-      summary: Find Projects
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建项目
+      tags:
+      - 项目
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
   /api/v1/projects/{projectId}:
+    put:
+      summary: 更新项目
+      tags:
+      - 项目
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    patch:
+      summary: 部分更新项目
+      tags:
+      - 项目
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
     get:
+      summary: 获取项目详情
       tags:
       - 项目
       parameters:
@@ -406,7 +490,26 @@ paths:
           $ref: "#/components/responses/InternalError"
         "400":
           $ref: "#/components/responses/BadRequest"
-      summary: Find Project
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除项目
+      tags:
+      - 项目
+      parameters:
+      - description: 项目ID
+        in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
   /api/v1/projects/{projectId}/apis:
@@ -3994,6 +4097,164 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
+  /api/v1/resources:
+    get:
+      summary: 获取资源列表
+      tags:
+      - 资源
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResourceResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/resources/tree:
+    get:
+      summary: 获取资源树
+      tags:
+      - 资源
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResourceResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+  /api/v1/roles:
+    get:
+      summary: 获取角色列表
+      tags:
+      - 角色
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoleResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    post:
+      summary: 创建角色
+      tags:
+      - 角色
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+  /api/v1/roles/{roleId}:
+    put:
+      summary: 更新角色
+      tags:
+      - 角色
+      parameters:
+      - description: 角色ID
+        in: path
+        name: roleId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+      - BearerAuth: []
+    get:
+      summary: 获取角色详情
+      tags:
+      - 角色
+      parameters:
+      - description: 角色ID
+        in: path
+        name: roleId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
+    delete:
+      summary: 删除角色
+      tags:
+      - 角色
+      parameters:
+      - description: 角色ID
+        in: path
+        name: roleId
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      security:
+      - BearerAuth: []
   /api/v1/settings:
     patch:
       summary: 保存设置
@@ -5200,15 +5461,6 @@ components:
         requestCount:
           type: integer
           format: int32
-        queryCount:
-          type: integer
-          format: int32
-        mutationCount:
-          type: integer
-          format: int32
-        subscribeCount:
-          type: integer
-          format: int32
         dataSourceCount:
           type: integer
           format: int32
@@ -5533,7 +5785,7 @@ components:
       properties:
         id:
           type: string
-        username:
+        name:
           type: string
         email:
           type: string
@@ -5551,7 +5803,6 @@ components:
           type: string
           description: ID
         username:
-          type: string
           description: 用户名
         email:
           type: string
@@ -5565,12 +5816,14 @@ components:
         updatedBy:
           type: string
           description: 更新人
+        name:
+          type: string
     MemberResponse:
       type: object
       properties:
         id:
           type: string
-        username:
+        name:
           type: string
         email:
           type: string
@@ -5964,6 +6217,11 @@ components:
           $ref: "#/components/schemas/LocalDateTime"
         updatedAt:
           $ref: "#/components/schemas/LocalDateTime"
+        stats:
+          $ref: "#/components/schemas/ProjectStats"
+    ProjectStats:
+      type: object
+      properties:
         apiCount:
           type: integer
           format: int32
@@ -6001,6 +6259,87 @@ components:
           type: string
         fieldName:
           type: string
+    ResourceResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        permission:
+          type: string
+        type:
+          type: string
+        parentId:
+          type: integer
+          format: int64
+    RoleRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        resourceIds:
+          type: array
+          items:
+            type: string
+    RoleRequestSchema:
+      type: object
+      description: 角色请求
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: 角色名称
+        description:
+          type: string
+          description: 角色描述
+        resoureceIds:
+          description: "资源ID, 逗号分隔"
+        createdBy:
+          description: 创建人
+        updatedBy:
+          description: 更新人
+        resourceIds:
+          type: array
+          items:
+            type: string
+    RoleResource:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        permission:
+          type: string
+    RoleResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        resources:
+          type: array
+          items:
+            $ref: "#/components/schemas/RoleResource"
     RollbackTaskParamSchema:
       type: object
       properties:
@@ -6737,6 +7076,8 @@ tags:
   description: 系统信息
 - name: 系统监控
   description: 系统监控相关接口，包括JVM、CPU、内存、线程、磁盘（含I/O）、网络等监控信息
+- name: 角色
+  description: 角色管理
 - name: 触发器
   description: 触发器管理
 - name: 认证
@@ -6745,6 +7086,8 @@ tags:
   description: 模型数据记录管理
 - name: 设置
   description: 系统设置
+- name: 资源
+  description: 资源管理
 - name: 身份源
   description: 身份源管理
 - name: 项目

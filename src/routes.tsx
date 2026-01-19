@@ -18,7 +18,6 @@ import {
   DatabaseOutlined,
   DeploymentUnitOutlined,
   FileTextOutlined,
-  HomeOutlined,
   LineChartOutlined,
   NodeIndexOutlined,
   PlayCircleOutlined,
@@ -26,7 +25,8 @@ import {
   ThunderboltOutlined,
   UserOutlined,
   CloudUploadOutlined,
-  FolderOutlined,
+  AppstoreOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
 import GraphQLAPI from "@/pages/GraphQLAPI";
 import CustomAPI from "@/pages/CustomAPI";
@@ -56,7 +56,7 @@ export const platformRoutes: RouteConfig[] = [
   {
     path: "/project",
     element: <Project />,
-    icon: FolderOutlined,
+    icon:  AppstoreOutlined,
     translationKey: "platform.project",
   },
   {
@@ -77,7 +77,7 @@ export const projectRoutes: RouteConfig[] = [
   {
     path: "/project/:projectId/",
     element: <Overview />,
-    icon: HomeOutlined,
+    icon: DashboardOutlined,
     translationKey: "overview",
   },
   {

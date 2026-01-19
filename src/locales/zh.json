@@ -791,6 +791,7 @@
     "home": "首页",
     "project": "项目",
     "member": "成员",
+    "role": "角色",
     "settings": "设置",
     "select_project": "选择项目",
     "back_to_platform": "返回平台"
@@ -834,6 +835,32 @@
     "member_role_viewer": "访客",
     "member_status_active": "活跃",
     "member_status_inactive": "未激活"
+  },
+  "role": {
+    "add": "添加角色",
+    "edit": "编辑角色",
+    "id": "ID",
+    "id_required": "请输入ID",
+    "id_placeholder": "请输入ID",
+    "name": "角色名称",
+    "name_required": "请输入角色名称",
+    "name_placeholder": "请输入角色名称",
+    "description": "描述",
+    "description_placeholder": "请输入描述",
+    "resources": "资源权限",
+    "resources_placeholder": "请选择资源",
+    "created_at": "创建时间",
+    "search_placeholder": "搜索角色",
+    "delete_confirm": "确认删除角色",
+    "delete_confirm_desc": "确定要删除该角色吗？",
+    "delete_success": "删除成功",
+    "delete_failed": "删除失败",
+    "update_success": "更新成功",
+    "create_success": "创建成功",
+    "fetch_failed": "获取角色失败"
+  },
+  "resource": {
+    "fetch_failed": "获取资源失败"
   },
   "project": {
     "searchPlaceholder": "搜索项目...",

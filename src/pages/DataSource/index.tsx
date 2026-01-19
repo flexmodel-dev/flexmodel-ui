@@ -166,7 +166,6 @@ const DatasourceManagement: React.FC = () => {
   return (
     <PageContainer
       title={t('datasource')}
-      extra={[]}
       loading={false}>
       <Splitter>
         <Splitter.Panel max="20%" collapsible>

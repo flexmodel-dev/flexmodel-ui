@@ -514,9 +514,6 @@
   "chinese": "Chinese",
   "english": "English",
   "refresh_tab": "Refresh tab",
-  "platform": {
-    "project": "Projects"
-  },
   "project": {
     "searchPlaceholder": "Search for a project...",
     "create": "New project",
@@ -835,6 +832,7 @@
     "home": "Home",
     "project": "Projects",
     "member": "Members",
+    "role": "Roles",
     "settings": "Settings",
     "select_project": "Select Project",
     "back_to_platform": "Back to Platform"
@@ -878,5 +876,31 @@
     "member_role_viewer": "Viewer",
     "member_status_active": "Active",
     "member_status_inactive": "Inactive"
+  },
+  "role": {
+    "add": "Add Role",
+    "edit": "Edit Role",
+    "id": "ID",
+    "id_required": "Please enter ID",
+    "id_placeholder": "Please enter ID",
+    "name": "Role Name",
+    "name_required": "Please enter role name",
+    "name_placeholder": "Please enter role name",
+    "description": "Description",
+    "description_placeholder": "Please enter description",
+    "resources": "Resource Permissions",
+    "resources_placeholder": "Please select resources",
+    "created_at": "Created At",
+    "search_placeholder": "Search Roles",
+    "delete_confirm": "Confirm Delete Role",
+    "delete_confirm_desc": "Are you sure you want to delete this role?",
+    "delete_success": "Deleted Successfully",
+    "delete_failed": "Failed to delete role",
+    "update_success": "Updated Successfully",
+    "create_success": "Created Successfully",
+    "fetch_failed": "Failed to fetch roles"
+  },
+  "resource": {
+    "fetch_failed": "Failed to fetch resources"
   }
 }

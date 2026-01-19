@@ -1,26 +1,37 @@
-import React, {useState, useEffect, useCallback} from "react";
-import {Button, Form, Input, message, Modal, Space, Table} from "antd";
-import {useTranslation} from "react-i18next";
-import {DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
+import React, { useState, useEffect, useCallback } from "react";
+import { message, Modal, Tabs } from "antd";
+import { useTranslation } from "react-i18next";
 import PageContainer from "@/components/common/PageContainer";
-import type {ColumnsType} from "antd/es/table";
-import {getMembers, createMember, updateMember, deleteMember} from "@/services/member";
-import type {MemberResponse} from "@/types/member.d";
+import { getMembers, createMember, updateMember, deleteMember } from "@/services/member";
+import { getRoles, createRole, updateRole, deleteRole } from "@/services/role";
+import { getResourceTree } from "@/services/resource";
+import type { MemberResponse } from "@/types/member.d";
+import type { RoleResponse } from "@/types/role.d";
+import type { ResourceNode } from "@/types/resource.d";
+import MemberList from "./components/MemberList";
+import RoleList from "./components/RoleList";
+import MemberModal from "./components/MemberModal";
+import RoleModal from "./components/RoleModal";
 
 const Member: React.FC = () => {
-  const {t} = useTranslation();
-  const [form] = Form.useForm();
-  const [members, setTeams] = useState<MemberResponse[]>([]);
+  const { t } = useTranslation();
+  const [members, setMembers] = useState<MemberResponse[]>([]);
+  const [roles, setRoles] = useState<RoleResponse[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [editingTeam, setEditingTeam] = useState<MemberResponse | null>(null);
+  const [roleModalVisible, setRoleModalVisible] = useState<boolean>(false);
+  const [editingMember, setEditingMember] = useState<MemberResponse | null>(null);
+  const [editingRole, setEditingRole] = useState<RoleResponse | null>(null);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [roleSearchKeyword, setRoleSearchKeyword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [roleLoading, setRoleLoading] = useState<boolean>(true);
+  const [resourceTreeData, setResourceTreeData] = useState<any[]>([]);
 
   const fetchMembers = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getMembers();
-      setTeams(data);
+      setMembers(data);
     } catch (error) {
       console.error("Failed to fetch members:", error);
       message.error(t("member.user_fetch_failed"));
@@ -29,27 +40,55 @@ const Member: React.FC = () => {
     }
   }, [t]);
 
+  const fetchRoles = useCallback(async () => {
+    setRoleLoading(true);
+    try {
+      const data = await getRoles();
+      setRoles(data);
+    } catch (error) {
+      console.error("Failed to fetch roles:", error);
+      message.error(t("role.fetch_failed"));
+    } finally {
+      setRoleLoading(false);
+    }
+  }, [t]);
+
+  const fetchResources = useCallback(async () => {
+    try {
+      const data = await getResourceTree();
+      const treeData = transformResourceToTree(data);
+      setResourceTreeData(treeData);
+    } catch (error) {
+      console.error("Failed to fetch resources:", error);
+      message.error(t("resource.fetch_failed"));
+    }
+  }, [t]);
+
+  const transformResourceToTree = (resources: ResourceNode[]): any[] => {
+    return resources.map(resource => ({
+      label: resource.name,
+      value: resource.id,
+      children: resource.children ? transformResourceToTree(resource.children) : undefined
+    }));
+  };
+
   useEffect(() => {
     fetchMembers();
-  }, [fetchMembers]);
+    fetchRoles();
+    fetchResources();
+  }, [fetchMembers, fetchRoles, fetchResources]);
 
-  const handleAdd = () => {
-    setEditingTeam(null);
-    form.resetFields();
+  const handleMemberAdd = () => {
+    setEditingMember(null);
     setModalVisible(true);
   };
 
-  const handleEdit = (member: MemberResponse) => {
-    setEditingTeam(member);
-    form.setFieldsValue({
-      id: member.id,
-      name: member.name,
-      email: member.email
-    });
+  const handleMemberEdit = (member: MemberResponse) => {
+    setEditingMember(member);
     setModalVisible(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleMemberDelete = (id: string) => {
     Modal.confirm({
       title: t("member.user_delete_confirm"),
       content: t("member.user_delete_confirm_desc"),
@@ -66,11 +105,10 @@ const Member: React.FC = () => {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleMemberSubmit = async (values: any) => {
     try {
-      const values = await form.validateFields();
-      if (editingTeam) {
-        await updateMember(editingTeam.id, {
+      if (editingMember) {
+        await updateMember(editingMember.id, {
           name: values.name,
           email: values.email,
           password: values.password
@@ -81,166 +119,118 @@ const Member: React.FC = () => {
         message.success(t("member.user_create_success"));
       }
       setModalVisible(false);
-      form.resetFields();
       await fetchMembers();
     } catch (error) {
       console.error("Failed to save member:", error);
     }
   };
 
-  const handleSearch = (value: string) => {
+  const handleRoleAdd = () => {
+    setEditingRole(null);
+    setRoleModalVisible(true);
+  };
+
+  const handleRoleEdit = (role: RoleResponse) => {
+    setEditingRole(role);
+    setRoleModalVisible(true);
+  };
+
+  const handleRoleDelete = (id: string) => {
+    Modal.confirm({
+      title: t("role.delete_confirm"),
+      content: t("role.delete_confirm_desc"),
+      onOk: async () => {
+        try {
+          await deleteRole(id);
+          message.success(t("role.delete_success"));
+          await fetchRoles();
+        } catch (error) {
+          console.error("Failed to delete role:", error);
+          message.error(t("role.delete_failed"));
+        }
+      }
+    });
+  };
+
+  const handleRoleSubmit = async (values: any) => {
+    try {
+      if (editingRole) {
+        await updateRole(editingRole.id, {
+          name: values.name,
+          description: values.description,
+          resourceIds: values.resourceIds
+        });
+        message.success(t("role.update_success"));
+      } else {
+        await createRole(values);
+        message.success(t("role.create_success"));
+      }
+      setRoleModalVisible(false);
+      await fetchRoles();
+    } catch (error) {
+      console.error("Failed to save role:", error);
+    }
+  };
+
+  const handleMemberSearch = (value: string) => {
     setSearchKeyword(value);
   };
 
-  const filteredTeams = members.filter(member =>
+  const handleRoleSearch = (value: string) => {
+    setRoleSearchKeyword(value);
+  };
+
+  const filteredMembers = members.filter(member =>
     member.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
     member.email.toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
-  const columns: ColumnsType<MemberResponse> = [
-    {
-      title: t("member.user_id"),
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id.localeCompare(b.id)
-    },
-    {
-      title: t("member.user_name"),
-      dataIndex: "name",
-      key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name)
-    },
-    {
-      title: t("member.user_email"),
-      dataIndex: "email",
-      key: "email",
-      sorter: (a, b) => a.email.localeCompare(b.email)
-    },
-    {
-      title: t("member.user_created_at"),
-      dataIndex: "createdAt",
-      key: "createdAt",
-      sorter: (a, b) => (a.createdAt || "").localeCompare(b.createdAt || "")
-    },
-    {
-      title: t("operations"),
-      key: "operations",
-      render: (_, record) => (
-        <Space size="small">
-          <Button
-            type="link"
-            size="small"
-            icon={<EditOutlined/>}
-            onClick={() => handleEdit(record)}
-          >
-            {t("edit")}
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            danger
-            icon={<DeleteOutlined/>}
-            onClick={() => handleDelete(record.id)}
-          >
-            {t("delete")}
-          </Button>
-        </Space>
-      )
-    }
-  ];
+  const filteredRoles = roles.filter(role =>
+    role.name.toLowerCase().includes(roleSearchKeyword.toLowerCase()) ||
+    (role.description || "").toLowerCase().includes(roleSearchKeyword.toLowerCase())
+  );
 
   return (
     <>
       <PageContainer
         title={t("platform.member")}
-        extra={[<Space>
-          <Input
-            placeholder={t("member.user_search_placeholder")}
-            prefix={<SearchOutlined/>}
-            allowClear
-            onChange={(e) => handleSearch(e.target.value)}
-            style={{width: 200}}
-          />
-          <Space>
-            <Button type="primary" icon={<PlusOutlined/>} onClick={handleAdd}>
-              {t("member.user_add")}
-            </Button>
-          </Space>
-        </Space>]}
         loading={loading}>
-        <Table
-          columns={columns}
-          dataSource={filteredTeams}
-          rowKey="id"
-          pagination={{
-            total: filteredTeams.length,
-            pageSize: 10,
-            showSizeChanger: true,
-            showTotal: (total) => t("pagination_total_text", {
-              start: 1,
-              end: Math.min(10, total),
-              total
-            })
-          }}
-        />
+        <Tabs>
+          <Tabs.TabPane key="members" tab={t("platform.member")}>
+            <MemberList
+              members={filteredMembers}
+              loading={loading}
+              onSearch={handleMemberSearch}
+              onAdd={handleMemberAdd}
+              onEdit={handleMemberEdit}
+              onDelete={handleMemberDelete}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="roles" tab={t("platform.role")}>
+            <RoleList
+              roles={filteredRoles}
+              loading={roleLoading}
+              onSearch={handleRoleSearch}
+              onAdd={handleRoleAdd}
+              onEdit={handleRoleEdit}
+              onDelete={handleRoleDelete}
+            />
+          </Tabs.TabPane>
+        </Tabs>
       </PageContainer>
-      <Modal
-        title={editingTeam ? t("member.user_edit") : t("member.user_add")}
-        open={modalVisible}
-        onOk={handleSubmit}
-        onCancel={() => {
-          setModalVisible(false);
-          form.resetFields();
-        }}
-        okText={t("save")}
-        cancelText={t("cancel")}
-        width={500}
-      >
-        <Form form={form} layout="vertical">
-          {!editingTeam && (
-            <Form.Item
-              name="id"
-              label={t("member.user_id")}
-              rules={[
-                {required: true, message: t("member.user_id_required")}
-              ]}
-            >
-              <Input placeholder={t("member.user_id_placeholder")}/>
-            </Form.Item>
-          )}
-          <Form.Item
-            name="name"
-            label={t("member.user_name")}
-            rules={[
-              {required: true, message: t("member.user_name_required")},
-              {min: 2, message: t("member.user_name_min_length")}
-            ]}
-          >
-            <Input placeholder={t("member.user_name_placeholder")}/>
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label={t("member.user_email")}
-            rules={[
-              {required: false, message: t("member.user_email_required")},
-              {type: "email", message: t("member.user_email_invalid")}
-            ]}
-          >
-            <Input placeholder={t("member.user_email_placeholder")}/>
-          </Form.Item>
-          <Form.Item
-            name="password"
-            label={t("member.user_password")}
-            rules={editingTeam ? [] : [
-              {required: true, message: t("member.user_password_required")},
-              {min: 6, message: t("member.user_password_min_length")}
-            ]}
-          >
-            <Input.Password
-              placeholder={editingTeam ? t("member.user_password_placeholder_optional") : t("member.user_password_placeholder")}/>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <MemberModal
+        visible={modalVisible}
+        editingMember={editingMember}
+        onCancel={() => setModalVisible(false)}
+        onSubmit={handleMemberSubmit}
+      />
+      <RoleModal
+        visible={roleModalVisible}
+        editingRole={editingRole}
+        resourceTreeData={resourceTreeData}
+        onCancel={() => setRoleModalVisible(false)}
+        onSubmit={handleRoleSubmit}
+      />
     </>
   );
 };
