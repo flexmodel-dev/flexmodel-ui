@@ -816,6 +816,8 @@
     "user_password_min_length": "密码至少6个字符",
     "user_password_placeholder": "请输入密码",
     "user_password_placeholder_optional": "留空则保持当前密码",
+    "user_roles": "角色",
+    "user_roles_placeholder": "请选择角色",
     "user_fetch_failed": "获取成员失败",
     "user_delete_failed": "删除成员失败",
     "member_role": "角色",

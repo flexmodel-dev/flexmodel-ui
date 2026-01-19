@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Space, Table, Tag } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import type { ColumnsType } from "antd/es/table";
@@ -42,6 +42,18 @@ const UserList: React.FC<UserListProps> = ({
       dataIndex: "email",
       key: "email",
       sorter: (a, b) => a.email.localeCompare(b.email)
+    },
+    {
+      title: t("member.user_roles"),
+      dataIndex: "roles",
+      key: "roles",
+      render: (roles: { id: string; name: string }[]) => (
+        <Space>
+          {roles?.map((role) => (
+            <Tag color="blue" key={role.id}>{role.name}</Tag>
+          ))}
+        </Space>
+      )
     },
     {
       title: t("member.user_created_at"),

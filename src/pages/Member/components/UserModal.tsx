@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
-import { Form, Input, Modal } from "antd";
+import { Form, Input, Modal, Select } from "antd";
 import { useTranslation } from "react-i18next";
 import type { UserResponse } from "@/types/user";
+import type { RoleResponse } from "@/types/role";
 
 interface UserModalProps {
   visible: boolean;
   editingUser: UserResponse | null;
+  roles: RoleResponse[];
   onCancel: () => void;
   onSubmit: (values: any) => Promise<void>;
 }
@@ -13,6 +15,7 @@ interface UserModalProps {
 const UserModal: React.FC<UserModalProps> = ({
   visible,
   editingUser,
+  roles,
   onCancel,
   onSubmit
 }) => {
@@ -25,7 +28,8 @@ const UserModal: React.FC<UserModalProps> = ({
         form.setFieldsValue({
           id: editingUser.id,
           name: editingUser.name,
-          email: editingUser.email
+          email: editingUser.email,
+          roleIds: editingUser.roles?.map(r => r.id) || []
         });
       } else {
         form.resetFields();
@@ -95,6 +99,21 @@ const UserModal: React.FC<UserModalProps> = ({
         >
           <Input.Password
             placeholder={editingUser ? t("member.user_password_placeholder_optional") : t("member.user_password_placeholder")} />
+        </Form.Item>
+        <Form.Item
+          name="roleIds"
+          label={t("member.user_roles")}
+        >
+          <Select
+            mode="multiple"
+            allowClear
+            placeholder={t("member.user_roles_placeholder")}
+            style={{ width: '100%' }}
+            options={roles.map(role => ({
+              label: role.name,
+              value: role.id
+            }))}
+          />
         </Form.Item>
       </Form>
     </Modal>

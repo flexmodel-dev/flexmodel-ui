@@ -857,6 +857,8 @@
     "user_password_min_length": "Password must be at least 6 characters",
     "user_password_placeholder": "Please enter password",
     "user_password_placeholder_optional": "Leave blank to keep current password",
+    "user_roles": "Roles",
+    "user_roles_placeholder": "Please select roles",
     "user_fetch_failed": "Failed to fetch members",
     "user_delete_failed": "Failed to delete member",
     "member_role": "Role",

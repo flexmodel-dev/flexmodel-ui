@@ -11,6 +11,7 @@ export interface UserRequest {
    *  创建用户必传参数
    */
   password?: string;
+  roleIds?: string[];
   createdBy?: string;
   updatedBy?: string;
 }
@@ -22,6 +23,10 @@ export interface UserResponse {
   id: string;
   name: string;
   email: string;
+  roles?: {
+    id: string;
+    name: string;
+  }[];
   createdBy?: string;
   updatedBy?: string;
   createdAt?: string;

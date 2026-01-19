@@ -111,7 +111,8 @@ const Member: React.FC = () => {
         await updateUser(editingUser.id, {
           name: values.name,
           email: values.email,
-          password: values.password
+          password: values.password,
+          roleIds: values.roleIds
         });
         message.success(t("member.user_update_success"));
       } else {
@@ -221,6 +222,7 @@ const Member: React.FC = () => {
       <UserModal
         visible={modalVisible}
         editingUser={editingUser}
+        roles={roles}
         onCancel={() => setModalVisible(false)}
         onSubmit={handleUserSubmit}
       />
