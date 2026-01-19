@@ -45,7 +45,7 @@ const UserModal: React.FC<UserModalProps> = ({
 
   return (
     <Modal
-      title={editingUser ? t("user.user_edit") : t("user.user_add")}
+      title={editingUser ? t("member.user_edit") : t("member.user_add")}
       open={visible}
       onOk={handleOk}
       onCancel={onCancel}
@@ -57,17 +57,17 @@ const UserModal: React.FC<UserModalProps> = ({
         {!editingUser && (
           <Form.Item
             name="id"
-            label={t("user.user_id")}
+            label={t("member.user_id")}
             rules={[
-              { required: true, message: t("user.user_id_required") }
+              { required: true, message: t("member.user_id_required") }
             ]}
           >
-            <Input placeholder={t("user.user_id_placeholder")} />
+            <Input placeholder={t("member.user_id_placeholder")} />
           </Form.Item>
         )}
         <Form.Item
           name="name"
-          label={t("user.user_name")}
+          label={t("member.user_name")}
           rules={[
             { required: true, message: t("member.user_name_required") },
             { min: 2, message: t("member.user_name_min_length") }
@@ -87,14 +87,14 @@ const UserModal: React.FC<UserModalProps> = ({
         </Form.Item>
         <Form.Item
           name="password"
-          label={t("user.user_password")}
+          label={t("member.user_password")}
           rules={editingUser ? [] : [
-            { required: true, message: t("user.user_password_required") },
-            { min: 6, message: t("user.user_password_min_length") }
+            { required: true, message: t("member.user_password_required") },
+            { min: 6, message: t("member.user_password_min_length") }
           ]}
         >
           <Input.Password
-            placeholder={editingUser ? t("user.user_password_placeholder_optional") : t("user.user_password_placeholder")} />
+            placeholder={editingUser ? t("member.user_password_placeholder_optional") : t("member.user_password_placeholder")} />
         </Form.Item>
       </Form>
     </Modal>
