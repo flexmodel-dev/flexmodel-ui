@@ -3,19 +3,19 @@ import { Button, Input, Space, Table } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import type { ColumnsType } from "antd/es/table";
-import type { MemberResponse } from "@/types/member.d";
+import type { UserResponse } from "@/types/user";
 
-interface MemberListProps {
-  members: MemberResponse[];
+interface UserListProps {
+  users: UserResponse[];
   loading: boolean;
   onSearch: (value: string) => void;
   onAdd: () => void;
-  onEdit: (member: MemberResponse) => void;
+  onEdit: (user: UserResponse) => void;
   onDelete: (id: string) => void;
 }
 
-const MemberList: React.FC<MemberListProps> = ({
-  members,
+const UserList: React.FC<UserListProps> = ({
+  users,
   loading,
   onSearch,
   onAdd,
@@ -24,7 +24,7 @@ const MemberList: React.FC<MemberListProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const columns: ColumnsType<MemberResponse> = [
+  const columns: ColumnsType<UserResponse> = [
     {
       title: t("member.user_id"),
       dataIndex: "id",
@@ -93,11 +93,11 @@ const MemberList: React.FC<MemberListProps> = ({
         </Space>
       )}
       columns={columns}
-      dataSource={members}
+      dataSource={users}
       rowKey="id"
       loading={loading}
       pagination={{
-        total: members.length,
+        total: users.length,
         pageSize: 10,
         showSizeChanger: true,
         showTotal: (total) => t("pagination_total_text", {
@@ -110,4 +110,4 @@ const MemberList: React.FC<MemberListProps> = ({
   );
 };
 
-export default MemberList;
+export default UserList;

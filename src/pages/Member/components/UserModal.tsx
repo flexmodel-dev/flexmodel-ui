@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { Form, Input, Modal } from "antd";
 import { useTranslation } from "react-i18next";
-import type { MemberResponse } from "@/types/member.d";
+import type { UserResponse } from "@/types/user";
 
-interface MemberModalProps {
+interface UserModalProps {
   visible: boolean;
-  editingMember: MemberResponse | null;
+  editingUser: UserResponse | null;
   onCancel: () => void;
   onSubmit: (values: any) => Promise<void>;
 }
 
-const MemberModal: React.FC<MemberModalProps> = ({
+const UserModal: React.FC<UserModalProps> = ({
   visible,
-  editingMember,
+  editingUser,
   onCancel,
   onSubmit
 }) => {
@@ -21,17 +21,17 @@ const MemberModal: React.FC<MemberModalProps> = ({
 
   useEffect(() => {
     if (visible) {
-      if (editingMember) {
+      if (editingUser) {
         form.setFieldsValue({
-          id: editingMember.id,
-          name: editingMember.name,
-          email: editingMember.email
+          id: editingUser.id,
+          name: editingUser.name,
+          email: editingUser.email
         });
       } else {
         form.resetFields();
       }
     }
-  }, [visible, editingMember, form]);
+  }, [visible, editingUser, form]);
 
   const handleOk = async () => {
     try {
@@ -45,7 +45,7 @@ const MemberModal: React.FC<MemberModalProps> = ({
 
   return (
     <Modal
-      title={editingMember ? t("member.user_edit") : t("member.user_add")}
+      title={editingUser ? t("user.user_edit") : t("user.user_add")}
       open={visible}
       onOk={handleOk}
       onCancel={onCancel}
@@ -54,20 +54,20 @@ const MemberModal: React.FC<MemberModalProps> = ({
       width={500}
     >
       <Form form={form} layout="vertical">
-        {!editingMember && (
+        {!editingUser && (
           <Form.Item
             name="id"
-            label={t("member.user_id")}
+            label={t("user.user_id")}
             rules={[
-              { required: true, message: t("member.user_id_required") }
+              { required: true, message: t("user.user_id_required") }
             ]}
           >
-            <Input placeholder={t("member.user_id_placeholder")} />
+            <Input placeholder={t("user.user_id_placeholder")} />
           </Form.Item>
         )}
         <Form.Item
           name="name"
-          label={t("member.user_name")}
+          label={t("user.user_name")}
           rules={[
             { required: true, message: t("member.user_name_required") },
             { min: 2, message: t("member.user_name_min_length") }
@@ -87,18 +87,18 @@ const MemberModal: React.FC<MemberModalProps> = ({
         </Form.Item>
         <Form.Item
           name="password"
-          label={t("member.user_password")}
-          rules={editingMember ? [] : [
-            { required: true, message: t("member.user_password_required") },
-            { min: 6, message: t("member.user_password_min_length") }
+          label={t("user.user_password")}
+          rules={editingUser ? [] : [
+            { required: true, message: t("user.user_password_required") },
+            { min: 6, message: t("user.user_password_min_length") }
           ]}
         >
           <Input.Password
-            placeholder={editingMember ? t("member.user_password_placeholder_optional") : t("member.user_password_placeholder")} />
+            placeholder={editingUser ? t("user.user_password_placeholder_optional") : t("user.user_password_placeholder")} />
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-export default MemberModal;
+export default UserModal;

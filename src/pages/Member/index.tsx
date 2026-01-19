@@ -2,24 +2,24 @@ import React, { useState, useEffect, useCallback } from "react";
 import { message, Modal, Tabs } from "antd";
 import { useTranslation } from "react-i18next";
 import PageContainer from "@/components/common/PageContainer";
-import { getMembers, createMember, updateMember, deleteMember } from "@/services/member";
+import { getUsers, createUser, updateUser, deleteUser } from "@/services/user";
 import { getRoles, createRole, updateRole, deleteRole } from "@/services/role";
 import { getResourceTree } from "@/services/resource";
-import type { MemberResponse } from "@/types/member.d";
-import type { RoleResponse } from "@/types/role.d";
+import type { UserResponse } from "@/types/user";
+import type { RoleResponse } from "@/types/role";
 import type { ResourceNode } from "@/types/resource.d";
-import MemberList from "./components/MemberList";
+import UserList from "./components/UserList";
 import RoleList from "./components/RoleList";
-import MemberModal from "./components/MemberModal";
+import UserModal from "./components/UserModal";
 import RoleModal from "./components/RoleModal";
 
 const Member: React.FC = () => {
   const { t } = useTranslation();
-  const [members, setMembers] = useState<MemberResponse[]>([]);
+  const [users, setUsers] = useState<UserResponse[]>([]);
   const [roles, setRoles] = useState<RoleResponse[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [roleModalVisible, setRoleModalVisible] = useState<boolean>(false);
-  const [editingMember, setEditingMember] = useState<MemberResponse | null>(null);
+  const [editingUser, setEditingUser] = useState<UserResponse | null>(null);
   const [editingRole, setEditingRole] = useState<RoleResponse | null>(null);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [roleSearchKeyword, setRoleSearchKeyword] = useState<string>("");
@@ -27,13 +27,13 @@ const Member: React.FC = () => {
   const [roleLoading, setRoleLoading] = useState<boolean>(true);
   const [resourceTreeData, setResourceTreeData] = useState<any[]>([]);
 
-  const fetchMembers = useCallback(async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getMembers();
-      setMembers(data);
+      const data = await getUsers();
+      setUsers(data);
     } catch (error) {
-      console.error("Failed to fetch members:", error);
+      console.error("Failed to fetch users:", error);
       message.error(t("member.user_fetch_failed"));
     } finally {
       setLoading(false);
@@ -73,55 +73,55 @@ const Member: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchMembers();
+    fetchUsers();
     fetchRoles();
     fetchResources();
-  }, [fetchMembers, fetchRoles, fetchResources]);
+  }, [fetchUsers, fetchRoles, fetchResources]);
 
-  const handleMemberAdd = () => {
-    setEditingMember(null);
+  const handleUserAdd = () => {
+    setEditingUser(null);
     setModalVisible(true);
   };
 
-  const handleMemberEdit = (member: MemberResponse) => {
-    setEditingMember(member);
+  const handleUserEdit = (user: UserResponse) => {
+    setEditingUser(user);
     setModalVisible(true);
   };
 
-  const handleMemberDelete = (id: string) => {
+  const handleUserDelete = (id: string) => {
     Modal.confirm({
       title: t("member.user_delete_confirm"),
       content: t("member.user_delete_confirm_desc"),
       onOk: async () => {
         try {
-          await deleteMember(id);
+          await deleteUser(id);
           message.success(t("member.user_delete_success"));
-          await fetchMembers();
+          await fetchUsers();
         } catch (error) {
-          console.error("Failed to delete member:", error);
+          console.error("Failed to delete user:", error);
           message.error(t("member.user_delete_failed"));
         }
       }
     });
   };
 
-  const handleMemberSubmit = async (values: any) => {
+  const handleUserSubmit = async (values: any) => {
     try {
-      if (editingMember) {
-        await updateMember(editingMember.id, {
+      if (editingUser) {
+        await updateUser(editingUser.id, {
           name: values.name,
           email: values.email,
           password: values.password
         });
         message.success(t("member.user_update_success"));
       } else {
-        await createMember(values);
+        await createUser(values);
         message.success(t("member.user_create_success"));
       }
       setModalVisible(false);
-      await fetchMembers();
+      await fetchUsers();
     } catch (error) {
-      console.error("Failed to save member:", error);
+      console.error("Failed to save user:", error);
     }
   };
 
@@ -180,9 +180,9 @@ const Member: React.FC = () => {
     setRoleSearchKeyword(value);
   };
 
-  const filteredMembers = members.filter(member =>
-    member.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-    member.email.toLowerCase().includes(searchKeyword.toLowerCase())
+  const filteredUsers = users.filter(user =>
+    user.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
   const filteredRoles = roles.filter(role =>
@@ -196,14 +196,14 @@ const Member: React.FC = () => {
         title={t("platform.member")}
         loading={loading}>
         <Tabs>
-          <Tabs.TabPane key="members" tab={t("platform.member")}>
-            <MemberList
-              members={filteredMembers}
+          <Tabs.TabPane key="users" tab={t("member.user")}>
+            <UserList
+              users={filteredUsers}
               loading={loading}
               onSearch={handleMemberSearch}
-              onAdd={handleMemberAdd}
-              onEdit={handleMemberEdit}
-              onDelete={handleMemberDelete}
+              onAdd={handleUserAdd}
+              onEdit={handleUserEdit}
+              onDelete={handleUserDelete}
             />
           </Tabs.TabPane>
           <Tabs.TabPane key="roles" tab={t("platform.role")}>
@@ -218,11 +218,11 @@ const Member: React.FC = () => {
           </Tabs.TabPane>
         </Tabs>
       </PageContainer>
-      <MemberModal
+      <UserModal
         visible={modalVisible}
-        editingMember={editingMember}
+        editingUser={editingUser}
         onCancel={() => setModalVisible(false)}
-        onSubmit={handleMemberSubmit}
+        onSubmit={handleUserSubmit}
       />
       <RoleModal
         visible={roleModalVisible}

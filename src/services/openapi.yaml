@@ -242,7 +242,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
       security:
       - BearerAuth: []
-  /api/v1/members:
+  /api/v1/users:
     get:
       summary: 获取成员列表
       tags:
@@ -285,7 +285,7 @@ paths:
           $ref: "#/components/responses/InternalError"
       security:
       - BearerAuth: []
-  /api/v1/members/{userId}:
+  /api/v1/users/{userId}:
     put:
       summary: 更新成员
       tags:

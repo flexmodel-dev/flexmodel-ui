@@ -1,14 +1,14 @@
 /**
- * 成员请求接口
+ * 用户请求接口
  */
-export interface MemberRequest {
+export interface UserRequest {
   id?: string;
   name: string;
   email: string;
   /**
    *  如果提供了新密码，则 hash 后更新
    *  如果没有提供密码，则保留原有的密码 hash
-   *  创建成员必传参数
+   *  创建用户必传参数
    */
   password?: string;
   createdBy?: string;
@@ -16,9 +16,9 @@ export interface MemberRequest {
 }
 
 /**
- * 成员响应接口
+ * 用户响应接口
  */
-export interface MemberResponse {
+export interface UserResponse {
   id: string;
   name: string;
   email: string;
