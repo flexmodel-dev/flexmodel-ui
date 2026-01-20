@@ -11,7 +11,7 @@ import {initializeDarkMode} from "./utils/darkMode.ts";
 import {RenderProjectRoutes} from "./routes";
 import Project from "./pages/Project/index.tsx";
 import Settings from "./pages/Settings";
-import Team from "./pages/Member/index.tsx";
+import Member from "./pages/Member/index.tsx";
 
 const App = () => {
   const { fetchConfig } = appStore.useConfig();
@@ -78,7 +78,7 @@ const App = () => {
               <PlatformLayout />
             </ProtectedRoute>
           }>
-            <Route index element={<Team />} />
+            <Route index element={<Member />} />
           </Route>
 
           <Route path="/settings" element={
