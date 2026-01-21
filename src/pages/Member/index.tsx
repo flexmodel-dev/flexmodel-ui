@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { message, Modal, Tabs } from "antd";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import PageContainer from "@/components/common/PageContainer";
 import { getUsers, createUser, updateUser, deleteUser } from "@/services/user";
 import { getRoles, createRole, updateRole, deleteRole } from "@/services/role";
@@ -15,6 +16,7 @@ import RoleModal from "./components/RoleModal";
 
 const Member: React.FC = () => {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [users, setUsers] = useState<UserResponse[]>([]);
   const [roles, setRoles] = useState<RoleResponse[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -26,6 +28,8 @@ const Member: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [roleLoading, setRoleLoading] = useState<boolean>(true);
   const [resourceTreeData, setResourceTreeData] = useState<any[]>([]);
+
+  const activeTab = searchParams.get('tab') || 'users';
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -196,7 +200,10 @@ const Member: React.FC = () => {
       <PageContainer
         title={t("platform.member")}
         loading={loading}>
-        <Tabs>
+        <Tabs
+          activeKey={activeTab}
+          onChange={(key) => setSearchParams({ tab: key })}
+        >
           <Tabs.TabPane key="users" tab={t("member.user")}>
             <UserList
               users={filteredUsers}
