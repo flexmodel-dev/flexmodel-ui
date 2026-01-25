@@ -13,11 +13,13 @@ import {
   Row,
   Select,
   Space,
+  Tooltip,
   Typography
 } from 'antd';
+const { TextArea } = Input;
 import {CloseOutlined, CodeOutlined, PlusOutlined} from '@ant-design/icons';
 import {Edge, Node} from '@xyflow/react';
-import ScriptEditor from '../../../components/common/ScriptEditor';
+import ScriptEditorModal from '../../../components/common/ScriptEditorModal';
 import FieldMappingComponent from '../../../components/common/FieldMappingComponent';
 import {getDatasourceList} from '@/services/datasource';
 import {getModelList} from '@/services/model';
@@ -150,6 +152,18 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   const [selectedDatasource, setSelectedDatasource] = React.useState<string>('');
   const [selectedModel, setSelectedModel] = React.useState<EntitySchema | null>(null);
   const [apiList, setApiList] = React.useState<any[]>([]);
+  const [scriptEditorVisible, setScriptEditorVisible] = React.useState(false);
+  const [sqlEditorVisible, setSqlEditorVisible] = React.useState(false);
+
+  const handleScriptChange = (value: string) => {
+    form.setFieldValue(['properties', 'script'], value);
+    handleFormChange({ properties: { script: value } }, form.getFieldsValue());
+  };
+
+  const handleSqlChange = (value: string) => {
+    form.setFieldValue(['properties', 'script'], value);
+    handleFormChange({ properties: { script: value } }, form.getFieldsValue());
+  };
 
   // 暴露校验方法给父组件
   useImperativeHandle(ref, () => ({
@@ -400,9 +414,25 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
         return (
           <>
             <Form.Item label="脚本内容" name={['properties', 'script']} rules={[{ required: true, message: '请输入脚本内容' }]}>
-              <ScriptEditor
-                language="javascript"
-              />
+              <div style={{position: 'relative'}}>
+                <TextArea
+                  readOnly
+                  size="large"
+                  rows={3}
+                  value={nodeProperties?.script || ""}
+                  placeholder="双击或者点击按钮输入脚本内容"
+                  onDoubleClick={() => setScriptEditorVisible(true)}
+                  style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
+                />
+                <Tooltip title="打开脚本编辑器">
+                  <Button
+                    type="text"
+                    icon={<CodeOutlined/>}
+                    onClick={() => setScriptEditorVisible(true)}
+                    style={{position: 'absolute', top: 8, right: 8, padding: '4px 12px', borderRadius: '4px'}}
+                  />
+                </Tooltip>
+              </div>
             </Form.Item>
           </>
         );
@@ -428,7 +458,25 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
               </Col>
             </Row>
             <Form.Item label="执行SQL" name={['properties', 'script']} rules={[{ required: true, message: '请输入SQL' }]}>
-              <ScriptEditor language="sql" />
+              <div style={{position: 'relative'}}>
+                <TextArea
+                  readOnly
+                  size="large"
+                  rows={3}
+                  value={nodeProperties?.script || ""}
+                  placeholder="双击或者点击按钮输入SQL"
+                  onDoubleClick={() => setSqlEditorVisible(true)}
+                  style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
+                />
+                <Tooltip title="打开SQL编辑器">
+                  <Button
+                    type="text"
+                    icon={<CodeOutlined/>}
+                    onClick={() => setSqlEditorVisible(true)}
+                    style={{position: 'absolute', top: 8, right: 8, padding: '4px 12px', borderRadius: '4px'}}
+                  />
+                </Tooltip>
+              </div>
             </Form.Item>
             <Form.Item
               label="结果存放路径"
@@ -1054,6 +1102,23 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       <div style={{ height: '100%', overflow: 'auto' }}>
         {selectedEdge ? renderEdgeProperties() : renderNodeProperties()}
       </div>
+      <ScriptEditorModal
+        visible={scriptEditorVisible}
+        value={nodeProperties?.script || ""}
+        onChange={handleScriptChange}
+        onClose={() => setScriptEditorVisible(false)}
+        title="脚本编辑器"
+        description="编辑 JavaScript 脚本内容"
+      />
+      <ScriptEditorModal
+        visible={sqlEditorVisible}
+        language="sql"
+        value={nodeProperties?.script || ""}
+        onChange={handleSqlChange}
+        onClose={() => setSqlEditorVisible(false)}
+        title="SQL 编辑器"
+        description="编辑 SQL 查询语句"
+      />
     </Drawer>
   );
 });

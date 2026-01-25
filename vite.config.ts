@@ -32,7 +32,7 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: `http://localhost:8080`,
+        target: `https://preview.flexmodel.dev`,
         ws: true, // 启用WebSocket代理
         changeOrigin: true,
       },

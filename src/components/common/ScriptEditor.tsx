@@ -34,6 +34,12 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
     if (language === 'groovy') {
       registerGroovyLanguage(monaco);
     }
+    editor.onKeyDown((event: any) => {
+      if (event?.keyCode === monaco?.KeyCode?.Space) {
+        event.stopPropagation();
+      }
+    });
+    editor.focus();
   };
 
   return (
@@ -78,4 +84,3 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
 };
 
 export default ScriptEditor;
-
