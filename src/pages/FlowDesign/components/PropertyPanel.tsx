@@ -144,7 +144,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
 }, ref) => {
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
-  
+
   const [form] = Form.useForm();
   const [nodeProperties, setNodeProperties] = React.useState<Record<string, any>>({});
   const [datasources, setDatasources] = React.useState<DatasourceSchema[]>([]);
@@ -241,7 +241,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
         setDatasources([]);
         return;
       }
-      
+
       try {
         const dsList = await getDatasourceList(projectId);
         setDatasources(dsList);
@@ -259,7 +259,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
         setApiList([]);
         return;
       }
-      
+
       try {
         const apis = await getApis(projectId);
         setApiList(apis);
@@ -829,7 +829,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             <Row gutter={16}>
               <Col span={6}>
                 <Form.Item
-                  label="HTTP方法"
+                  label="方法"
                   name={['properties', 'method']}
                   rules={[{ required: true, message: '请选择HTTP方法' }]}
                 >

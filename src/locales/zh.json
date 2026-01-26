@@ -18,17 +18,16 @@
     "restore_success": "已还原：{{title}}",
     "restore_failed": "还原失败",
     "graphql": {
-      "placeholder": "点击右侧按钮配置GraphQL",
       "open_editor": "打开GraphQL编辑器"
     },
     "execution": {
+      "placeholder": "双击打开编辑器",
       "execution_type": "执行类型",
       "pre_script": "前置脚本",
       "open_pre_script_editor": "打开前置脚本编辑器",
       "post_script": "后置脚本",
       "open_post_script_editor": "打开后置脚本编辑器",
       "execution_script": "执行脚本",
-      "script_placeholder": "点击右侧按钮配置执行脚本",
       "open_script_editor": "打开执行脚本编辑器",
       "script_editor": "执行脚本编辑器",
       "script_description": "编写用于执行逻辑的 JavaScript 代码",

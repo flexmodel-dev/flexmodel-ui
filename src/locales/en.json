@@ -18,17 +18,16 @@
     "restore_success": "Restored: {{title}}",
     "restore_failed": "Restore failed",
     "graphql": {
-      "placeholder": "Click the button on the right to configure GraphQL",
-      "open_editor": "Open GraphQL Editor"
+      "open_editor": "Doble click to open scipt editor"
     },
     "execution": {
+      "placeholder": "Doble click to open scipt editor",
       "execution_type": "Execution Type",
       "pre_script": "Pre Script",
       "open_pre_script_editor": "Open Pre Script Editor",
       "post_script": "Post Script",
       "open_post_script_editor": "Open Post Script Editor",
       "execution_script": "Execution Script",
-      "script_placeholder": "Click the button on the right to configure execution script",
       "open_script_editor": "Open Execution Script Editor",
       "script_editor": "Execution Script Editor",
       "script_description": "Write JavaScript for execution logic",

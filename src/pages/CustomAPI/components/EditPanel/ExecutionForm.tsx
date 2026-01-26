@@ -134,6 +134,7 @@ const ExecutionForm: React.FC<ExecuteConfigProps> = ({data, onChange}: ExecuteCo
               size="large"
               rows={3}
               value={formData?.execution?.preScript || ""}
+              placeholder={t("apis.execution.placeholder")}
               onDoubleClick={handlePreScriptOpen}
               style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
             />
@@ -174,7 +175,7 @@ const ExecutionForm: React.FC<ExecuteConfigProps> = ({data, onChange}: ExecuteCo
                 size="large"
                 rows={3}
                 value={formData?.execution?.query || ""}
-                placeholder={t("apis.graphql.placeholder")}
+                placeholder={t("apis.execution.placeholder")}
                 onDoubleClick={handleGqlOpen}
                 style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
               />
@@ -197,7 +198,7 @@ const ExecutionForm: React.FC<ExecuteConfigProps> = ({data, onChange}: ExecuteCo
                 size="large"
                 rows={3}
                 value={formData?.execution?.executionScript || ""}
-                placeholder={t("apis.execution.script_placeholder")}
+                placeholder={t("apis.execution.placeholder")}
                 onDoubleClick={() => setScriptEditorVisible(true)}
                 style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
               />
@@ -220,6 +221,7 @@ const ExecutionForm: React.FC<ExecuteConfigProps> = ({data, onChange}: ExecuteCo
               size="large"
               rows={3}
               value={formData?.execution?.postScript || ""}
+              placeholder={t("apis.execution.placeholder")}
               onDoubleClick={handlePostScriptOpen}
               style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
             />
