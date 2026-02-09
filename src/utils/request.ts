@@ -87,6 +87,11 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
 
   // 处理401未授权错误，尝试刷新token
   if (status === 401 && config && !config._retry) {
+    // 如果是刷新token请求本身失败，直接拒绝，不进行重试
+    if (config.url?.includes('/auth/refresh')) {
+      return Promise.reject(apiError)
+    }
+
     if (isRefreshing) {
       // 如果正在刷新token，将请求加入队列
       return new Promise((resolve, reject) => {
@@ -120,9 +125,15 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
 
       // 重试原请求
       return axiosInstance(config)
-    } catch (refreshError) {
+    } catch (refreshError: any) {
       // 刷新token失败，清除认证状态
       useAuthStore.getState().logout()
+
+      // 如果刷新token返回401，跳转到登录页
+      if (refreshError?.status === 401 || refreshError?.response?.status === 401) {
+        window.location.hash = '/login'
+      }
+
       processQueue(refreshError, null)
       isRefreshing = false
       return Promise.reject(apiError)
