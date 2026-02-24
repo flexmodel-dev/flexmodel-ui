@@ -34,10 +34,10 @@ window.onload = function() {
   window.ui = SwaggerUIBundle({
     url: getOpenApiUrl(),
     urls: [
-      {
+      /*{
         url: getOpenApiUrl(),
         name: 'Project Definition API'
-      },
+      },*/
       {
         url: '/api/v1/openapi',
         name: 'Platform API'

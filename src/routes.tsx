@@ -86,12 +86,12 @@ export const projectRoutes: RouteConfig[] = [
     icon: ApiOutlined,
     translationKey: "api",
     children: [
-      {
+      /*{
         path: "/project/:projectId/api/custom-api",
         element: <CustomAPI />,
         icon: DeploymentUnitOutlined,
         translationKey: "custom_api",
-      },
+      },*/
       {
         path: "/project/:projectId/api/graphql",
         element: <GraphQLAPI />,
