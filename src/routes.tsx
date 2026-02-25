@@ -29,7 +29,7 @@ import {
   DashboardOutlined,
 } from "@ant-design/icons";
 import GraphQLAPI from "@/pages/GraphQLAPI";
-import CustomAPI from "@/pages/CustomAPI";
+// import CustomAPI from "@/pages/CustomAPI";
 import OpenAPI from "@/pages/OpenAPI";
 import Flow from "@/pages/Flow";
 import FlowList from "@/pages/Flow/components/FlowList.tsx";
