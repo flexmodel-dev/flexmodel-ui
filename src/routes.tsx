@@ -5,7 +5,6 @@ import Overview from "./pages/Overview";
 import DataView from "./pages/DataView";
 import ApiView from "./pages/APIView";
 import DataModeling from "./pages/DataModeling";
-import DataSource from "./pages/DataSource";
 import APILog from "./pages/APILog";
 import Storage from "./pages/Storage";
 import Member from "./pages/Member";
@@ -124,12 +123,6 @@ export const projectRoutes: RouteConfig[] = [
         element: <DataModeling />,
         icon: ContainerOutlined,
         translationKey: "data_modeling",
-      },
-      {
-        path: "/project/:projectId/data/source",
-        element: <DataSource />,
-        icon: DatabaseOutlined,
-        translationKey: "data_source",
       },
     ],
   },

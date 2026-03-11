@@ -16,15 +16,11 @@ import {EntitySchema} from '@/types/data-modeling';
 import {useProject} from "@/store/appStore";
 
 interface TriggerListProps {
-  /** 数据源名称（用于事件触发模式） */
-  datasource?: string;
-  /** 模型信息（用于事件触发模式） */
   model?: EntitySchema;
-  /** 是否只显示事件触发 */
   eventOnly?: boolean;
 }
 
-const TriggerList: React.FC<TriggerListProps> = ({datasource, model, eventOnly = false}) => {
+const TriggerList: React.FC<TriggerListProps> = ({model, eventOnly = false}) => {
   const {t} = useTranslation();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
@@ -39,7 +35,7 @@ const TriggerList: React.FC<TriggerListProps> = ({datasource, model, eventOnly =
 
   useEffect(() => {
     loadTriggers();
-  }, [currentPage, pageSize, eventOnly, datasource, model]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentPage, pageSize, eventOnly, model]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadTriggers = async () => {
     setLoading(true);
@@ -50,8 +46,8 @@ const TriggerList: React.FC<TriggerListProps> = ({datasource, model, eventOnly =
         size: pageSize
       };
 
-      if (eventOnly && datasource && model) {
-        params.jobGroup = `${datasource}_${model.name}`;
+      if (eventOnly && model) {
+        params.jobGroup = model.name;
       }
 
       const response = await getTriggerPage(projectId, params);
@@ -261,7 +257,6 @@ const TriggerList: React.FC<TriggerListProps> = ({datasource, model, eventOnly =
     },
   ];
 
-  // 直接使用API返回的数据，不需要客户端分页
   return (
     <PageContainer
       title={t('trigger.title')
@@ -318,7 +313,6 @@ const TriggerList: React.FC<TriggerListProps> = ({datasource, model, eventOnly =
           trigger={editingTrigger || undefined}
           onSubmit={handleSubmit}
           form={form}
-          datasource={datasource}
           model={model}
           eventOnly={eventOnly}
         />

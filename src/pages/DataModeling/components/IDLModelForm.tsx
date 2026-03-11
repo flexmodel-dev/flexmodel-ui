@@ -6,23 +6,20 @@ import IDLEditor from './IDLEditor';
 
 interface IDLModelFormProps {
   mode: 'create' | 'edit';
-  datasource: string;
   currentValue?: any;
   onConfirm: (form: any) => void;
   onCancel: () => void;
 }
 
 const IDLModelForm = React.forwardRef<any, IDLModelFormProps>(({
-  mode: _mode, // eslint-disable-line @typescript-eslint/no-unused-vars
-  datasource: _datasource, // eslint-disable-line @typescript-eslint/no-unused-vars
-  currentValue: _currentValue, // eslint-disable-line @typescript-eslint/no-unused-vars
+  mode: _mode,
+  currentValue: _currentValue,
   onConfirm,
   onCancel,
 }, ref) => {
   const { t } = useTranslation();
   const { token } = theme.useToken();
 
-  // 重置表单内容（不调用onCancel）
   const resetForm = () => {
     setIdlCode(`// ${t('idl_syntax_example')}
 model example_model {
@@ -39,7 +36,6 @@ enum ExampleEnum {
 }`);
   };
 
-  // 暴露提交方法给父组件
   React.useImperativeHandle(ref, () => ({
     submit: handleSubmit,
     reset: resetForm,

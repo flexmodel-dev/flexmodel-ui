@@ -21,16 +21,13 @@ import {CloseOutlined, CodeOutlined, PlusOutlined} from '@ant-design/icons';
 import {Edge, Node} from '@xyflow/react';
 import ScriptEditorModal from '../../../components/common/ScriptEditorModal';
 import FieldMappingComponent from '../../../components/common/FieldMappingComponent';
-import {getDatasourceList} from '@/services/datasource';
 import {getModelList} from '@/services/model';
 import {getApis} from '@/services/api-info';
-import {DatasourceSchema} from '@/types/data-source';
 import {EntitySchema, EnumSchema, NativeQuerySchema} from '@/types/data-modeling';
 import {useProject} from '@/store/appStore';
 
 const { Option } = Select;
 
-// 请求头配置组件
 interface HeaderItem {
   key: string;
   value: string;
@@ -147,9 +144,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
 
   const [form] = Form.useForm();
   const [nodeProperties, setNodeProperties] = React.useState<Record<string, any>>({});
-  const [datasources, setDatasources] = React.useState<DatasourceSchema[]>([]);
   const [models, setModels] = React.useState<(EntitySchema | EnumSchema | NativeQuerySchema)[]>([]);
-  const [selectedDatasource, setSelectedDatasource] = React.useState<string>('');
   const [selectedModel, setSelectedModel] = React.useState<EntitySchema | null>(null);
   const [apiList, setApiList] = React.useState<any[]>([]);
   const [scriptEditorVisible, setScriptEditorVisible] = React.useState(false);
@@ -165,7 +160,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     handleFormChange({ properties: { script: value } }, form.getFieldsValue());
   };
 
-  // 暴露校验方法给父组件
   useImperativeHandle(ref, () => ({
     validateCurrentNode: async () => {
       if (!selectedNode) {
@@ -173,13 +167,10 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       }
 
       try {
-        // 只校验当前表单中有rules的字段
         await form.validateFields();
-        // 校验通过
         onValidationChange(selectedNode.id, true);
         return true;
       } catch (error) {
-        // 校验失败
         console.log('节点校验失败:', selectedNode.id, error);
         onValidationChange(selectedNode.id, false);
         return false;
@@ -187,11 +178,9 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     }
   }), [selectedNode, form, onValidationChange]);
 
-  // 当选中节点变化时，更新表单
   React.useEffect(() => {
     if (selectedNode) {
       const baseProperties = (selectedNode.data?.properties as any) || {};
-      // 首次进入时若没有properties，回填常用字段
       const properties = {
         name: selectedNode.data?.name,
         positionX: Math.round(selectedNode.position.x),
@@ -199,7 +188,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
         ...baseProperties,
       } as any;
 
-      // 处理document字段的特殊转换
       const processedProperties = { ...baseProperties };
       if (processedProperties.document && Array.isArray(processedProperties.document)) {
         processedProperties.document = convertArrayToFieldMapping(processedProperties.document);
@@ -213,14 +201,11 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
         positionY: properties.positionY ?? Math.round(selectedNode.position.y),
         width: selectedNode.style?.width || 120,
         height: selectedNode.style?.height || 60,
-        enabled: selectedNode.data?.enabled !== false, // 默认为true
-        // 设置嵌套的 properties 字段
+        enabled: selectedNode.data?.enabled !== false,
         properties: processedProperties,
       });
-      // 更新本地属性状态
       setNodeProperties(properties);
     } else if (selectedEdge) {
-      // 当选中边时，更新表单
       form.setFieldsValue({
         edgeId: selectedEdge.id,
         sourceNode: selectedEdge.source,
@@ -234,25 +219,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     }
   }, [selectedNode, selectedEdge, form]);
 
-  // 获取数据源列表
-  React.useEffect(() => {
-    const fetchDatasources = async () => {
-      if (!projectId) {
-        setDatasources([]);
-        return;
-      }
-
-      try {
-        const dsList = await getDatasourceList(projectId);
-        setDatasources(dsList);
-      } catch (error) {
-        console.error('获取数据源列表失败:', error);
-      }
-    };
-    fetchDatasources();
-  }, [projectId]);
-
-  // 获取API列表
   React.useEffect(() => {
     const fetchApis = async () => {
       if (!projectId) {
@@ -270,17 +236,15 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     fetchApis();
   }, [projectId]);
 
-  // 获取模型列表
   React.useEffect(() => {
-    if (!selectedDatasource || !projectId) {
+    if (!projectId) {
       setModels([]);
       return;
     }
 
     const fetchModels = async () => {
       try {
-        const modelList = await getModelList(projectId, selectedDatasource);
-        // 过滤出type='entity'的模型
+        const modelList = await getModelList(projectId);
         const entityModels = modelList.filter(model => model.type === 'entity');
         setModels(entityModels);
       } catch (error) {
@@ -289,17 +253,11 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       }
     };
     fetchModels();
-  }, [selectedDatasource, projectId]);
+  }, [projectId]);
 
-  // 当选中节点变化时，更新选中的数据源和模型
   React.useEffect(() => {
     if (selectedNode && selectedNode.type === 'serviceTask') {
-      const datasourceName = (selectedNode.data?.properties as any)?.datasourceName;
       const modelName = (selectedNode.data?.properties as any)?.modelName;
-
-      if (datasourceName) {
-        setSelectedDatasource(datasourceName);
-      }
 
       if (modelName && models.length > 0) {
         const model = models.find(m => m.name === modelName) as EntitySchema;
@@ -308,21 +266,11 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     }
   }, [selectedNode, models]);
 
-  // 处理数据源变化
-  const handleDatasourceChange = (value: string) => {
-    setSelectedDatasource(value);
-    setSelectedModel(null);
-    // 清空模型选择
-    form.setFieldValue(['properties', 'modelName'], undefined);
-  };
-
-  // 处理模型变化
   const handleModelChange = (modelName: string) => {
     const model = models.find(m => m.name === modelName) as EntitySchema;
     setSelectedModel(model || null);
   };
 
-  // 递归获取所有API节点
   const getAllApis = (apis: any[]): any[] => {
     const result: any[] = [];
     const traverse = (items: any[]) => {
@@ -339,12 +287,10 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     return result;
   };
 
-  // 处理API选择变化
   const handleApiChange = (apiId: string) => {
     const allApis = getAllApis(apiList);
     const selectedApi = allApis.find(api => api.id === apiId);
     if (selectedApi) {
-      // 自动填充method和url
       form.setFieldsValue({
         properties: {
           ...form.getFieldValue('properties'),
@@ -355,13 +301,11 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     }
   };
 
-  // 将字段映射数组转换为数组格式
   const convertFieldMappingToArray = (fieldMappings: any[]) => {
     if (!fieldMappings || fieldMappings.length === 0) return [];
     return fieldMappings.filter(mapping => mapping.field && mapping.value !== undefined);
   };
 
-  // 将数组格式转换为字段映射数组
   const convertArrayToFieldMapping = (arrayData: any[]) => {
     if (!arrayData || !Array.isArray(arrayData)) return [];
     return arrayData.map(item => ({
@@ -370,26 +314,22 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     }));
   };
 
-  // 处理表单值变化
   const handleFormChange = (_changedValues: any, allValues: any) => {
     if (selectedNode) {
-      // 处理document字段的特殊转换
       const processedProperties = { ...(allValues.properties || {}) };
       if (processedProperties.document && Array.isArray(processedProperties.document)) {
         processedProperties.document = convertFieldMappingToArray(processedProperties.document);
       }
 
-      // 合并所有属性，包括嵌套的 properties 字段
       const nextProps = {
         ...(selectedNode.data?.properties as any || {}),
-        ...processedProperties, // 合并嵌套的 properties 字段
+        ...processedProperties,
         name: allValues.name,
         positionX: allValues.positionX,
         positionY: allValues.positionY,
       } as any;
       setNodeProperties(nextProps);
 
-      // 传递统一格式的数据给父组件
       onNodePropertyChange(selectedNode.id, {
         name: allValues.name,
         positionX: allValues.positionX,
@@ -397,7 +337,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
         properties: nextProps
       });
     } else if (selectedEdge) {
-      // 处理边属性变化
       onEdgePropertyChange(selectedEdge.id, {
         conditionsequenceflow: allValues.conditionsequenceflow || '',
         defaultConditions: allValues.defaultConditions || 'false',
@@ -405,7 +344,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     }
   };
 
-  // 渲染服务任务节点属性配置
   const renderServiceTaskProperties = () => {
     const subType = (selectedNode?.data?.properties as any)?.subType;
 
@@ -440,23 +378,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       case 'sql':
         return (
           <>
-            <Row gutter={16}>
-              <Col span={24}>
-                <Form.Item
-                  label="数据源"
-                  name={['properties', 'datasourceName']}
-                  rules={[{ required: true, message: '请选择数据源' }]}
-                >
-                  <Select placeholder="请选择数据源">
-                    {datasources.map(ds => (
-                      <Option key={ds.name} value={ds.name}>
-                        {ds.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
             <Form.Item label="执行SQL" name={['properties', 'script']} rules={[{ required: true, message: '请输入SQL' }]}>
               <div style={{position: 'relative'}}>
                 <TextArea
@@ -496,45 +417,22 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             >
               <Input placeholder="非必填，更新多条记录时可使用，例如: arrayData" />
             </Form.Item>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="数据源"
-                  name={['properties', 'datasourceName']}
-                  rules={[{ required: true, message: '请选择数据源' }]}
-                >
-                  <Select
-                    placeholder="请选择数据源"
-                    onChange={handleDatasourceChange}
-                  >
-                    {datasources.map(ds => (
-                      <Option key={ds.name} value={ds.name}>
-                        {ds.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="模型"
-                  name={['properties', 'modelName']}
-                  rules={[{ required: true, message: '请选择模型' }]}
-                >
-                  <Select
-                    placeholder="请选择模型"
-                    disabled={!selectedDatasource}
-                    onChange={handleModelChange}
-                  >
-                    {models.map(model => (
-                      <Option key={model.name} value={model.name}>
-                        {model.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form.Item
+              label="模型"
+              name={['properties', 'modelName']}
+              rules={[{ required: true, message: '请选择模型' }]}
+            >
+              <Select
+                placeholder="请选择模型"
+                onChange={handleModelChange}
+              >
+                {models.map(model => (
+                  <Option key={model.name} value={model.name}>
+                    {model.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
 
             <Form.Item
               label="数据映射"
@@ -567,45 +465,22 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             >
               <Input placeholder="非必填，更新多条记录时可使用，例如: arrayData" />
             </Form.Item>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="数据源"
-                  name={['properties', 'datasourceName']}
-                  rules={[{ required: true, message: '请选择数据源' }]}
-                >
-                  <Select
-                    placeholder="请选择数据源"
-                    onChange={handleDatasourceChange}
-                  >
-                    {datasources.map(ds => (
-                      <Option key={ds.name} value={ds.name}>
-                        {ds.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="模型"
-                  name={['properties', 'modelName']}
-                  rules={[{ required: true, message: '请选择模型' }]}
-                >
-                  <Select
-                    placeholder="请选择模型"
-                    disabled={!selectedDatasource}
-                    onChange={handleModelChange}
-                  >
-                    {models.map(model => (
-                      <Option key={model.name} value={model.name}>
-                        {model.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form.Item
+              label="模型"
+              name={['properties', 'modelName']}
+              rules={[{ required: true, message: '请选择模型' }]}
+            >
+              <Select
+                placeholder="请选择模型"
+                onChange={handleModelChange}
+              >
+                {models.map(model => (
+                  <Option key={model.name} value={model.name}>
+                    {model.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
             <Form.Item
               label="数据映射"
               name={['properties', 'document']}
@@ -644,44 +519,21 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       case 'delete_record':
         return (
           <>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="数据源"
-                  name={['properties', 'datasourceName']}
-                  rules={[{ required: true, message: '请选择数据源' }]}
-                >
-                  <Select
-                    placeholder="请选择数据源"
-                    onChange={handleDatasourceChange}
-                  >
-                    {datasources.map(ds => (
-                      <Option key={ds.name} value={ds.name}>
-                        {ds.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="模型"
-                  name={['properties', 'modelName']}
-                  rules={[{ required: true, message: '请选择模型' }]}
-                >
-                  <Select
-                    placeholder="请选择模型"
-                    disabled={!selectedDatasource}
-                  >
-                    {models.map(model => (
-                      <Option key={model.name} value={model.name}>
-                        {model.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form.Item
+              label="模型"
+              name={['properties', 'modelName']}
+              rules={[{ required: true, message: '请选择模型' }]}
+            >
+              <Select
+                placeholder="请选择模型"
+              >
+                {models.map(model => (
+                  <Option key={model.name} value={model.name}>
+                    {model.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
             <Form.Item
               label="过滤条件"
               name={['properties', 'filter']}
@@ -707,44 +559,21 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       case 'query_record':
         return (
           <>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="数据源"
-                  name={['properties', 'datasourceName']}
-                  rules={[{ required: true, message: '请选择数据源' }]}
-                >
-                  <Select
-                    placeholder="请选择数据源"
-                    onChange={handleDatasourceChange}
-                  >
-                    {datasources.map(ds => (
-                      <Option key={ds.name} value={ds.name}>
-                        {ds.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="模型"
-                  name={['properties', 'modelName']}
-                  rules={[{ required: true, message: '请选择模型' }]}
-                >
-                  <Select
-                    placeholder="请选择模型"
-                    disabled={!selectedDatasource}
-                  >
-                    {models.map(model => (
-                      <Option key={model.name} value={model.name}>
-                        {model.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form.Item
+              label="模型"
+              name={['properties', 'modelName']}
+              rules={[{ required: true, message: '请选择模型' }]}
+            >
+              <Select
+                placeholder="请选择模型"
+              >
+                {models.map(model => (
+                  <Option key={model.name} value={model.name}>
+                    {model.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
             <Form.Item
               label="过滤条件"
               name={['properties', 'filter']}
@@ -888,13 +717,11 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     }
   };
 
-  // 获取节点名称
   const getNodeName = (nodeId: string): string => {
     const node = nodes.find(n => n.id === nodeId);
     return (node?.data?.name as string) || nodeId;
   };
 
-  // 检查源节点是否为网关节点
   const isSourceNodeGateway = () => {
     if (!selectedEdge) return false;
     const sourceNode = nodes.find(n => n.id === selectedEdge.source);
@@ -902,7 +729,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     return ['exclusiveGateway', 'parallelGateway', 'inclusiveGateway'].includes(sourceNode.type || '');
   };
 
-  // 渲染边属性配置
   const renderEdgeProperties = () => {
     if (!selectedEdge) return null;
 
@@ -991,10 +817,8 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     );
   };
 
-  // 渲染节点属性配置
   const renderNodeProperties = () => {
 
-    // 根据节点类型渲染不同的属性配置
     const renderNodeSpecificProperties = () => {
       switch (selectedNode?.type) {
         case 'startEvent':
@@ -1044,7 +868,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             <Form.Item label="节点名称" name="name">
               <Input placeholder="请输入节点名称" />
             </Form.Item>
-            {/* X坐标和Y坐标字段隐藏，只保存在properties中 */}
             <Form.Item name="positionX" style={{ display: 'none' }}>
               <Input />
             </Form.Item>

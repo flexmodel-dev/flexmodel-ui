@@ -8,11 +8,10 @@ import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
 
 interface IndexListProps {
-  datasource: string;
   model: Entity;
 }
 
-const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
+const IndexList: React.FC<IndexListProps> = ({model}) => {
   const {t} = useTranslation();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
@@ -26,12 +25,9 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
   const indexFormRef = useRef<any>(null);
 
   const fetchIndexes = useCallback(async () => {
-    // Replace this with actual fetch call
-    // const res = await getIndexes(datasource, model?.name);
     setIndexList(model?.indexes || []);
   }, [model?.indexes]);
 
-  // 搜索过滤逻辑
   const filterIndexes = useCallback((indexes: Index[], keyword: string) => {
     if (!keyword.trim()) {
       return indexes;
@@ -41,7 +37,6 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
     );
   }, []);
 
-  // 当索引列表或搜索关键词变化时，更新过滤后的列表
   useEffect(() => {
     const filtered = filterIndexes(indexList, searchKeyword);
     setFilteredIndexList(filtered);
@@ -73,7 +68,7 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
           fieldName: f.fieldName,
           direction: f.direction,
           name: f.fieldName,
-          type: '', // 需根据实际情况填写
+          type: '',
           concreteType: '',
           unique: false,
           nullable: false,
@@ -83,10 +78,10 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
         modelName: model?.name,
       };
       if (selectedIndexKey === -1) {
-        await createIndex(projectId, datasource, model?.name as string, indexSchema);
+        await createIndex(projectId, model?.name as string, indexSchema);
         setIndexList([...indexList, values]);
       } else {
-        await modifyIndex(projectId, datasource, model?.name as string, values.name, indexSchema);
+        await modifyIndex(projectId, model?.name as string, values.name, indexSchema);
         const updatedIndexes = [...indexList];
         updatedIndexes[selectedIndexKey] = values;
         setIndexList(updatedIndexes);
@@ -115,7 +110,7 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
   const delIndex = async (key: number) => {
     try {
       const index = indexList[key];
-      await dropIndex(projectId, datasource, model?.name as string, index.name);
+      await dropIndex(projectId, model?.name as string, index.name);
       setIndexList(indexList.filter((_, i) => i !== key));
       message.success(t('index_delete_success'));
     } catch (error) {
@@ -208,7 +203,6 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
         <IndexForm
           ref={indexFormRef}
           mode={formMode}
-          datasource={datasource}
           model={model}
           currentValue={currentVal}
           onConfirm={addOrEditIndex}
@@ -220,4 +214,3 @@ const IndexList: React.FC<IndexListProps> = ({datasource, model}) => {
 };
 
 export default IndexList;
-

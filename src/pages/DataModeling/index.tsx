@@ -18,7 +18,6 @@ const ModelingPage: React.FC = () => {
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
 
-  const [activeDs, setActiveDs] = useState("");
   const [activeModel, setActiveModel] = useState<any>({});
   const [selectModelVersion, setSelectModelVersion] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -27,67 +26,57 @@ const ModelingPage: React.FC = () => {
   const nativeQueryFormRef = useRef<any>(null);
   const [viewMode, setViewMode] = useState<'list' | 'er'>('list');
 
-  // 处理选择的模型变化并同步到URL参数
-  const handleItemChange = (ds: string, item: any) => {
-    setActiveDs(ds);
+  const handleItemChange = (item: any) => {
     setActiveModel(item);
-    setIsEditing(false); // 切换模型时重置编辑状态
-    setNativeQueryIsEditing(false); // 切换模型时重置原生查询编辑状态
+    setIsEditing(false);
+    setNativeQueryIsEditing(false);
   };
 
-  // 切换编辑状态
   const handleToggleEdit = useCallback(() => {
     setIsEditing(prev => !prev);
   }, []);
 
-  // 取消编辑
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false);
   }, []);
 
-  // 保存数据
   const handleSave = useCallback(() => {
     if (enumFormRef.current) {
       enumFormRef.current.submit();
     }
   }, []);
 
-  // 切换原生查询编辑状态
   const handleToggleNativeQueryEdit = useCallback(() => {
     setNativeQueryIsEditing(prev => !prev);
   }, []);
 
-  // 取消原生查询编辑
   const handleCancelNativeQueryEdit = useCallback(() => {
     setNativeQueryIsEditing(false);
   }, []);
 
-  // 保存原生查询数据
   const handleSaveNativeQuery = useCallback(() => {
     if (nativeQueryFormRef.current) {
       nativeQueryFormRef.current.submit();
     }
   }, []);
 
-  // 渲染模型视图
   const renderModelView = () => {
     console.log("active:", activeModel);
     switch (true) {
       case activeModel?.type === "entity":
-        return <EntityView datasource={activeDs} model={activeModel}/>;
+        return <EntityView model={activeModel}/>;
       case activeModel?.type === "enum":
         return (
           <EnumForm
             ref={enumFormRef}
             mode={isEditing ? "edit" : "view"}
-            datasource={activeDs}
             model={activeModel}
             onConfirm={async (anEnum: Enum) => {
               try {
-                await modifyModel(projectId, activeDs, anEnum);
+                await modifyModel(projectId, anEnum);
                 message.success(t("form_save_success"));
                 setSelectModelVersion(selectModelVersion + 1);
-                setIsEditing(false); // 保存成功后退出编辑状态
+                setIsEditing(false);
               } catch (error) {
                 console.error(error);
                 message.error(t("form_save_failed"));
@@ -100,14 +89,13 @@ const ModelingPage: React.FC = () => {
           <NativeQueryForm
             ref={nativeQueryFormRef}
             mode={nativeQueryIsEditing ? "edit" : "view"}
-            datasource={activeDs}
             model={activeModel}
             onConfirm={async (data) => {
               try {
-                await modifyModel(projectId, activeDs, data);
+                await modifyModel(projectId, data);
                 message.success(t("form_save_success"));
                 setSelectModelVersion(selectModelVersion + 1);
-                setNativeQueryIsEditing(false); // 保存成功后退出编辑状态
+                setNativeQueryIsEditing(false);
               } catch (error) {
                 console.error(error);
                 message.error(t("form_save_failed"));
@@ -152,7 +140,6 @@ const ModelingPage: React.FC = () => {
           >
 
             <ModelExplorer
-                datasource={activeDs}
                 editable
                 onSelect={handleItemChange}
                 version={selectModelVersion}
@@ -160,7 +147,6 @@ const ModelingPage: React.FC = () => {
           </Splitter.Panel>
           <Splitter.Panel>
             <div className="pl-2">
-              {/* 编辑控制按钮 */}
               {activeModel?.type === "enum" && (
                 <div style={{marginBottom: 16, display: 'flex', justifyContent: 'flex-end'}}>
                   <Space>

@@ -8,23 +8,20 @@ import NativeQueryForm from './NativeQueryForm';
 
 interface ModelFormProps {
   mode: 'create' | 'edit';
-  datasource: string;
   currentValue?: any;
   onConfirm: (form: any) => void;
   onCancel: () => void;
 }
 
 const ModelForm = React.forwardRef<any, ModelFormProps>(({
-  mode: _mode, // eslint-disable-line @typescript-eslint/no-unused-vars
-  datasource,
-  currentValue: _currentValue, // eslint-disable-line @typescript-eslint/no-unused-vars
+  mode: _mode,
+  currentValue: _currentValue,
   onConfirm,
   onCancel,
 }, ref) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('entity');
 
-  // 暴露提交方法给父组件
   React.useImperativeHandle(ref, () => ({
     submit: handleSubmit,
     reset: handleCancel,
@@ -67,7 +64,6 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
     },
   }));
 
-  // 实体表单相关状态
   const [entityForm] = Form.useForm();
   const [entityModel, setEntityModel] = useState<Entity>({
     name: '',
@@ -76,10 +72,8 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
     indexes: [],
   });
 
-  // 枚举表单
   const [enumForm] = Form.useForm();
 
-  // 本地查询表单
   const [nativeQueryForm] = Form.useForm();
 
   const handleTabChange = (key: string) => {
@@ -130,7 +124,6 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
     }
   };
 
-  // 统一的提交处理函数
   const handleSubmit = async () => {
     switch (activeTab) {
       case 'entity':
@@ -148,7 +141,6 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
   };
 
   const handleCancel = () => {
-    // 清空表单内容
     entityForm.resetFields();
     enumForm.resetFields();
     nativeQueryForm.resetFields();
@@ -169,7 +161,6 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
         <EntityForm
           form={entityForm}
           entityModel={entityModel}
-          datasource={datasource}
           onEntityModelChange={setEntityModel}
         />
       ),
@@ -188,7 +179,6 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
         <NativeQueryForm 
           form={nativeQueryForm} 
           mode="create"
-          datasource={datasource}
         />
       ),
     },

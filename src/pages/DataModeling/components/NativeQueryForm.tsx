@@ -2,14 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {Button, Form, Input, message, Modal, Space, Table, theme} from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import {useTranslation} from 'react-i18next';
-import {executeNativeQuery} from '@/services/datasource.ts';
 import type {NativeQueryModel} from '@/types/data-modeling';
 import {useProject} from '@/store/appStore';
 
 interface NativeQueryFormProps {
   form?: any;
   mode?: 'create' | 'edit' | 'view';
-  datasource?: string;
   model?: Partial<NativeQueryModel>;
   onConfirm?: (model: NativeQueryModel) => void;
 }
@@ -17,7 +15,6 @@ interface NativeQueryFormProps {
 const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
   form: externalForm,
   mode = 'create',
-  datasource,
   model,
   onConfirm
 }, ref) => {
@@ -38,7 +35,6 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
   const [paramsDialogVisible, setParamsDialogVisible] = useState(false);
   const [params, setParams] = useState<string[]>([]);
 
-  // 暴露提交方法给父组件
   React.useImperativeHandle(ref, () => ({
     submit: handleSave,
     reset: () => {
@@ -50,7 +46,6 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
     validateFields: form.validateFields,
   }));
 
-  // 初始化表单值
   useEffect(() => {
     if (model) {
       form.setFieldsValue(model);
@@ -88,34 +83,12 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
   };
 
   const executeQuery = async () => {
-    if (!projectId || !datasource) {
-      message.error(t("project_or_datasource_required"));
+    if (!projectId) {
+      message.error(t("project_required"));
       return;
     }
     
-    try {
-      const res = await executeNativeQuery(projectId, datasource, {
-        statement: form.getFieldValue("statement"),
-        parameters: paramsForm.getFieldsValue(),
-      });
-
-      setExecResult(res);
-      setColumns(
-        res.result.length
-          ? Object.keys(res.result[0]).map((key) => ({
-            key,
-            title: key,
-            dataIndex: key,
-            width: 100,
-            ellipsis: true,
-            render: (text: any) => `${text}`,
-          }))
-          : []
-      );
-    } catch (error) {
-      console.error("Query execution failed", error);
-      message.error(t("query_execution_failed"));
-    }
+    message.info(t("native_query_execute_not_supported"));
   };
 
   const handleSave = async () => {

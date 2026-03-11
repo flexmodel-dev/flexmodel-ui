@@ -3,14 +3,12 @@ import TriggerList from '@/pages/Schedule/components/TriggerList';
 import {Entity} from '@/types/data-modeling';
 
 interface TriggerWrapperProps {
-  datasource: string;
   model: Entity;
 }
 
-const TriggerWrapper: React.FC<TriggerWrapperProps> = ({ datasource, model }) => {
+const TriggerWrapper: React.FC<TriggerWrapperProps> = ({ model }) => {
   return (
     <TriggerList
-      datasource={datasource}
       model={model}
       eventOnly={true}
     />

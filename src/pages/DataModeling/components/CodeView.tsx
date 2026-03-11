@@ -12,11 +12,10 @@ import {getFileAsBlob, getTemplates} from '@/services/codegen.js';
 import type {Model} from '@/types/data-modeling';
 
 interface CodeViewProps {
-  datasource: string;
   model: Partial<Model>;
 }
 
-const CodeView: React.FC<CodeViewProps> = ({datasource}) => {
+const CodeView: React.FC<CodeViewProps> = ({model}) => {
   const [blob, setBlob] = useState<Blob | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isExpand, setIsExpand] = useState<boolean>(true);
@@ -31,28 +30,17 @@ const CodeView: React.FC<CodeViewProps> = ({datasource}) => {
     exploreRef?.current?.downloadZip();
   };
 
-  /**
-   * 点击搜索
-   *
-   * @param val
-   */
   const handleExplore = (val: string) => {
     setIsLoading(true);
     setTemplateName(val);
-    getFileAsBlob(`/codegen/${val}.zip?variables=${encodeURIComponent(variables)}&datasource=${datasource}`).then(b => {
+    getFileAsBlob(`/codegen/${val}.zip?variables=${encodeURIComponent(variables)}&modelName=${model?.name}`).then(b => {
       setBlob(b);
       setIsLoading(false);
     });
   };
 
-  /**
-   * 处理模板选择变化
-   *
-   * @param val
-   */
   const handleTemplateChange = (val: string) => {
     setTemplateName(val);
-    // 根据选择的模板更新变量
     const selectedTemplate = templatesData.find(template => template.name === val);
     if (selectedTemplate) {
       setVariables(JSON.stringify(selectedTemplate.variables, null, 2));
@@ -63,13 +51,13 @@ const CodeView: React.FC<CodeViewProps> = ({datasource}) => {
   useEffect(() => {
     if (templateName) {
       getFileAsBlob(
-        `/codegen/${templateName}.zip?variables=${encodeURIComponent(variables)}&datasource=${datasource}`
+        `/codegen/${templateName}.zip?variables=${encodeURIComponent(variables)}&modelName=${model?.name}`
       ).then(b => {
         setBlob(b);
         setIsLoading(false);
       });
     }
-  }, [datasource, templateName, variables]);
+  }, [model?.name, templateName, variables]);
 
   useEffect(() => {
     getTemplates().then((res: { name: string, variables: object }[]) => {
@@ -160,7 +148,7 @@ const CodeView: React.FC<CodeViewProps> = ({datasource}) => {
         <Spin spinning={isLoading}>
           <Explore
             blob={blob}
-            projectName={`${datasource}_${templateName}.zip`}
+            projectName={`${model?.name}_${templateName}.zip`}
             ref={exploreRef}
           />
         </Spin>
@@ -170,4 +158,3 @@ const CodeView: React.FC<CodeViewProps> = ({datasource}) => {
 };
 
 export default CodeView;
-

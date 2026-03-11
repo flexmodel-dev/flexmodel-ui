@@ -10,14 +10,12 @@ import IndexTable from './IndexTable';
 interface EntityFormProps {
   form: any;
   entityModel: Entity;
-  datasource: string;
   onEntityModelChange: (model: Entity) => void;
 }
 
 const EntityForm: React.FC<EntityFormProps> = ({
   form,
   entityModel,
-  datasource,
   onEntityModelChange,
 }) => {
   const { t } = useTranslation();
@@ -46,13 +44,11 @@ const EntityForm: React.FC<EntityFormProps> = ({
 
   const handleAddField = () => {
     setFieldFormMode('create');
-    // 不清空表单，保持上次输入的内容
     setChangeFieldDialogVisible(true);
   };
 
   const handleAddIndex = () => {
     setIndexFormMode('create');
-    // 不清空表单，保持上次输入的内容
     setChangeIndexDialogVisible(true);
   };
 
@@ -157,7 +153,6 @@ const EntityForm: React.FC<EntityFormProps> = ({
         </Form>
       </div>
 
-      {/* 字段表单弹窗 */}
       <Modal
         title={t("field_form_title")}
         open={changeFieldDialogVisible}
@@ -168,7 +163,6 @@ const EntityForm: React.FC<EntityFormProps> = ({
         <FieldForm
           ref={fieldFormRef}
           mode={fieldFormMode}
-          datasource={datasource}
           model={entityModel}
           currentValue={fieldForm}
           onConfirm={addOrEditField}
@@ -176,7 +170,6 @@ const EntityForm: React.FC<EntityFormProps> = ({
         />
       </Modal>
 
-      {/* 索引表单弹窗 */}
       <Modal
         title={t("index_form_title")}
         open={changeIndexDialogVisible}
@@ -187,7 +180,6 @@ const EntityForm: React.FC<EntityFormProps> = ({
         <IndexForm
           ref={indexFormRef}
           mode={indexFormMode}
-          datasource={datasource}
           model={entityModel}
           currentValue={indexForm}
           onConfirm={addOrEditIndex}

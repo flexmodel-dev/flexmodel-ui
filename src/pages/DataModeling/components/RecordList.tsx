@@ -11,7 +11,7 @@ import {useProject} from "@/store/appStore";
 
 const { TextArea } = Input;
 
-const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
+const RecordList: React.FC<RecordListProps> = ({ model }) => {
   const { t } = useTranslation();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
@@ -35,7 +35,7 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
         ...query,
         sort: query.sort.length > 0 ? JSON.stringify(query.sort) : undefined
       };
-      const data = await getRecordList(projectId, datasource, model.name, apiQuery);
+      const data = await getRecordList(projectId, model.name, apiQuery);
       setRecords(data as { list: MRecord[]; total: number });
     } catch (error) {
       console.error('Failed to fetch records:', error);
@@ -44,7 +44,7 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
     } finally {
       setLoading(false);
     }
-  }, [projectId, datasource, model.name, query]);
+  }, [projectId, model.name, query]);
 
   useEffect(() => {
     if (model) fetchRecords();
@@ -62,7 +62,7 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
       return;
     }
     try {
-      await deleteRecord(projectId, datasource, model.name, record[idField.name]);
+      await deleteRecord(projectId, model.name, record[idField.name]);
       message.success(t('record_delete_success') || 'Record deleted successfully');
       await fetchRecords();
     } catch (error) {
@@ -77,7 +77,6 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
     form.resetFields();
   };
 
-  // 格式化表单数据
   const formatFormData = (values: Record<string, any>): MRecord => {
     const formattedValues: MRecord = {};
     for (const [key, value] of Object.entries(values)) {
@@ -117,15 +116,13 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
       sortOrder: query.sort.find(s => s.field === field.name)?.order === 'ASC' ? 'ascend' :
         query.sort.find(s => s.field === field.name)?.order === 'DESC' ? 'descend' : null,
       render: (text: string) => {
-        // 如果值为 null 或 undefined，显示 "-"
         if (text === null || text === undefined) {
           return '-';
         }
 
         const fmtText = (typeof text === 'object' ? JSON.stringify(text) : text.toString());
 
-        // 根据字段类型设置最大长度
-        let maxLength = 50; // 默认最大长度
+        let maxLength = 50;
         if (field.type === 'String') {
           maxLength = 30;
         } else if (field.type === 'JSON') {
@@ -170,7 +167,6 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
   });
 
 
-  // 事件处理函数
   const handleNewRecord = () => {
     setCurrentRecord(undefined);
     setEditMode(false);
@@ -195,10 +191,9 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
   };
 
   const handleSearch = () => {
-    setQuery({ ...query, page: 1, filter: searchValue }); // 重置到第一页，更新 filter
+    setQuery({ ...query, page: 1, filter: searchValue });
   };
 
-  // 渲染主要内容
   const renderContent = () => {
     if (!model) {
       return <Empty />;
@@ -206,9 +201,7 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
 
     return (
       <>
-        {/* 搜索区域 */}
         <div style={{ marginBottom: 16 }}>
-
 
           {searchExpanded && (
             <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
@@ -231,7 +224,6 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
           )}
         </div>
 
-        {/* 头部操作区 */}
         <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
           <Space>
             <Button
@@ -281,7 +273,6 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
     );
   };
 
-  // 处理表单提交
   const handleFormSubmit = async () => {
     try {
       const values = await form.validateFields();
@@ -292,9 +283,9 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
           message.warning(t('record_edit_no_id_warning'));
           return;
         }
-        await updateRecord(projectId, datasource, model.name, currentRecord[idField.name], formattedValues);
+        await updateRecord(projectId, model.name, currentRecord[idField.name], formattedValues);
       } else {
-        await createRecord(projectId, datasource, model.name, formattedValues);
+        await createRecord(projectId, model.name, formattedValues);
       }
 
       setDialogFormVisible(false);
@@ -311,7 +302,6 @@ const RecordList: React.FC<RecordListProps> = ({ datasource, model }) => {
     }
   };
 
-  // 渲染模态框
   const renderModal = () => {
     if (!model) return null;
 

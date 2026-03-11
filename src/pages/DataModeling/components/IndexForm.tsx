@@ -7,7 +7,6 @@ import {Index} from "@/types/data-modeling";
 
 interface IndexFormProps {
   mode: 'create' | 'edit';
-  datasource: string;
   model: any;
   currentValue: Index;
   onConfirm: (form: Index) => void;
@@ -15,7 +14,7 @@ interface IndexFormProps {
 }
 
 const IndexForm = React.forwardRef<any, IndexFormProps>(({
-  mode: _mode, // eslint-disable-line @typescript-eslint/no-unused-vars
+  mode: _mode,
   model,
   currentValue,
   onConfirm,
@@ -24,7 +23,6 @@ const IndexForm = React.forwardRef<any, IndexFormProps>(({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   
-  // 将表单实例暴露给父组件
   React.useImperativeHandle(ref, () => ({
     submit: handleConfirm,
     reset: handleCancel,
@@ -35,11 +33,8 @@ const IndexForm = React.forwardRef<any, IndexFormProps>(({
 
   useEffect(() => {
     if (currentValue && Object.keys(currentValue).length > 0) {
-      // 编辑现有索引时，设置表单值
       form.setFieldsValue(currentValue);
     } else {
-      // 添加新索引时，不清空表单，保持上次输入的内容
-      // 只有当表单完全为空时才设置初始值
       const currentFormValues = form.getFieldsValue();
       if (!currentFormValues.name && (!currentFormValues.fields || currentFormValues.fields.length === 0)) {
         form.setFieldsValue({
@@ -54,11 +49,9 @@ const IndexForm = React.forwardRef<any, IndexFormProps>(({
   const handleConfirm = () => {
     form.validateFields().then((values) => {
       onConfirm(values);
-      // 不清空表单，保持用户输入的内容
     });
   };
 
-  // 处理表单取消
   const handleCancel = () => {
     form.resetFields();
     onCancel();
@@ -155,4 +148,3 @@ const IndexForm = React.forwardRef<any, IndexFormProps>(({
 });
 
 export default IndexForm;
-

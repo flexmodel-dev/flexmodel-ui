@@ -9,14 +9,12 @@ import {useProject} from "@/store/appStore";
 
 interface FieldFormProps {
   mode: 'create' | 'edit';
-  datasource: any;
   model: any;
   currentValue: any;
   onConfirm: (form: any) => void;
   onCancel: () => void;
 }
 
-// 字段类型常量
 export const BasicFieldTypes = [
   {
     name: 'String',
@@ -56,7 +54,6 @@ export const BasicFieldTypes = [
   },
 ];
 
-// 字段初始值常量
 export const FieldInitialValues: any = {
   STRING: {
     type: 'String',
@@ -136,7 +133,6 @@ export const FieldInitialValues: any = {
 
 const FieldForm = React.forwardRef<any, FieldFormProps>(({
   mode,
-  datasource,
   model,
   currentValue,
   onConfirm,
@@ -147,7 +143,6 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
 
-  // 将表单实例暴露给父组件
   React.useImperativeHandle(ref, () => ({
     submit: handleConfirm,
     reset: handleCancel,
@@ -160,11 +155,11 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
   const [tmpType, setTmpType] = useState<string>("");
 
   const reqModelList = React.useCallback(async () => {
-    const data = await getModelList(projectId, datasource);
+    const data = await getModelList(projectId);
     console.log('ModelList data:', data);
     console.log('Enum models:', data.filter(item => item.type === "enum"));
     setModelList(data);
-  }, [projectId, datasource]);
+  }, [projectId]);
 
   const initialValues = React.useMemo(() => ({
     name: "",
@@ -189,12 +184,10 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
   useEffect(() => {
     reqModelList();
     if (currentValue && Object.keys(currentValue).length > 0) {
-      // 编辑现有字段时，设置表单值，确保包含所有必要字段
       form.setFieldsValue({
         ...initialValues,
         ...currentValue
       });
-      // 根据字段类型正确设置tmpType
       let tmpTypeValue = currentValue.tmpType;
       if (!tmpTypeValue) {
         if (currentValue.type === 'Relation' && currentValue.from) {
@@ -207,7 +200,6 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
       }
       setTmpType(tmpTypeValue);
     } else {
-      // 创建新字段时，清空表单并设置初始值
       form.setFieldsValue(initialValues);
       setTmpType("String");
     }
@@ -232,21 +224,21 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
         type: "Relation",
         from: value.replace("Relation:", ""),
         multiple: false,
-        defaultValue: { type: "fixed", value: null }, // 重置默认值
+        defaultValue: { type: "fixed", value: null },
       });
     } else if (value.startsWith("Enum")) {
       form.setFieldsValue({
         ...FieldInitialValues["ENUM"],
         type: "EnumRef",
         from: value.replace("Enum:", ""),
-        defaultValue: { type: "fixed", value: null }, // 重置默认值
+        defaultValue: { type: "fixed", value: null },
       })
     } else {
       form.setFieldsValue({
         ...FieldInitialValues[value.toUpperCase()],
         type: value,
         multiple: false,
-        defaultValue: { type: "fixed", value: null }, // 重置默认值
+        defaultValue: { type: "fixed", value: null },
       });
     }
   };
@@ -262,25 +254,21 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
     });
   };
 
-  // 处理表单取消
   const handleCancel = () => {
     form.resetFields();
     onCancel();
   };
 
-  // 处理表单值变化
   const handleFormChange = (
     changedValues: Partial<Field>,
     allValues: Field
   ) => {
     if ("multiple" in changedValues) {
-      // 如果有默认值的情况下才进行处理
       if (
         allValues.defaultValue !== undefined &&
         allValues.defaultValue !== null
       ) {
         if (changedValues.multiple) {
-          // 切换到multiple时，将单个值转换为数组
           const _defaultValue = Array.isArray(allValues.defaultValue)
             ? allValues.defaultValue
             : [allValues.defaultValue];
@@ -289,7 +277,6 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
             defaultValue: _defaultValue,
           });
         } else {
-          // 切换到非multiple时，取数组的第一个值，并确保重置表单状态
           const _defaultValue = Array.isArray(allValues.defaultValue)
             ? allValues.defaultValue[0]
             : allValues.defaultValue;
@@ -301,10 +288,7 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
       }
     }
 
-    // 处理identity字段变化
     if ("identity" in changedValues && changedValues.identity === true) {
-      // 当设置当前字段为identity时，需要通知父组件更新其他字段的identity状态
-      // 这里可以通过回调函数通知父组件
       console.log("Field set as identity:", allValues.name);
     }
   };
@@ -452,16 +436,13 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
       <Form.Item label={t("identity")} name="identity" valuePropName="checked">
         <Switch
           disabled={(() => {
-            // 检查当前字段是否已经是identity
             const currentFieldName = form.getFieldValue("name");
             const currentIdentity = form.getFieldValue("identity");
 
-            // 如果当前字段已经是identity，则不禁用
             if (currentIdentity) {
               return false;
             }
 
-            // 检查其他字段是否已经是identity
             const existingIdentityField = model?.fields?.find((field: any) =>
               field.identity === true && field.name !== currentFieldName
             );
@@ -483,4 +464,3 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
 });
 
 export default FieldForm;
-

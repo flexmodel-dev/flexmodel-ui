@@ -3,42 +3,36 @@ import {Button, Col, Popover, Row, Segmented, Space, Typography,} from "antd";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
 
-import CodeView from "./CodeView";
 import FieldList from "./FieldList";
 import IndexList from "./IndexList";
 import RecordList from "./RecordList";
 import TriggerWrapper from "@/pages/DataModeling/components/TriggerWrapper.tsx";
 
 interface Props {
-  datasource: string;
   model: any;
 }
 
-const EntityView = ({datasource, model}: Props) => {
+const EntityView = ({model}: Props) => {
   const {t} = useTranslation();
   const [selectedItem, setSelectedItem] = useState<string>("field");
 
-  // 选项设置
   const options = [
     {label: t("field"), value: "field"},
     {label: t("index"), value: "index"},
     {label: t("record"), value: "record"},
     {label: t("trigger.title"), value: "trigger"},
-    {label: t("coding"), value: "coding"},
   ];
 
   const renderContent = () => {
     switch (selectedItem) {
       case "field":
-        return <FieldList datasource={datasource} model={model}/>;
+        return <FieldList model={model}/>;
       case "index":
-        return <IndexList datasource={datasource} model={model}/>;
+        return <IndexList model={model}/>;
       case "record":
-        return <RecordList datasource={datasource} model={model}/>;
-      case "coding":
-        return <CodeView datasource={datasource} model={model}/>;
+        return <RecordList model={model}/>;
       case "trigger":
-        return <TriggerWrapper datasource={datasource} model={model}/>;
+        return <TriggerWrapper model={model}/>;
       default:
         return null;
     }

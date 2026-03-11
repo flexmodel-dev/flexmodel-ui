@@ -22,11 +22,10 @@ import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
 
 interface FieldListProps {
-  datasource: string;
   model: Entity;
 }
 
-const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
+const FieldList: React.FC<FieldListProps> = ({ model }) => {
   const { t } = useTranslation();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
@@ -43,12 +42,9 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
   const fieldFormRef = useRef<any>(null);
 
   const fetchFields = useCallback(async () => {
-    // Replace this with actual fetch call
-    // const res = await getFields(datasource, model?.name);
     setFieldList(model?.fields);
   }, [model?.fields]);
 
-  // 搜索过滤逻辑
   const filterFields = useCallback((fields: Field[], keyword: string) => {
     if (!keyword.trim()) {
       return fields;
@@ -58,7 +54,6 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
     );
   }, []);
 
-  // 当字段列表或搜索关键词变化时，更新过滤后的列表
   useEffect(() => {
     const filtered = filterFields(fieldList, searchKeyword);
     setFilteredFieldList(filtered);
@@ -83,7 +78,6 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
     setFormMode('edit');
     setSelectedFieldIndex(index);
 
-    // 根据字段类型正确设置tmpType
     let tmpTypeValue = field.tmpType;
     if (!tmpTypeValue) {
       if (field.type === 'Relation' && field.from) {
@@ -115,10 +109,10 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
         identity: values.identity ?? false,
       };
       if (selectedFieldIndex === -1) {
-        const res = await createField(projectId, datasource, model?.name, typedField);
+        const res = await createField(projectId, model?.name, typedField);
         setFieldList([...fieldList, res as unknown as Field]);
       } else {
-        await modifyField(projectId, datasource, model?.name, values.name, typedField);
+        await modifyField(projectId, model?.name, values.name, typedField);
         const updatedFields = [...fieldList];
         updatedFields[selectedFieldIndex] = values;
         setFieldList(updatedFields);
@@ -147,7 +141,7 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
   const delField = async (index: number) => {
     try {
       const field = fieldList[index];
-      await dropField(projectId, datasource, model?.name, field.name);
+      await dropField(projectId, model?.name, field.name);
       setFieldList(fieldList.filter((_, i) => i !== index));
       message.success(t("field_delete_success"));
     } catch (error) {
@@ -156,7 +150,6 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
     }
   };
 
-  // 根据字段类型获取对应的图标
   const getFieldTypeIcon = (type: string) => {
     switch (type) {
       case 'String':
@@ -330,7 +323,6 @@ const FieldList: React.FC<FieldListProps> = ({ datasource, model }) => {
         <FieldForm
           ref={fieldFormRef}
           mode={formMode}
-          datasource={datasource}
           model={model}
           currentValue={currentVal}
           onConfirm={addOrEditField}
