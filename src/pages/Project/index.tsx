@@ -390,6 +390,10 @@ const Project: React.FC = () => {
             label={t('project.projectId')}
             name="id"
             tooltip={t('project.projectIdHelp')}
+            rules={[
+              { required: true, message: t('project.projectIdRequired') },
+              { pattern: /^[a-z][a-z0-9_]{1,62}$/, message: t('project.projectIdPattern') }
+            ]}
           >
             <Input placeholder={t('project.projectIdPlaceholder')} />
           </Form.Item>
