@@ -72,8 +72,8 @@ export const dropIndex = (projectId: string, modelName: string, indexName: strin
 }
 
 /**
- * 执行IDL
+ * 执行FML
  */
-export const executeIdl = (projectId: string, idl: string): Promise<(EntitySchema | EnumSchema | NativeQuerySchema)[]> => {
-  return api.post(`/projects/${projectId}/models/idl/execute`, { idl })
+export const executeFml = (projectId: string, fml: string): Promise<(EntitySchema | EnumSchema | NativeQuerySchema)[]> => {
+  return api.post(`/projects/${projectId}/models/fml/execute`, { fml })
 }

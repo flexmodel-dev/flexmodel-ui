@@ -87,7 +87,7 @@ export interface EntitySchema {
   indexes: IndexSchema[];
   comment?: string;
   additionalProperties?: Record<string, any>;
-  idl?: string;
+  fml?: string;
 }
 
 /**
@@ -98,7 +98,7 @@ export interface EnumSchema {
   comment?: string;
   elements: string[];
   additionalProperties?: Record<string, any>;
-  idl?: string;
+  fml?: string;
   type: string;
 }
 
@@ -111,7 +111,7 @@ export interface NativeQuerySchema {
   statement: string;
   comment?: string;
   additionalProperties?: Record<string, any>;
-  idl?: string;
+  fml?: string;
   parameters?: string[];
   fields?: QueryField[];
 }

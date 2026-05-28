@@ -53,7 +53,7 @@ const EntityView = ({model}: Props) => {
                     copyable
                     style={{whiteSpace: "pre-wrap", margin: "8px 0 0 0"}}
                   >
-                    {model?.idl}
+                    {model?.fml}
                   </Typography.Paragraph>
                 </div>
               }

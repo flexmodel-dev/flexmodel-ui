@@ -16,7 +16,7 @@ export type DatasourceType = 'SYSTEM' | 'USER';
  */
 export enum ScriptType {
   JSON = 'JSON',
-  IDL = 'IDL',
+  FML = 'FML',
 }
 
 /**

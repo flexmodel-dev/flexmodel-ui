@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Button, Drawer, Dropdown, Input, message, Modal, Spin} from "antd";
 import type {MenuProps} from "antd";
 import {MoreOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
-import {createModel, dropModel, getModelList, executeIdl} from "@/services/model.ts";
+import {createModel, dropModel, getModelList, executeFml} from "@/services/model.ts";
 import type {DatasourceSchema} from '@/types/data-source';
 import {useTranslation} from "react-i18next";
 import {useLocale} from "@/store/appStore.ts";
@@ -19,7 +19,7 @@ import {
 import '@/components/explore/styles/explore.scss';
 import Tree from '@/components/explore/explore/Tree.jsx';
 import ModelForm from "@/pages/DataModeling/components/ModelForm";
-import IDLModelForm from "@/pages/DataModeling/components/IDLModelForm";
+import FmlModelForm from "@/pages/DataModeling/components/FmlModelForm";
 
 const IconNativeQueryFolder = () => (
   <svg
@@ -92,15 +92,15 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
   const [modelLoading, setModelLoading] = useState<boolean>(false);
   const [deleteDialogVisible, setDeleteDialogVisible] = useState<boolean>(false);
   const [createModelDrawerVisible, setCreateModelDrawerVisible] = useState(false);
-  const [createIDLModelVisible, setCreateIDLModelVisible] = useState(false);
+  const [createFmlModelVisible, setCreateFmlModelVisible] = useState(false);
   const [filterText, setFilterText] = useState<string>("");
 
   const modelFormRef = useRef<any>(null);
-  const idlModelFormRef = useRef<any>(null);
+  const fmlModelFormRef = useRef<any>(null);
 
   const addModel = async () => {
     setCreateModelDrawerVisible(false);
-    setCreateIDLModelVisible(false);
+    setCreateFmlModelVisible(false);
     await reqModelList();
   };
 
@@ -115,9 +115,9 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     }
   };
 
-  const handleIDLModelFormSubmit = async (formData: any) => {
+  const handleFmlModelFormSubmit = async (formData: any) => {
     try {
-      await executeIdl(projectId, formData.idl);
+      await executeFml(projectId, formData.script);
       message.success(t('model_created_success'));
       addModel();
     } catch (error) {
@@ -132,9 +132,9 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     }
   };
 
-  const handleIDLModalOk = () => {
-    if (idlModelFormRef.current) {
-      idlModelFormRef.current.submit();
+  const handleFmlModalOk = () => {
+    if (fmlModelFormRef.current) {
+      fmlModelFormRef.current.submit();
     }
   };
 
@@ -145,10 +145,10 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     }
   };
 
-  const handleIDLModalCancel = () => {
-    setCreateIDLModelVisible(false);
-    if (idlModelFormRef.current) {
-      idlModelFormRef.current.reset();
+  const handleFmlModalCancel = () => {
+    setCreateFmlModelVisible(false);
+    if (fmlModelFormRef.current) {
+      fmlModelFormRef.current.reset();
     }
   };
 
@@ -350,9 +350,9 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
                   onClick: () => setCreateModelDrawerVisible(true),
                 },
                 {
-                  key: "create_model_by_idl",
-                  label: t("create_model_by_idl"),
-                  onClick: () => setCreateIDLModelVisible(true),
+                  key: "create_model_by_fml",
+                  label: t("create_model_by_fml"),
+                  onClick: () => setCreateFmlModelVisible(true),
                 },
               ],
             }}
@@ -451,26 +451,26 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
         />
       </Drawer>
       <Drawer
-        title={t('create_model_by_idl')}
-        open={createIDLModelVisible}
-        onClose={handleIDLModalCancel}
+        title={t('create_model_by_fml')}
+        open={createFmlModelVisible}
+        onClose={handleFmlModalCancel}
         size={1000}
         footer={
           <div style={{textAlign: 'left'}}>
-            <Button onClick={handleIDLModalCancel} style={{marginRight: 8}}>
+            <Button onClick={handleFmlModalCancel} style={{marginRight: 8}}>
               {t('cancel')}
             </Button>
-            <Button onClick={handleIDLModalOk} type="primary">
+            <Button onClick={handleFmlModalOk} type="primary">
               {t('confirm')}
             </Button>
           </div>
         }
       >
-        <IDLModelForm
-          ref={idlModelFormRef}
+        <FmlModelForm
+          ref={fmlModelFormRef}
           mode="create"
-          onConfirm={handleIDLModelFormSubmit}
-          onCancel={() => setCreateIDLModelVisible(false)}
+          onConfirm={handleFmlModelFormSubmit}
+          onCancel={() => setCreateFmlModelVisible(false)}
         />
       </Drawer>
     </div>

@@ -111,7 +111,7 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
     try {
       // 尝试刷新token，refreshToken通过cookie自动传递
       const response = await authService.refreshToken()
-      
+
       // 更新store中的token
       useAuthStore.getState().setToken(response.token)
 

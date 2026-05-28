@@ -1,5 +1,5 @@
 /**
- * IDL语法示例
+ * FML语法示例
 // 班级模型
 model Classes {
   id: String @id @default(uuid()),
@@ -54,7 +54,7 @@ import {useTheme} from '@/store/appStore';
 import {useTranslation} from 'react-i18next';
 import {theme} from 'antd';
 
-interface IDLEditorProps {
+interface FmlEditorProps {
   value: string;
   onChange: (value: string | undefined) => void;
   height?: string;
@@ -63,12 +63,12 @@ interface IDLEditorProps {
   docUrl?: string;
 }
 
-const IDLEditor: React.FC<IDLEditorProps> = ({
+const FmlEditor: React.FC<FmlEditorProps> = ({
   value,
   onChange,
   readOnly = false,
   showDocLink = false,
-  docUrl = 'https://flexmodel.dev/docs/api/model-schema/#idl-%E5%AF%B9%E8%B1%A1%E9%85%8D%E7%BD%AE',
+  docUrl = 'https://flexmodel.dev/docs/api/model-schema/#fml-%E5%AF%B9%E8%B1%A1%E9%85%8D%E7%BD%AE',
 }) => {
   const { isDark } = useTheme();
   const { t } = useTranslation();
@@ -79,22 +79,22 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
   // 获取当前主题
   const currentTheme = isDark ? 'vs-dark' : 'vs';
 
-  // IDL语法提示配置
-  const idlLanguageConfig = {
-    id: 'idl',
-    extensions: ['.idl'],
-    aliases: ['IDL', 'idl'],
-    mimetypes: ['text/x-idl'],
+  // FML语法提示配置
+  const fmlLanguageConfig = {
+    id: 'fml',
+    extensions: ['.fml'],
+    aliases: ['FML', 'fml'],
+    mimetypes: ['text/x-fml'],
   };
 
-  // IDL语法高亮配置
-  const idlMonarchTokensProvider = {
+  // FML语法高亮配置
+  const fmlMonarchTokensProvider = {
     defaultToken: '',
-    tokenPostfix: '.idl',
+    tokenPostfix: '.fml',
 
     keywords: [
-      'model', 'enum', 'String', 'Int', 'Long', 'Float', 'Double', 'Boolean',
-      'DateTime', 'JSON', 'BigInt', 'Decimal', 'Bytes', 'Unsupported'
+      'model', 'enum', 'seed', 'String', 'Int', 'Long', 'Float', 'Double', 'Boolean',
+      'DateTime', 'JSON', 'BigInt', 'Decimal', 'Bytes', 'Unsupported', 'true', 'false', 'null'
     ],
 
     operators: [
@@ -157,8 +157,8 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
     },
   };
 
-  // IDL语法提示配置
-  const idlCompletionProvider = {
+  // FML语法提示配置
+  const fmlCompletionProvider = {
     provideCompletionItems: () => {
       const suggestions = [
         {
@@ -166,7 +166,7 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
           kind: 14, // Keyword
           insertText: 'model ${1:modelName} {\n\t${2}\n}',
           insertTextRules: 4, // InsertAsSnippet
-          documentation: t('idl.model_definition'),
+          documentation: t('fml.model_definition'),
           sortText: '01'
         },
         {
@@ -174,167 +174,175 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
           kind: 14, // Keyword
           insertText: 'enum ${1:enumName} {\n\t${2}\n}',
           insertTextRules: 4, // InsertAsSnippet
-          documentation: t('idl.enum_definition'),
+          documentation: t('fml.enum_definition'),
           sortText: '02'
+        },
+        {
+          label: 'seed',
+          kind: 14, // Keyword
+          insertText: 'seed ${1:modelName} [\n\t${2}\n]',
+          insertTextRules: 4, // InsertAsSnippet
+          documentation: t('fml.seed_definition'),
+          sortText: '03'
         },
         {
           label: 'String',
           kind: 5, // Class
           insertText: 'String',
-          documentation: t('idl.string_type'),
-          sortText: '03'
+          documentation: t('fml.string_type'),
+          sortText: '04'
         },
         {
           label: 'Int',
           kind: 5, // Class
           insertText: 'Int',
-          documentation: t('idl.int_type'),
-          sortText: '04'
+          documentation: t('fml.int_type'),
+          sortText: '05'
         },
         {
           label: 'Long',
           kind: 5, // Class
           insertText: 'Long',
-          documentation: t('idl.long_type'),
-          sortText: '05'
+          documentation: t('fml.long_type'),
+          sortText: '06'
         },
         {
           label: 'Float',
           kind: 5, // Class
           insertText: 'Float',
-          documentation: t('idl.float_type'),
-          sortText: '06'
+          documentation: t('fml.float_type'),
+          sortText: '07'
         },
         {
           label: 'Double',
           kind: 5, // Class
           insertText: 'Double',
-          documentation: t('idl.double_type'),
-          sortText: '07'
+          documentation: t('fml.double_type'),
+          sortText: '08'
         },
         {
           label: 'Boolean',
           kind: 5, // Class
           insertText: 'Boolean',
-          documentation: t('idl.boolean_type'),
-          sortText: '08'
+          documentation: t('fml.boolean_type'),
+          sortText: '09'
         },
         {
           label: 'DateTime',
           kind: 5, // Class
           insertText: 'DateTime',
-          documentation: t('idl.datetime_type'),
-          sortText: '09'
+          documentation: t('fml.datetime_type'),
+          sortText: '10'
         },
         {
           label: 'JSON',
           kind: 5, // Class
           insertText: 'JSON',
-          documentation: t('idl.json_type'),
-          sortText: '10'
+          documentation: t('fml.json_type'),
+          sortText: '11'
         },
         {
           label: 'BigInt',
           kind: 5, // Class
           insertText: 'BigInt',
-          documentation: t('idl.bigint_type'),
-          sortText: '11'
+          documentation: t('fml.bigint_type'),
+          sortText: '12'
         },
         {
           label: 'Decimal',
           kind: 5, // Class
           insertText: 'Decimal',
-          documentation: t('idl.decimal_type'),
-          sortText: '12'
+          documentation: t('fml.decimal_type'),
+          sortText: '13'
         },
         {
           label: 'Bytes',
           kind: 5, // Class
           insertText: 'Bytes',
-          documentation: t('idl.bytes_type'),
-          sortText: '13'
+          documentation: t('fml.bytes_type'),
+          sortText: '14'
         },
         {
           label: '@id',
           kind: 15, // Property
           insertText: '@id',
-          documentation: t('idl.primary_key'),
-          sortText: '14'
+          documentation: t('fml.primary_key'),
+          sortText: '15'
         },
         {
           label: '@unique',
           kind: 15, // Property
           insertText: '@unique',
-          documentation: t('idl.unique_constraint'),
-          sortText: '15'
+          documentation: t('fml.unique_constraint'),
+          sortText: '16'
         },
         {
           label: '@default',
           kind: 15, // Property
           insertText: '@default(${1:value})',
           insertTextRules: 4, // InsertAsSnippet
-          documentation: t('idl.default_value'),
-          sortText: '16'
+          documentation: t('fml.default_value'),
+          sortText: '17'
         },
         {
           label: '@comment',
           kind: 15, // Property
           insertText: '@comment("${1:comment}")',
           insertTextRules: 4, // InsertAsSnippet
-          documentation: t('idl.field_comment'),
-          sortText: '17'
+          documentation: t('fml.field_comment'),
+          sortText: '18'
         },
         {
           label: '@length',
           kind: 15, // Property
           insertText: '@length("${1:length}")',
           insertTextRules: 4, // InsertAsSnippet
-          documentation: t('idl.field_length'),
-          sortText: '18'
+          documentation: t('fml.field_length'),
+          sortText: '19'
         },
         {
           label: '@index',
           kind: 15, // Property
           insertText: '@index(fields: [${1:fieldName}])',
           insertTextRules: 4, // InsertAsSnippet
-          documentation: t('idl.index_definition'),
-          sortText: '19'
+          documentation: t('fml.index_definition'),
+          sortText: '20'
         },
         {
           label: '@relation',
           kind: 15, // Property
           insertText: '@relation(localField: "${1:localField}", foreignField: "${2:foreignField}", cascadeDelete: "${3:true|false}")',
           insertTextRules: 4, // InsertAsSnippet
-          documentation: t('idl.relation_definition'),
-          sortText: '20'
+          documentation: t('fml.relation_definition'),
+          sortText: '21'
         },
         {
           label: 'ulid()',
           kind: 3, // Function
           insertText: 'ulid()',
-          documentation: t('idl.generate_ulid'),
-          sortText: '21'
+          documentation: t('fml.generate_ulid'),
+          sortText: '22'
         },
         {
           label: 'uuid()',
           kind: 3, // Function
           insertText: 'uuid()',
-          documentation: t('idl.generate_uuid'),
-          sortText: '22'
+          documentation: t('fml.generate_uuid'),
+          sortText: '23'
         },
         {
           label: 'now()',
           kind: 3, // Function
           insertText: 'now()',
-          documentation: t('idl.current_time'),
-          sortText: '23'
+          documentation: t('fml.current_time'),
+          sortText: '24'
         },
         {
           label: 'autoIncrement()',
           kind: 3, // Function
           insertText: 'autoIncrement()',
-          documentation: t('idl.auto_increment'),
-          sortText: '24'
+          documentation: t('fml.auto_increment'),
+          sortText: '25'
         }
       ];
 
@@ -347,10 +355,10 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
     editorRef.current = _editor;
     monacoRef.current = monaco;
 
-    // 注册IDL语言
-    monaco.languages.register(idlLanguageConfig);
-    monaco.languages.setMonarchTokensProvider('idl', idlMonarchTokensProvider);
-    monaco.languages.registerCompletionItemProvider('idl', idlCompletionProvider);
+    // 注册FML语言
+    monaco.languages.register(fmlLanguageConfig);
+    monaco.languages.setMonarchTokensProvider('fml', fmlMonarchTokensProvider);
+    monaco.languages.registerCompletionItemProvider('fml', fmlCompletionProvider);
   };
 
   return (
@@ -368,7 +376,7 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
             fontSize: '12px',
             color: token.colorTextSecondary
           }}>
-            {t('idl_editor')}
+            {t('fml_editor')}
           </span>
           <a
             href={docUrl}
@@ -383,14 +391,14 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
               gap: '4px'
             }}
           >
-            📖 {t('view_idl_docs')}
+            📖 {t('view_fml_docs')}
           </a>
         </div>
       )}
       <div style={{ flex: 1 }}>
         <Editor
           height="100%"
-          language="idl"
+          language="fml"
           value={value}
           onChange={onChange}
           onMount={handleEditorDidMount}
@@ -425,4 +433,4 @@ const IDLEditor: React.FC<IDLEditorProps> = ({
   );
 };
 
-export default IDLEditor;
+export default FmlEditor;

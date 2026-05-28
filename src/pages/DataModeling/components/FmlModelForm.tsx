@@ -2,16 +2,16 @@ import React, {useState} from 'react';
 import {message, theme} from 'antd';
 import {useTranslation} from 'react-i18next';
 import {ScriptImportPayload, ScriptType} from '@/types/data-source';
-import IDLEditor from './IDLEditor';
+import FmlEditor from './FmlEditor';
 
-interface IDLModelFormProps {
+interface FmlModelFormProps {
   mode: 'create' | 'edit';
   currentValue?: any;
   onConfirm: (form: any) => void;
   onCancel: () => void;
 }
 
-const IDLModelForm = React.forwardRef<any, IDLModelFormProps>(({
+const FmlModelForm = React.forwardRef<any, FmlModelFormProps>(({
   mode: _mode,
   currentValue: _currentValue,
   onConfirm,
@@ -21,7 +21,7 @@ const IDLModelForm = React.forwardRef<any, IDLModelFormProps>(({
   const { token } = theme.useToken();
 
   const resetForm = () => {
-    setIdlCode(`// ${t('idl_syntax_example')}
+    setFmlCode(`// ${t('fml_syntax_example')}
 model example_model {
   id : String @id @default(ulid()),
   name : String @length("255") @comment("${t('name')}"),
@@ -40,20 +40,20 @@ enum ExampleEnum {
     submit: handleSubmit,
     reset: resetForm,
     cancel: handleCancel,
-    getFieldsValue: () => ({ idlCode }),
+    getFieldsValue: () => ({ fmlCode }),
     setFieldsValue: (values: any) => {
-      if (values.idlCode) {
-        setIdlCode(values.idlCode);
+      if (values.fmlCode) {
+        setFmlCode(values.fmlCode);
       }
     },
     validateFields: async () => {
-      if (!idlCode.trim()) {
-        throw new Error(t('enter_idl_code'));
+      if (!fmlCode.trim()) {
+        throw new Error(t('enter_fml_code'));
       }
-      return { idlCode };
+      return { fmlCode };
     },
   }));
-  const [idlCode, setIdlCode] = useState(`// ${t('idl_syntax_example')}
+  const [fmlCode, setFmlCode] = useState(`// ${t('fml_syntax_example')}
 model example_model {
   id : Long @id @default(autoIncrement()),
   name : String @length("255") @comment("${t('name')}"),
@@ -70,14 +70,14 @@ enum ExampleEnum {
 }`);
 
   const handleSubmit = async () => {
-    if (!idlCode.trim()) {
-      message.error(t('enter_idl_code'));
+    if (!fmlCode.trim()) {
+      message.error(t('enter_fml_code'));
       return;
     }
 
     const payload: ScriptImportPayload = {
-      script: idlCode,
-      type: ScriptType.IDL
+      script: fmlCode,
+      type: ScriptType.FML
     };
 
     onConfirm(payload);
@@ -89,9 +89,9 @@ enum ExampleEnum {
 
   return (
     <div style={{ height: '600px', border: `1px solid ${token.colorBorder}`, borderRadius: token.borderRadius }}>
-      <IDLEditor
-        value={idlCode}
-        onChange={(value) => setIdlCode(value || '')}
+      <FmlEditor
+        value={fmlCode}
+        onChange={(value) => setFmlCode(value || '')}
         height="100%"
         showDocLink={true}
       />
@@ -99,4 +99,4 @@ enum ExampleEnum {
   );
 });
 
-export default IDLModelForm;
+export default FmlModelForm;
