@@ -11,6 +11,7 @@ import {GraphQLData} from "@/types/api-management";
 import {useGraphiQL} from "@graphiql/react";
 import {theme} from "antd";
 import {useTheme, useProject} from "@/store/appStore.ts";
+import {useParams} from "react-router-dom";
 
 interface GraphQLProps {
   data: GraphQLData | undefined;
@@ -125,7 +126,8 @@ const GraphQL: React.FC<GraphQLProps> = ({ data, onChange }: GraphQLProps) => {
   const { token } = theme.useToken();
   const { isDark } = useTheme();
   const { currentProject } = useProject();
-  const projectId = currentProject?.id || '';
+  const { projectId: routeProjectId } = useParams<{ projectId: string }>();
+  const projectId = currentProject?.id || routeProjectId || '';
   
   // 使用useMemo缓存explorer插件，避免重复创建
   const explorer = useMemo(() => explorerPlugin(), []);
@@ -134,7 +136,9 @@ const GraphQL: React.FC<GraphQLProps> = ({ data, onChange }: GraphQLProps) => {
   const fetcher = useMemo(() => {
     return (graphQLParams: any) => {
       if (!projectId) {
-        return Promise.reject(new Error('Project ID is required'));
+        return Promise.resolve({
+          errors: [{ message: '请先选择一个项目' }],
+        });
       }
       return executeQuery(projectId, graphQLParams);
     };
