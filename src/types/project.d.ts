@@ -1,6 +1,8 @@
 /**
  * 项目接口
  */
+import type { Branch } from "./branch";
+
 export interface Project {
   id: string;
   name: string;
@@ -10,6 +12,8 @@ export interface Project {
   createdBy?: string;
   updatedBy?: string;
   ownerId?: string;
+  currentBranch?: string;
+  branches?: Branch[];
   stats?: {
     apiCount: number;
     modelCount: number;

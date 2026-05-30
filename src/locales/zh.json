@@ -901,5 +901,27 @@
     "confirm": "确定",
     "cancel": "取消",
     "create": "创建"
+  },
+  "branch": {
+    "branches": "分支",
+    "createBranch": "新建分支",
+    "manageBranches": "管理分支",
+    "switchSuccess": "已切换到分支 {{name}}",
+    "switchFailed": "切换分支失败",
+    "createSuccess": "分支 {{name}} 创建成功",
+    "createFailed": "创建分支失败",
+    "deleteSuccess": "分支 {{name}} 已删除",
+    "deleteFailed": "删除分支失败",
+    "name": "分支名称",
+    "nameRequired": "请输入分支名称",
+    "nameFormatError": "分支名格式不正确，需以小写字母开头，由小写字母、数字和下划线组成，长度2~63个字符",
+    "nameMainError": "不能创建名为 main 的分支",
+    "nameFormatHint": "小写字母开头，由小写字母、数字和下划线组成",
+    "namePlaceholder": "例如：feature_branch",
+    "sourceBranch": "来源分支",
+    "description": "描述",
+    "descriptionPlaceholder": "可选，描述此分支的用途",
+    "active": "活跃",
+    "deleteConfirm": "确定删除分支 {{name}} 吗？此操作不可恢复。"
   }
 }

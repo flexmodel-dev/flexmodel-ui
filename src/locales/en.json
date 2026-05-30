@@ -906,5 +906,27 @@
   },
   "resource": {
     "fetch_failed": "Failed to fetch resources"
+  },
+  "branch": {
+    "branches": "Branches",
+    "createBranch": "New Branch",
+    "manageBranches": "Manage Branches",
+    "switchSuccess": "Switched to branch {{name}}",
+    "switchFailed": "Failed to switch branch",
+    "createSuccess": "Branch {{name}} created successfully",
+    "createFailed": "Failed to create branch",
+    "deleteSuccess": "Branch {{name}} deleted",
+    "deleteFailed": "Failed to delete branch",
+    "name": "Branch Name",
+    "nameRequired": "Please enter a branch name",
+    "nameFormatError": "Invalid format: must start with lowercase letter, consist of lowercase letters, digits and underscores, 2~63 chars",
+    "nameMainError": "Cannot create a branch named 'main'",
+    "nameFormatHint": "Starts with lowercase letter, lowercase letters, digits and underscores",
+    "namePlaceholder": "e.g. feature_branch",
+    "sourceBranch": "Source Branch",
+    "description": "Description",
+    "descriptionPlaceholder": "Optional, describe the purpose of this branch",
+    "active": "Active",
+    "deleteConfirm": "Are you sure to delete branch {{name}}? This action cannot be undone."
   }
 }

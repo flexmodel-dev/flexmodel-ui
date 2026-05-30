@@ -23,6 +23,7 @@ import AIChatBox from "@/components/ai-chatbox/index";
 import Console from "@/components/console/Console.tsx";
 import { Message } from "../ai-chatbox/types";
 import ResizablePanel from "@/components/common/ResizablePanel";
+import BranchSwitcher from "@/components/common/BranchSwitcher";
 import { Outlet } from "react-router-dom";
 import { getFullRoutePath } from "@/routes";
 import UserInfo from "@/components/UserInfo";
@@ -46,6 +47,7 @@ const ProjectLayout: React.FC = () => {
   const [isConsoleVisible, setIsConsoleVisible] = React.useState(false);
   const [isProjectInitialized, setIsProjectInitialized] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
+  const [branchMenuItems, setBranchMenuItems] = React.useState<any[]>([]);
 
   useEffect(() => {
     const initializeProject = async () => {
@@ -149,6 +151,16 @@ const ProjectLayout: React.FC = () => {
           }))
         } : undefined
       });
+
+      // 分支节点整合到面包屑中
+      if (projectId) {
+        items.push({
+          title: (
+            <BranchSwitcher projectId={projectId} onMenuItemsChange={setBranchMenuItems} />
+          ),
+          menu: branchMenuItems.length > 0 ? { items: branchMenuItems } : undefined
+        });
+      }
     }
 
     const routePath = pathname.replace(`/project/${projectId}`, '') || '/';
@@ -167,7 +179,7 @@ const ProjectLayout: React.FC = () => {
     });
 
     return items;
-  }, [currentProject, projects, projectId, t, token.marginXS, handleProjectChange]);
+  }, [currentProject, projects, projectId, t, token.marginXS, handleProjectChange, branchMenuItems]);
 
   return (
     <Layout style={{
