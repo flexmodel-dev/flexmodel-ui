@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Locale } from "antd/es/locale";
 import {
   ApartmentOutlined,
+  AppstoreOutlined,
   CodeOutlined,
   FileSearchOutlined,
   GlobalOutlined,
@@ -139,7 +140,7 @@ const ProjectLayout: React.FC = () => {
       items.push({
         title: (
           <span className="cursor-pointer">
-            <ApartmentOutlined style={{ marginRight: token.marginXS }} />
+            <AppstoreOutlined style={{ marginRight: token.marginXS }} />
             <span>{currentProject.name}</span>
           </span>
         ),
@@ -308,7 +309,7 @@ const ProjectLayout: React.FC = () => {
                 />
               )}
             >
-              {isProjectInitialized ? <Outlet /> : null}
+              {isProjectInitialized ? <Outlet key={currentProject?.currentBranch} /> : null}
             </ResizablePanel>
           </ResizablePanel>
         </Layout.Content>
