@@ -69,9 +69,6 @@ const GraphQLAPI: React.FC = () => {
 #   }
 #   total: studentAggregate(where: {studentName: {_in: ["李四", "王五"]}}) @transform(get: "_count") {
 #     _count
-#     _max {
-#       age
-#     }
 #   }
 #   maxAge: studentAggregate(where: {studentName: {_in: ["李四", "王五"]}}) @transform(get: "_max.age") {
 #     _max {
