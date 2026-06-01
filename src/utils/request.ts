@@ -33,7 +33,7 @@ const ERROR_CODES = {
 } as const
 
 // API 基础路径
-export const BASE_URI = "/api/v1"
+export const BASE_URI = "/api"
 
 // 标记是否正在刷新token
 let isRefreshing = false

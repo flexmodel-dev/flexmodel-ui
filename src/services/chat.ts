@@ -46,7 +46,7 @@ export const sendChatMessage = async (params: ChatRequest, signal?: AbortSignal)
     'Authorization': `Bearer ${token}`
   };
 
-  return fetch('/api/v1/ai/chat/completions', {
+  return fetch('/api/ai/chat/completions', {
     method: 'POST',
     headers,
     body: JSON.stringify(params),
@@ -99,7 +99,7 @@ export const sendMessage = async (params: SendMessageRequest, signal?: AbortSign
     'Authorization': `Bearer ${token}`
   };
 
-  return fetch(`/api/v1/ai/chat/completions`, {
+  return fetch(`/api/ai/chat/completions`, {
     method: 'POST',
     headers,
     body: JSON.stringify(params),
