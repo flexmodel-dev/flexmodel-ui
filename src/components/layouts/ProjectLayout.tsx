@@ -8,7 +8,6 @@ import { useLocale, useTheme, useProject } from "@/store/appStore";
 import { useTranslation } from "react-i18next";
 import { Locale } from "antd/es/locale";
 import {
-  ApartmentOutlined,
   AppstoreOutlined,
   CodeOutlined,
   FileSearchOutlined,

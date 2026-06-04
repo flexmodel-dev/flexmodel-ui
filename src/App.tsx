@@ -54,7 +54,7 @@ const App = () => {
     <ConfigProvider
       locale={locale}
       theme={{
-        algorithm: isDark ? [antdTheme.darkAlgorithm, antdTheme.compactAlgorithm] : [antdTheme.compactAlgorithm],
+        algorithm: isDark ? [antdTheme.darkAlgorithm, antdTheme.compactAlgorithm] : [],
         // algorithm: isDark ? [antdTheme.darkAlgorithm] : [],
 
       }}

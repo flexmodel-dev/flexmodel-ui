@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {Card, Form, InputNumber, Select, Switch} from "antd";
 import type {SelectProps} from "antd/es/select";
-import {getIdentityProviders} from "@/services/identity-provider.ts";
+import {getAuthProviders} from "@/services/auth-provider.ts";
 import {useTranslation} from "react-i18next";
 import {ApiMeta} from "@/types/api-management";
 import {useProject} from "@/store/appStore";
@@ -21,10 +21,10 @@ const AuthorizationForm: React.FC<AuthProps> = ({ data, onChange }: AuthProps) =
   const [options, setOptions] = useState<SelectProps["options"]>([]);
   const { t } = useTranslation();
 
-  // 获取身份源列表
+  // 获取认证提供商列表
   useEffect(() => {
     if (!projectId) return;
-    getIdentityProviders(projectId).then((res) =>
+    getAuthProviders(projectId).then((res) =>
       setOptions(
         res.map((d: { name: string }) => ({
           value: d.name,

@@ -14,7 +14,6 @@ interface SecuritySettings {
   intervalInSeconds: number;
   maxRequestCount: number;
   graphqlEndpointPath?: string;
-  graphqlEndpointIdentityProvider?: string | null;
 }
 
 /**
@@ -51,7 +50,6 @@ export interface Security {
   maxRequestCount: number;
   intervalInSeconds: number;
   graphqlEndpointPath: string;
-  graphqlEndpointIdentityProvider: string;
 }
 
 /**

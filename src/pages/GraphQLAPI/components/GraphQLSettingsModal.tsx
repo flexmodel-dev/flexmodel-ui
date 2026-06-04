@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, message, Modal, Select} from "antd";
-import {getIdentityProviders} from "@/services/identity-provider";
+import {Button, Form, Input, message, Modal} from "antd";
 import {saveSettings} from "@/services/settings";
 import {Settings} from "@/types/settings";
 import {useConfig, useProject} from "@/store/appStore";
@@ -24,33 +23,14 @@ const GraphQLSettingsModal: React.FC<GraphQLSettingsModalProps> = ({
   const { currentProject } = useProject();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [identityProviders, setIdentityProviders] = useState<Array<{ name: string }>>([]);
 
   const projectId = currentProject?.id || '';
-
-  // 加载身份提供商
-  useEffect(() => {
-    const loadProviders = async () => {
-      if (!projectId) return;
-      try {
-        const providers = await getIdentityProviders(projectId);
-        setIdentityProviders(providers);
-      } catch (error) {
-        console.error(t('identity_provider_load_failed'), error);
-      }
-    };
-
-    if (visible) {
-      loadProviders();
-    }
-  }, [visible, projectId, t]);
 
   // 设置表单初始值
   useEffect(() => {
     if (visible && settings) {
       form.setFieldsValue({
         graphqlEndpointPath: settings.security.graphqlEndpointPath || '/graphql',
-        graphqlEndpointIdentityProvider: settings.security.graphqlEndpointIdentityProvider
       });
     }
   }, [visible, settings, form]);
@@ -117,21 +97,6 @@ const GraphQLSettingsModal: React.FC<GraphQLSettingsModalProps> = ({
           <Input
             addonBefore={config?.apiRootPath || ''}
             placeholder="/graphql"
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="graphqlEndpointIdentityProvider"
-          label={t('identity_provider')}
-          extra={t('identity_provider_help')}
-        >
-          <Select
-            options={identityProviders.map(provider => ({
-              value: provider.name,
-              label: provider.name
-            }))}
-            placeholder={t('select_identity_provider')}
-            allowClear
           />
         </Form.Item>
       </Form>

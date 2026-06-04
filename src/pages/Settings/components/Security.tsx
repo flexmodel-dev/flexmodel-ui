@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Form, Input, InputNumber, Select, Switch} from 'antd';
+import {Button, Form, Input, InputNumber, Switch} from 'antd';
 import {useTranslation} from "react-i18next";
-import type {SelectProps} from "antd/es/select";
-import {getIdentityProviders} from "@/services/identity-provider.ts";
 import {useConfig} from "@/store/appStore.ts";
 
 interface SecurityProps {
@@ -15,8 +13,6 @@ interface SecurityData {
   intervalInSeconds: number;
   maxRequestCount: number;
   graphqlEndpointPath?: string;
-  graphqlEndpointIdentityProvider?: string | null;
-  systemIdentityProvider: string;
 }
 
 const Security: React.FC<SecurityProps> = ({settings, onChange}) => {
@@ -30,18 +26,7 @@ const Security: React.FC<SecurityProps> = ({settings, onChange}) => {
     intervalInSeconds: 60,
     maxRequestCount: 500,
     graphqlEndpointPath: '/graphql',
-    graphqlEndpointIdentityProvider: null,
-    systemIdentityProvider: 'default'
   });
-  const [options, setOptions] = useState<SelectProps['options']>([]);
-
-  useEffect(() => {
-    getIdentityProviders("default")
-      .then(res => setOptions(res.map((d: { name: string }) => ({
-        value: d.name,
-        label: d.name,
-      }))));
-  }, []);
 
   useEffect(() => {
     form.setFieldsValue(settings.security);
@@ -73,12 +58,6 @@ const Security: React.FC<SecurityProps> = ({settings, onChange}) => {
         </>}
         <Form.Item name="graphqlEndpointPath" label={t('graphql_endpoint_path')} required>
           <Input addonBefore={config?.apiRootPath+"/{tenantId}"}/>
-        </Form.Item>
-        <Form.Item name="graphqlEndpointIdentityProvider" label={t('graphql_identity_provider')}>
-          <Select options={options} placeholder={t('select_a_provider')} allowClear/>
-        </Form.Item>
-        <Form.Item name="systemIdentityProvider" label={t('system_identity_provider')}>
-          <Select options={options} placeholder={t('select_a_provider')}/>
         </Form.Item>
         <Form.Item>
           <Button type="primary" onClick={submit}>{t('save')}</Button>
