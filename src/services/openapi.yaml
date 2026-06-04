@@ -5455,16 +5455,13 @@ components:
     FmMetricsResponse:
       type: object
       properties:
-        customApiCount:
-          type: integer
-          format: int32
         requestCount:
           type: integer
           format: int32
-        dataSourceCount:
+        modelCount:
           type: integer
           format: int32
-        modelCount:
+        branchCount:
           type: integer
           format: int32
         flowDefCount:

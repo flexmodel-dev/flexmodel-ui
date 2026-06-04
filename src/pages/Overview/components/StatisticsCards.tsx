@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, Col, Row, theme} from "antd";
-import {ApiOutlined, ClockCircleOutlined, DatabaseOutlined, NodeIndexOutlined} from "@ant-design/icons";
+import {ApiOutlined, AppstoreOutlined, ClockCircleOutlined, NodeIndexOutlined} from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
 
 // 滚动容器样式
@@ -35,10 +35,9 @@ const metricItemStyle: React.CSSProperties = {
 
 // 统计数据接口
 interface Statistics {
-  customApiCount: number;
   requestCount: number;
-  dataSourceCount: number;
   modelCount: number;
+  branchCount: number;
   flowDefCount: number;
   flowExecCount: number;
   triggerTotalCount: number;
@@ -128,8 +127,42 @@ const StatCard: React.FC<{
   );
 };
 
-// API信息卡片组件
-const ApiInfoCard: React.FC<{ stats: Statistics; color: string }> = ({stats, color}) => {
+// 建模卡片组件
+const ModelingCard: React.FC<{ stats: Statistics; color: string }> = ({stats, color}) => {
+  const {t} = useTranslation();
+
+  return (
+    <StatCard
+      title={t("modeling", "建模")}
+      icon={<AppstoreOutlined style={{fontSize: '24px', color: '#ffffff'}}/>}
+      color={color}
+    >
+      <div className="stat-card-scroll-container" style={scrollContainerStyle}>
+        <div style={metricsContainerStyle}>
+          <div style={metricItemStyle}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
+              {t("model_count")}
+            </div>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
+              {stats.modelCount}
+            </div>
+          </div>
+          <div style={metricItemStyle}>
+            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
+              {t("branch.branches")}
+            </div>
+            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
+              {stats.branchCount}
+            </div>
+          </div>
+        </div>
+      </div>
+    </StatCard>
+  );
+};
+
+// API请求卡片组件
+const ApiRequestCard: React.FC<{ stats: Statistics; color: string }> = ({stats, color}) => {
   const {t} = useTranslation();
 
   return (
@@ -140,14 +173,6 @@ const ApiInfoCard: React.FC<{ stats: Statistics; color: string }> = ({stats, col
     >
       <div className="stat-card-scroll-container" style={scrollContainerStyle}>
         <div style={metricsContainerStyle}>
-          <div style={metricItemStyle}>
-            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
-              {t("api")}
-            </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
-              {stats.customApiCount}
-            </div>
-          </div>
           <div style={metricItemStyle}>
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("request_count")}
@@ -238,40 +263,6 @@ const TaskSchedulingCard: React.FC<{ stats: Statistics; color: string }> = ({sta
   );
 };
 
-// 数据卡片组件
-const DataCard: React.FC<{ stats: Statistics; color: string }> = ({stats, color}) => {
-  const {t} = useTranslation();
-
-  return (
-    <StatCard
-      title={t("data")}
-      icon={<DatabaseOutlined style={{fontSize: '24px', color: '#ffffff'}}/>}
-      color={color}
-    >
-      <div className="stat-card-scroll-container" style={scrollContainerStyle}>
-        <div style={metricsContainerStyle}>
-          <div style={metricItemStyle}>
-            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
-              {t("datasource")}
-            </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
-              {stats.dataSourceCount}
-            </div>
-          </div>
-          <div style={metricItemStyle}>
-            <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
-              {t("model_count")}
-            </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
-              {stats.modelCount}
-            </div>
-          </div>
-        </div>
-      </div>
-    </StatCard>
-  );
-};
-
 // 统计卡片组组件
 const StatisticsCards: React.FC<StatisticsCardsProps> = ({stats}) => {
   const {token} = theme.useToken();
@@ -310,15 +301,15 @@ const StatisticsCards: React.FC<StatisticsCardsProps> = ({stats}) => {
       </style>
       <Row gutter={[8, 8]} className="statistics-cards-row">
         <Col xs={24} sm={12} lg={6}>
-          <ApiInfoCard
+          <ModelingCard
             stats={stats}
-            color={token.colorPrimary}
+            color={token.colorSuccess}
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <DataCard
+          <ApiRequestCard
             stats={stats}
-            color={token.colorSuccess}
+            color={token.colorPrimary}
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -338,5 +329,7 @@ const StatisticsCards: React.FC<StatisticsCardsProps> = ({stats}) => {
     </>
   );
 };
+
+
 
 export default StatisticsCards;

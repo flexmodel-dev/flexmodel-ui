@@ -15,9 +15,8 @@ const StatisticsPage: React.FC = () => {
   const projectId = currentProject?.id || '';
 
   const [stats, setStats] = useState<FmMetricsResponse>({
-    customApiCount: 0,
-    dataSourceCount: 0,
     modelCount: 0,
+    branchCount: 0,
     flowDefCount: 0,
     flowExecCount: 0,
     triggerTotalCount: 0,
@@ -37,29 +36,6 @@ const StatisticsPage: React.FC = () => {
     dayjs().startOf("week"),
     dayjs().endOf("week"),
   ]);
-
-  // 使用 useMetricsData hook
-  // const { data: metricsData, loading: metricsLoading, error: metricsError, updateKey } = useMetricsData();
-  // const { data: metricsData} = useMetricsData();
-
-  // 当 metricsData 更新时，更新 stats
-  // useEffect(() => {
-  //   if (metricsData?.fm) {
-  //     setStats({
-  //       queryCount: metricsData.fm.queryCount || 0,
-  //       mutationCount: metricsData.fm.mutationCount || 0,
-  //       subscribeCount: metricsData.fm.subscribeCount || 0,
-  //       dataSourceCount: metricsData.fm.dataSourceCount || 0,
-  //       modelCount: metricsData.fm.modelCount || 0,
-  //       flowDefCount: metricsData.fm.flowDefCount || 0,
-  //       flowExecCount: metricsData.fm.flowExecCount || 0,
-  //       triggerTotalCount: metricsData.fm.triggerTotalCount || 0,
-  //       jobSuccessCount: metricsData.fm.jobSuccessCount || 0,
-  //       jobFailureCount: metricsData.fm.jobFailureCount || 0,
-  //       requestCount: metricsData.fm.requestCount || 0,
-  //     });
-  //   }
-  // }, [metricsData]);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -99,14 +75,6 @@ const StatisticsPage: React.FC = () => {
     >
       {/* 统计卡片组件 */}
       <StatisticsCards stats={stats} />
-
-      {/* 系统监控组件 */}
-      {/*<UnifiedMonitoring
-        metricsData={metricsData}
-        loading={metricsLoading}
-        error={metricsError}
-        updateKey={updateKey}
-      />*/}
 
       {/* 趋势分析组件 */}
       <TrendAnalysis

@@ -146,10 +146,9 @@ export interface JvmMetricsResponse {
 }
 
 export interface FmMetricsResponse {
-  customApiCount: number;
   requestCount: number;
-  dataSourceCount: number;
   modelCount: number;
+  branchCount: number;
   flowDefCount: number;
   flowExecCount: number;
   triggerTotalCount: number;
