@@ -45,11 +45,11 @@
 }
 
 .json-schema-react-editor .plus {
-  color: #2395f1
+  color: #1b61c9
 }
 
 .json-schema-react-editor .close {
-  color: #ff561b
+  color: #aa2d00
 }
 
 .json-schema-react-editor .array-type {
@@ -71,7 +71,7 @@
 }
 
 .json-schema-react-editor .icon-object {
-  color: #0d1b3ea6;
+  color: rgba(24, 29, 38, 0.65);
   font-weight: 400;
   font-size: 10px;
 }
@@ -92,7 +92,7 @@
 
 .json-schema-react-editor .adv-set {
   padding-right: 8px;
-  color: #00a854;
+  color: #006400;
 }
 
 .json-schema-react-editor .type-select-style {
@@ -116,7 +116,7 @@
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 16px;
-  border-left: 3px solid #2395f1;
+  border-left: 3px solid #1b61c9;
   padding-left: 8px;
 }
 
@@ -129,7 +129,7 @@
 }
 
 .json-schema-react-editor-adv-modal-select .format-items-title {
-  color: #999;
+  color: #9297a0;
   position: absolute;
   right: 16px;
 }

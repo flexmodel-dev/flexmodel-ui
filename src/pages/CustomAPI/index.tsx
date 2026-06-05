@@ -719,7 +719,7 @@ const CustomAPI: React.FC = () => {
             <Input
               value={getParentFolderName(createParentId)}
               disabled
-              style={{ backgroundColor: "#f5f5f5" }}
+              style={{ backgroundColor: "#f8fafc" }}
             />
           </Form.Item>
           <Form.Item label={t("apis.name")}>
@@ -767,7 +767,7 @@ const CustomAPI: React.FC = () => {
             <Input
               value={getParentFolderName(createParentId)}
               disabled
-              style={{ backgroundColor: "#f5f5f5" }}
+              style={{ backgroundColor: "#f8fafc" }}
             />
           </Form.Item>
           <Form.Item label={t("folder_name")}>

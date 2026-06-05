@@ -94,16 +94,16 @@
   .icon-times {
     left: 7px;
     width: 10px;
-    color: #d20000;
+    color: #aa2d00;
   }
   .icon-check {
     top: 6px;
   }
   &.selected {
-    background: #e7f1f4;
+    background: #f8fafc;
     .icon {
-      border-color: rgba(darken(#e7f1f4, 20), 0.6);
-      color: darken(#e7f1f4, 60);
+      border-color: rgba(#e0e2e6, 0.6);
+      color: #41454d;
     }
     .icon-plus {
       opacity: 1;
@@ -115,7 +115,7 @@
     box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.1);
     .icon {
       border-color: rgba(0, 0, 0, 0.1);
-      color: #ff6a00;
+      color: #181d26;
     }
     .icon-check {
       opacity: 1;
@@ -141,7 +141,7 @@
       background: $light-background-dark;
     }
     .warning {
-      color: #f30808;
+      color: #aa2d00;
     }
   }
   &.invalid {
@@ -165,10 +165,10 @@
 
 @mixin tilehover {
   &:hover {
-    background: #e7f1f4;
+    background: #f8fafc;
     .icon {
-      border-color: rgba(darken(#e7f1f4, 20), 0.6);
-      color: darken(#e7f1f4, 80);
+      border-color: rgba(#e0e2e6, 0.6);
+      color: #181d26;
     }
     .icon-plus {
       opacity: 1;

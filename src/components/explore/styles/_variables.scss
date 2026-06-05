@@ -1,42 +1,45 @@
 @use "sass:color" as color;
-// Theme Light
 
-$light-background: #fff;
-$light-background-dark: #f7f7f7;
-$light-background-darker: #e4e4e4;
-$light-background-disabled: #23282b;
-$light-color: #222;
-$light-color-light: #d1d2d3;
-$light-color-medium: #8d8f91;
-$light-color-dark: #494c4e;
-$light-border: #e4e4e4;
+// ============================================================================
+// DESIGN.md token overrides for explore component
+// Colors per Airtable-design-analysis specification
+// ============================================================================
+
+// Theme Light
+$light-background: #ffffff;          // {colors.canvas}
+$light-background-dark: #f8fafc;     // {colors.surface-soft}
+$light-background-darker: #e0e2e6;   // {colors.surface-strong}
+$light-background-disabled: #e0e2e6; // {colors.surface-strong}
+$light-color: #181d26;               // {colors.ink}
+$light-color-light: #9297a0;         // {colors.border-strong}
+$light-color-medium: #41454d;        // {colors.muted}
+$light-color-dark: #333840;          // {colors.body}
+$light-border: #dddddd;              // {colors.hairline}
 $light-border-dark: color.scale($light-border, $lightness: -10%);
 $light-outline: rgba(0, 0, 0, 0.2);
-$light-primary: #ff6a00;
-$light-link: #0188ff;
+$light-primary: #181d26;             // {colors.primary}
+$light-link: #1b61c9;                // {colors.link}
 
 // Theme Dark
-
-$dark-background: #1b1f23;
-$dark-background-light: #262a2d;
+$dark-background: #181d26;           // {colors.surface-dark}
+$dark-background-light: #1d1f25;     // {colors.surface-dark-elevated}
 $dark-background-lighter: color.scale($dark-background-light, $lightness: 5%);
-$dark-background-disabled: #23282b;
-$dark-color: #fff;
-$dark-color-light: #d1d2d3;
-$dark-color-medium: #8d8f91;
-$dark-color-dark: #494c4e;
-$dark-border: #323638;
+$dark-background-disabled: #252830;
+$dark-color: #ffffff;                // {colors.on-dark}
+$dark-color-light: #9297a0;          // {colors.border-strong}
+$dark-color-medium: #6b6f78;         // derived muted for dark
+$dark-color-dark: #545860;           // derived for dark
+$dark-border: #32363a;               // hairline for dark surfaces
 $dark-border-dark: color.scale($dark-border, $lightness: 10%);
-$dark-outline: #76797a;
-$dark-primary: #ff6a00;
-$dark-link: #0188ff;
+$dark-outline: #545860;
+$dark-primary: #e0e2e6;              // {colors.surface-strong} (primary on dark)
+$dark-link: #6badff;                 // link on dark
 
 // Global
-
 $spring-8points: 8px;
-$spring-font-size: 15px;
+$spring-font-size: 14px;             // {typography.body-md}
 $spring-font-size-sm: 14px;
-$spring-font-family: Karla, Arial, sans-serif;
-$spring-radius: 4px;
+$spring-font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+$spring-radius: 10px;                // {rounded.md}
 $spring-transition-duration: 0.15s;
 $spring-sidebar-width: 316px;

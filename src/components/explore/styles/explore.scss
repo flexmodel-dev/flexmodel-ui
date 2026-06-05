@@ -2,8 +2,8 @@
 @use 'mixins' as *;
 @use 'prism' as *;
 
-$placeholder-bg: #f7f7f7;
-$placeholder-border: #e4e4e4;
+$placeholder-bg: #f8fafc;
+$placeholder-border: #dddddd;
 
 .modal-explorer {
   width: 98%;
@@ -245,9 +245,9 @@ $placeholder-border: #e4e4e4;
       }
     }
     &.selected {
-      background: #e6f7ff;
-      color: #1677ff;
-      border-radius: 3px;
+      background: #f8fafc;
+      color: #181d26;
+      border-radius: 2px;
       outline: none;
     }
   }
@@ -442,9 +442,9 @@ pre.prism-code {
         background: rgba(255, 255, 255, 0.06);
       }
       &.selected {
-        background: #1677ff;
-        color: #fff;
-        border-radius: 3px;
+        background: #181d26;
+        color: #ffffff;
+        border-radius: 2px;
         outline: none;
       }
       &:focus {
@@ -537,9 +537,9 @@ pre.prism-code {
       }
     }
     &.selected {
-      background: #e6f7ff;
-      color: #1677ff;
-      border-radius: 3px;
+      background: #f8fafc;
+      color: #181d26;
+      border-radius: 2px;
       outline: none;
     }
   }

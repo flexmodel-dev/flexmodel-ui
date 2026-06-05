@@ -34,10 +34,10 @@ const ConsolePerformanceMonitor: React.FC<ConsolePerformanceMonitorProps> = Reac
 
   const getPerformanceColor = () => {
     switch (performanceLevel) {
-      case 'good': return '#52c41a';
-      case 'warning': return '#faad14';
-      case 'poor': return '#ff4d4f';
-      default: return '#d9d9d9';
+      case 'good': return '#39bf45';
+      case 'warning': return '#d9a441';
+      case 'poor': return '#aa2d00';
+      default: return '#9297a0';
     }
   };
 
@@ -58,8 +58,8 @@ const ConsolePerformanceMonitor: React.FC<ConsolePerformanceMonitorProps> = Reac
         <div>{t('console.display_limit')}: {displayLimit === -1 ? t('console.limit_all') : t('console.limit_items', { count: displayLimit })}</div>
         <div>{t('console.connection_status')}: {isConnected ? t('console.connected') : t('console.disconnected')}</div>
         <div>{t('console.performance_status')}: {getPerformanceText()}</div>
-        {logCount > 400 && <div style={{ color: '#ff4d4f' }}>{t('console.suggest_clear_logs')}</div>}
-        {displayLimit > 500 && <div style={{ color: '#faad14' }}>{t('console.too_many_items_may_affect_perf')}</div>}
+        {logCount > 400 && <div style={{ color: '#aa2d00' }}>{t('console.suggest_clear_logs')}</div>}
+        {displayLimit > 500 && <div style={{ color: '#d9a441' }}>{t('console.too_many_items_may_affect_perf')}</div>}
       </div>
     );
   };

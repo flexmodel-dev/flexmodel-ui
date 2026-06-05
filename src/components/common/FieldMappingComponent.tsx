@@ -94,7 +94,7 @@ const FieldMappingComponent: React.FC<FieldMappingComponentProps> = ({
                 );
               })}
             </Select>
-            <span style={{ color: '#666' }}>=</span>
+            <span style={{ color: '#41454d' }}>=</span>
             <Input
               placeholder={placeholder.value}
               value={mapping.value}
@@ -108,7 +108,7 @@ const FieldMappingComponent: React.FC<FieldMappingComponentProps> = ({
               onClick={() => handleRemove(index)}
               disabled={disabled}
               size="small"
-              style={{ color: '#ff4d4f' }}
+              style={{ color: '#aa2d00' }}
             />
           </div>
         );

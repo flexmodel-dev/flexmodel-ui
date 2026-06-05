@@ -1,10 +1,10 @@
 import {HashRouter, Route, Routes, Navigate} from "react-router-dom";
-import {ConfigProvider, theme as antdTheme} from "antd";
+import {ConfigProvider} from "antd";
 import PlatformLayout from "./components/layouts/PlatformLayout";
 import ProjectLayout from "./components/layouts/ProjectLayout";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import {useEffect} from "react";
+import {useEffect, useMemo} from "react";
 import * as appStore from "./store/appStore.ts";
 import {useAuth} from "./store/authStore.ts";
 import {initializeDarkMode} from "./utils/darkMode.ts";
@@ -12,6 +12,7 @@ import {RenderProjectRoutes} from "./routes";
 import Project from "./pages/Project/index.tsx";
 import Settings from "./pages/Settings";
 import Member from "./pages/Member/index.tsx";
+import {antdTheme as lightTheme, antdDarkTheme as darkTheme} from "./theme/designTokens.ts";
 
 const App = () => {
   const { fetchConfig } = appStore.useConfig();
@@ -50,14 +51,17 @@ const App = () => {
     }
   }, [isAuthenticated, refreshAuthToken]);
 
+  const theme = useMemo(() => {
+    if (isDark) {
+      return { ...darkTheme };
+    }
+    return lightTheme;
+  }, [isDark]);
+
   return (
     <ConfigProvider
       locale={locale}
-      theme={{
-        algorithm: isDark ? [antdTheme.darkAlgorithm, antdTheme.compactAlgorithm] : [],
-        // algorithm: isDark ? [antdTheme.darkAlgorithm] : [],
-
-      }}
+      theme={theme}
     >
       <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>

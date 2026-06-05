@@ -1,6 +1,12 @@
-/* 编程字体配置 */
+/* 编程字体 + UI字体配置 */
 
-/* 导入Google Fonts编程字体 */
+/*
+ * Inter Display → 替代 Haas Groot Disp（标题/展示字体）
+ * Inter         → 替代 Haas Grotesk（正文/UI 字体）
+ * Per DESIGN.md: Inter Display (variable) is the closest open-source substitute for Haas.
+ * Weight axes used: 400 (regular), 475 (mid-weight for pricing), 500 (medium), 600 (semibold for legal).
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:ital,wght@0,300..700;1,300..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');

@@ -14,14 +14,14 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
       style={{
         width: 120,
         height: 60,
-        background: selected ? '#e6f7ff' : '#f6ffed',
-        border: `2px solid ${getNodeBorderColor(hasError, selected, token.colorError, '#1890ff', '#722ed1')}`,
-        borderRadius: '8px',
+        background: selected ? '#f8fafc' : '#f8fafc',
+        border: `2px solid ${getNodeBorderColor(hasError, selected, token.colorError, '#181d26', '#41454d')}`,
+        borderRadius: '10px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: '12px',
-        color: '#722ed1',
+        color: '#41454d',
         position: 'relative',
         boxShadow: getNodeBoxShadow(hasError, selected, '0 2px 8px rgba(0, 0, 0, 0.1)'),
       }}
@@ -33,7 +33,7 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
         position={Position.Left}
         id="left"
         style={{
-          background: '#722ed1',
+          background: '#41454d',
           width: 8,
           height: 8,
         }}
@@ -49,7 +49,7 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
         position={Position.Right}
         id="right"
         style={{
-          background: '#722ed1',
+          background: '#41454d',
           width: 8,
           height: 8,
         }}

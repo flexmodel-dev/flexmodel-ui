@@ -32,9 +32,9 @@ const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
       case 'delete_record':
         return <MinusOutlined {...iconProps} style={{color: token.colorError}}/>;
       case 'script':
-        return <CodeOutlined {...iconProps} style={{color: '#f7df1e'}}/>;
+        return <CodeOutlined {...iconProps} style={{color: '#f4d35e'}}/>;
       case 'sql':
-        return <DatabaseOutlined {...iconProps} style={{color: '#1890ff'}}/>;
+        return <DatabaseOutlined {...iconProps} style={{color: '#254fad'}}/>;
       case 'api':
         return <ApiOutlined {...iconProps} style={{color: token.colorPrimary}}/>;
       default:

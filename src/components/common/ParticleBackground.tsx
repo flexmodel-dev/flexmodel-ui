@@ -80,7 +80,7 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
         // 绘制粒子
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(24, 144, 255, ${particle.opacity})`;
+        ctx.fillStyle = `rgba(27, 97, 201, ${particle.opacity})`;
         ctx.fill();
 
         // 绘制连接线
@@ -94,7 +94,7 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
               ctx.beginPath();
               ctx.moveTo(particle.x, particle.y);
               ctx.lineTo(otherParticle.x, otherParticle.y);
-              ctx.strokeStyle = `rgba(24, 144, 255, ${0.1 * (1 - distance / 100)})`;
+              ctx.strokeStyle = `rgba(27, 97, 201, ${0.1 * (1 - distance / 100)})`;
               ctx.lineWidth = 1;
               ctx.stroke();
             }

@@ -358,7 +358,7 @@ export const IconEnum = () => (
     className='icon-enum'
     width='18' height='18'
   >
-    <circle cx='12' cy='12' r='9' fill='#52c41a' />
+    <circle cx='12' cy='12' r='9' fill='#39bf45' />
     <text x='12' y='16' textAnchor='middle' fontSize='10' fill='#fff' fontFamily='Arial' fontWeight='bold'>E</text>
   </svg>
 )

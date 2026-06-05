@@ -50,6 +50,15 @@ export interface StorageSchema {
 }
 
 /**
+ * 存储验证结果接口
+ */
+export interface ValidateStorageResult {
+  success: boolean;
+  errorMsg?: string;
+  time?: number;
+}
+
+/**
  * 文件项接口
  */
 export interface FileItem {

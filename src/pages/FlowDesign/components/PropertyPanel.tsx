@@ -74,7 +74,7 @@ const HeadersComponent: React.FC<HeadersComponentProps> = ({
             onChange={(e) => handleKeyChange(index, e.target.value)}
             style={{ flex: 1 }}
           />
-          <span style={{ color: '#666' }}>=</span>
+          <span style={{ color: '#41454d' }}>=</span>
           <Input
             placeholder="请求头值，支持变量如 ${token}"
             value={header.value}
@@ -86,7 +86,7 @@ const HeadersComponent: React.FC<HeadersComponentProps> = ({
             icon={<CloseOutlined />}
             onClick={() => handleRemove(index)}
             size="small"
-            style={{ color: '#ff4d4f' }}
+            style={{ color: '#aa2d00' }}
           />
         </div>
       ))}
@@ -360,7 +360,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                   value={nodeProperties?.script || ""}
                   placeholder="双击或者点击按钮输入脚本内容"
                   onDoubleClick={() => setScriptEditorVisible(true)}
-                  style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
+                  style={{borderRadius: '6px', border: '1px solid #dddddd'}}
                 />
                 <Tooltip title="打开脚本编辑器">
                   <Button
@@ -387,7 +387,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                   value={nodeProperties?.script || ""}
                   placeholder="双击或者点击按钮输入SQL"
                   onDoubleClick={() => setSqlEditorVisible(true)}
-                  style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
+                  style={{borderRadius: '6px', border: '1px solid #dddddd'}}
                 />
                 <Tooltip title="打开SQL编辑器">
                   <Button
@@ -749,13 +749,13 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             <Form.Item label="源节点" name="sourceNode">
               <Input
                 disabled
-                suffix={<span style={{ color: '#999', fontSize: '12px' }}>({getNodeName(selectedEdge.source)})</span>}
+                suffix={<span style={{ color: '#9297a0', fontSize: '12px' }}>({getNodeName(selectedEdge.source)})</span>}
               />
             </Form.Item>
             <Form.Item label="目标节点" name="targetNode">
               <Input
                 disabled
-                suffix={<span style={{ color: '#999', fontSize: '12px' }}>({getNodeName(selectedEdge.target)})</span>}
+                suffix={<span style={{ color: '#9297a0', fontSize: '12px' }}>({getNodeName(selectedEdge.target)})</span>}
               />
             </Form.Item>
           </Form>
@@ -794,7 +794,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                     <Radio value="false">否</Radio>
                   </Radio.Group>
                 </Form.Item>
-                <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
+                <div style={{ fontSize: '12px', color: '#41454d', marginTop: '8px' }}>
                   <p><strong>条件表达式说明：</strong></p>
                   <ul style={{ paddingLeft: '20px', marginTop: '4px' }}>
                     <li>使用 ${'{'}expression{'}'} 格式编写条件</li>
@@ -807,7 +807,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
               </>
             )}
             {!isGateway && (
-              <div style={{ color: '#999', padding: '16px', textAlign: 'center' }}>
+              <div style={{ color: '#9297a0', padding: '16px', textAlign: 'center' }}>
                 普通连线无需设置条件
               </div>
             )}

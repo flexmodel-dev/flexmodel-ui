@@ -124,7 +124,7 @@ const CreateProviderModal: React.FC<CreateProviderModalProps> = ({ open, onClose
 
         {currentStep === 2 && (
           <div style={{ textAlign: "center", padding: "24px 0" }}>
-            <p style={{ fontSize: 16, color: "#52c41a" }}>{t("provider_created")}</p>
+            <p style={{ fontSize: 16, color: "#39bf45" }}>{t("provider_created")}</p>
           </div>
         )}
       </Form>

@@ -2,11 +2,11 @@
 
 // 定义固定的颜色常量，避免因token变化导致重新计算
 export const TAB_COLORS = {
-  primary: '#1890ff',
-  error: '#ff4d4f', 
-  success: '#52c41a',
-  info: '#13c2c2',
-  warning: '#faad14'
+  primary: '#181d26',
+  error: '#aa2d00', 
+  success: '#39bf45',
+  info: '#a8d8c4',
+  warning: '#d9a441'
 };
 
 // 获取图例配置的函数，支持国际化

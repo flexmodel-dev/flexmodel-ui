@@ -37,21 +37,21 @@ const NodePanel: React.FC<NodePanelProps> = ({onHide}) => {
   // 获取图标组件
   const getIcon = (iconType: string) => {
     const iconMap: Record<string, React.ReactNode> = {
-      'start-event': <PlayCircleOutlined style={{color: '#52c41a'}}/>,
-      'end-event': <StopOutlined style={{color: '#ff4d4f'}}/>,
-      'user-task': <UserOutlined style={{color: '#1890ff'}}/>,
-      'gateway-exclusive': <CloseCircleOutlined style={{color: '#ff4d4f'}}/>,
-      'gateway-parallel': <PlusCircleOutlined style={{color: '#ff4d4f'}}/>,
-      'gateway-inclusive': <MinusCircleOutlined style={{color: '#ff4d4f'}}/>,
-      'submit': <FileAddOutlined style={{color: '#722ed1'}}/>,
-      'add-record': <PlusOutlined style={{color: '#1890ff'}}/>,
-      'update-record': <EditOutlined style={{color: '#1890ff'}}/>,
-      'query-record': <SearchOutlined style={{color: '#1890ff'}}/>,
-      'delete-record': <MinusOutlined style={{color: '#1890ff'}}/>,
-      'js-script': <CodeOutlined style={{color: '#f7df1e'}}/>,
-      'sql': <DatabaseOutlined style={{color: '#1890ff'}}/>,
-      'call-api': <ApiOutlined style={{color: '#1890ff'}}/>,
-      'call-service': <LinkOutlined style={{color: '#722ed1'}}/>,
+      'start-event': <PlayCircleOutlined style={{color: '#39bf45'}}/>,
+      'end-event': <StopOutlined style={{color: '#aa2d00'}}/>,
+      'user-task': <UserOutlined style={{color: '#458fff'}}/>,
+      'gateway-exclusive': <CloseCircleOutlined style={{color: '#aa2d00'}}/>,
+      'gateway-parallel': <PlusCircleOutlined style={{color: '#aa2d00'}}/>,
+      'gateway-inclusive': <MinusCircleOutlined style={{color: '#aa2d00'}}/>,
+      'submit': <FileAddOutlined style={{color: '#41454d'}}/>,
+      'add-record': <PlusOutlined style={{color: '#458fff'}}/>,
+      'update-record': <EditOutlined style={{color: '#458fff'}}/>,
+      'query-record': <SearchOutlined style={{color: '#458fff'}}/>,
+      'delete-record': <MinusOutlined style={{color: '#458fff'}}/>,
+      'js-script': <CodeOutlined style={{color: '#f4d35e'}}/>,
+      'sql': <DatabaseOutlined style={{color: '#254fad'}}/>,
+      'call-api': <ApiOutlined style={{color: '#458fff'}}/>,
+      'call-service': <LinkOutlined style={{color: '#41454d'}}/>,
     };
     return iconMap[iconType] || <UserOutlined/>;
   };

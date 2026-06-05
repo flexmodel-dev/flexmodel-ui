@@ -113,7 +113,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleAIChat, onToggleConsole }) => {
 
   return (
     <Layout.Header
-      className="bg-white dark:bg-[#18181c] border-b border-[#f5f5f5] dark:border-[#23232a] shadow-sm dark:shadow-lg"
+      className="bg-white dark:bg-[#181d26] border-b border-[#f8fafc] dark:border-[#1d1f25] shadow-sm dark:shadow-lg"
       style={{
         padding: 0,
         height: token.controlHeight * 1.5,
@@ -162,7 +162,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleAIChat, onToggleConsole }) => {
             onChange={toggleDarkMode}
             checkedChildren={<MoonOutlined />}
             unCheckedChildren={<SunOutlined />}
-            style={{ marginRight: token.marginXS }}
+            style={{ minWidth: 52, marginRight: token.marginXS }}
           />
           <Dropdown
             menu={{items: localeMenuItems}}

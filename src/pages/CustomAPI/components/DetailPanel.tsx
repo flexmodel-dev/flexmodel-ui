@@ -144,7 +144,7 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
   if (!data) {
     return (
       <Card className="h-full">
-        <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+        <div className="flex items-center justify-center h-full text-[#41454d] dark:text-[#6b6f78]">
           {t("api_detail.select_api_to_view")}
         </div>
       </Card>
@@ -238,16 +238,16 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
           return <Text type="secondary">{t("api_detail.none")}</Text>;
         }
         return (
-          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
-            <pre className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          <div className="bg-[#f8fafc] dark:bg-[#1d1f25] p-3 rounded-md">
+            <pre className="text-sm text-[#333840] dark:text-[#9297a0] whitespace-pre-wrap">
               {JSON.stringify(parsed, null, 2)}
             </pre>
           </div>
         );
       } catch {
         return (
-          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
-            <pre className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          <div className="bg-[#f8fafc] dark:bg-[#1d1f25] p-3 rounded-md">
+            <pre className="text-sm text-[#333840] dark:text-[#9297a0] whitespace-pre-wrap">
               {trimmed}
             </pre>
           </div>
@@ -260,8 +260,8 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
     }
 
     return (
-      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
-        <pre className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+      <div className="bg-[#f8fafc] dark:bg-[#1d1f25] p-3 rounded-md">
+        <pre className="text-sm text-[#333840] dark:text-[#9297a0] whitespace-pre-wrap">
           {JSON.stringify(variables, null, 2)}
         </pre>
       </div>
@@ -278,7 +278,7 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
       <div className="space-y-6">
         {/* API 基本信息 */}
         <div>
-          <Title level={3} className="mb-4 text-gray-800 dark:text-gray-200">
+          <Title level={3} className="mb-4 text-[#181d26] dark:text-[#e0e2e6]">
             {data.name}
           </Title>
 
@@ -322,19 +322,19 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
             <Divider />
             <div>
               <Title level={4}
-                className="mb-3 text-gray-800 dark:text-gray-200">{t("api_detail.document", { defaultValue: "数据映射" })}</Title>
+                className="mb-3 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.document", { defaultValue: "数据映射" })}</Title>
 
               <div className="space-y-6">
                 {/* 入参映射 */}
                 {data.meta.document.input && (
                   <div>
-                    <Title level={5} className="mb-2 text-gray-700 dark:text-gray-300">
+                    <Title level={5} className="mb-2 text-[#333840] dark:text-[#9297a0]">
                       {t("api_detail.document_input", { defaultValue: "入参映射" })}
                     </Title>
                     <div className="space-y-3 pl-4">
                       {data.meta.document.input.schema && (
                         <div>
-                          <Text strong className="block mb-2 text-gray-800 dark:text-gray-200">
+                          <Text strong className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">
                             {t("api_detail.document_schema", { defaultValue: "Schema (JSON Schema)" })}:
                           </Text>
                           <div>
@@ -349,13 +349,13 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
                 {/* 出参映射 */}
                 {data.meta.document.output && (
                   <div>
-                    <Title level={5} className="mb-2 text-gray-700 dark:text-gray-300">
+                    <Title level={5} className="mb-2 text-[#333840] dark:text-[#9297a0]">
                       {t("api_detail.document_output", { defaultValue: "出参映射" })}
                     </Title>
                     <div className="space-y-3 pl-4">
                       {data.meta.document.output.schema && (
                         <div>
-                          <Text strong className="block mb-2 text-gray-800 dark:text-gray-200">
+                          <Text strong className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">
                             {t("api_detail.document_schema", { defaultValue: "Schema (JSON Schema)" })}:
                           </Text>
                           <div>
@@ -377,14 +377,14 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
             <Divider />
             <div>
               <Title level={4}
-                className="mb-3 text-gray-800 dark:text-gray-200">{t("api_detail.children")} ({data.children.length})</Title>
+                className="mb-3 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.children")} ({data.children.length})</Title>
               <Space orientation="vertical" className="w-full">
                 {data.children.map((child) => (
-                  <Card key={child.id} size="small" className="bg-gray-50 dark:bg-gray-800">
+                  <Card key={child.id} size="small" className="bg-[#f8fafc] dark:bg-[#1d1f25]">
                     <div className="flex items-center justify-between">
                       <div>
-                        <Text strong className="text-gray-800 dark:text-gray-200">{child.name}</Text>
-                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <Text strong className="text-[#181d26] dark:text-[#e0e2e6]">{child.name}</Text>
+                        <div className="text-sm text-[#41454d] dark:text-[#6b6f78] mt-1">
                           <Tag color={getMethodColor(child.method || '')}>
                             {child.method}
                           </Tag>
@@ -406,7 +406,7 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
         {/* 认证与权限 */}
         <div>
           <Title level={4}
-            className="mb-3 text-gray-800 dark:text-gray-200">{t("api_detail.auth_and_permissions")}</Title>
+            className="mb-3 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.auth_and_permissions")}</Title>
           <Descriptions bordered column={2} size="small">
             <Descriptions.Item label={t("api_detail.requires_auth")}>
               <Badge
@@ -444,16 +444,16 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
             <Divider />
             <div>
               <Title level={4}
-                className="mb-3 text-gray-800 dark:text-gray-200">{t("api_detail.execution_config")}</Title>
+                className="mb-3 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.execution_config")}</Title>
 
               <div className="space-y-4">
 
                 {data.meta.execution.preScript && (
                   <div>
                     <Text strong
-                      className="block mb-2 text-gray-800 dark:text-gray-200">{t("api_detail.pre_script", { defaultValue: "前置脚本" })}:</Text>
-                    <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md border border-gray-200 dark:border-gray-700">
-                      <pre className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                      className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.pre_script", { defaultValue: "前置脚本" })}:</Text>
+                    <div className="bg-[#f8fafc] dark:bg-[#1d1f25] p-3 rounded-md border border-[#dddddd] dark:border-[#32363a]">
+                      <pre className="text-sm text-[#333840] dark:text-[#9297a0] whitespace-pre-wrap">
                         {data.meta.execution.preScript}
                       </pre>
                     </div>
@@ -464,21 +464,21 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
                   {data.meta.execution.operationName && (
                     <div>
                       <Text strong
-                        className="block mb-2 text-gray-800 dark:text-gray-200">{t("api_detail.operation_name")}:</Text>
+                        className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.operation_name")}:</Text>
                       <Text code>{data.meta.execution.operationName}</Text>
                     </div>
                   )}
 
                   <div>
                     <Text strong
-                      className="block mb-2 text-gray-800 dark:text-gray-200">{t("api_detail.variables")}:</Text>
+                      className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.variables")}:</Text>
                     {renderVariables(data.meta.execution.variables || {})}
                   </div>
 
                   {data.meta.execution.headers && Object.keys(data.meta.execution.headers).length > 0 && (
                     <div>
                       <Text strong
-                        className="block mb-2 text-gray-800 dark:text-gray-200">{t("api_detail.headers")}:</Text>
+                        className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.headers")}:</Text>
                       {renderVariables(data.meta.execution.headers)}
                     </div>
                   )}
@@ -486,9 +486,9 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
                   {data.meta.execution.query && (
                     <div>
                       <Text strong
-                        className="block mb-2 text-gray-800 dark:text-gray-200">{t("api_detail.query_statement")}:</Text>
-                      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
-                        <pre className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                        className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.query_statement")}:</Text>
+                      <div className="bg-[#f8fafc] dark:bg-[#1d1f25] p-3 rounded-md">
+                        <pre className="text-sm text-[#333840] dark:text-[#9297a0] whitespace-pre-wrap">
                           {data.meta.execution.query}
                         </pre>
                       </div>
@@ -499,9 +499,9 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
                 {isScript && (
                   <div>
                     <Text strong
-                      className="block mb-2 text-gray-800 dark:text-gray-200">{t("apis.execution.execution_script")}:</Text>
-                    <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
-                      <pre className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                      className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">{t("apis.execution.execution_script")}:</Text>
+                    <div className="bg-[#f8fafc] dark:bg-[#1d1f25] p-3 rounded-md">
+                      <pre className="text-sm text-[#333840] dark:text-[#9297a0] whitespace-pre-wrap">
                         {data.meta.execution.executionScript}
                       </pre>
                     </div>
@@ -510,9 +510,9 @@ const DetailPanel: React.FC<APIDetailProps> = ({ data }: APIDetailProps) => {
                 {data.meta.execution.postScript && (
                   <div>
                     <Text strong
-                      className="block mb-2 text-gray-800 dark:text-gray-200">{t("api_detail.post_script", { defaultValue: "后置脚本" })}:</Text>
-                    <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md border border-gray-200 dark:border-gray-700">
-                      <pre className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                      className="block mb-2 text-[#181d26] dark:text-[#e0e2e6]">{t("api_detail.post_script", { defaultValue: "后置脚本" })}:</Text>
+                    <div className="bg-[#f8fafc] dark:bg-[#1d1f25] p-3 rounded-md border border-[#dddddd] dark:border-[#32363a]">
+                      <pre className="text-sm text-[#333840] dark:text-[#9297a0] whitespace-pre-wrap">
                         {data.meta.execution.postScript}
                       </pre>
                     </div>

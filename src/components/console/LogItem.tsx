@@ -71,12 +71,12 @@ const LogItem: React.FC<LogItemProps> = React.memo(({ log, getLevelColor, token,
           <span
             key={index}
             style={{
-              backgroundColor: '#fff3cd',
-              color: '#856404',
+              backgroundColor: '#f5e9d4',
+              color: '#d9a441',
               padding: '1px 2px',
               borderRadius: '2px',
               fontWeight: 'bold',
-              border: '1px solid #ffeaa7',
+              border: '1px solid #f4d35e',
               boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
             }}
           >

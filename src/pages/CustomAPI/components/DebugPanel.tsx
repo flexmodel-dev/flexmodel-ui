@@ -122,7 +122,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
               格式化
             </Button>
           </Flex>
-          <div style={{ border: "1px solid #d9d9d9", borderRadius: "6px", overflow: "hidden" }}>
+          <div style={{ border: "1px solid #dddddd", borderRadius: "6px", overflow: "hidden" }}>
             <Editor
               height="150px"
               defaultLanguage="json"
@@ -149,7 +149,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                 格式化
               </Button>
             </Flex>
-            <div style={{ border: "1px solid #d9d9d9", borderRadius: "6px", overflow: "hidden" }}>
+            <div style={{ border: "1px solid #dddddd", borderRadius: "6px", overflow: "hidden" }}>
               <Editor
                 height="200px"
                 defaultLanguage="json"
@@ -184,7 +184,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
             响应{responseStatus ? `（${responseStatus}）` : ""}
           </Typography.Text>
           <div style={{
-            border: "1px solid #d9d9d9",
+            border: "1px solid #dddddd",
             borderRadius: "6px",
             overflow: "hidden",
             flex: 1,

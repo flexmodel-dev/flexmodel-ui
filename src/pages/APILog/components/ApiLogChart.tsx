@@ -19,10 +19,10 @@ const ApiLogChart: React.FC<ApiLogChartProps> = ({
     tooltip: {
       trigger: "axis",
       backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      borderColor: '#ccc',
+      borderColor: '#dddddd',
       borderWidth: 1,
       textStyle: {
-        color: '#333'
+        color: '#181d26'
       }
     },
     grid: {
@@ -67,10 +67,10 @@ const ApiLogChart: React.FC<ApiLogChartProps> = ({
         smooth: true,
         lineStyle: {
           width: 3,
-          color: '#1890ff'
+          color: '#458fff'
         },
         itemStyle: {
-          color: '#1890ff',
+          color: '#458fff',
           borderWidth: 2,
           borderColor: '#fff'
         },
@@ -84,22 +84,22 @@ const ApiLogChart: React.FC<ApiLogChartProps> = ({
             colorStops: [
               {
                 offset: 0,
-                color: 'rgba(24, 144, 255, 0.3)'
+                color: 'rgba(27, 97, 201, 0.3)'
               },
               {
                 offset: 1,
-                color: 'rgba(24, 144, 255, 0.05)'
+                color: 'rgba(27, 97, 201, 0.05)'
               }
             ]
           }
         },
         emphasis: {
           itemStyle: {
-            color: '#1890ff',
+            color: '#458fff',
             borderWidth: 3,
             borderColor: '#fff',
             shadowBlur: 10,
-            shadowColor: 'rgba(24, 144, 255, 0.5)'
+            shadowColor: 'rgba(27, 97, 201, 0.5)'
           }
         }
       },

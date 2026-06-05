@@ -16,7 +16,8 @@ import {
   listFiles,
   deleteFile,
   uploadFile,
-  createFolder
+  createFolder,
+  downloadFile
 } from '@/services/storage';
 
 interface FileBrowserProps {
@@ -114,8 +115,15 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
     }
   };
 
-  const handleDownload = (file: FileItem) => {
-    message.info(t('download_file', {name: file.name}));
+  const handleDownload = async (file: FileItem) => {
+    try {
+      message.loading({ content: t('downloading', {name: file.name}), key: 'download' });
+      await downloadFile(projectId, storageName, file.path, file.name);
+      message.success({ content: t('download_success', {name: file.name}), key: 'download' });
+    } catch (error) {
+      console.error(error);
+      message.error({ content: t('download_failed', {name: file.name}), key: 'download' });
+    }
   };
 
   const formatFileSize = (bytes?: number): string => {
@@ -149,9 +157,9 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
       render: (text: string, record: FileItem) => (
         <Space>
           {record.type === 'folder' ? (
-            <FolderOutlined style={{color: '#1890ff', fontSize: 18}}/>
+            <FolderOutlined style={{color: '#458fff', fontSize: 18}}/>
           ) : (
-            <FileOutlined style={{color: '#8c8c8c', fontSize: 18}}/>
+            <FileOutlined style={{color: '#9297a0', fontSize: 18}}/>
           )}
           <a onClick={() => handleFolderClick(record)} style={{fontSize: 14}}>
             {text}
@@ -282,7 +290,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
           }}
         >
           <p className="ant-upload-drag-icon">
-            <UploadOutlined style={{fontSize: 48, color: '#1890ff'}}/>
+            <UploadOutlined style={{fontSize: 48, color: '#458fff'}}/>
           </p>
           <p className="ant-upload-text">{t('upload_drag_text')}</p>
           <p className="ant-upload-hint">{t('upload_hint')}</p>

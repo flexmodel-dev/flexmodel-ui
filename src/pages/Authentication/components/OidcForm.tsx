@@ -18,7 +18,7 @@ const OidcForm: React.FC = () => {
 
       {issuer && (
         <Form.Item label={t("oidc_discovery_endpoint")}>
-          <span style={{ wordBreak: "break-all", color: "#888" }}>
+          <span style={{ wordBreak: "break-all", color: "#9297a0" }}>
             {issuer}/.well-known/openid-configuration
           </span>
         </Form.Item>

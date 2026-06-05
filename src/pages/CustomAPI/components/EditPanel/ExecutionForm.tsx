@@ -136,7 +136,7 @@ const ExecutionForm: React.FC<ExecuteConfigProps> = ({data, onChange}: ExecuteCo
               value={formData?.execution?.preScript || ""}
               placeholder={t("apis.execution.placeholder")}
               onDoubleClick={handlePreScriptOpen}
-              style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
+              style={{borderRadius: '6px', border: '1px solid #dddddd'}}
             />
             <Tooltip title={t("apis.execution.open_pre_script_editor")}>
               <Button
@@ -177,7 +177,7 @@ const ExecutionForm: React.FC<ExecuteConfigProps> = ({data, onChange}: ExecuteCo
                 value={formData?.execution?.query || ""}
                 placeholder={t("apis.execution.placeholder")}
                 onDoubleClick={handleGqlOpen}
-                style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
+                style={{borderRadius: '6px', border: '1px solid #dddddd'}}
               />
               <Tooltip title={t("apis.graphql.open_editor")}>
                 <Button
@@ -200,7 +200,7 @@ const ExecutionForm: React.FC<ExecuteConfigProps> = ({data, onChange}: ExecuteCo
                 value={formData?.execution?.executionScript || ""}
                 placeholder={t("apis.execution.placeholder")}
                 onDoubleClick={() => setScriptEditorVisible(true)}
-                style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
+                style={{borderRadius: '6px', border: '1px solid #dddddd'}}
               />
               <Tooltip title={t("apis.execution.open_script_editor")}>
                 <Button
@@ -223,7 +223,7 @@ const ExecutionForm: React.FC<ExecuteConfigProps> = ({data, onChange}: ExecuteCo
               value={formData?.execution?.postScript || ""}
               placeholder={t("apis.execution.placeholder")}
               onDoubleClick={handlePostScriptOpen}
-              style={{borderRadius: '6px', border: '1px solid #d9d9d9'}}
+              style={{borderRadius: '6px', border: '1px solid #dddddd'}}
             />
             <Tooltip title={t("apis.execution.open_post_script_editor")}>
               <Button

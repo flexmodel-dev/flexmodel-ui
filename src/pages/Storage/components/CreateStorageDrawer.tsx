@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Drawer, Form, message, Space} from 'antd';
-import {createStorage} from "@/services/storage.ts";
+import {CheckCircleOutlined} from '@ant-design/icons';
+import {createStorage, validateStorage} from "@/services/storage.ts";
 import StorageForm from "@/pages/Storage/components/StorageForm";
 import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
@@ -15,6 +16,33 @@ const CreateStorageDrawer: React.FC<{
   const projectId = currentProject?.id || '';
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
+  const [validating, setValidating] = useState<boolean>(false);
+
+  const handleValidateStorage = async () => {
+    try {
+      setValidating(true);
+      const values = await form.validateFields();
+      const data = {
+        name: values.name || 'validation-test',
+        type: values.type,
+        config: values.config,
+        enabled: values.enabled ?? true,
+        createdAt: '',
+        updatedAt: ''
+      };
+      const result = await validateStorage(projectId, data);
+      if (result.success) {
+        message.success(t('storage_validate_success', {time: result.time}));
+      } else {
+        message.error(t('storage_validate_failed', {error: result.errorMsg}));
+      }
+    } catch (error) {
+      console.error(error);
+      message.error(t('storage_validate_failed', {error: String(error)}));
+    } finally {
+      setValidating(false);
+    }
+  };
 
   const handleCreateStorage = async () => {
     try {
@@ -56,12 +84,19 @@ const CreateStorageDrawer: React.FC<{
       footer={
         <div style={{textAlign: 'right'}}>
           <Space>
+            <Button
+              icon={<CheckCircleOutlined />}
+              onClick={handleValidateStorage}
+              loading={validating}
+            >
+              {t('validate_connection')}
+            </Button>
             <Button onClick={handleClose}>
               {t('cancel')}
             </Button>
-            <Button 
-              type="primary" 
-              onClick={handleCreateStorage} 
+            <Button
+              type="primary"
+              onClick={handleCreateStorage}
               loading={loading}
             >
               {t('create')}

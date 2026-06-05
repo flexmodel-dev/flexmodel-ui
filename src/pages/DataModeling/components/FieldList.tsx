@@ -153,26 +153,26 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
   const getFieldTypeIcon = (type: string) => {
     switch (type) {
       case 'String':
-        return <FontSizeOutlined style={{ color: '#1890ff', marginRight: 4 }} />;
+        return <FontSizeOutlined style={{ color: '#458fff', marginRight: 4 }} />;
       case 'Int':
       case 'Long':
       case 'Float':
       case 'Decimal':
-        return <NumberOutlined style={{ color: '#52c41a', marginRight: 4 }} />;
+        return <NumberOutlined style={{ color: '#39bf45', marginRight: 4 }} />;
       case 'Boolean':
-        return <CheckCircleOutlined style={{ color: '#722ed1', marginRight: 4 }} />;
+        return <CheckCircleOutlined style={{ color: '#41454d', marginRight: 4 }} />;
       case 'Date':
-        return <CalendarOutlined style={{ color: '#13c2c2', marginRight: 4 }} />;
+        return <CalendarOutlined style={{ color: '#a8d8c4', marginRight: 4 }} />;
       case 'Time':
-        return <ClockCircleOutlined style={{ color: '#eb2f96', marginRight: 4 }} />;
+        return <ClockCircleOutlined style={{ color: '#aa2d00', marginRight: 4 }} />;
       case 'DateTime':
-        return <CalendarOutlined style={{ color: '#fa8c16', marginRight: 4 }} />;
+        return <CalendarOutlined style={{ color: '#d9a441', marginRight: 4 }} />;
       case 'JSON':
-        return <FileTextOutlined style={{ color: '#f5222d', marginRight: 4 }} />;
+        return <FileTextOutlined style={{ color: '#aa2d00', marginRight: 4 }} />;
       case 'Relation':
-        return <LinkOutlined style={{ color: '#2f54eb', marginRight: 4 }} />;
+        return <LinkOutlined style={{ color: '#254fad', marginRight: 4 }} />;
       case 'EnumRef':
-        return <TagsOutlined style={{ color: '#fa541c', marginRight: 4 }} />;
+        return <TagsOutlined style={{ color: '#aa2d00', marginRight: 4 }} />;
       default:
         return null;
     }
@@ -187,7 +187,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
         <span>
           {record.identity ? (
             <KeyOutlined
-              style={{ color: '#faad14', marginRight: 4 }}
+              style={{ color: '#d9a441', marginRight: 4 }}
               title={t("identity_field")}
             />
           ) : (

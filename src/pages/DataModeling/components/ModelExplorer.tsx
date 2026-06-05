@@ -32,9 +32,9 @@ const IconNativeQueryFolder = () => (
     className='icon-native-query-folder'
     width='18' height='18'
   >
-    <rect x='2' y='7' width='20' height='11' rx='2.5' fill='#FAAD14'/>
-    <rect x='2' y='5' width='10' height='4' rx='1.5' fill='#FFE58F'/>
-    <text x='12' y='16' textAnchor='middle' fontSize='9' fill='#fff' fontFamily='Arial' fontWeight='bold'>NQ</text>
+    <rect x='2' y='7' width='20' height='11' rx='2.5' fill='#D9A441'/>
+    <rect x='2' y='5' width='10' height='4' rx='1.5' fill='#F4D35E'/>
+    <text x='12' y='16' textAnchor='middle' fontSize='9' fill='#ffffff' fontFamily='Arial' fontWeight='bold'>NQ</text>
   </svg>
 );
 
@@ -49,8 +49,8 @@ const IconNativeQueryModel = () => (
     className='icon-native-query-model'
     width='18' height='18'
   >
-    <circle cx='12' cy='12' r='9' fill='#722ED1'/>
-    <text x='12' y='16' textAnchor='middle' fontSize='10' fill='#fff' fontFamily='Arial' fontWeight='bold'>Q</text>
+    <circle cx='12' cy='12' r='9' fill='#41454D'/>
+    <text x='12' y='16' textAnchor='middle' fontSize='10' fill='#ffffff' fontFamily='Arial' fontWeight='bold'>Q</text>
   </svg>
 );
 

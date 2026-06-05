@@ -96,7 +96,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
           padding: '0 10px',
           position: 'relative',
           boxShadow: isSelected
-            ? '0 4px 12px rgba(24, 144, 255, 0.25)'
+            ? '0 4px 12px rgba(27, 97, 201, 0.25)'
             : '0 1px 3px rgba(0, 0, 0, 0.08)',
         }}
       >
@@ -143,7 +143,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
           position: 'relative',
           borderRadius: 8,
           boxShadow: isSelected
-            ? '0 4px 12px rgba(24, 144, 255, 0.25)'
+            ? '0 4px 12px rgba(27, 97, 201, 0.25)'
             : '0 2px 8px rgba(0, 0, 0, 0.08)',
         }}
       >
@@ -189,7 +189,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
           padding: '8px 12px',
           position: 'relative',
           boxShadow: isSelected
-            ? '0 4px 12px rgba(24, 144, 255, 0.25)'
+            ? '0 4px 12px rgba(27, 97, 201, 0.25)'
             : '0 2px 8px rgba(0, 0, 0, 0.08)',
         }}
       >
@@ -231,7 +231,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
         padding: '10px 14px',
         position: 'relative',
         boxShadow: isSelected
-          ? '0 4px 12px rgba(24, 144, 255, 0.25)'
+          ? '0 4px 12px rgba(27, 97, 201, 0.25)'
           : '0 2px 8px rgba(0, 0, 0, 0.08)',
       }}
     >

@@ -215,7 +215,7 @@ const ApiKeysTab: React.FC = () => {
           </Text>
           <div style={{
             padding: 12,
-            background: "#f5f5f5",
+            background: "#f8fafc",
             borderRadius: 6,
             wordBreak: "break-all",
             fontFamily: "monospace",

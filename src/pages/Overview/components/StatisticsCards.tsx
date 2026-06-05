@@ -315,13 +315,13 @@ const StatisticsCards: React.FC<StatisticsCardsProps> = ({stats}) => {
         <Col xs={24} sm={12} lg={6}>
           <FlowOrchestrationCard
             stats={stats}
-            color="#8B5CF6"
+            color="#458fff"
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <TaskSchedulingCard
             stats={stats}
-            color="#EC4899"
+            color="#aa2d00"
           />
         </Col>
 

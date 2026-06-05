@@ -1,5 +1,5 @@
 import {api} from '@/utils/request'
-import {StorageSchema, FileItem} from '@/types/storage'
+import {StorageSchema, FileItem, ValidateStorageResult} from '@/types/storage'
 
 /**
  * 获取存储列表
@@ -51,6 +51,16 @@ export const getStorage = (projectId: string, storageName: string): Promise<Stor
 }
 
 /**
+ * 验证存储配置
+ * @param projectId 项目ID
+ * @param data 存储配置
+ * @returns 验证结果
+ */
+export const validateStorage = (projectId: string, data: StorageSchema): Promise<ValidateStorageResult> => {
+  return api.post(`/projects/${projectId}/storages/validate`, data)
+}
+
+/**
  * 列出文件
  * @param projectId 项目ID
  * @param storageName 存储名称
@@ -58,7 +68,7 @@ export const getStorage = (projectId: string, storageName: string): Promise<Stor
  * @returns 文件列表
  */
 export const listFiles = (projectId: string, storageName: string, path?: string): Promise<FileItem[]> => {
-  const url = path 
+  const url = path
     ? `/projects/${projectId}/storages/${storageName}/files?path=${encodeURIComponent(path)}`
     : `/projects/${projectId}/storages/${storageName}/files`
   return api.get(url)
@@ -105,6 +115,29 @@ export const getFileInfo = (projectId: string, storageName: string, path: string
  */
 export const getFileSize = (projectId: string, storageName: string, path: string): Promise<{size: number}> => {
   return api.get(`/projects/${projectId}/storages/${storageName}/files/size?path=${encodeURIComponent(path)}`)
+}
+
+/**
+ * 下载文件
+ * @param projectId 项目ID
+ * @param storageName 存储名称
+ * @param path 文件路径
+ * @param fileName 文件名
+ */
+export const downloadFile = async (projectId: string, storageName: string, path: string, fileName: string): Promise<void> => {
+  const response = await api.request({
+    url: `/projects/${projectId}/storages/${storageName}/files/download?path=${encodeURIComponent(path)}`,
+    method: 'get',
+    responseType: 'blob'
+  });
+  const url = window.URL.createObjectURL(new Blob([response as Blob]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', fileName);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
 }
 
 /**
