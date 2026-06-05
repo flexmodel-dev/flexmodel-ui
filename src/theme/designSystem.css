@@ -1,0 +1,327 @@
+/**
+ * Flexmodel Design System — CSS Custom Properties
+ *
+ * All design tokens from DESIGN.md (Airtable-design-analysis).
+ * Uses Inter Display / Inter as open-source substitute for Haas Groot Disp / Haas Grotesk.
+ *
+ * Token hierarchy:
+ *   --flex-color-*     → Color values
+ *   --flex-type-*      → Typography (fontFamily, fontSize, fontWeight, lineHeight, letterSpacing)
+ *   --flex-rounded-*   → Border radius
+ *   --flex-space-*     → Spacing scale
+ */
+
+:root {
+  /* ==========================================================================
+     Colors — Brand & Accent
+     ========================================================================== */
+  --flex-color-primary: #181d26;
+  --flex-color-primary-active: #0d1218;
+  --flex-color-ink: #181d26;
+  --flex-color-body: #333840;
+  --flex-color-muted: #41454d;
+  --flex-color-hairline: #dddddd;
+  --flex-color-border-strong: #9297a0;
+  --flex-color-canvas: #ffffff;
+  --flex-color-surface-soft: #f8fafc;
+  --flex-color-surface-strong: #e0e2e6;
+  --flex-color-surface-dark: #181d26;
+  --flex-color-surface-dark-elevated: #1d1f25;
+  --flex-color-on-primary: #ffffff;
+  --flex-color-on-dark: #ffffff;
+  --flex-color-link: #1b61c9;
+  --flex-color-link-active: #1a3866;
+  --flex-color-info: #254fad;
+  --flex-color-info-border: #458fff;
+  --flex-color-success: #006400;
+  --flex-color-success-border: #39bf45;
+  --flex-color-pricing-ink: #1d1f25;
+
+  /* Signature card surfaces */
+  --flex-color-signature-coral: #aa2d00;
+  --flex-color-signature-forest: #0a2e0e;
+  --flex-color-signature-cream: #f5e9d4;
+  --flex-color-signature-peach: #fcab79;
+  --flex-color-signature-mint: #a8d8c4;
+  --flex-color-signature-yellow: #f4d35e;
+  --flex-color-signature-mustard: #d9a441;
+
+  /* ==========================================================================
+     Typography — Font Families
+     ========================================================================== */
+  /* Inter Display: substitute for Haas Groot Disp (display sizes) */
+  --flex-font-display: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  /* Inter: substitute for Haas Grotesk (24px and below) */
+  --flex-font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  /* ==========================================================================
+     Typography — Scales
+     ========================================================================== */
+  /* display-xl: 48px / 500 / 1.1 / 0 — Articles page h2 */
+  --flex-type-display-xl-size: 48px;
+  --flex-type-display-xl-weight: 500;
+  --flex-type-display-xl-line: 1.1;
+  --flex-type-display-xl-spacing: 0;
+  /* display-lg: 40px / 400 / 1.2 / 0 — Homepage h1 hero */
+  --flex-type-display-lg-size: 40px;
+  --flex-type-display-lg-weight: 400;
+  --flex-type-display-lg-line: 1.2;
+  --flex-type-display-lg-spacing: 0;
+  /* display-md: 32px / 400 / 1.2 / 0 — Feature-section headlines */
+  --flex-type-display-md-size: 32px;
+  --flex-type-display-md-weight: 400;
+  --flex-type-display-md-line: 1.2;
+  --flex-type-display-md-spacing: 0;
+  /* title-lg: 24px / 400 / 1.35 / 0.12px — Section titles */
+  --flex-type-title-lg-size: 24px;
+  --flex-type-title-lg-weight: 400;
+  --flex-type-title-lg-line: 1.35;
+  --flex-type-title-lg-spacing: 0.12px;
+  /* title-md: 20px / 400 / 1.5 / 0 — Sub-section titles */
+  --flex-type-title-md-size: 20px;
+  --flex-type-title-md-weight: 400;
+  --flex-type-title-md-line: 1.5;
+  --flex-type-title-md-spacing: 0;
+  /* title-sm: 18px / 500 / 1.4 / 0 — Article-card titles */
+  --flex-type-title-sm-size: 18px;
+  --flex-type-title-sm-weight: 500;
+  --flex-type-title-sm-line: 1.4;
+  --flex-type-title-sm-spacing: 0;
+  /* label-md: 16px / 500 / 1.4 / 0 — Demo-card titles, list labels */
+  --flex-type-label-md-size: 16px;
+  --flex-type-label-md-weight: 500;
+  --flex-type-label-md-line: 1.4;
+  --flex-type-label-md-spacing: 0;
+  /* button: 16px / 500 / 1.4 / 0 — CTA button labels */
+  --flex-type-button-size: 16px;
+  --flex-type-button-weight: 500;
+  --flex-type-button-line: 1.4;
+  --flex-type-button-spacing: 0;
+  /* body-md: 14px / 400 / 1.25 / 0 — Body copy, footer, nav */
+  --flex-type-body-md-size: 14px;
+  --flex-type-body-md-weight: 400;
+  --flex-type-body-md-line: 1.25;
+  --flex-type-body-md-spacing: 0;
+  /* caption: 14px / 500 / 1.35 / 0.16px — Captions, meta text */
+  --flex-type-caption-size: 14px;
+  --flex-type-caption-weight: 500;
+  --flex-type-caption-line: 1.35;
+  --flex-type-caption-spacing: 0.16px;
+  /* legal: 13.12px / 600 / 1.2 / 0 — Cookie/legal CTAs */
+  --flex-type-legal-size: 13.12px;
+  --flex-type-legal-weight: 600;
+  --flex-type-legal-line: 1.2;
+  --flex-type-legal-spacing: 0;
+  /* pricing-display: 44.8px / 475 / 1.1 / 0 — Pricing-page h1 */
+  --flex-type-pricing-display-size: 44.8px;
+  --flex-type-pricing-display-weight: 475;
+  --flex-type-pricing-display-line: 1.1;
+  --flex-type-pricing-display-spacing: 0;
+  /* pricing-section: 28px / 475 / 1.2 / 0 — Pricing section heads */
+  --flex-type-pricing-section-size: 28px;
+  --flex-type-pricing-section-weight: 475;
+  --flex-type-pricing-section-line: 1.2;
+  --flex-type-pricing-section-spacing: 0;
+  /* pricing-card-title: 20px / 475 / 1.3 / 0 — Plan name */
+  --flex-type-pricing-card-title-size: 20px;
+  --flex-type-pricing-card-title-weight: 475;
+  --flex-type-pricing-card-title-line: 1.3;
+  --flex-type-pricing-card-title-spacing: 0;
+
+  /* ==========================================================================
+     Border Radius
+     ========================================================================== */
+  --flex-rounded-xs: 2px;     /* Cookie/legal CTAs */
+  --flex-rounded-sm: 6px;     /* Text inputs, small inline buttons */
+  --flex-rounded-md: 10px;    /* Content cards, article cards, cream callouts */
+  --flex-rounded-lg: 12px;    /* Primary CTAs, signature cards, tabbed feature cards */
+  --flex-rounded-pill: 9999px; /* Pricing-page CTAs (sub-system only) */
+  --flex-rounded-full: 9999px; /* Circular icon buttons, avatars */
+
+  /* ==========================================================================
+     Spacing
+     ========================================================================== */
+  --flex-space-xxs: 4px;
+  --flex-space-xs: 8px;
+  --flex-space-sm: 12px;
+  --flex-space-md: 16px;
+  --flex-space-lg: 24px;      /* Gutter between cards in 3-up grids */
+  --flex-space-xl: 32px;      /* Tabbed feature cards, pricing tier cards internal padding */
+  --flex-space-xxl: 48px;     /* Signature card internal padding, breathing room */
+  --flex-space-section: 96px; /* Universal vertical rhythm constant between major bands */
+
+  /* ==========================================================================
+     Component: button-primary
+     ========================================================================== */
+  --flex-btn-primary-bg: var(--flex-color-primary);
+  --flex-btn-primary-color: var(--flex-color-on-primary);
+  --flex-btn-primary-font: var(--flex-font-body);
+  --flex-btn-primary-size: var(--flex-type-button-size);
+  --flex-btn-primary-weight: var(--flex-type-button-weight);
+  --flex-btn-primary-line: var(--flex-type-button-line);
+  --flex-btn-primary-spacing: var(--flex-type-button-spacing);
+  --flex-btn-primary-rounded: var(--flex-rounded-lg);
+  --flex-btn-primary-padding: 16px 24px;
+
+  /* ==========================================================================
+     Component: button-secondary
+     ========================================================================== */
+  --flex-btn-secondary-bg: var(--flex-color-canvas);
+  --flex-btn-secondary-color: var(--flex-color-ink);
+  --flex-btn-secondary-border: 1px solid var(--flex-color-hairline);
+  --flex-btn-secondary-font: var(--flex-font-body);
+  --flex-btn-secondary-size: var(--flex-type-button-size);
+  --flex-btn-secondary-weight: var(--flex-type-button-weight);
+  --flex-btn-secondary-line: var(--flex-type-button-line);
+  --flex-btn-secondary-rounded: var(--flex-rounded-lg);
+  --flex-btn-secondary-padding: 16px 24px;
+
+  /* ==========================================================================
+     Component: top-nav
+     ========================================================================== */
+  --flex-topnav-bg: var(--flex-color-canvas);
+  --flex-topnav-color: var(--flex-color-ink);
+  --flex-topnav-height: 64px;
+  --flex-topnav-font: var(--flex-font-body);
+  --flex-topnav-size: var(--flex-type-body-md-size);
+
+  /* ==========================================================================
+     Component: text-input
+     ========================================================================== */
+  --flex-input-bg: var(--flex-color-canvas);
+  --flex-input-color: var(--flex-color-ink);
+  --flex-input-border: 1px solid var(--flex-color-hairline);
+  --flex-input-rounded: var(--flex-rounded-sm);
+  --flex-input-padding: 12px 16px;
+  --flex-input-height: 44px;
+  --flex-input-font: var(--flex-font-body);
+  --flex-input-size: var(--flex-type-body-md-size);
+
+  /* ==========================================================================
+     Component: cards
+     ========================================================================== */
+  --flex-card-bg: var(--flex-color-canvas);
+  --flex-card-color: var(--flex-color-ink);
+  --flex-card-rounded: var(--flex-rounded-md);
+  --flex-card-padding: 16px;
+
+  /* ==========================================================================
+     Elevation
+     ========================================================================== */
+  /* Button rest: soft drop with subtle blue-tinted glow at low alpha */
+  --flex-shadow-button: 0 2px 0 rgba(27, 97, 201, 0.02);
+  /* Button focus: outer 2px blue ring at higher alpha */
+  --flex-shadow-button-focus: 0 0 0 2px rgba(69, 143, 255, 0.35);
+}
+
+/* ==========================================================================
+   Dark Mode Overrides
+   ========================================================================== */
+html.dark {
+  --flex-color-canvas: #181d26;
+  --flex-color-surface-soft: #1d1f25;
+  --flex-color-surface-strong: #252830;
+  --flex-color-hairline: #32363a;
+  --flex-color-border-strong: #545860;
+  --flex-color-ink: #e0e2e6;
+  --flex-color-body: #9297a0;
+  --flex-color-muted: #6b6f78;
+  --flex-color-link: #6badff;
+  --flex-color-link-active: #458fff;
+
+  --flex-btn-primary-bg: #e0e2e6;
+  --flex-btn-primary-color: #181d26;
+  --flex-btn-secondary-bg: #1d1f25;
+  --flex-btn-secondary-color: #e0e2e6;
+  --flex-btn-secondary-border: 1px solid #32363a;
+
+  --flex-topnav-bg: #181d26;
+  --flex-topnav-color: #e0e2e6;
+
+  --flex-input-bg: #1d1f25;
+  --flex-input-color: #e0e2e6;
+  --flex-input-border: 1px solid #32363a;
+
+  --flex-card-bg: #1d1f25;
+  --flex-card-color: #e0e2e6;
+
+  --flex-shadow-button: 0 2px 0 rgba(0, 0, 0, 0.15);
+  --flex-shadow-button-focus: 0 0 0 2px rgba(69, 143, 255, 0.25);
+}
+
+/* ==========================================================================
+   Utility Classes — Typography
+   ========================================================================== */
+.flex-type-display-xl {
+  font-family: var(--flex-font-display);
+  font-size: var(--flex-type-display-xl-size);
+  font-weight: var(--flex-type-display-xl-weight);
+  line-height: var(--flex-type-display-xl-line);
+  letter-spacing: var(--flex-type-display-xl-spacing);
+}
+.flex-type-display-lg {
+  font-family: var(--flex-font-display);
+  font-size: var(--flex-type-display-lg-size);
+  font-weight: var(--flex-type-display-lg-weight);
+  line-height: var(--flex-type-display-lg-line);
+  letter-spacing: var(--flex-type-display-lg-spacing);
+}
+.flex-type-display-md {
+  font-family: var(--flex-font-display);
+  font-size: var(--flex-type-display-md-size);
+  font-weight: var(--flex-type-display-md-weight);
+  line-height: var(--flex-type-display-md-line);
+  letter-spacing: var(--flex-type-display-md-spacing);
+}
+.flex-type-title-lg {
+  font-family: var(--flex-font-body);
+  font-size: var(--flex-type-title-lg-size);
+  font-weight: var(--flex-type-title-lg-weight);
+  line-height: var(--flex-type-title-lg-line);
+  letter-spacing: var(--flex-type-title-lg-spacing);
+}
+.flex-type-title-md {
+  font-family: var(--flex-font-display);
+  font-size: var(--flex-type-title-md-size);
+  font-weight: var(--flex-type-title-md-weight);
+  line-height: var(--flex-type-title-md-line);
+  letter-spacing: var(--flex-type-title-md-spacing);
+}
+.flex-type-title-sm {
+  font-family: var(--flex-font-body);
+  font-size: var(--flex-type-title-sm-size);
+  font-weight: var(--flex-type-title-sm-weight);
+  line-height: var(--flex-type-title-sm-line);
+  letter-spacing: var(--flex-type-title-sm-spacing);
+}
+.flex-type-label-md {
+  font-family: var(--flex-font-body);
+  font-size: var(--flex-type-label-md-size);
+  font-weight: var(--flex-type-label-md-weight);
+  line-height: var(--flex-type-label-md-line);
+  letter-spacing: var(--flex-type-label-md-spacing);
+}
+.flex-type-body-md {
+  font-family: var(--flex-font-body);
+  font-size: var(--flex-type-body-md-size);
+  font-weight: var(--flex-type-body-md-weight);
+  line-height: var(--flex-type-body-md-line);
+  letter-spacing: var(--flex-type-body-md-spacing);
+}
+.flex-type-caption {
+  font-family: var(--flex-font-body);
+  font-size: var(--flex-type-caption-size);
+  font-weight: var(--flex-type-caption-weight);
+  line-height: var(--flex-type-caption-line);
+  letter-spacing: var(--flex-type-caption-spacing);
+}
+
+/* ==========================================================================
+   Utility Classes — Border Radius
+   ========================================================================== */
+.flex-rounded-xs { border-radius: var(--flex-rounded-xs); }
+.flex-rounded-sm { border-radius: var(--flex-rounded-sm); }
+.flex-rounded-md { border-radius: var(--flex-rounded-md); }
+.flex-rounded-lg { border-radius: var(--flex-rounded-lg); }
+.flex-rounded-pill { border-radius: var(--flex-rounded-pill); }
+.flex-rounded-full { border-radius: var(--flex-rounded-full); }
