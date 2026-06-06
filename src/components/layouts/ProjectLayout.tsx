@@ -273,7 +273,8 @@ const ProjectLayout: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
-            overflow: "hidden"
+            overflow: "hidden",
+            backgroundColor: token.colorFillQuaternary
           }}
         >
           <ResizablePanel
