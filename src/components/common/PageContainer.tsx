@@ -74,7 +74,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
               height: '100%',
             }}
           >
-            <Spin size="large" />
+            <Spin />
           </div>
         ) : (
           children
