@@ -212,10 +212,11 @@ const ProjectLayout: React.FC = () => {
                 style={{ marginRight: token.marginXS }}
               />
               <span style={{
-                fontWeight: 600,
+                fontWeight: 700,
                 fontSize: token.fontSizeLG,
-                letterSpacing: 0.5,
-                color: token.colorText
+                letterSpacing: 1,
+                fontFamily: `'Inter Display', ${token.fontFamily}`,
+                color: token.colorPrimaryText
               }}>{currentProject?.name}</span>
             </Link>
             <div style={{
