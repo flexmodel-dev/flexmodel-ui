@@ -597,7 +597,7 @@
   "flow_design": "流程设计",
   "flow_instance": "流程实例",
   "flow_instance_detail": "流程实例详情",
-  "schedule": "任务调度",
+  "scheduling": "任务调度",
   "trigger": {
     "title": "触发器",
     "create": "创建触发器",

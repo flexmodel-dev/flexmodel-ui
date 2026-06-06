@@ -1,5 +1,5 @@
 import React from 'react';
-import TriggerList from '@/pages/Schedule/components/TriggerList';
+import TriggerList from '@/pages/Scheduling/components/TriggerList';
 import {Entity} from '@/types/data-modeling';
 
 interface TriggerWrapperProps {

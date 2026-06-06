@@ -639,7 +639,7 @@
   "flow_design": "Flow Design",
   "flow_instance": "Flow Instance Monitoring",
   "flow_instance_detail": "Flow Instance Detail",
-  "schedule": "Schedule",
+  "scheduling": "Scheduling",
   "trigger": {
     "title": "Trigger",
     "create": "Create Trigger",

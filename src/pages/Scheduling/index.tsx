@@ -1,8 +1,8 @@
 import React from 'react';
 import {Outlet} from "react-router-dom";
 
-const Schedule: React.FC = () => {
+const Scheduling: React.FC = () => {
   return <Outlet />;
 };
 
-export default Schedule;
+export default Scheduling;

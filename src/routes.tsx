@@ -34,9 +34,9 @@ import Flow from "@/pages/Flow";
 import FlowList from "@/pages/Flow/components/FlowList.tsx";
 import FlowDesign from "@/pages/FlowDesign/index.tsx";
 import FlowInstanceList from "@/pages/Flow/components/FlowInstanceList.tsx";
-import Schedule from "@/pages/Schedule/index.tsx";
-import TriggerList from "./pages/Schedule/components/TriggerList";
-import JobExecutionLogList from "./pages/Schedule/components/JobExecutionLogList";
+import Scheduling from "@/pages/Scheduling/index.tsx";
+import TriggerList from "./pages/Scheduling/components/TriggerList";
+import JobExecutionLogList from "./pages/Scheduling/components/JobExecutionLogList";
 import FlowDetail from "./pages/FlowDetail";
 import Project from "./pages/Project";
 
@@ -163,19 +163,19 @@ export const projectRoutes: RouteConfig[] = [
     hideLayout: true,
   },
   {
-    path: "/project/:projectId/schedule",
-    element: <Schedule />,
+    path: "/project/:projectId/scheduling",
+    element: <Scheduling />,
     icon: ThunderboltOutlined,
-    translationKey: "schedule",
+    translationKey: "scheduling",
     children: [
       {
-        path: "/project/:projectId/schedule/trigger",
+        path: "/project/:projectId/scheduling/trigger",
         element: <TriggerList />,
         icon: ThunderboltOutlined,
         translationKey: "trigger.title",
       },
       {
-        path: "/project/:projectId/schedule/job-execution-log",
+        path: "/project/:projectId/scheduling/job-execution-log",
         element: <JobExecutionLogList />,
         icon: PlayCircleOutlined,
         translationKey: "job_execution_log",
