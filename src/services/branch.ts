@@ -1,5 +1,5 @@
 import { api } from "@/utils/request";
-import type { Branch, BranchCreateRequest } from "@/types/branch";
+import type { Branch, BranchCreateRequest, BranchMergeRequest } from "@/types/branch";
 import type { Project } from "@/types/project";
 
 /**
@@ -38,4 +38,13 @@ export const deleteBranch = (projectId: string, branchName: string): Promise<voi
  */
 export const switchBranch = (projectId: string, branchName: string): Promise<Project> => {
   return api.put(`/projects/${projectId}/branches/${branchName}/switch`);
+};
+
+/**
+ * 合并分支
+ * @param projectId 项目ID
+ * @param data 合并请求
+ */
+export const mergeBranch = (projectId: string, data: BranchMergeRequest): Promise<void> => {
+  return api.post(`/projects/${projectId}/branches/merge`, data);
 };

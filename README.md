@@ -40,19 +40,37 @@ npm run preview
 ## 🏗️ 技术栈
 
 - **框架**: React 18, TypeScript, Vite
-- **UI 库**: Ant Design 5, Tailwind CSS
-- **图形引擎**: AntV X6 (用于 ER 图与流程编排)
-- **状态管理**: Redux Toolkit
+- **UI 库**: Ant Design 6, Tailwind CSS
+- **图形引擎**: @xyflow/react (流程编排), ECharts (图表)
+- **状态管理**: Redux Toolkit, Zustand
+- **编辑器**: Monaco Editor
 - **国际化**: i18next
 
 ## 📁 项目结构
 
 ```text
 src/
-├── components/          # 可复用 UI 组件
-├── pages/               # 业务页面 (建模、编排、存储、系统等)
+├── components/          # 可复用 UI 组件 (通用组件、AI 对话、布局等)
+├── pages/               # 业务页面
+│   ├── DataModeling/    # 数据建模 (ER 图、实体、字段)
+│   ├── FlowDesign/      # 流程设计器
+│   ├── Flow/            # 流程定义与实例管理
+│   ├── FlowDetail/      # 流程实例详情
+│   ├── Scheduling/      # 任务调度 (触发器、执行日志)
+│   ├── GraphQLAPI/      # GraphQL API 管理
+│   ├── OpenAPI/         # OpenAPI 管理
+│   ├── APILog/          # API 日志
+│   ├── Authentication/  # 认证 (API Key、OIDC)
+│   ├── Storage/         # 文件存储管理
+│   ├── Overview/        # 项目概览与监控
+│   ├── Member/          # 成员与角色管理
+│   ├── Settings/        # 系统设置
+│   └── ...              # 更多页面
 ├── services/            # API 请求封装
-├── store/               # Redux 状态管理
+├── store/               # Redux & Zustand 状态管理
+├── hooks/               # 自定义 Hooks
+├── theme/               # 设计令牌与主题
+├── types/               # TypeScript 类型定义
 ├── locales/             # 国际化文件
 └── utils/               # 工具函数
 ```

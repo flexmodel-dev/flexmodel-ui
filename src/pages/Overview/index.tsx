@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import type { ApiStat, RankingData } from '@/types/overview.d.ts';
-import TrendAnalysis from '@/components/common/TrendAnalysis';
+import TrendAnalysis from '@/pages/Overview/components/metrics/TrendAnalysis';
 import StatisticsCards from '@/pages/Overview/components/StatisticsCards';
 import { getApiLogStat } from "@/services/api-log";
 import { ApiLogStatSchema } from "@/types/api-log";

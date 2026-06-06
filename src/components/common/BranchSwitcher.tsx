@@ -10,6 +10,7 @@ import {
   Tag,
   Popconfirm,
   Spin,
+  Radio,
   theme as antdTheme,
 } from "antd";
 import {
@@ -17,12 +18,13 @@ import {
   PlusOutlined,
   DeleteOutlined,
   SettingOutlined,
+  MergeCellsOutlined,
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useProject } from "@/store/appStore";
-import { createBranch, deleteBranch, switchBranch } from "@/services/branch";
+import { createBranch, deleteBranch, switchBranch, mergeBranch } from "@/services/branch";
 import { getProject } from "@/services/project";
-import type { BranchCreateRequest } from "@/types/branch";
+import type { BranchCreateRequest, ConflictStrategy } from "@/types/branch";
 
 interface BranchSwitcherProps {
   projectId: string;
@@ -45,6 +47,11 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
   // 管理分支弹窗
   const [manageModalOpen, setManageModalOpen] = useState(false);
   const [manageLoading, setManageLoading] = useState(false);
+
+  // 合并分支弹窗
+  const [mergeModalOpen, setMergeModalOpen] = useState(false);
+  const [mergeLoading, setMergeLoading] = useState(false);
+  const [mergeForm] = Form.useForm();
 
   const currentBranch = currentProject?.currentBranch ?? "main";
   const branches = currentProject?.branches ?? [];
@@ -105,6 +112,27 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
     [projectId, refreshProject, t],
   );
 
+  const handleMerge = useCallback(async () => {
+    try {
+      const values = await mergeForm.validateFields();
+      setMergeLoading(true);
+      await mergeBranch(projectId, {
+        sourceBranch: values.sourceBranch,
+        targetBranch: values.targetBranch,
+        conflictStrategy: values.conflictStrategy as ConflictStrategy,
+      });
+      message.success(t("branch.mergeSuccess"));
+      setMergeModalOpen(false);
+      mergeForm.resetFields();
+      await refreshProject();
+    } catch (err: any) {
+      if (err?.errorFields) return;
+      message.error(err?.message || t("branch.mergeFailed"));
+    } finally {
+      setMergeLoading(false);
+    }
+  }, [projectId, mergeForm, refreshProject, t]);
+
   const branchNameValidator = useCallback((_: any, value: string) => {
     if (!value) {
       return Promise.reject(new Error(t("branch.nameRequired")));
@@ -142,6 +170,12 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
         label: t('branch.createBranch'),
         icon: <PlusOutlined />,
         onClick: () => setCreateModalOpen(true),
+      },
+      {
+        key: '__merge__',
+        label: t('branch.mergeBranch'),
+        icon: <MergeCellsOutlined />,
+        onClick: () => setMergeModalOpen(true),
       },
       {
         key: '__manage__',
@@ -251,6 +285,55 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
             }}
           />
         </Spin>
+      </Modal>
+
+      {/* 合并分支弹窗 */}
+      <Modal
+        title={t("branch.mergeBranch")}
+        open={mergeModalOpen}
+        onOk={handleMerge}
+        onCancel={() => {
+          setMergeModalOpen(false);
+          mergeForm.resetFields();
+        }}
+        confirmLoading={mergeLoading}
+        destroyOnClose
+      >
+        <Form form={mergeForm} layout="vertical" initialValues={{ targetBranch: "main", conflictStrategy: "SKIP" }}>
+          <Form.Item
+            label={t("branch.mergeSourceBranch")}
+            name="sourceBranch"
+            rules={[{ required: true, message: t("branch.mergeSourceBranchRequired") }]}
+          >
+            <Select
+              placeholder={t("branch.mergeSourceBranchPlaceholder")}
+              options={branches
+                .filter((b) => b.name !== currentBranch)
+                .map((b) => ({ label: b.name, value: b.name }))}
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("branch.mergeTargetBranch")}
+            name="targetBranch"
+            rules={[{ required: true, message: t("branch.mergeTargetBranchRequired") }]}
+          >
+            <Select
+              options={branches
+                .map((b) => ({ label: b.name, value: b.name }))}
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("branch.conflictStrategy")}
+            name="conflictStrategy"
+            rules={[{ required: true }]}
+            extra={t("branch.conflictStrategyHint")}
+          >
+            <Radio.Group>
+              <Radio value="SKIP">{t("branch.conflictSkip")}</Radio>
+              <Radio value="OVERWRITE">{t("branch.conflictOverwrite")}</Radio>
+            </Radio.Group>
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );

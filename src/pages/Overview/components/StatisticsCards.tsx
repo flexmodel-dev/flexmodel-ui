@@ -227,7 +227,7 @@ const TaskSchedulingCard: React.FC<{ stats: Statistics; color: string }> = ({sta
 
   return (
     <StatCard
-      title={t("schedule")}
+      title={t("scheduling")}
       icon={<ClockCircleOutlined style={{fontSize: '24px', color: '#ffffff'}}/>}
       color={color}
     >
