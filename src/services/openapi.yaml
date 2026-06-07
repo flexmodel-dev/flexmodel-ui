@@ -5,112 +5,6 @@ info:
   version: 0.0.1
   description: FlexModel服务器API，提供模型管理和系统监控功能
 paths:
-  /api/ai/chat/completions:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SendMessageRequest"
-        required: true
-      responses:
-        "200":
-          description: OK
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      summary: Send Message
-      tags:
-      - Ai Resource
-      security:
-      - BearerAuth: []
-  /api/ai/chat/conversations:
-    get:
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/AiChatConversation"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      summary: Get All Conversations
-      tags:
-      - Ai Resource
-      security:
-      - BearerAuth: []
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateConversationRequest"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AiChatConversation"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
-      summary: Create Conversation
-      tags:
-      - Ai Resource
-      security:
-      - BearerAuth: []
-  /api/ai/chat/conversations/{id}:
-    get:
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AiChatConversation"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      summary: Get Conversation
-      tags:
-      - Ai Resource
-      security:
-      - BearerAuth: []
-    delete:
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "204":
-          description: No Content
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-      summary: Delete Conversation
-      tags:
-      - Ai Resource
-      security:
-      - BearerAuth: []
   /api/auth/login:
     post:
       tags:
@@ -4369,48 +4263,6 @@ components:
           format: int16
         broadcast:
           type: string
-    AiChatConversation:
-      type: object
-      properties:
-        id:
-          type: string
-        title:
-          type: string
-        messages:
-          type: array
-          items:
-            $ref: "#/components/schemas/AiChatMessage"
-        projectId:
-          type: string
-        createdBy:
-          type: string
-        updatedBy:
-          type: string
-        createdAt:
-          $ref: "#/components/schemas/LocalDateTime"
-        updatedAt:
-          $ref: "#/components/schemas/LocalDateTime"
-    AiChatMessage:
-      type: object
-      properties:
-        id:
-          type: string
-        conversationId:
-          type: string
-        role:
-          type: string
-        content:
-          type: string
-        projectId:
-          type: string
-        createdBy:
-          type: string
-        updatedBy:
-          type: string
-        createdAt:
-          $ref: "#/components/schemas/LocalDateTime"
-        updatedAt:
-          $ref: "#/components/schemas/LocalDateTime"
     AllMetricsResponse:
       type: object
       properties:
@@ -4789,13 +4641,6 @@ components:
         usedMemory:
           type: integer
           format: int64
-    CreateConversationRequest:
-      type: object
-      properties:
-        projectId:
-          type: string
-        title:
-          type: string
     CreateFlowParamSchema:
       type: object
       properties:
@@ -6566,16 +6411,6 @@ components:
           type: string
         systemIdentityProvider:
           type: string
-    SendMessageRequest:
-      type: object
-      required:
-      - content
-      properties:
-        conversationId:
-          type: string
-        content:
-          type: string
-          pattern: \S
     Settings:
       type: object
       properties:

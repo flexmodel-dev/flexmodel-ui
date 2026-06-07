@@ -19,9 +19,7 @@ import {
 import { applyDarkMode, setDarkModeToStorage } from "@/utils/darkMode";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import ProjectSidebar from "./ProjectSidebar";
-import AIChatBox from "@/components/ai-chatbox/index";
 import Console from "@/components/console/Console.tsx";
-import { Message } from "../ai-chatbox/types";
 import ResizablePanel from "@/components/common/ResizablePanel";
 import BranchSwitcher from "@/components/common/BranchSwitcher";
 import { Outlet } from "react-router-dom";
@@ -40,10 +38,6 @@ const ProjectLayout: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
 
-  const [isAIChatVisible, setIsAIChatVisible] = React.useState(false);
-  const [isAIChatFloating, setIsAIChatFloating] = React.useState(false);
-  const [messages, setMessages] = React.useState<Message[]>([]);
-  const [conversationId, setConversationId] = React.useState<string | null>(null);
   const [isConsoleVisible, setIsConsoleVisible] = React.useState(false);
   const [isProjectInitialized, setIsProjectInitialized] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
@@ -231,16 +225,6 @@ const ProjectLayout: React.FC = () => {
 
           <Space size={token.marginSM}>
             <Button
-              icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                <g fill="none" stroke={token.colorTextBase} strokeWidth="1.5">
-                  <path strokeLinecap="round" d="M11.5 6C7.022 6 4.782 6 3.391 7.172S2 10.229 2 14s0 5.657 1.391 6.828S7.021 22 11.5 22c4.478 0 6.718 0 8.109-1.172S21 17.771 21 14c0-1.17 0-2.158-.041-3" />
-                  <path strokeLinejoin="round" d="m18.5 2l.258.697c.338.914.507 1.371.84 1.704c.334.334.791.503 1.705.841L22 5.5l-.697.258c-.914.338-1.371.507-1.704.84c-.334-.503.791-.841 1.705L18.5 9l-.258-.697c-.338-.914-.507-1.371-.84-1.704c-.334-.334-.791-.503-1.705-.841L15 5.5l.697-.258c.914-.338 1.371-.507 1.704-.84c.334-.334.503-.791.841-1.705z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m15.5 12l1.227 1.057c.515.445.773.667.773.943s-.258.498-.773.943L15.5 16m-8-4l-1.227 1.057c-.515.445-.773.667-.773.943s.258.498.773.943L7.5 16m5-5l-2 6" />
-                </g>
-              </svg>}
-              onClick={() => setIsAIChatVisible((v) => !v)}
-            />
-            <Button
               icon={<CodeOutlined />}
               onClick={() => setIsConsoleVisible((v) => !v)}
             />
@@ -287,48 +271,11 @@ const ProjectLayout: React.FC = () => {
               <Console onToggle={() => setIsConsoleVisible((v) => !v)} />
             )}
           >
-            <ResizablePanel
-              visible={isAIChatVisible && !isAIChatFloating}
-              placement="right"
-              defaultSize={420}
-              minSize={320}
-              maxSize={600}
-              mainStyle={{ padding: token.padding }}
-              renderPanel={() => (
-                <AIChatBox
-                  conversationId={conversationId}
-                  messages={messages}
-                  onMessages={(msg: Message[]) => {
-                    setConversationId(msg[0]?.conversationId);
-                    setMessages(msg);
-                  }}
-                  isVisible={isAIChatVisible}
-                  onToggle={setIsAIChatVisible}
-                  isFloating={isAIChatFloating}
-                  onToggleFloating={setIsAIChatFloating}
-                />
-              )}
-            >
-              {isProjectInitialized ? <Outlet key={currentProject?.currentBranch} /> : null}
-            </ResizablePanel>
+            {isProjectInitialized ? <Outlet key={currentProject?.currentBranch} /> : null}
           </ResizablePanel>
         </Layout.Content>
       </Layout>
 
-      {isAIChatFloating && (
-        <AIChatBox
-          conversationId={conversationId}
-          messages={messages}
-          onMessages={(msg: Message[]) => {
-            setConversationId(msg[0].conversationId);
-            setMessages(msg);
-          }}
-          isVisible={isAIChatVisible}
-          onToggle={setIsAIChatVisible}
-          isFloating={isAIChatFloating}
-          onToggleFloating={setIsAIChatFloating}
-        />
-      )}
     </Layout>
   );
 };
