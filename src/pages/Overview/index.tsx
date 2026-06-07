@@ -5,7 +5,6 @@ import TrendAnalysis from '@/pages/Overview/components/metrics/TrendAnalysis';
 import StatisticsCards from '@/pages/Overview/components/StatisticsCards';
 import { getApiLogStat } from "@/services/api-log";
 import { ApiLogStatSchema } from "@/types/api-log";
-// import {useMetricsData} from "@/pages/Overview/components/metrics/useMetricsData";
 import { FmMetricsResponse, getFmMetrics } from "@/services/metrics";
 import { useProject } from "@/store/appStore";
 
