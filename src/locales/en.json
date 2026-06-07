@@ -102,6 +102,9 @@
   "key_type_custom": "Custom Key",
   "key_prefix": "Prefix",
   "scopes": "Scopes",
+  "project_ids": "Accessible Projects",
+  "project_ids_placeholder": "Leave empty for all projects, or enter project IDs separated by commas",
+  "all_projects": "All Projects",
   "read_only": "Read Only",
   "regenerate": "Regenerate",
   "yes": "Yes",
@@ -882,7 +885,8 @@
     "role": "Roles",
     "settings": "Settings",
     "select_project": "Select Project",
-    "back_to_platform": "Back to Platform"
+    "back_to_platform": "Back to Platform",
+    "api_keys": "API Keys"
   },
   "member": {
     "user": "User",

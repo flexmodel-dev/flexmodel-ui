@@ -102,6 +102,9 @@
   "key_type_custom": "自定义 Key",
   "key_prefix": "前缀",
   "scopes": "权限范围",
+  "project_ids": "可访问项目",
+  "project_ids_placeholder": "留空表示可访问所有项目，多个项目ID用逗号分隔",
+  "all_projects": "所有项目",
   "read_only": "只读",
   "regenerate": "重新生成",
   "yes": "是",
@@ -839,7 +842,8 @@
     "role": "角色",
     "settings": "设置",
     "select_project": "选择项目",
-    "back_to_platform": "返回平台"
+    "back_to_platform": "返回平台",
+    "api_keys": "API Keys"
   },
   "member": {
     "user": "用户",

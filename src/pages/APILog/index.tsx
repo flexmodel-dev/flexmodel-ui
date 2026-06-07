@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Button, Col, DatePicker, Descriptions, Drawer, Form, Input, Row, Select, Space, Table, Tag, theme,} from "antd";
 import PageContainer from "@/components/common/PageContainer";
 import {DownOutlined, SearchOutlined, SettingOutlined, UpOutlined,} from "@ant-design/icons";
@@ -25,6 +25,8 @@ const LogViewer: React.FC = () => {
   const [form] = Form.useForm();
   const [query, setQuery] = useState({ page: 1, size: 100 });
   const [settingsDialogVisible, setSettingsDialogVisible] = useState<boolean>(false);
+  const [tableScrollY, setTableScrollY] = useState(300);
+  const tableWrapperRef = useRef<HTMLDivElement>(null);
 
 
   const getApiLogsHandler = async () => {
@@ -68,6 +70,23 @@ const LogViewer: React.FC = () => {
   useEffect(() => {
     getApiLogsHandler();
   }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const calcTableHeight = () => {
+      if (tableWrapperRef.current) {
+        const paginationHeight = 56;
+        const headerHeight = 55;
+        const available = tableWrapperRef.current.clientHeight - paginationHeight - headerHeight;
+        setTableScrollY(Math.max(available, 150));
+      }
+    };
+    calcTableHeight();
+    const observer = new ResizeObserver(calcTableHeight);
+    if (tableWrapperRef.current) {
+      observer.observe(tableWrapperRef.current);
+    }
+    return () => observer.disconnect();
+  }, [expand]);
 
   const showDetail = (record: any) => {
     setLog(record);
@@ -222,22 +241,25 @@ const LogViewer: React.FC = () => {
 
         {/* 图表区域 */}
         <div style={{
-          height: '200px',
+          height: '140px',
           marginBottom: '10px',
           flexShrink: 0
         }}>
-          <ApiLogChart chartData={chartData} />
+          <ApiLogChart chartData={chartData} height="140px" />
         </div>
 
         {/* 表格区域 */}
-        <div style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: 0,
-          overflow: 'hidden',
-          marginBottom: '10px'
-        }}>
+        <div
+          ref={tableWrapperRef}
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+            overflow: 'hidden',
+            marginBottom: '10px'
+          }}
+        >
           <div style={{
             flex: 1,
             minHeight: 0,
@@ -246,7 +268,7 @@ const LogViewer: React.FC = () => {
             <Table
               bordered={false}
               virtual
-              scroll={{ y: expand ? 130 : 190 }}
+              scroll={{ y: tableScrollY }}
               columns={columns}
               dataSource={tableData?.list}
               rowKey="id"

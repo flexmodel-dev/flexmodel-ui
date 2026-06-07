@@ -11,6 +11,7 @@ import {initializeDarkMode} from "./utils/darkMode.ts";
 import {RenderProjectRoutes} from "./routes";
 import Project from "./pages/Project/index.tsx";
 import Settings from "./pages/Settings";
+import ApiKeys from "./pages/ApiKeys";
 import Member from "./pages/Member/index.tsx";
 import {antdTheme as lightTheme, antdDarkTheme as darkTheme} from "./theme/designTokens.ts";
 
@@ -83,6 +84,14 @@ const App = () => {
             </ProtectedRoute>
           }>
             <Route index element={<Member />} />
+          </Route>
+
+          <Route path="/api-keys" element={
+            <ProtectedRoute>
+              <PlatformLayout />
+            </ProtectedRoute>
+          }>
+            <Route index element={<ApiKeys />} />
           </Route>
 
           <Route path="/settings" element={

@@ -7,6 +7,7 @@ export interface ApiKey {
   keyPrefix: string;
   keyType: 'anon' | 'service' | 'custom';
   scopes: string;
+  projectIds?: string;
   readOnly: boolean;
   expiresAt: string | null;
   lastUsedAt: string | null;
@@ -23,5 +24,6 @@ export interface CreateApiKeyRequest {
   name: string;
   keyType?: string;
   scopes?: string;
+  projectIds?: string;
   readOnly?: boolean;
 }

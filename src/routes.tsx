@@ -26,6 +26,7 @@ import {
   CloudUploadOutlined,
   AppstoreOutlined,
   DashboardOutlined,
+  KeyOutlined,
 } from "@ant-design/icons";
 import GraphQLAPI from "@/pages/GraphQLAPI";
 import OpenAPI from "@/pages/OpenAPI";
@@ -38,6 +39,7 @@ import TriggerList from "./pages/Scheduling/components/TriggerList";
 import JobExecutionLogList from "./pages/Scheduling/components/JobExecutionLogList";
 import FlowDetail from "./pages/FlowDetail";
 import Project from "./pages/Project";
+import ApiKeys from "./pages/ApiKeys";
 
 export interface RouteConfig {
   path: string;
@@ -62,6 +64,12 @@ export const platformRoutes: RouteConfig[] = [
     element: <Member />,
     icon: UserOutlined,
     translationKey: "platform.member",
+  },
+  {
+    path: "/api-keys",
+    element: <ApiKeys />,
+    icon: KeyOutlined,
+    translationKey: "platform.api_keys",
   },
   {
     path: "/settings",

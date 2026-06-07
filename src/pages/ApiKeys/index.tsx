@@ -2,16 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Button, message, Modal, Popconfirm, Space, Table, Tag, Typography, Input, Form, Switch } from "antd";
 import { CopyOutlined, DeleteOutlined, ReloadOutlined, PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { useProject } from "@/store/appStore";
 import { getApiKeys, createApiKey, regenerateApiKey, deleteApiKey } from "@/services/api-key";
 import type { ApiKey, CreateApiKeyRequest } from "@/types/api-key";
+import { PageContainer } from "@/components/common";
 
 const { Text } = Typography;
 
-const ApiKeysTab: React.FC = () => {
+const ApiKeys: React.FC = () => {
   const { t } = useTranslation();
-  const { currentProject } = useProject();
-  const projectId = currentProject?.id || "";
 
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(false);
@@ -20,17 +18,16 @@ const ApiKeysTab: React.FC = () => {
   const [form] = Form.useForm();
 
   const fetchKeys = useCallback(async () => {
-    if (!projectId) return;
     try {
       setLoading(true);
-      const data = await getApiKeys(projectId);
+      const data = await getApiKeys();
       setKeys(data);
     } catch {
       message.error(t("api_keys_load_failed"));
     } finally {
       setLoading(false);
     }
-  }, [t, projectId]);
+  }, [t]);
 
   useEffect(() => {
     fetchKeys();
@@ -43,9 +40,10 @@ const ApiKeysTab: React.FC = () => {
         name: values.name,
         keyType: "custom",
         scopes: values.scopes || "*",
+        projectIds: values.projectIds || "",
         readOnly: values.readOnly ?? false,
       };
-      const res = await createApiKey(projectId, req);
+      const res = await createApiKey(req);
       setNewKeyValue(res.key || null);
       setCreateModalOpen(false);
       form.resetFields();
@@ -58,7 +56,7 @@ const ApiKeysTab: React.FC = () => {
 
   const handleRegenerate = async (id: string) => {
     try {
-      const res = await regenerateApiKey(projectId, id);
+      const res = await regenerateApiKey(id);
       setNewKeyValue(res.key || null);
       await fetchKeys();
       message.success(t("api_key_regenerated"));
@@ -69,7 +67,7 @@ const ApiKeysTab: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteApiKey(projectId, id);
+      await deleteApiKey(id);
       await fetchKeys();
       message.success(t("api_key_deleted"));
     } catch {
@@ -117,6 +115,13 @@ const ApiKeysTab: React.FC = () => {
       render: (scopes: string) => scopes === "*" ? <Tag color="green">*</Tag> : scopes,
     },
     {
+      title: t("project_ids"),
+      dataIndex: "projectIds",
+      key: "projectIds",
+      render: (projectIds: string) =>
+        !projectIds ? <Tag color="green">{t("all_projects")}</Tag> : projectIds,
+    },
+    {
       title: t("read_only"),
       dataIndex: "readOnly",
       key: "readOnly",
@@ -157,7 +162,7 @@ const ApiKeysTab: React.FC = () => {
   ];
 
   return (
-    <>
+    <PageContainer title={t("api_keys")}>
       <div style={{ marginBottom: 16, display: "flex", justifyContent: "flex-end" }}>
         <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalOpen(true)}>
           {t("create_api_key")}
@@ -188,6 +193,9 @@ const ApiKeysTab: React.FC = () => {
           </Form.Item>
           <Form.Item name="scopes" label={t("scopes")}>
             <Input placeholder="* 或 read,write" />
+          </Form.Item>
+          <Form.Item name="projectIds" label={t("project_ids")}>
+            <Input placeholder={t("project_ids_placeholder")} />
           </Form.Item>
           <Form.Item name="readOnly" label={t("read_only")} valuePropName="checked">
             <Switch />
@@ -226,8 +234,8 @@ const ApiKeysTab: React.FC = () => {
           </div>
         </div>
       </Modal>
-    </>
+    </PageContainer>
   );
 };
 
-export default ApiKeysTab;
+export default ApiKeys;
