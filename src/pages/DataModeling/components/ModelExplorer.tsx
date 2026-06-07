@@ -3,7 +3,6 @@ import {Button, Drawer, Dropdown, Input, message, Modal, Spin} from "antd";
 import type {MenuProps} from "antd";
 import {MoreOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {createModel, dropModel, getModelList, executeFml} from "@/services/model.ts";
-import type {DatasourceSchema} from '@/types/data-source';
 import {useTranslation} from "react-i18next";
 import {useLocale} from "@/store/appStore.ts";
 import {useProject} from "@/store/appStore";

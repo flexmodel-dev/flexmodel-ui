@@ -73,7 +73,6 @@ export interface MRecord {
  * 记录列表属性接口
  */
 export interface RecordListProps {
-  datasource: string;
   model: any;
 }
 
