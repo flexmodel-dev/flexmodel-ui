@@ -693,6 +693,7 @@ const lightComponentTokens = {
     itemHoverColor: colors.ink,
     itemActiveBg: colors['surface-soft'],
     horizontalItemSelectedColor: colors.ink,
+    subMenuItemSelectedColor: colors.ink,
   },
   Table: {
     headerBg: colors.canvas,
@@ -857,6 +858,7 @@ const darkComponentTokens = {
     itemHoverColor: '#e0e2e6',
     itemActiveBg: colors['surface-dark-elevated'],
     horizontalItemSelectedColor: '#e0e2e6',
+    subMenuItemSelectedColor: '#e0e2e6',
   },
   Table: {
     headerBg: colors['surface-dark-elevated'],
