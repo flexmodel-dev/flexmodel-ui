@@ -95,10 +95,10 @@ const Sidebar: React.FC = () => {
 
   const logoTextStyle = useMemo(() => ({
     marginLeft: token.marginSM,
-    fontWeight: 700,
+    fontWeight: 400,
     fontSize: token.fontSizeXL,
-    letterSpacing: 1.5,
-    fontFamily: `'Inter Display', ${token.fontFamily}`,
+    letterSpacing: 1,
+    fontFamily: token.fontFamily,
     opacity: isSidebarCollapsed ? 0 : 1,
     transform: isSidebarCollapsed ? 'translateX(-10px) scale(0.95)' : 'translateX(0) scale(1)',
     transition: 'opacity 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1), max-width 0.3s cubic-bezier(0.4,0,0.2,1)',
@@ -108,8 +108,8 @@ const Sidebar: React.FC = () => {
     overflow: 'hidden',
     display: 'inline-block',
     verticalAlign: 'middle',
-    color: token.colorPrimaryText,
-  }), [isSidebarCollapsed, token.fontFamily, token.colorPrimaryText, token.marginSM, token.fontSizeXL]);
+    color: token.colorText,
+  }), [isSidebarCollapsed, token.fontFamily, token.colorText, token.marginSM, token.fontSizeXL]);
 
   const menuStyle = useMemo(() => ({
     flex: 1,

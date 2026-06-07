@@ -90,11 +90,10 @@ const PlatformLayout: React.FC = () => {
                 style={{ marginRight: token.marginXS }}
               />
               <span style={{
-                fontWeight: 700,
+                fontWeight: 600,
                 fontSize: token.fontSizeLG,
-                letterSpacing: 1,
-                fontFamily: `'Inter Display', ${token.fontFamily}`,
-                color: token.colorPrimaryText
+                letterSpacing: 0.5,
+                color: token.colorText
               }}>Flexmodel</span>
             </Link>
             <div style={{
