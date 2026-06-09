@@ -1,96 +1,96 @@
 import React, {useState, useEffect} from "react";
 import {Button, Divider, Dropdown, Spin, theme} from "antd";
 import type {MenuProps} from "antd";
-import {CloudOutlined, DeleteOutlined, FolderOutlined, MoreOutlined} from "@ant-design/icons";
+import {DatabaseOutlined, DeleteOutlined, FolderOutlined, MoreOutlined} from "@ant-design/icons";
 import Tree from "@/components/explore/explore/Tree.jsx";
 import "@/components/explore/styles/explore.scss";
-import type {StorageSchema} from "@/types/storage";
-import {getStorageList} from "@/services/storage.ts";
+import type {BucketSchema} from "@/types/storage";
+import {getBucketList} from "@/services/storage.ts";
 import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
 
-interface StorageExplorerProps {
-  onSelect: (storage: StorageSchema) => void;
+interface BucketExplorerProps {
+  onSelect: (bucket: BucketSchema) => void;
   setDeleteVisible: (visible: boolean) => void;
   setDrawerVisible: (visible: boolean) => void;
-  selectedStorage?: string;
+  selectedBucket?: string;
 }
 
-const StorageExplorer: React.FC<StorageExplorerProps> = ({
+const BucketExplorer: React.FC<BucketExplorerProps> = ({
   onSelect,
   setDeleteVisible,
   setDrawerVisible,
-  selectedStorage,
+  selectedBucket,
 }) => {
-  const { token } = theme.useToken();
+  const {token} = theme.useToken();
   const {t} = useTranslation();
-  const { currentProject } = useProject();
+  const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
-  
-  const [storageList, setStorageList] = useState<StorageSchema[]>([]);
-  const [activeStorage, setActiveStorage] = useState<StorageSchema | null>(null);
+
+  const [bucketList, setBucketList] = useState<BucketSchema[]>([]);
+  const [activeBucket, setActiveBucket] = useState<BucketSchema | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getStorageListHandler = async () => {
+  const getBucketListHandler = async () => {
     try {
       setLoading(true);
-      const list = await getStorageList(projectId);
-      setStorageList(list);
+      const list = await getBucketList(projectId);
+      setBucketList(list);
 
-      let initialActiveStorage = null;
-      if (selectedStorage) {
-        initialActiveStorage = list.find(s => s.name === selectedStorage) || null;
+      let initialActive = null;
+      if (selectedBucket) {
+        initialActive = list.find(b => b.name === selectedBucket) || null;
       } else {
-        initialActiveStorage = list[0] || null;
+        initialActive = list[0] || null;
       }
 
-      setActiveStorage(initialActiveStorage);
-      if (initialActiveStorage) {
-        onSelect(initialActiveStorage);
+      setActiveBucket(initialActive);
+      if (initialActive) {
+        onSelect(initialActive);
       }
     } catch (error) {
-      console.error("Failed to load storage list:", error);
+      console.error("Failed to load bucket list:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getStorageListHandler();
+    getBucketListHandler();
   }, []);
 
   useEffect(() => {
-    if (selectedStorage && storageList.length > 0) {
-      const storage = storageList.find(s => s.name === selectedStorage) || null;
-      setActiveStorage(storage);
-      if (storage) {
-        onSelect(storage);
+    if (selectedBucket && bucketList.length > 0) {
+      const bucket = bucketList.find(b => b.name === selectedBucket) || null;
+      setActiveBucket(bucket);
+      if (bucket) {
+        onSelect(bucket);
       }
     }
-  }, [selectedStorage, storageList, onSelect]);
+  }, [selectedBucket, bucketList, onSelect]);
 
   const treeData = {
-    children: storageList.map((storage) => ({
+    children: bucketList.map((bucket) => ({
       type: 'file' as const,
-      filename: storage.name,
-      path: storage.name,
-      storage,
+      filename: bucket.name,
+      path: bucket.name,
+      bucket,
     }))
   };
 
   const selectedItem = {
-    path: activeStorage?.name || ''
+    path: activeBucket?.name || ''
   };
 
   const renderIcon = (item: any, nodeType: any) => {
-    if (nodeType === 'file' && item.storage) {
-      return <CloudOutlined style={{fontSize: '16px'}}/>;
+    if (nodeType === 'file' && item.bucket) {
+      return <DatabaseOutlined style={{fontSize: '16px'}}/>;
     }
     return <FolderOutlined style={{fontSize: '16px'}}/>;
   };
 
   const renderMore = (item: any) => {
-    if (item.storage) {
+    if (item.bucket) {
       const menuItems: MenuProps["items"] = [
         {
           key: "delete",
@@ -99,7 +99,7 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
           danger: true,
           onClick: (e) => {
             e?.domEvent?.stopPropagation();
-            setActiveStorage(item.storage);
+            setActiveBucket(item.bucket);
             setDeleteVisible(true);
           },
         },
@@ -128,8 +128,8 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
           tree={treeData}
           selected={selectedItem}
           onClickItem={(item) => {
-            setActiveStorage(item.storage);
-            onSelect(item.storage);
+            setActiveBucket(item.bucket);
+            onSelect(item.bucket);
           }}
           renderIcon={renderIcon}
           renderMore={renderMore}
@@ -138,16 +138,16 @@ const StorageExplorer: React.FC<StorageExplorerProps> = ({
         <Divider style={{margin: `${token.paddingXS}px 0`}}/>
         <Button
           type="primary"
-          icon={<CloudOutlined/>}
+          icon={<DatabaseOutlined/>}
           onClick={() => setDrawerVisible(true)}
           style={{width: "100%"}}
           ghost
         >
-          {t("create_storage")}
+          {t("create_bucket")}
         </Button>
       </div>
     </Spin>
   );
 };
 
-export default StorageExplorer;
+export default BucketExplorer;

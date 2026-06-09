@@ -1,7 +1,7 @@
 /**
- * 存储类型
+ * Bucket 访问可见性
  */
-export type StorageType = 'S3' | 'LOCAL';
+export type BucketVisibility = 'PRIVATE' | 'AUTHENTICATED' | 'PUBLIC';
 
 /**
  * 文件类型
@@ -9,53 +9,29 @@ export type StorageType = 'S3' | 'LOCAL';
 export type FileType = 'file' | 'folder';
 
 /**
- * S3配置接口
+ * Bucket 模式接口
  */
-export interface S3Config {
-  accessKey: string;
-  secretKey: string;
-  bucket: string;
-  region: string;
-  endpoint?: string;
-  pathStyle?: boolean;
-}
-
-/**
- * 本地配置接口
- */
-export interface LocalConfig {
-  basePath: string;
-  maxFileSize?: number;
-}
-
-/**
- * 存储配置接口
- */
-export interface StorageConfig {
-  type: StorageType;
-  s3?: S3Config;
-  local?: LocalConfig;
-}
-
-/**
- * 存储模式接口
- */
-export interface StorageSchema {
+export interface BucketSchema {
+  id: string;
   name: string;
-  type: StorageType;
-  config: StorageConfig;
-  enabled: boolean;
+  description?: string;
+  visibility: BucketVisibility;
+  maxFileSize?: number;
+  ownerType: string;
+  ownerId: string;
   createdAt: string;
   updatedAt: string;
 }
 
 /**
- * 存储验证结果接口
+ * 存储提供者信息接口
  */
-export interface ValidateStorageResult {
-  success: boolean;
-  errorMsg?: string;
-  time?: number;
+export interface StorageProviderInfo {
+  type: string;
+  bucket?: string;
+  endpoint?: string;
+  localPath?: string;
+  readOnly: boolean;
 }
 
 /**

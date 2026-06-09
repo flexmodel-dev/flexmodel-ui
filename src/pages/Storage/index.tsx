@@ -1,18 +1,16 @@
 import React, {useState} from "react";
-import {Button, Col, Form, message, Modal, Row, Space, Splitter, Tabs, Typography, theme} from "antd";
+import {Button, Col, Form, message, Modal, Row, Space, Splitter, Tabs, Typography, theme, Tag} from "antd";
 import {useTranslation} from "react-i18next";
 import PageContainer from "@/components/common/PageContainer";
-import type {StorageSchema} from "@/types/storage";
-import StorageExplorer from "@/pages/Storage/components/StorageExplorer";
-import {
-  deleteStorage,
-  updateStorage,
-} from "@/services/storage.ts";
-import CreateStorageDrawer from "@/pages/Storage/components/CreateStorageDrawer";
-import StorageView from "@/pages/Storage/components/StorageView";
-import StorageForm from "@/pages/Storage/components/StorageForm";
+import type {BucketSchema, StorageProviderInfo} from "@/types/storage";
+import BucketExplorer from "@/pages/Storage/components/BucketExplorer";
+import {deleteBucket, updateBucket, getStorageProviderInfo} from "@/services/storage.ts";
+import CreateBucketDrawer from "@/pages/Storage/components/CreateBucketDrawer";
+import BucketView from "@/pages/Storage/components/BucketView";
+import BucketForm from "@/pages/Storage/components/BucketForm";
 import FileBrowser from "@/pages/Storage/components/FileBrowser";
 import {useProject} from "@/store/appStore";
+import {CloudOutlined, HddOutlined} from "@ant-design/icons";
 
 const {Title} = Typography;
 
@@ -21,26 +19,33 @@ const StorageManagement: React.FC = () => {
   const {t} = useTranslation();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
-  const [activeStorage, setActiveStorage] = useState<StorageSchema | null>(null);
+  const [activeBucket, setActiveBucket] = useState<BucketSchema | null>(null);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [deleteVisible, setDeleteVisible] = useState<boolean>(false);
+  const [forceDelete, setForceDelete] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>('browser');
+  const [providerInfo, setProviderInfo] = useState<StorageProviderInfo | null>(null);
   const [form] = Form.useForm();
 
-  const handleSelect = (storage: StorageSchema) => {
-    if (activeStorage?.name !== storage.name) {
-      setActiveStorage(storage);
+  // Load provider info on mount
+  React.useEffect(() => {
+    getStorageProviderInfo().then(setProviderInfo).catch(() => {});
+  }, []);
+
+  const handleSelect = (bucket: BucketSchema) => {
+    if (activeBucket?.name !== bucket.name) {
+      setActiveBucket(bucket);
       setActiveTab('browser');
     }
   };
 
-  const handleEditStorage = async (formData: any) => {
+  const handleEditBucket = async (formData: any) => {
     try {
-      await updateStorage(projectId, formData.name, formData as StorageSchema);
+      await updateBucket(projectId, formData.name, formData as BucketSchema);
       setIsEditing(false);
-      if (activeStorage) {
-        setActiveStorage(formData as StorageSchema);
+      if (activeBucket) {
+        setActiveBucket(formData as BucketSchema);
       }
       message.success(t("form_save_success"));
     } catch {
@@ -49,31 +54,50 @@ const StorageManagement: React.FC = () => {
   };
 
   const handleDelete = async () => {
-    if (activeStorage) {
+    if (activeBucket) {
       try {
-        await deleteStorage(projectId, activeStorage.name);
+        await deleteBucket(projectId, activeBucket.name, forceDelete);
         setDeleteVisible(false);
-        setActiveStorage(null);
-        message.success(t("delete_storage_success"));
-      } catch {
-        message.error(t("delete_storage_failed"));
+        setForceDelete(false);
+        setActiveBucket(null);
+        message.success(t("delete_bucket_success"));
+      } catch (error: any) {
+        if (error?.message?.includes('not empty')) {
+          message.error(t("bucket_not_empty"));
+        } else {
+          message.error(t("delete_bucket_failed"));
+        }
       }
     }
   };
+
+  const providerTypeLabel = providerInfo?.type === 's3' ? 'S3' : providerInfo?.type === 'local' ? 'Local' : providerInfo?.type || '-';
 
   return (
     <>
       <PageContainer
         title={t("storage")}
+        extra={
+          providerInfo && (
+            <Space size="small">
+              <Tag icon={providerInfo.type === 's3' ? <CloudOutlined/> : <HddOutlined/>} color="blue">
+                {providerTypeLabel}
+              </Tag>
+              {providerInfo.readOnly && (
+                <Tag color="orange">{t('read_only')}</Tag>
+              )}
+            </Space>
+          )
+        }
       >
         <Splitter>
           <Splitter.Panel max="20%" collapsible>
             <div style={{height: "80vh", overflow: "auto"}}>
-              <StorageExplorer
+              <BucketExplorer
                 onSelect={handleSelect}
                 setDeleteVisible={setDeleteVisible}
                 setDrawerVisible={setDrawerVisible}
-                selectedStorage={activeStorage?.name}
+                selectedBucket={activeBucket?.name}
               />
             </div>
           </Splitter.Panel>
@@ -85,7 +109,7 @@ const StorageManagement: React.FC = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-                <Title level={3} style={{margin: 0}}>{activeStorage?.name || t('storage')}</Title>
+                <Title level={3} style={{margin: 0}}>{activeBucket?.name || t('storage')}</Title>
                 <Space>
                   {isEditing ? (
                     <Space>
@@ -95,7 +119,7 @@ const StorageManagement: React.FC = () => {
                       }}>{t("cancel")}</Button>
                       <Button type="primary" onClick={async () => {
                         const values = await form.validateFields();
-                        await handleEditStorage(values);
+                        await handleEditBucket(values);
                       }}>{t("save")}</Button>
                     </Space>
                   ) : (
@@ -103,28 +127,29 @@ const StorageManagement: React.FC = () => {
                       type="primary"
                       onClick={() => {
                         setIsEditing(true);
-                        form.setFieldsValue(activeStorage);
+                        form.setFieldsValue(activeBucket);
                       }}
+                      disabled={!activeBucket}
                     >
                       {t("edit")}
                     </Button>
                   )}
                 </Space>
               </div>
-              {activeStorage && (
+              {activeBucket && (
                 <Row>
                   <Col span={24}>
                     {isEditing ? (
                       <Form form={form} layout="vertical">
-                        <StorageForm/>
+                        <BucketForm/>
                       </Form>
                     ) : (
                       <Tabs activeKey={activeTab} onChange={setActiveTab}>
                         <Tabs.TabPane key="browser" tab={t('file_browser')}>
-                          <FileBrowser storageName={activeStorage.name} projectId={projectId}/>
+                          <FileBrowser bucketName={activeBucket.name} projectId={projectId}/>
                         </Tabs.TabPane>
                         <Tabs.TabPane key="config" tab={t('configuration')}>
-                          <StorageView data={activeStorage}/>
+                          <BucketView data={activeBucket}/>
                         </Tabs.TabPane>
                       </Tabs>
                     )}
@@ -136,74 +161,11 @@ const StorageManagement: React.FC = () => {
         </Splitter>
 
       </PageContainer>
-      {/* <PageContainer
-        title={activeStorage?.name || t('storage')}
-        extra={
-          <>
-            {isEditing ? (
-              <Space>
-                <Button onClick={() => {
-                  setIsEditing(false);
-                  form.resetFields();
-                }}>{t("cancel")}</Button>
-                <Button type="primary" onClick={async () => {
-                  const values = await form.validateFields();
-                  await handleEditStorage(values);
-                }}>{t("save")}</Button>
-              </Space>
-            ) : (
-              <Button
-                type="primary"
-                onClick={() => {
-                  setIsEditing(true);
-                  form.setFieldsValue(activeStorage);
-                }}
-              >
-                {t("edit")}
-              </Button>
-            )}
-          </>
-        }>
-        <Layout style={{ height: "100%", background: "transparent" }}>
-          <Sider width={320} style={{ background: "transparent", borderRight: "1px solid var(--ant-color-border)" }}>
-            <div style={{ height: "100%", overflow: "auto" }}>
-              <StorageExplorer
-                onSelect={handleSelect}
-                setDeleteVisible={setDeleteVisible}
-                setDrawerVisible={setDrawerVisible}
-                selectedStorage={activeStorage?.name}
-              />
-            </div>
-          </Sider>
-          <Content style={{ padding: "12px 20px", overflow: "auto" }}>
-            {activeStorage && (
-              <Row>
-                <Col span={24}>
-                  {isEditing ? (
-                    <Form form={form} layout="vertical">
-                      <StorageForm />
-                    </Form>
-                  ) : (
-                    <Tabs activeKey={activeTab} onChange={setActiveTab}>
-                      <Tabs.TabPane key="browser" tab={t('file_browser')}>
-                        <FileBrowser storageName={activeStorage.name} projectId={projectId} />
-                      </Tabs.TabPane>
-                      <Tabs.TabPane key="config" tab={t('configuration')}>
-                        <StorageView data={activeStorage} />
-                      </Tabs.TabPane>
-                    </Tabs>
-                  )}
-                </Col>
-              </Row>
-            )}
-          </Content>
-        </Layout>
-      </PageContainer> */}
 
-      <CreateStorageDrawer
+      <CreateBucketDrawer
         visible={drawerVisible}
         onChange={(data) => {
-          setActiveStorage(data);
+          setActiveBucket(data);
         }}
         onClose={() => {
           setDrawerVisible(false);
@@ -212,15 +174,26 @@ const StorageManagement: React.FC = () => {
 
       <Modal
         open={deleteVisible}
-        title={t("delete_storage_confirm", {name: activeStorage?.name})}
-        onCancel={() => setDeleteVisible(false)}
+        title={t("delete_bucket_confirm", {name: activeBucket?.name})}
+        onCancel={() => {
+          setDeleteVisible(false);
+          setForceDelete(false);
+        }}
         onOk={handleDelete}
         okText={t("delete")}
         okButtonProps={{danger: true}}
       >
-        <p>
-          {t("delete_storage_confirm_desc", {name: activeStorage?.name})}
-        </p>
+        <p>{t("delete_bucket_confirm_desc", {name: activeBucket?.name})}</p>
+        <div style={{marginTop: 12}}>
+          <label>
+            <input
+              type="checkbox"
+              checked={forceDelete}
+              onChange={(e) => setForceDelete(e.target.checked)}
+            />
+            {' '}{t('force_delete')} — {t('force_delete_desc')}
+          </label>
+        </div>
       </Modal>
     </>
   );

@@ -21,14 +21,13 @@ import {
 } from '@/services/storage';
 
 interface FileBrowserProps {
-  storageName: string;
+  bucketName: string;
   projectId: string;
 }
 
-const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
+const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
   const {t} = useTranslation();
-  const { token } = theme.useToken();
-  console.log('FileBrowser for storage:', storageName, 'projectId:', projectId);
+  const {token} = theme.useToken();
   const [currentPath, setCurrentPath] = useState<string>('/');
   const [fileList, setFileList] = useState<FileItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,7 +39,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
   const loadFiles = useCallback(async () => {
     setLoading(true);
     try {
-      const files = await listFiles(projectId, storageName, currentPath === '/' ? undefined : currentPath);
+      const files = await listFiles(projectId, bucketName, currentPath === '/' ? undefined : currentPath);
       setFileList(files);
     } catch (error) {
       console.error(error);
@@ -48,7 +47,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
     } finally {
       setLoading(false);
     }
-  }, [projectId, storageName, currentPath, t]);
+  }, [projectId, bucketName, currentPath, t]);
 
   React.useEffect(() => {
     loadFiles();
@@ -79,7 +78,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
     }
     try {
       const folderPath = `${currentPath}/${folderName}`.replace(/\/+/g, '/');
-      await createFolder(projectId, storageName, folderPath);
+      await createFolder(projectId, bucketName, folderPath);
       message.success(t('create_folder_success'));
       setCreateFolderVisible(false);
       setFolderName('');
@@ -92,7 +91,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
 
   const handleDelete = async (file: FileItem) => {
     try {
-      await deleteFile(projectId, storageName, file.path);
+      await deleteFile(projectId, bucketName, file.path);
       message.success(t('delete_file_success'));
       await loadFiles();
     } catch (error) {
@@ -104,7 +103,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
   const handleBatchDelete = async () => {
     try {
       await Promise.all(
-        selectedRowKeys.map(path => deleteFile(projectId, storageName, path as string))
+        selectedRowKeys.map(path => deleteFile(projectId, bucketName, path as string))
       );
       setSelectedRowKeys([]);
       message.success(t('batch_delete_success'));
@@ -117,12 +116,12 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
 
   const handleDownload = async (file: FileItem) => {
     try {
-      message.loading({ content: t('downloading', {name: file.name}), key: 'download' });
-      await downloadFile(projectId, storageName, file.path, file.name);
-      message.success({ content: t('download_success', {name: file.name}), key: 'download' });
+      message.loading({content: t('downloading', {name: file.name}), key: 'download'});
+      await downloadFile(projectId, bucketName, file.path, file.name);
+      message.success({content: t('download_success', {name: file.name}), key: 'download'});
     } catch (error) {
       console.error(error);
-      message.error({ content: t('download_failed', {name: file.name}), key: 'download' });
+      message.error({content: t('download_failed', {name: file.name}), key: 'download'});
     }
   };
 
@@ -136,7 +135,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
 
   const getBreadcrumbItems = () => {
     const parts = currentPath.split('/').filter(Boolean);
-    const items: any[] = [{title: <a onClick={() => handleBreadcrumbClick('/')}>根目录</a>}];
+    const items: any[] = [{title: <a onClick={() => handleBreadcrumbClick('/')}>{t('root_directory')}</a>}];
     let path = '';
     parts.forEach((part, index) => {
       path += '/' + part;
@@ -278,7 +277,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({storageName, projectId}) => {
             try {
               const fileObj = file as File;
               const filePath = currentPath === '/' ? `/${fileObj.name}` : `${currentPath}/${fileObj.name}`.replace(/\/+/g, '/');
-              await uploadFile(projectId, storageName, filePath, fileObj, fileObj.size);
+              await uploadFile(projectId, bucketName, filePath, fileObj, fileObj.size);
               message.success(t('upload_success', {name: fileObj.name}));
               onSuccess?.(new Date().getTime().toString());
               await loadFiles();
