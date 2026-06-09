@@ -126,7 +126,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    padding: '8px 8px 4px 4px',
+    padding: '8px 8px 8px 8px',
     gap: '8px',
   };
 
@@ -195,7 +195,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
                     }}>
                       <DatabaseOutlined style={{
                         fontSize: 16,
-                        color: isActive ? token.colorText : '#41454d',
+                        color: isActive ? token.colorText : token.colorTextTertiary,
                         flexShrink: 0,
                       }}/>
                       <Text
@@ -204,7 +204,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
                           fontSize: 14,
                           fontWeight: isActive ? 500 : 400,
                           lineHeight: '1.4',
-                          color: isActive ? token.colorText : '#333840',
+                          color: isActive ? token.colorText : token.colorTextSecondary,
                         }}
                       >
                         {bucket.name}
@@ -218,7 +218,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
                       <MoreOutlined
                         style={{
                           fontSize: 16,
-                          color: '#41454d',
+                          color: token.colorTextTertiary,
                           cursor: 'pointer',
                           padding: '2px 4px',
                           borderRadius: 4,
