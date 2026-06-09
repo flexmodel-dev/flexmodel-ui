@@ -158,7 +158,7 @@
   "date_range": "日期范围",
   "load_more": "加载更多",
   "datasource": "数据源管理",
-  "storage": "文件存储",
+  "storage": "对象存储",
   "storage_provider": "存储后端",
   "bucket": "Bucket",
   "bucket_name": "Bucket 名称",

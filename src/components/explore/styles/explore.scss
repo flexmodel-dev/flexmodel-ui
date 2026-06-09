@@ -462,20 +462,62 @@ pre.prism-code {
       }
     }
   }
+
+  .explorer-ul-compact {
+    &,
+    ul {
+      color: $dark-color;        // {colors.on-dark}
+    }
+    .file,
+    .folder {
+      color: $dark-color;
+      background: transparent;
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      &.selected {
+        background: #1d1f25;     // {colors.surface-dark-elevated}
+        color: #ffffff;
+        border-radius: 6px;
+        outline: none;
+      }
+      &:focus {
+        outline: none;
+      }
+      &.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        &:hover {
+          background: transparent;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
 }
 
-// 紧凑模式样式
+// 紧凑模式样式 — 基于 DESIGN.md 设计系统
 .explorer-ul-compact {
   &,
   ul {
-    padding: 0;
+    padding: 4px 0;
     margin: 0;
     list-style: none;
-    font-size: 12px;
-    line-height: 24px;
+    font-size: 14px;             // {typography.body-md}
+    line-height: 32px;           // 更宽敞的行高
+    font-family: $spring-font-family;
+    color: $light-color-dark;    // {colors.body}
   }
   span {
     display: block;
+  }
+  .li-folder,
+  .li-file {
+    border-radius: 6px;          // {rounded.sm}
+    margin: 1px 4px;
+    transition: background 0.12s ease;
   }
   .file,
   .folder {
@@ -483,42 +525,43 @@ pre.prism-code {
     display: block;
     cursor: pointer;
     text-decoration: none;
-    color: $light-color;
+    color: $light-color-dark;    // {colors.body}
     word-wrap: normal;
     white-space: nowrap;
     &:hover {
-      background: rgba(0, 0, 0, 0.03);
+      background: #f8fafc;       // {colors.surface-soft}
     }
     .text {
       position: relative;
-      padding-left: 36px;
-      margin: 0 4px;
+      padding-left: 38px;
+      margin: 0 8px;
+      font-size: 14px;
     }
     .icon {
       display: block;
       position: absolute;
-      top: 2px;
+      top: 7px;
       left: 14px;
-      height: 16px;
-      width: 16px;
+      height: 18px;
+      width: 18px;
     }
     .icon-caret-down {
       display: block;
       position: absolute;
       z-index: 1000;
-      top: 4px;
+      top: 8px;
       left: 0;
-      height: 12px;
-      width: 12px;
+      height: 14px;
+      width: 14px;
     }
     .icon-chevron-right, .icon-chevron-down {
       display: block;
       position: absolute;
       z-index: 1000;
-      top: 4px;
+      top: 8px;
       left: 0;
-      height: 8px;
-      width: 8px;
+      height: 10px;
+      width: 10px;
     }
 
     outline: 1px dotted transparent;
@@ -537,10 +580,11 @@ pre.prism-code {
       }
     }
     &.selected {
-      background: #f8fafc;
-      color: #181d26;
-      border-radius: 2px;
+      background: #f8fafc;       // {colors.surface-soft}
+      color: #181d26;            // {colors.ink}
+      border-radius: 6px;        // {rounded.sm}
       outline: none;
+      font-weight: 500;          // {typography.caption} weight
     }
   }
 
@@ -553,61 +597,61 @@ pre.prism-code {
     }
   }
 
-  $range: 8px;
+  $range: 12px;
 
   .level-0 {
     .text {
-      margin-left: 0 * $range + 4px;
+      margin-left: 0 * $range + 8px;
     }
   }
   .level-1 {
     .text {
-      margin-left: 1 * $range + 4px;
+      margin-left: 1 * $range + 8px;
     }
   }
   .level-2 {
     .text {
-      margin-left: 2 * $range + 4px;
+      margin-left: 2 * $range + 8px;
     }
   }
   .level-3 {
     .text {
-      margin-left: 3 * $range + 4px;
+      margin-left: 3 * $range + 8px;
     }
   }
   .level-4 {
     .text {
-      margin-left: 4 * $range + 4px;
+      margin-left: 4 * $range + 8px;
     }
   }
   .level-5 {
     .text {
-      margin-left: 5 * $range + 4px;
+      margin-left: 5 * $range + 8px;
     }
   }
   .level-6 {
     .text {
-      margin-left: 6 * $range + 4px;
+      margin-left: 6 * $range + 8px;
     }
   }
   .level-7 {
     .text {
-      margin-left: 7 * $range + 4px;
+      margin-left: 7 * $range + 8px;
     }
   }
   .level-8 {
     .text {
-      margin-left: 8 * $range + 4px;
+      margin-left: 8 * $range + 8px;
     }
   }
   .level-9 {
     .text {
-      margin-left: 9 * $range + 4px;
+      margin-left: 9 * $range + 8px;
     }
   }
   .level-10 {
     .text {
-      margin-left: 10 * $range + 4px;
+      margin-left: 10 * $range + 8px;
     }
   }
 }

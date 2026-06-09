@@ -26,6 +26,7 @@ const StorageManagement: React.FC = () => {
   const [forceDelete, setForceDelete] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>('browser');
   const [providerInfo, setProviderInfo] = useState<StorageProviderInfo | null>(null);
+  const [bucketRefreshKey, setBucketRefreshKey] = useState<number>(0);
   const [form] = Form.useForm();
 
   // Load provider info on mount
@@ -60,6 +61,7 @@ const StorageManagement: React.FC = () => {
         setDeleteVisible(false);
         setForceDelete(false);
         setActiveBucket(null);
+        setBucketRefreshKey(k => k + 1);
         message.success(t("delete_bucket_success"));
       } catch (error: any) {
         if (error?.message?.includes('not empty')) {
@@ -98,6 +100,7 @@ const StorageManagement: React.FC = () => {
                 setDeleteVisible={setDeleteVisible}
                 setDrawerVisible={setDrawerVisible}
                 selectedBucket={activeBucket?.name}
+                refreshKey={bucketRefreshKey}
               />
             </div>
           </Splitter.Panel>
@@ -166,6 +169,7 @@ const StorageManagement: React.FC = () => {
         visible={drawerVisible}
         onChange={(data) => {
           setActiveBucket(data);
+          setBucketRefreshKey(k => k + 1);
         }}
         onClose={() => {
           setDrawerVisible(false);

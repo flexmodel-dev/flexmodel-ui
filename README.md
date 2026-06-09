@@ -61,7 +61,7 @@ src/
 │   ├── OpenAPI/         # OpenAPI 管理
 │   ├── APILog/          # API 日志
 │   ├── Authentication/  # 认证 (API Key、OIDC)
-│   ├── Storage/         # 文件存储管理
+│   ├── Storage/         # 对象存储管理
 │   ├── Overview/        # 项目概览与监控
 │   ├── Member/          # 成员与角色管理
 │   ├── Settings/        # 系统设置

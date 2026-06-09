@@ -12,7 +12,7 @@ import {IconChevronDown, IconChevronRight, IconFile, IconFolder} from '../icons/
  * @param {Function} [props.renderMore]
  * @param {(item: any, nodeType: 'file'|'folder') => React.ReactNode} [props.renderIcon] 自定义icon渲染函数
  */
-function Tree({ tree, selected, onClickItem, renderMore, renderIcon }) {
+function Tree({ tree, selected, onClickItem, renderMore, renderIcon, compact = false }) {
   const [folders, setFolders] = useState([])
   // 1. li-file加一个state hoverFilePath，onMouseEnter/onMouseLeave控制
   const [hoverFilePath, setHoverFilePath] = useState(null);
@@ -132,7 +132,7 @@ function Tree({ tree, selected, onClickItem, renderMore, renderIcon }) {
   }
 
   return (
-    <ul className='explorer-ul'>
+    <ul className={`explorer-ul${compact ? ' explorer-ul-compact' : ''}`}>
       {tree.children.map(item => renderItem(item, 0))}
     </ul>
   )
@@ -151,7 +151,8 @@ Tree.propTypes = {
   }).isRequired,
   onClickItem: PropTypes.func.isRequired,
   renderMore: PropTypes.func,
-  renderIcon: PropTypes.func, // 新增
+  renderIcon: PropTypes.func,
+  compact: PropTypes.bool,
 }
 
 export default Tree

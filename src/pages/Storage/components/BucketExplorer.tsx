@@ -1,19 +1,20 @@
 import React, {useState, useEffect} from "react";
-import {Button, Divider, Dropdown, Spin, theme} from "antd";
+import {Button, Divider, Dropdown, List, Spin, theme, Typography} from "antd";
 import type {MenuProps} from "antd";
-import {DatabaseOutlined, DeleteOutlined, FolderOutlined, MoreOutlined} from "@ant-design/icons";
-import Tree from "@/components/explore/explore/Tree.jsx";
-import "@/components/explore/styles/explore.scss";
+import {DatabaseOutlined, DeleteOutlined, MoreOutlined} from "@ant-design/icons";
 import type {BucketSchema} from "@/types/storage";
 import {getBucketList} from "@/services/storage.ts";
 import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
+
+const {Text} = Typography;
 
 interface BucketExplorerProps {
   onSelect: (bucket: BucketSchema) => void;
   setDeleteVisible: (visible: boolean) => void;
   setDrawerVisible: (visible: boolean) => void;
   selectedBucket?: string;
+  refreshKey?: number;
 }
 
 const BucketExplorer: React.FC<BucketExplorerProps> = ({
@@ -21,6 +22,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
   setDeleteVisible,
   setDrawerVisible,
   selectedBucket,
+  refreshKey = 0,
 }) => {
   const {token} = theme.useToken();
   const {t} = useTranslation();
@@ -57,7 +59,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
 
   useEffect(() => {
     getBucketListHandler();
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => {
     if (selectedBucket && bucketList.length > 0) {
@@ -69,70 +71,104 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
     }
   }, [selectedBucket, bucketList, onSelect]);
 
-  const treeData = {
-    children: bucketList.map((bucket) => ({
-      type: 'file' as const,
-      filename: bucket.name,
-      path: bucket.name,
-      bucket,
-    }))
-  };
-
-  const selectedItem = {
-    path: activeBucket?.name || ''
-  };
-
-  const renderIcon = (item: any, nodeType: any) => {
-    if (nodeType === 'file' && item.bucket) {
-      return <DatabaseOutlined style={{fontSize: '16px'}}/>;
-    }
-    return <FolderOutlined style={{fontSize: '16px'}}/>;
-  };
-
-  const renderMore = (item: any) => {
-    if (item.bucket) {
-      const menuItems: MenuProps["items"] = [
-        {
-          key: "delete",
-          label: t("delete"),
-          icon: <DeleteOutlined/>,
-          danger: true,
-          onClick: (e) => {
-            e?.domEvent?.stopPropagation();
-            setActiveBucket(item.bucket);
-            setDeleteVisible(true);
-          },
-        },
-      ];
-
-      return (
-        <Dropdown
-          menu={{items: menuItems}}
-          trigger={["hover"]}
-          placement="bottomRight"
-        >
-          <MoreOutlined
-            className="cursor-pointer opacity-100 transition-opacity"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </Dropdown>
-      );
-    }
-    return null;
-  };
+  const menuItems = (bucket: BucketSchema): MenuProps["items"] => [
+    {
+      key: "delete",
+      label: t("delete"),
+      icon: <DeleteOutlined/>,
+      danger: true,
+      onClick: () => {
+        setActiveBucket(bucket);
+        setDeleteVisible(true);
+      },
+    },
+  ];
 
   return (
     <Spin spinning={loading}>
       <div style={{margin: token.paddingXS}}>
-        <Tree
-          tree={treeData}
-          selected={selectedItem}
-          onClickItem={(item) => {
-            setActiveBucket(item.bucket);
-            onSelect(item.bucket);
+        <List
+          dataSource={bucketList}
+          renderItem={(bucket) => {
+            const isActive = activeBucket?.name === bucket.name;
+            return (
+              <List.Item
+                onClick={() => {
+                  setActiveBucket(bucket);
+                  onSelect(bucket);
+                }}
+                style={{
+                  padding: '8px 12px',
+                  marginBottom: 4,
+                  borderRadius: 10,
+                  cursor: 'pointer',
+                  backgroundColor: isActive ? token.colorFillSecondary : 'transparent',
+                  border: 'none',
+                  transition: 'background-color 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = token.colorFillTertiary;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  gap: 8,
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    flex: 1,
+                    minWidth: 0,
+                  }}>
+                    <DatabaseOutlined style={{
+                      fontSize: 16,
+                      color: isActive ? token.colorText : '#41454d',
+                      flexShrink: 0,
+                    }}/>
+                    <Text
+                      ellipsis
+                      style={{
+                        fontSize: 14,
+                        fontWeight: isActive ? 500 : 400,
+                        lineHeight: '1.4',
+                        color: isActive ? token.colorText : '#333840',
+                      }}
+                    >
+                      {bucket.name}
+                    </Text>
+                  </div>
+                  <Dropdown
+                    menu={{items: menuItems(bucket)}}
+                    trigger={["hover"]}
+                    placement="bottomRight"
+                  >
+                    <MoreOutlined
+                      style={{
+                        fontSize: 16,
+                        color: '#41454d',
+                        cursor: 'pointer',
+                        padding: '2px 4px',
+                        borderRadius: 4,
+                        flexShrink: 0,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </Dropdown>
+                </div>
+              </List.Item>
+            );
           }}
-          renderIcon={renderIcon}
-          renderMore={renderMore}
         />
 
         <Divider style={{margin: `${token.paddingXS}px 0`}}/>

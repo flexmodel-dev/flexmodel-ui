@@ -306,6 +306,8 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    padding: '8px 8px 4px 4px',
+    gap: '8px',
   };
 
   const treeContainerStyle = {
@@ -313,17 +315,19 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     minHeight: 0,
     maxHeight: 'calc(100vh - 200px)',
     overflow: 'auto',
+    padding: '0 4px',
   };
 
   const inputStyle = {
     width: '100%',
-    marginRight: '5px',
+    borderRadius: '6px',
   };
 
   const containerStyle = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column' as const,
+    padding: '4px 0',
   };
 
   return (
