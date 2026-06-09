@@ -250,6 +250,7 @@
   "connect_sync_models_done_tips": "The models was synchronized from {{name}}",
   "management": "Management",
   "search_models": "Search Models",
+  "search_buckets": "Search Buckets",
   "new_entity": "New Entity",
   "new_enum": "New Enum",
   "new_native_query": "New Native query",

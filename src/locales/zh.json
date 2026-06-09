@@ -250,6 +250,7 @@
   "connect_sync_models_done_tips": "同步模型到数据库 {{name}} 成功",
   "management": "管理",
   "search_models": "搜索模型",
+  "search_buckets": "搜索 Bucket",
   "new_entity": "新建实体",
   "new_enum": "新建枚举",
   "new_native_query": "新建本地查询",

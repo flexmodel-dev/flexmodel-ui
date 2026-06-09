@@ -5,7 +5,6 @@ import PageContainer from "@/components/common/PageContainer";
 import type {BucketSchema, StorageProviderInfo} from "@/types/storage";
 import BucketExplorer from "@/pages/Storage/components/BucketExplorer";
 import {deleteBucket, updateBucket, getStorageProviderInfo} from "@/services/storage.ts";
-import CreateBucketDrawer from "@/pages/Storage/components/CreateBucketDrawer";
 import BucketView from "@/pages/Storage/components/BucketView";
 import BucketForm from "@/pages/Storage/components/BucketForm";
 import FileBrowser from "@/pages/Storage/components/FileBrowser";
@@ -20,7 +19,6 @@ const StorageManagement: React.FC = () => {
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
   const [activeBucket, setActiveBucket] = useState<BucketSchema | null>(null);
-  const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [deleteVisible, setDeleteVisible] = useState<boolean>(false);
   const [forceDelete, setForceDelete] = useState<boolean>(false);
@@ -79,6 +77,7 @@ const StorageManagement: React.FC = () => {
     <>
       <PageContainer
         title={t("storage")}
+        bodyStyle={{overflow: 'hidden', padding: 0}}
         extra={
           providerInfo && (
             <Space size="small">
@@ -92,20 +91,19 @@ const StorageManagement: React.FC = () => {
           )
         }
       >
-        <Splitter>
+        <Splitter style={{height: '100%'}}>
           <Splitter.Panel max="20%" collapsible>
-            <div style={{height: "80vh", overflow: "auto"}}>
+            <div style={{height: '100%', overflow: 'hidden'}}>
               <BucketExplorer
                 onSelect={handleSelect}
                 setDeleteVisible={setDeleteVisible}
-                setDrawerVisible={setDrawerVisible}
                 selectedBucket={activeBucket?.name}
                 refreshKey={bucketRefreshKey}
               />
             </div>
           </Splitter.Panel>
           <Splitter.Panel>
-            <div style={{padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto"}}>
+            <div style={{height: '100%', padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto"}}>
               <div style={{
                 marginBottom: token.marginMD,
                 display: 'flex',
@@ -164,17 +162,6 @@ const StorageManagement: React.FC = () => {
         </Splitter>
 
       </PageContainer>
-
-      <CreateBucketDrawer
-        visible={drawerVisible}
-        onChange={(data) => {
-          setActiveBucket(data);
-          setBucketRefreshKey(k => k + 1);
-        }}
-        onClose={() => {
-          setDrawerVisible(false);
-        }}
-      />
 
       <Modal
         open={deleteVisible}
