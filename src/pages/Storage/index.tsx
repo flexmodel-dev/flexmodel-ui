@@ -4,7 +4,8 @@ import {useTranslation} from "react-i18next";
 import PageContainer from "@/components/common/PageContainer";
 import type {BucketSchema, StorageProviderInfo} from "@/types/storage";
 import BucketExplorer from "@/pages/Storage/components/BucketExplorer";
-import {deleteBucket, updateBucket, getStorageProviderInfo} from "@/services/storage.ts";
+import {deleteBucket, updateBucket} from "@/services/storage.ts";
+import {getGlobalProfile} from "@/services/global";
 import BucketView from "@/pages/Storage/components/BucketView";
 import BucketForm from "@/pages/Storage/components/BucketForm";
 import FileBrowser from "@/pages/Storage/components/FileBrowser";
@@ -29,7 +30,7 @@ const StorageManagement: React.FC = () => {
 
   // Load provider info on mount
   React.useEffect(() => {
-    getStorageProviderInfo().then(setProviderInfo).catch(() => {});
+    getGlobalProfile().then(profile => setProviderInfo(profile.storageProvider)).catch(() => {});
   }, []);
 
   const handleSelect = (bucket: BucketSchema) => {

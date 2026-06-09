@@ -1,5 +1,5 @@
 import {api} from '@/utils/request'
-import {BucketSchema, FileItem, StorageProviderInfo} from '@/types/storage'
+import {BucketSchema, FileItem} from '@/types/storage'
 
 /**
  * 获取 Bucket 列表
@@ -50,14 +50,6 @@ export const deleteBucket = (projectId: string, bucketName: string, force?: bool
  */
 export const getBucket = (projectId: string, bucketName: string): Promise<BucketSchema> => {
   return api.get(`/projects/${projectId}/buckets/${bucketName}`)
-}
-
-/**
- * 获取存储提供者信息
- * @returns 存储提供者信息
- */
-export const getStorageProviderInfo = (): Promise<StorageProviderInfo> => {
-  return api.get('/storage/provider')
 }
 
 /**
