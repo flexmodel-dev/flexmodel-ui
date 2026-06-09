@@ -13,11 +13,11 @@ import type {ColumnsType} from 'antd/es/table';
 import type {FileItem} from '@/types/storage';
 import {useTranslation} from 'react-i18next';
 import {
-  listFiles,
-  deleteFile,
-  uploadFile,
+  listObjects,
+  deleteObject,
+  uploadObject,
   createFolder,
-  downloadFile
+  downloadObject
 } from '@/services/storage';
 
 interface FileBrowserProps {
@@ -39,7 +39,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
   const loadFiles = useCallback(async () => {
     setLoading(true);
     try {
-      const files = await listFiles(projectId, bucketName, currentPath === '/' ? undefined : currentPath);
+      const files = await listObjects(projectId, bucketName, currentPath === '/' ? undefined : currentPath);
       setFileList(files);
     } catch (error) {
       console.error(error);
@@ -91,7 +91,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
 
   const handleDelete = async (file: FileItem) => {
     try {
-      await deleteFile(projectId, bucketName, file.path);
+      await deleteObject(projectId, bucketName, file.path);
       message.success(t('delete_file_success'));
       await loadFiles();
     } catch (error) {
@@ -103,7 +103,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
   const handleBatchDelete = async () => {
     try {
       await Promise.all(
-        selectedRowKeys.map(path => deleteFile(projectId, bucketName, path as string))
+        selectedRowKeys.map(path => deleteObject(projectId, bucketName, path as string))
       );
       setSelectedRowKeys([]);
       message.success(t('batch_delete_success'));
@@ -117,7 +117,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
   const handleDownload = async (file: FileItem) => {
     try {
       message.loading({content: t('downloading', {name: file.name}), key: 'download'});
-      await downloadFile(projectId, bucketName, file.path, file.name);
+      await downloadObject(projectId, bucketName, file.path, file.name);
       message.success({content: t('download_success', {name: file.name}), key: 'download'});
     } catch (error) {
       console.error(error);
@@ -277,7 +277,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
             try {
               const fileObj = file as File;
               const filePath = currentPath === '/' ? `/${fileObj.name}` : `${currentPath}/${fileObj.name}`.replace(/\/+/g, '/');
-              await uploadFile(projectId, bucketName, filePath, fileObj, fileObj.size);
+              await uploadObject(projectId, bucketName, filePath, fileObj);
               message.success(t('upload_success', {name: fileObj.name}));
               onSuccess?.(new Date().getTime().toString());
               await loadFiles();

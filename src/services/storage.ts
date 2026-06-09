@@ -61,72 +61,49 @@ export const getStorageProviderInfo = (): Promise<StorageProviderInfo> => {
 }
 
 /**
- * 列出文件
+ * 列出对象
  * @param projectId 项目ID
  * @param bucketName Bucket 名称
- * @param path 路径
- * @returns 文件列表
+ * @param prefix 前缀路径
+ * @returns 对象列表
  */
-export const listFiles = (projectId: string, bucketName: string, path?: string): Promise<FileItem[]> => {
-  const url = path
-    ? `/projects/${projectId}/buckets/${bucketName}/files?path=${encodeURIComponent(path)}`
-    : `/projects/${projectId}/buckets/${bucketName}/files`
+export const listObjects = (projectId: string, bucketName: string, prefix?: string): Promise<FileItem[]> => {
+  const url = prefix
+    ? `/projects/${projectId}/buckets/${bucketName}/objects?prefix=${encodeURIComponent(prefix)}`
+    : `/projects/${projectId}/buckets/${bucketName}/objects`
   return api.get(url)
 }
 
 /**
- * 删除文件
+ * 上传对象（PUT binary）
  * @param projectId 项目ID
  * @param bucketName Bucket 名称
- * @param path 文件路径
+ * @param path 对象路径
+ * @param file 文件对象
  */
-export const deleteFile = (projectId: string, bucketName: string, path: string): Promise<void> => {
-  return api.request({ url: `/projects/${projectId}/buckets/${bucketName}/files/delete?path=${encodeURIComponent(path)}`, method: 'delete' })
+export const uploadObject = (projectId: string, bucketName: string, path: string, file: File): Promise<void> => {
+  const objectPath = path.startsWith('/') ? path.substring(1) : path;
+  return api.request({
+    url: `/projects/${projectId}/buckets/${bucketName}/objects/${objectPath}`,
+    method: 'put',
+    data: file,
+    headers: {
+      'Content-Type': 'application/octet-stream'
+    }
+  })
 }
 
 /**
- * 检查文件是否存在
+ * 下载对象
  * @param projectId 项目ID
  * @param bucketName Bucket 名称
- * @param path 文件路径
- * @returns 文件是否存在
- */
-export const checkFileExists = (projectId: string, bucketName: string, path: string): Promise<{exists: boolean}> => {
-  return api.get(`/projects/${projectId}/buckets/${bucketName}/files/exists?path=${encodeURIComponent(path)}`)
-}
-
-/**
- * 获取文件信息
- * @param projectId 项目ID
- * @param bucketName Bucket 名称
- * @param path 文件路径
- * @returns 文件信息
- */
-export const getFileInfo = (projectId: string, bucketName: string, path: string): Promise<FileItem> => {
-  return api.get(`/projects/${projectId}/buckets/${bucketName}/files/info?path=${encodeURIComponent(path)}`)
-}
-
-/**
- * 获取文件大小
- * @param projectId 项目ID
- * @param bucketName Bucket 名称
- * @param path 文件路径
- * @returns 文件大小
- */
-export const getFileSize = (projectId: string, bucketName: string, path: string): Promise<{size: number}> => {
-  return api.get(`/projects/${projectId}/buckets/${bucketName}/files/size?path=${encodeURIComponent(path)}`)
-}
-
-/**
- * 下载文件
- * @param projectId 项目ID
- * @param bucketName Bucket 名称
- * @param path 文件路径
+ * @param path 对象路径
  * @param fileName 文件名
  */
-export const downloadFile = async (projectId: string, bucketName: string, path: string, fileName: string): Promise<void> => {
+export const downloadObject = async (projectId: string, bucketName: string, path: string, fileName: string): Promise<void> => {
+  const objectPath = path.startsWith('/') ? path.substring(1) : path;
   const response = await api.request({
-    url: `/projects/${projectId}/buckets/${bucketName}/files/download?path=${encodeURIComponent(path)}`,
+    url: `/projects/${projectId}/buckets/${bucketName}/objects/${objectPath}`,
     method: 'get',
     responseType: 'blob'
   });
@@ -141,35 +118,63 @@ export const downloadFile = async (projectId: string, bucketName: string, path: 
 }
 
 /**
- * 上传文件
+ * 删除对象
  * @param projectId 项目ID
  * @param bucketName Bucket 名称
- * @param path 目标路径
- * @param file 文件对象
- * @param fileSize 文件大小
+ * @param path 对象路径
  */
-export const uploadFile = (projectId: string, bucketName: string, path: string, file: File, fileSize?: number): Promise<void> => {
-  const formData = new FormData()
-  formData.append('file', file)
-  if (fileSize !== undefined) {
-    formData.append('fileSize', fileSize.toString())
-  }
-  return api.request({
-    url: `/projects/${projectId}/buckets/${bucketName}/files/upload?path=${encodeURIComponent(path)}`,
-    method: 'post',
-    data: formData,
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
+export const deleteObject = (projectId: string, bucketName: string, path: string): Promise<void> => {
+  const objectPath = path.startsWith('/') ? path.substring(1) : path;
+  return api.delete(`/projects/${projectId}/buckets/${bucketName}/objects/${objectPath}`)
 }
 
 /**
- * 创建文件夹
+ * 检查对象是否存在（HEAD 请求）
  * @param projectId 项目ID
  * @param bucketName Bucket 名称
- * @param path 文件夹路径
+ * @param path 对象路径
+ * @returns Response headers 包含 Content-Length、Last-Modified 等
+ */
+export const headObject = async (projectId: string, bucketName: string, path: string): Promise<{exists: boolean, headers?: Headers}> => {
+  const objectPath = path.startsWith('/') ? path.substring(1) : path;
+  try {
+    const response = await api.request({
+      url: `/projects/${projectId}/buckets/${bucketName}/objects/${objectPath}`,
+      method: 'head'
+    });
+    return { exists: true, headers: response as any };
+  } catch {
+    return { exists: false };
+  }
+}
+
+/**
+ * 获取对象元数据
+ * @param projectId 项目ID
+ * @param bucketName Bucket 名称
+ * @param path 对象路径
+ * @returns 对象元数据
+ */
+export const getObjectMetadata = (projectId: string, bucketName: string, path: string): Promise<FileItem> => {
+  const objectPath = path.startsWith('/') ? path.substring(1) : path;
+  return api.get(`/projects/${projectId}/buckets/${bucketName}/objects/${objectPath}/metadata`)
+}
+
+/**
+ * 创建文件夹（PUT 空对象 + folder=true 查询参数）
+ * @param projectId 项目ID
+ * @param bucketName Bucket 名称
+ * @param path 文件夹路径（如 images）
  */
 export const createFolder = (projectId: string, bucketName: string, path: string): Promise<void> => {
-  return api.request({ url: `/projects/${projectId}/buckets/${bucketName}/folders/create?path=${encodeURIComponent(path)}`, method: 'post' })
+  // Strip leading slash to avoid double-slash in URL
+  const objectPath = path.startsWith('/') ? path.substring(1) : path;
+  return api.request({
+    url: `/projects/${projectId}/buckets/${bucketName}/objects/${objectPath}?folder=true`,
+    method: 'put',
+    data: new Blob([]),
+    headers: {
+      'Content-Type': 'application/octet-stream'
+    }
+  })
 }
