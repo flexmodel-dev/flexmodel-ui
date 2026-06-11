@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import PageContainer from '@/components/common/PageContainer.tsx';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Button, message, Space} from 'antd';
+import {Button, message, Space, theme} from 'antd';
 import {ArrowLeftOutlined} from '@ant-design/icons';
 import {FlowModuleDetail, getElementInstances, getFlowInstance, getFlowModule, NodeInstance,} from '@/services/flow.ts';
 import {
@@ -30,6 +30,7 @@ const FlowDetail: React.FC = () => {
   const { flowInstanceId } = useParams<{ flowInstanceId: string }>();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
+  const {token} = theme.useToken();
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState<string>('');
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -85,6 +86,9 @@ const FlowDetail: React.FC = () => {
   return (
     <PageContainer
       loading={loading}
+      style={{ padding: 0, border: 'none', borderRadius: 0 }}
+      bodyStyle={{ padding: 0, overflow: 'hidden' }}
+      headerStyle={{ borderBottom: `1px solid ${token.colorBorderSecondary}`, padding: '8px 16px' }}
       title={
         <Space>
           <Button icon={<ArrowLeftOutlined/>} onClick={() => navigate(-1)}/>

@@ -9,6 +9,7 @@ interface PageContainerProps {
   className?: string;
   loading?: boolean;
   bodyStyle?: React.CSSProperties;
+  headerStyle?: React.CSSProperties;
 }
 
 const PageContainer: React.FC<PageContainerProps> = ({
@@ -19,6 +20,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
   className,
   loading = false,
   bodyStyle,
+  headerStyle,
 }) => {
   const { token } = theme.useToken();
 
@@ -46,6 +48,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
             justifyContent: 'space-between',
             alignItems: 'center',
             flexShrink: 0,
+            ...headerStyle,
           }}
         >
           {title && (
