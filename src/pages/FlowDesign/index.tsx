@@ -534,19 +534,13 @@ const FlowDesign: React.FC = () => {
           if (!datasourceName || !modelName) {
             currentInvalidNodes.add(node.id);
           }
-        } else if (subType === 'api') {
-          const method = (node.data?.properties as any)?.method;
-          const url = (node.data?.properties as any)?.url;
-          if (!method || !url) {
-            currentInvalidNodes.add(node.id);
-          }
         }
       }
     }
-    
+
     // 更新校验状态
     setInvalidNodeIds(currentInvalidNodes);
-    
+
     // 如果还有校验失败的节点，阻止保存
     if (currentInvalidNodes.size > 0) {
       message.error(`有${currentInvalidNodes.size}个节点配置不完整，请修正后再保存`);
@@ -651,12 +645,6 @@ const FlowDesign: React.FC = () => {
           const datasourceName = (node.data?.properties as any)?.datasourceName;
           const modelName = (node.data?.properties as any)?.modelName;
           if (!datasourceName || !modelName) {
-            currentInvalidNodes.add(node.id);
-          }
-        } else if (subType === 'api') {
-          const method = (node.data?.properties as any)?.method;
-          const url = (node.data?.properties as any)?.url;
-          if (!method || !url) {
             currentInvalidNodes.add(node.id);
           }
         }

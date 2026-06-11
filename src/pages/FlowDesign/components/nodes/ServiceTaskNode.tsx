@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Handle, NodeProps, Position} from '@xyflow/react';
 import {
-  ApiOutlined,
   CodeOutlined,
   DatabaseOutlined,
   DeleteOutlined,
@@ -35,8 +34,6 @@ const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
         return <CodeOutlined {...iconProps} style={{color: '#f4d35e'}}/>;
       case 'sql':
         return <DatabaseOutlined {...iconProps} style={{color: '#254fad'}}/>;
-      case 'api':
-        return <ApiOutlined {...iconProps} style={{color: token.colorPrimary}}/>;
       default:
         return <SettingOutlined {...iconProps} style={{color: token.colorPrimary}}/>;
     }
@@ -68,9 +65,6 @@ const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
         break;
       case 'sql':
         baseName = '执行SQL';
-        break;
-      case 'api':
-        baseName = '调用API';
         break;
       default:
         baseName = '自动任务';

@@ -17,13 +17,13 @@ import {
   SunOutlined
 } from "@ant-design/icons";
 import { applyDarkMode, setDarkModeToStorage } from "@/utils/darkMode";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import ProjectSidebar from "./ProjectSidebar";
 import Console from "@/components/console/Console.tsx";
 import ResizablePanel from "@/components/common/ResizablePanel";
 import BranchSwitcher from "@/components/common/BranchSwitcher";
 import { Outlet } from "react-router-dom";
-import { getFullRoutePath } from "@/routes";
+import { getFullRoutePath, shouldHideLayout } from "@/routes";
 import UserInfo from "@/components/UserInfo";
 import { getProject, getProjects } from "@/services/project";
 import type { Project } from "@/types/project";
@@ -37,6 +37,7 @@ const ProjectLayout: React.FC = () => {
   const { token } = antdTheme.useToken();
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isConsoleVisible, setIsConsoleVisible] = React.useState(false);
   const [isProjectInitialized, setIsProjectInitialized] = React.useState(false);
@@ -174,6 +175,11 @@ const ProjectLayout: React.FC = () => {
 
     return items;
   }, [currentProject, projects, projectId, t, token.marginXS, handleProjectChange, branchMenuItems]);
+
+  // hideLayout 路由（如流程设计、流程实例详情）只渲染内容区，不显示 Header/Sidebar
+  if (shouldHideLayout(location.pathname)) {
+    return <Outlet key={currentProject?.currentBranch} />;
+  }
 
   return (
     <Layout style={{

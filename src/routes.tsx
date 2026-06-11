@@ -13,6 +13,7 @@ import {
   ApiOutlined,
   BranchesOutlined,
   CloudServerOutlined,
+  CodeOutlined,
   ContainerOutlined,
   DatabaseOutlined,
   DeploymentUnitOutlined,
@@ -40,6 +41,7 @@ import JobExecutionLogList from "./pages/Scheduling/components/JobExecutionLogLi
 import FlowDetail from "./pages/FlowDetail";
 import Project from "./pages/Project";
 import ApiKeys from "./pages/ApiKeys";
+import Functions from "./pages/Functions";
 
 export interface RouteConfig {
   path: string;
@@ -182,6 +184,12 @@ export const projectRoutes: RouteConfig[] = [
         translationKey: "job_execution_log",
       },
     ]
+  },
+  {
+    path: "/project/:projectId/functions",
+    element: <Functions />,
+    icon: CodeOutlined,
+    translationKey: "function.title",
   },
   {
     path: "/project/:projectId/storage",

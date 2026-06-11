@@ -17,90 +17,16 @@ import {
   Typography
 } from 'antd';
 const { TextArea } = Input;
-import {CloseOutlined, CodeOutlined, PlusOutlined} from '@ant-design/icons';
+import {CodeOutlined} from '@ant-design/icons';
 import {Edge, Node} from '@xyflow/react';
 import ScriptEditorModal from '../../../components/common/ScriptEditorModal';
 import FieldMappingComponent from '../../../components/common/FieldMappingComponent';
 import {getModelList} from '@/services/model';
-import {getApis} from '@/services/api-info';
+
 import {EntitySchema, EnumSchema, NativeQuerySchema} from '@/types/data-modeling';
 import {useProject} from '@/store/appStore';
 
 const { Option } = Select;
-
-interface HeaderItem {
-  key: string;
-  value: string;
-}
-
-interface HeadersComponentProps {
-  value?: HeaderItem[];
-  onChange?: (value: HeaderItem[]) => void;
-}
-
-const HeadersComponent: React.FC<HeadersComponentProps> = ({
-  value = [],
-  onChange,
-}) => {
-  const handleAdd = () => {
-    const newHeader: HeaderItem = { key: '', value: '' };
-    onChange?.([...value, newHeader]);
-  };
-
-  const handleRemove = (index: number) => {
-    const newValue = value.filter((_, i) => i !== index);
-    onChange?.(newValue);
-  };
-
-  const handleKeyChange = (index: number, key: string) => {
-    const newValue = [...value];
-    newValue[index] = { ...newValue[index], key };
-    onChange?.(newValue);
-  };
-
-  const handleValueChange = (index: number, newValue: string) => {
-    const updatedValue = [...value];
-    updatedValue[index] = { ...updatedValue[index], value: newValue };
-    onChange?.(updatedValue);
-  };
-
-  return (
-    <div>
-      {value.map((header, index) => (
-        <div key={index} style={{ marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Input
-            placeholder="请求头名称"
-            value={header.key}
-            onChange={(e) => handleKeyChange(index, e.target.value)}
-            style={{ flex: 1 }}
-          />
-          <span style={{ color: '#41454d' }}>=</span>
-          <Input
-            placeholder="请求头值，支持变量如 ${token}"
-            value={header.value}
-            onChange={(e) => handleValueChange(index, e.target.value)}
-            style={{ flex: 2 }}
-          />
-          <Button
-            type="text"
-            icon={<CloseOutlined />}
-            onClick={() => handleRemove(index)}
-            size="small"
-            style={{ color: '#aa2d00' }}
-          />
-        </div>
-      ))}
-      <Button
-        type="dashed"
-        icon={<PlusOutlined />}
-        onClick={handleAdd}
-        style={{ width: '100%', marginTop: 8 }}
-      >
-        新增请求头
-      </Button>
-    </div>
-  );
-};
 
 interface CustomEdge extends Edge {
   type: 'arrow';
@@ -146,7 +72,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   const [nodeProperties, setNodeProperties] = React.useState<Record<string, any>>({});
   const [models, setModels] = React.useState<(EntitySchema | EnumSchema | NativeQuerySchema)[]>([]);
   const [selectedModel, setSelectedModel] = React.useState<EntitySchema | null>(null);
-  const [apiList, setApiList] = React.useState<any[]>([]);
   const [scriptEditorVisible, setScriptEditorVisible] = React.useState(false);
   const [sqlEditorVisible, setSqlEditorVisible] = React.useState(false);
 
@@ -220,23 +145,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   }, [selectedNode, selectedEdge, form]);
 
   React.useEffect(() => {
-    const fetchApis = async () => {
-      if (!projectId) {
-        setApiList([]);
-        return;
-      }
-
-      try {
-        const apis = await getApis(projectId);
-        setApiList(apis);
-      } catch (error) {
-        console.error('获取API列表失败:', error);
-      }
-    };
-    fetchApis();
-  }, [projectId]);
-
-  React.useEffect(() => {
     if (!projectId) {
       setModels([]);
       return;
@@ -269,36 +177,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   const handleModelChange = (modelName: string) => {
     const model = models.find(m => m.name === modelName) as EntitySchema;
     setSelectedModel(model || null);
-  };
-
-  const getAllApis = (apis: any[]): any[] => {
-    const result: any[] = [];
-    const traverse = (items: any[]) => {
-      items.forEach(item => {
-        if (item.type === 'API') {
-          result.push(item);
-        }
-        if (item.children && item.children.length > 0) {
-          traverse(item.children);
-        }
-      });
-    };
-    traverse(apis);
-    return result;
-  };
-
-  const handleApiChange = (apiId: string) => {
-    const allApis = getAllApis(apiList);
-    const selectedApi = allApis.find(api => api.id === apiId);
-    if (selectedApi) {
-      form.setFieldsValue({
-        properties: {
-          ...form.getFieldValue('properties'),
-          method: selectedApi.method,
-          url: selectedApi.path
-        }
-      });
-    }
   };
 
   const convertFieldMappingToArray = (fieldMappings: any[]) => {
@@ -634,81 +512,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             </Form.Item>
           </>
         );
-
-      case 'api': {
-        const allApis = getAllApis(apiList);
-        return (
-          <>
-            <Form.Item
-              label="选择API"
-              name={['properties', 'apiId']}
-            >
-              <Select
-                placeholder="请选择内置API（可选）"
-                allowClear
-                onChange={handleApiChange}
-              >
-                {allApis.map(api => (
-                  <Option key={api.id} value={api.id}>
-                    {api.method} {api.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Form.Item
-                  label="方法"
-                  name={['properties', 'method']}
-                  rules={[{ required: true, message: '请选择HTTP方法' }]}
-                >
-                  <Select placeholder="请选择HTTP方法">
-                    <Option value="GET">GET</Option>
-                    <Option value="POST">POST</Option>
-                    <Option value="PUT">PUT</Option>
-                    <Option value="PATCH">PATCH</Option>
-                    <Option value="DELETE">DELETE</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={18}>
-                <Form.Item
-                  label="URL路径"
-                  name={['properties', 'url']}
-                  rules={[{ required: true, message: '请输入URL路径' }]}
-                >
-                  <Input placeholder="例如: /api/users" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item
-              label="请求头"
-              name={['properties', 'headers']}
-            >
-              <HeadersComponent />
-            </Form.Item>
-            <Form.Item
-              label="请求体"
-              name={['properties', 'body']}
-            >
-              <Input.TextArea
-                placeholder='{"name": "${userName}", "age": 25}'
-                rows={4}
-                style={{
-                  fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-                  fontSize: '13px'
-                }}
-              />
-            </Form.Item>
-            <Form.Item
-              label="结果存放路径"
-              name={['properties', 'resultPath']}
-            >
-              <Input placeholder="例如: apiResponse" />
-            </Form.Item>
-          </>
-        );
-      }
 
       default:
         return (

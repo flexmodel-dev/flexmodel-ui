@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Card, Col, Collapse, Row, Space, Typography} from 'antd';
 import {
-  ApiOutlined,
   CloseCircleOutlined,
   CodeOutlined,
   DatabaseOutlined,
@@ -50,7 +49,6 @@ const NodePanel: React.FC<NodePanelProps> = ({onHide}) => {
       'delete-record': <MinusOutlined style={{color: '#458fff'}}/>,
       'js-script': <CodeOutlined style={{color: '#f4d35e'}}/>,
       'sql': <DatabaseOutlined style={{color: '#254fad'}}/>,
-      'call-api': <ApiOutlined style={{color: '#458fff'}}/>,
       'call-service': <LinkOutlined style={{color: '#41454d'}}/>,
     };
     return iconMap[iconType] || <UserOutlined/>;
