@@ -178,7 +178,7 @@ const ProjectLayout: React.FC = () => {
 
   // hideLayout 路由（如流程设计、流程实例详情）只渲染内容区，不显示 Header/Sidebar
   if (shouldHideLayout(location.pathname)) {
-    return <Outlet key={currentProject?.currentBranch} />;
+    return <Outlet key={currentProject?.id} />;
   }
 
   return (
@@ -279,7 +279,7 @@ const ProjectLayout: React.FC = () => {
               <Console onToggle={() => setIsConsoleVisible((v) => !v)} />
             )}
           >
-            {isProjectInitialized ? <Outlet key={currentProject?.currentBranch} /> : null}
+            {isProjectInitialized ? <Outlet key={currentProject?.id} /> : null}
           </ResizablePanel>
         </Layout.Content>
       </Layout>

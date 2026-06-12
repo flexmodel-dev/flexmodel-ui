@@ -7,12 +7,13 @@ export interface Project {
   id: string;
   name: string;
   description?: string;
+  parentProjectId?: string;
+  databaseName?: string;
   createdAt: string;
   updatedAt: string;
   createdBy?: string;
   updatedBy?: string;
   ownerId?: string;
-  currentBranch?: string;
   branches?: Branch[];
   stats?: {
     apiCount: number;

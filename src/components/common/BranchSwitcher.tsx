@@ -22,8 +22,9 @@ import {
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useProject } from "@/store/appStore";
-import { createBranch, deleteBranch, switchBranch, mergeBranch } from "@/services/branch";
+import { createBranch, deleteBranch, mergeBranch } from "@/services/branch";
 import { getProject } from "@/services/project";
+import { useNavigate, useLocation } from "react-router-dom";
 import type { BranchCreateRequest, ConflictStrategy } from "@/types/branch";
 
 interface BranchSwitcherProps {
@@ -38,6 +39,11 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
   const { t } = useTranslation();
   const { token } = antdTheme.useToken();
   const { currentProject, setCurrentProject } = useProject();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // 确定父项目 ID（如果当前是分支项目，使用 parentProjectId）
+  const parentProjectId = currentProject?.parentProjectId || projectId;
 
   // 创建分支弹窗
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -53,7 +59,10 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
   const [mergeLoading, setMergeLoading] = useState(false);
   const [mergeForm] = Form.useForm();
 
-  const currentBranch = currentProject?.currentBranch ?? "main";
+  // 从项目 ID 推导当前分支名（Supabase 风格：每个分支是独立项目）
+  const currentBranch = currentProject?.parentProjectId
+    ? projectId.slice(currentProject.parentProjectId.length + 1)
+    : "main";
   const branches = currentProject?.branches ?? [];
 
   const refreshProject = useCallback(async () => {
@@ -69,14 +78,20 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
     async (branchName: string) => {
       if (branchName === currentBranch) return;
       try {
-        await switchBranch(projectId, branchName);
-        await refreshProject();
-        message.success(t("branch.switchSuccess", { name: branchName }));
+        // Supabase 风格：导航到分支项目 URL
+        const targetProjectId = branchName === "main" ? parentProjectId : `${parentProjectId}_${branchName}`;
+        // 保持当前路径的后续部分不变
+        const currentPath = location.pathname;
+        const projectPrefix = `/project/${projectId}`;
+        const suffix = currentPath.startsWith(projectPrefix)
+          ? currentPath.slice(projectPrefix.length)
+          : "";
+        navigate(`/project/${targetProjectId}${suffix}`);
       } catch (err: any) {
         message.error(err?.message || t("branch.switchFailed"));
       }
     },
-    [projectId, currentBranch, refreshProject, t],
+    [projectId, parentProjectId, currentBranch, navigate, location, t],
   );
 
   const handleCreate = useCallback(async () => {

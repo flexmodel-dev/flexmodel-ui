@@ -1,6 +1,5 @@
 import { api } from "@/utils/request";
 import type { Branch, BranchCreateRequest, BranchMergeRequest } from "@/types/branch";
-import type { Project } from "@/types/project";
 
 /**
  * 获取项目分支列表
@@ -28,16 +27,6 @@ export const createBranch = (projectId: string, data: BranchCreateRequest): Prom
  */
 export const deleteBranch = (projectId: string, branchName: string): Promise<void> => {
   return api.delete(`/projects/${projectId}/branches/${branchName}`);
-};
-
-/**
- * 切换到指定分支
- * @param projectId 项目ID
- * @param branchName 分支名称
- * @returns 更新后的项目
- */
-export const switchBranch = (projectId: string, branchName: string): Promise<Project> => {
-  return api.put(`/projects/${projectId}/branches/${branchName}/switch`);
 };
 
 /**
