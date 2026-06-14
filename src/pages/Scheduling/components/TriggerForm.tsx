@@ -6,6 +6,7 @@ import {INTERVAL_UNITS, MUTATION_TYPES, TRIGGER_TIMINGS, TriggerFormType} from '
 import {TriggerDTO} from '@/services/trigger';
 import {getModelList} from '@/services/model';
 import {FlowModule, getFlowList} from '@/services/flow';
+import {getFunctionList, FunctionResponse} from '@/services/function';
 import {EntitySchema, EnumSchema, NativeQuerySchema} from '@/types/data-modeling';
 import {useProject} from '@/store/appStore';
 
@@ -37,6 +38,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
   const [triggerFormType, setTriggerFormType] = useState<TriggerFormType>(eventOnly ? 'event' : 'interval');
   const [models, setModels] = useState<(EntitySchema | EnumSchema | NativeQuerySchema)[]>([]);
   const [flows, setFlows] = useState<FlowModule[]>([]);
+  const [functions, setFunctions] = useState<FunctionResponse[]>([]);
 
   useEffect(() => {
     const fetchFlows = async () => {
@@ -48,6 +50,18 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
       }
     };
     fetchFlows();
+  }, [projectId]);
+
+  useEffect(() => {
+    const fetchFunctions = async () => {
+      try {
+        const fnList = await getFunctionList(projectId, { size: 1000 });
+        setFunctions(fnList.list);
+      } catch (error) {
+        console.error('获取云函数列表失败:', error);
+      }
+    };
+    fetchFunctions();
   }, [projectId]);
 
   useEffect(() => {
@@ -229,25 +243,53 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
               disabled={mode === 'view'}
             >
               <Option value="FLOW">{t('flow')}</Option>
+              <Option value="FUNCTION">{t('trigger.job_type_function')}</Option>
             </Select>
           </Form.Item>
         </Col>
         <Col span={16}>
-          <Form.Item
-            name="jobId"
-            label={t('trigger.job_name')}
-            rules={[{ required: true, message: t('trigger.select_job_name') }]}
-          >
-            <Select
-              placeholder={t('trigger.select_job_name')}
-              disabled={mode === 'view'}
-            >
-              {flows.map(flow => (
-                <Option key={flow.flowModuleId} value={flow.flowModuleId}>
-                  {flow.flowName}
-                </Option>
-              ))}
-            </Select>
+          <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.jobType !== currentValues.jobType}>
+            {({ getFieldValue }) => {
+              const jobType = getFieldValue('jobType') || 'FLOW';
+              if (jobType === 'FUNCTION') {
+                return (
+                  <Form.Item
+                    name="jobId"
+                    label={t('trigger.job_name')}
+                    rules={[{ required: true, message: t('trigger.select_job_name') }]}
+                  >
+                    <Select
+                      placeholder={t('trigger.select_job_name')}
+                      disabled={mode === 'view'}
+                    >
+                      {functions.map(fn => (
+                        <Option key={fn.name} value={fn.name}>
+                          {fn.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                );
+              }
+              return (
+                <Form.Item
+                  name="jobId"
+                  label={t('trigger.job_name')}
+                  rules={[{ required: true, message: t('trigger.select_job_name') }]}
+                >
+                  <Select
+                    placeholder={t('trigger.select_job_name')}
+                    disabled={mode === 'view'}
+                  >
+                    {flows.map(flow => (
+                      <Option key={flow.flowModuleId} value={flow.flowModuleId}>
+                        {flow.flowName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              );
+            }}
           </Form.Item>
         </Col>
       </Row>

@@ -154,6 +154,8 @@ const TriggerList: React.FC<TriggerListProps> = ({model, eventOnly = false}) => 
     switch (jobType) {
       case 'FLOW':
         return t('flow');
+      case 'FUNCTION':
+        return t('trigger.job_type_function');
       default:
         return jobType;
     }

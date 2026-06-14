@@ -235,7 +235,7 @@ const FunctionEditor: React.FC = () => {
         display: "flex", justifyContent: "space-between", alignItems: "center",
         borderBottom: `1px solid ${token.colorBorderSecondary}`,
       }}>
-        <Text strong style={{fontSize: 11, textTransform: "uppercase", letterSpacing: 1}}>
+        <Text strong style={{fontSize: 14, fontWeight: 500, letterSpacing: 0.16, textTransform: "uppercase"}}>
           {t("function.files")}
         </Text>
         <Tooltip title={t("function.addFile")}>
@@ -247,9 +247,9 @@ const FunctionEditor: React.FC = () => {
           <div
             key={f.filename}
             style={{
-              display: "flex", alignItems: "center", gap: 6,
+              display: "flex", alignItems: "center", gap: 8,
               padding: `4px ${token.padding}px`,
-              cursor: "pointer", fontSize: 13,
+              cursor: "pointer", fontSize: 14,
               background: activeFile === f.filename ? token.colorPrimaryBg : "transparent",
               color: activeFile === f.filename ? token.colorPrimary : token.colorText,
               borderLeft: activeFile === f.filename
@@ -394,7 +394,7 @@ const FunctionEditor: React.FC = () => {
             type="text" icon={<ArrowLeftOutlined/>}
             onClick={() => navigate(`/project/${projectId}/functions`)}
           />
-          <Title level={5} style={{margin: 0}}>
+          <Title level={4} style={{margin: 0}}>
             {isEdit ? fnData?.name || fnName : t("function.createNew")}
           </Title>
         </Space>
@@ -438,7 +438,6 @@ const FunctionEditor: React.FC = () => {
           icon={<CheckOutlined/>}
           loading={submitting}
           onClick={handleSubmit}
-          style={{background: "#0a6b2e", borderColor: "#0a6b2e"}}
         >
           {t("function.deploy")}
         </Button>

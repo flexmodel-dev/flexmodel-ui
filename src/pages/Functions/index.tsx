@@ -7,6 +7,7 @@ import {
   Popconfirm,
   Space,
   Table,
+  theme,
   Tooltip,
 } from "antd";
 import {
@@ -32,6 +33,7 @@ import {useProject} from "@/store/appStore";
 
 const FunctionsPage: React.FC = () => {
   const {t} = useTranslation();
+  const {token} = theme.useToken();
   const navigate = useNavigate();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || "";
@@ -108,7 +110,10 @@ const FunctionsPage: React.FC = () => {
       key: "name",
       width: 200,
       render: (name: string, record: FunctionResponse) => (
-        <a onClick={() => handleViewDetail(record)} style={{fontWeight: 500}}>
+        <a
+          onClick={() => handleViewDetail(record)}
+          style={{color: token.colorLink, fontWeight: 500, cursor: "pointer"}}
+        >
           <CodeOutlined style={{marginRight: 8}}/>
           {name}
         </a>
@@ -119,7 +124,7 @@ const FunctionsPage: React.FC = () => {
       key: "endpoint",
       width: 280,
       render: (_: any, record: FunctionResponse) => (
-        <code style={{fontSize: 11, color: "#666"}}>
+        <code style={{fontSize: 12, color: token.colorTextSecondary}}>
           POST /functions/{record.name}
         </code>
       ),

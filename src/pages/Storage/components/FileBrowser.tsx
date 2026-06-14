@@ -156,11 +156,11 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
       render: (text: string, record: FileItem) => (
         <Space>
           {record.type === 'folder' ? (
-            <FolderOutlined style={{color: '#458fff', fontSize: 18}}/>
+            <FolderOutlined style={{color: token.colorInfoBorder, fontSize: token.fontSizeLG}}/>
           ) : (
-            <FileOutlined style={{color: '#9297a0', fontSize: 18}}/>
+            <FileOutlined style={{color: token.colorTextQuaternary, fontSize: token.fontSizeLG}}/>
           )}
-          <a onClick={() => handleFolderClick(record)} style={{fontSize: 14}}>
+          <a onClick={() => handleFolderClick(record)} style={{fontSize: token.fontSize, color: token.colorLink}}>
             {text}
           </a>
         </Space>
@@ -216,11 +216,11 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
 
   return (
     <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
-      <div style={{marginBottom: token.marginMD}}>
+      <div style={{marginBottom: token.marginLG}}>
         <Breadcrumb items={getBreadcrumbItems()}/>
       </div>
 
-      <div style={{marginBottom: token.marginMD}}>
+      <div style={{marginBottom: token.marginLG}}>
         <Space>
           <Button icon={<UploadOutlined/>} onClick={handleUpload}>
             {t('upload')}
@@ -289,7 +289,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
           }}
         >
           <p className="ant-upload-drag-icon">
-            <UploadOutlined style={{fontSize: 48, color: '#458fff'}}/>
+            <UploadOutlined style={{fontSize: 48, color: token.colorInfoBorder}}/>
           </p>
           <p className="ant-upload-text">{t('upload_drag_text')}</p>
           <p className="ant-upload-hint">{t('upload_hint')}</p>

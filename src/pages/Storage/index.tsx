@@ -104,14 +104,14 @@ const StorageManagement: React.FC = () => {
             </div>
           </Splitter.Panel>
           <Splitter.Panel>
-            <div style={{height: '100%', padding: `${token.paddingSM}px ${token.paddingLG}px`, overflow: "auto"}}>
+            <div style={{height: '100%', padding: `${token.paddingLG}px ${token.paddingXL}px`, overflow: "auto"}}>
               <div style={{
-                marginBottom: token.marginMD,
+                marginBottom: token.marginLG,
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-                <Title level={3} style={{margin: 0}}>{activeBucket?.name || t('storage')}</Title>
+                <Title level={3} style={{margin: 0, fontWeight: 400}}>{activeBucket?.name || t('storage')}</Title>
                 <Space>
                   {isEditing ? (
                     <Space>
@@ -176,7 +176,7 @@ const StorageManagement: React.FC = () => {
         okButtonProps={{danger: true}}
       >
         <p>{t("delete_bucket_confirm_desc", {name: activeBucket?.name})}</p>
-        <div style={{marginTop: 12}}>
+        <div style={{marginTop: token.marginSM}}>
           <label>
             <input
               type="checkbox"

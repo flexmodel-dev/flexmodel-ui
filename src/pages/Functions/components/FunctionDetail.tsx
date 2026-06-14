@@ -4,6 +4,7 @@ import {
   Spin,
   Tag,
   Tabs,
+  theme,
 } from "antd";
 import {
   CodeOutlined,
@@ -28,6 +29,7 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
   projectId,
 }) => {
   const {t} = useTranslation();
+  const {token} = theme.useToken();
   const [activeTab, setActiveTab] = useState("overview");
   const [activeFile, setActiveFile] = useState("index.ts");
 
@@ -79,7 +81,7 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
         {fileList.map((filename) => (
           <Tag
             key={filename}
-            color={activeFile === filename ? "blue" : "default"}
+            color={activeFile === filename ? token.colorPrimary : "default"}
             style={{cursor: "pointer"}}
             onClick={() => setActiveFile(filename)}
           >

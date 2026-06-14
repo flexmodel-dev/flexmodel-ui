@@ -122,22 +122,22 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
     },
   ];
 
-  const searchRowStyle = {
+  const searchRowStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    padding: '8px 8px 8px 8px',
-    gap: '8px',
+    padding: token.paddingXS,
+    gap: token.paddingXS,
   };
 
   return (
-    <div style={{height: '100%', display: 'flex', flexDirection: 'column', padding: '4px 0'}}>
+    <div style={{height: '100%', display: 'flex', flexDirection: 'column', padding: `${token.paddingXXS}px 0`}}>
       <div style={searchRowStyle}>
         <Input
           placeholder={t("search_buckets")}
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
-          style={{width: '100%', borderRadius: 6}}
+          style={{width: '100%'}}
           allowClear
           prefix={<SearchOutlined/>}
         />
@@ -147,7 +147,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
         />
       </div>
 
-      <div style={{flex: 1, minHeight: 0, overflow: 'auto', padding: '0 4px'}}>
+      <div style={{flex: 1, minHeight: 0, overflow: 'auto', padding: `0 ${token.paddingXXS}px`}}>
         <Spin spinning={loading}>
           <List
             dataSource={filteredBucketList}
@@ -160,9 +160,9 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
                     onSelect(bucket);
                   }}
                   style={{
-                    padding: '8px 12px',
-                    marginBottom: 4,
-                    borderRadius: 10,
+                    padding: `${token.paddingXS}px ${token.paddingSM}px`,
+                    marginBottom: token.marginXXS,
+                    borderRadius: token.borderRadius,
                     cursor: 'pointer',
                     backgroundColor: isActive ? token.colorFillSecondary : 'transparent',
                     border: 'none',
@@ -184,26 +184,26 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
-                    gap: 8,
+                    gap: token.paddingXS,
                   }}>
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 10,
+                      gap: token.paddingSM,
                       flex: 1,
                       minWidth: 0,
                     }}>
                       <DatabaseOutlined style={{
-                        fontSize: 16,
+                        fontSize: token.fontSizeLG,
                         color: isActive ? token.colorText : token.colorTextTertiary,
                         flexShrink: 0,
                       }}/>
                       <Text
                         ellipsis
                         style={{
-                          fontSize: 14,
-                          fontWeight: isActive ? 500 : 400,
-                          lineHeight: '1.4',
+                          fontSize: token.fontSize,
+                          fontWeight: isActive ? token.fontWeightStrong : 400,
+                          lineHeight: token.lineHeight,
                           color: isActive ? token.colorText : token.colorTextSecondary,
                         }}
                       >
@@ -217,11 +217,11 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
                     >
                       <MoreOutlined
                         style={{
-                          fontSize: 16,
+                          fontSize: token.fontSizeLG,
                           color: token.colorTextTertiary,
                           cursor: 'pointer',
-                          padding: '2px 4px',
-                          borderRadius: 4,
+                          padding: `2px ${token.paddingXXS}px`,
+                          borderRadius: token.borderRadiusXS,
                           flexShrink: 0,
                         }}
                         onClick={(e) => e.stopPropagation()}
@@ -249,7 +249,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
           form={createForm}
           layout="vertical"
           initialValues={{visibility: 'PRIVATE'}}
-          style={{marginTop: 16}}
+          style={{marginTop: token.marginMD}}
         >
           <BucketForm/>
         </Form>

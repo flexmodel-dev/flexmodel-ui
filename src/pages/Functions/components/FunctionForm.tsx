@@ -9,6 +9,7 @@ import {
   Select,
   Tabs,
   Tag,
+  theme,
   Typography,
 } from "antd";
 import {
@@ -51,6 +52,7 @@ const FunctionForm: React.FC<FunctionFormProps> = ({
   onCancel,
 }) => {
   const {t} = useTranslation();
+  const {token} = theme.useToken();
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [files, setFiles] = useState<FileEntry[]>([{filename: "index.ts", content: DEFAULT_INDEX_CODE}]);
@@ -175,7 +177,7 @@ const FunctionForm: React.FC<FunctionFormProps> = ({
       {files.map((f) => (
         <Tag
           key={f.filename}
-          color={activeFile === f.filename ? "blue" : "default"}
+          color={activeFile === f.filename ? token.colorPrimary : "default"}
           style={{cursor: "pointer", marginBottom: 4}}
           closable={f.filename !== "index.ts"}
           onClose={() => handleRemoveFile(f.filename)}

@@ -214,10 +214,10 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
                 <Tag
                   color={
                     response.status >= 200 && response.status < 300
-                      ? "green"
+                      ? token.colorSuccess
                       : response.status >= 400
-                        ? "red"
-                        : "orange"
+                        ? token.colorError
+                        : token.colorWarning
                   }
                 >
                   {response.status}

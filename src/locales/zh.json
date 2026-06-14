@@ -649,6 +649,7 @@
     "time_range": "时间范围",
     "select_job_type": "请选择任务类型",
     "select_job_name": "请选择任务名称",
+    "job_type_function": "云函数",
     "execute_success": "执行成功",
     "execute_failed": "执行失败",
     "execute": "立即执行"

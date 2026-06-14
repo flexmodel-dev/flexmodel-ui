@@ -692,6 +692,7 @@
     "time_range": "Time Range",
     "select_job_type": "Please select job type",
     "select_job_name": "Please select job name",
+    "job_type_function": "Cloud Function",
     "execute_success": "Execute successfully",
     "execute_failed": "Execute failed",
     "execute": "Execute Now"

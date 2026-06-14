@@ -21,7 +21,7 @@ const BucketView: React.FC<BucketViewProps> = ({data}) => {
     <Descriptions
       column={1}
       bordered
-      style={{marginTop: token.marginMD}}
+      style={{marginTop: token.marginLG, borderRadius: token.borderRadius}}
     >
       <Descriptions.Item label={t('bucket_name')}>{data.name}</Descriptions.Item>
       <Descriptions.Item label={t('bucket_description')}>{data.description || '-'}</Descriptions.Item>
