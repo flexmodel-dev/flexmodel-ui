@@ -264,6 +264,7 @@ const ProjectLayout: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
+            padding: token.padding,
             overflow: "hidden",
             backgroundColor: token.colorFillQuaternary
           }}

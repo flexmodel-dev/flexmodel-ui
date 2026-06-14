@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { theme } from "antd";
 import type { ApiStat, RankingData } from '@/types/overview.d.ts';
 import TrendAnalysis from '@/pages/Overview/components/metrics/TrendAnalysis';
 import StatisticsCards from '@/pages/Overview/components/StatisticsCards';
@@ -11,7 +10,6 @@ import { useProject } from "@/store/appStore";
 
 
 const StatisticsPage: React.FC = () => {
-  const { token } = theme.useToken();
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
 
@@ -71,8 +69,7 @@ const StatisticsPage: React.FC = () => {
         flex: 1,
         width: "100%",
         display: "flex",
-        flexDirection: "column",
-        padding: token.padding
+        flexDirection: "column"
       }}
     >
       {/* 统计卡片组件 */}
