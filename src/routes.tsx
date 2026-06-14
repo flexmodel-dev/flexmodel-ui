@@ -201,7 +201,7 @@ export const projectRoutes: RouteConfig[] = [
     hideLayout: false,
   },
   {
-    path: "/project/:projectId/functions/editor/:slug",
+    path: "/project/:projectId/functions/editor/:name",
     element: <FunctionEditor />,
     icon: CodeOutlined,
     translationKey: "function.editor",

@@ -6,7 +6,6 @@ export interface FunctionResponse {
   id: string;
   projectId: string;
   name: string;
-  slug: string;
   sourceFiles?: string;   // JSON string: filename → content
   timeout: number;
   createdBy?: string;
@@ -58,10 +57,10 @@ export interface PageDTO<T> {
 
 export const deployFunction = (
   projectId: string,
-  slug: string,
+  name: string,
   data: FunctionDeployRequest,
 ): Promise<FunctionResponse> => {
-  return api.post(`/projects/${projectId}/functions/${slug}/deploy`, data);
+  return api.post(`/projects/${projectId}/functions/${encodeURIComponent(name)}/deploy`, data);
 };
 
 export const getFunctionList = (
@@ -73,24 +72,24 @@ export const getFunctionList = (
 
 export const getFunction = (
   projectId: string,
-  slug: string,
+  name: string,
 ): Promise<FunctionResponse> => {
-  return api.get(`/projects/${projectId}/functions/${slug}`);
+  return api.get(`/projects/${projectId}/functions/${encodeURIComponent(name)}`);
 };
 
 export const deleteFunction = (
   projectId: string,
-  slug: string,
+  name: string,
 ): Promise<void> => {
-  return api.delete(`/projects/${projectId}/functions/${slug}`);
+  return api.delete(`/projects/${projectId}/functions/${encodeURIComponent(name)}`);
 };
 
 export const invokeFunction = (
   projectId: string,
-  slug: string,
+  name: string,
   data: FunctionInvokeRequest,
 ): Promise<FunctionInvokeResponse> => {
-  return api.post(`/projects/${projectId}/functions/${slug}/invoke`, data);
+  return api.post(`/projects/${projectId}/functions/${encodeURIComponent(name)}/invoke`, data);
 };
 
 // ---- Templates ----

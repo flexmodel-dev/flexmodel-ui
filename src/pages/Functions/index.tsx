@@ -75,14 +75,14 @@ const FunctionsPage: React.FC = () => {
   };
 
   const handleEdit = (fn: FunctionResponse) => {
-    navigate(`/project/${projectId}/functions/editor/${fn.slug}`);
+    navigate(`/project/${projectId}/functions/editor/${encodeURIComponent(fn.name)}`);
   };
 
   const handleViewDetail = async (fn: FunctionResponse) => {
     setDetailVisible(true);
     setDetailLoading(true);
     try {
-      const detail = await getFunction(projectId, fn.slug);
+      const detail = await getFunction(projectId, fn.name);
       setDetailFunction(detail);
     } catch {
       setDetailFunction(fn);
@@ -91,9 +91,9 @@ const FunctionsPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (slug: string) => {
+  const handleDelete = async (name: string) => {
     try {
-      await deleteFunction(projectId, slug);
+      await deleteFunction(projectId, name);
       message.success(t("function.deleteSuccess"));
       loadList();
     } catch {
@@ -120,16 +120,16 @@ const FunctionsPage: React.FC = () => {
       width: 280,
       render: (_: any, record: FunctionResponse) => (
         <code style={{fontSize: 11, color: "#666"}}>
-          POST /functions/{record.slug}
+          POST /functions/{record.name}
         </code>
       ),
     },
     {
-      title: t("function.timeout"),
-      dataIndex: "timeout",
-      key: "timeout",
-      width: 80,
-      render: (timeout: number) => `${timeout}s`,
+      title: t("function.createdAt"),
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: 160,
+      render: (date: string) => (date ? new Date(date).toLocaleString() : "-"),
     },
     {
       title: t("function.updatedAt"),
@@ -162,7 +162,7 @@ const FunctionsPage: React.FC = () => {
           </Tooltip>
           <Popconfirm
             title={t("function.deleteConfirm")}
-            onConfirm={() => handleDelete(record.slug)}
+            onConfirm={() => handleDelete(record.name)}
             okText={t("confirm")}
             cancelText={t("cancel")}
           >

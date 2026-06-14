@@ -58,12 +58,11 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
         labelStyle={{fontWeight: 500, width: 100}}
       >
         <Descriptions.Item label={t("function.name")}>{fn.name}</Descriptions.Item>
-        <Descriptions.Item label={t("function.timeout")}>{fn.timeout}s</Descriptions.Item>
-        <Descriptions.Item label={t("function.endpoint")} span={2}>
-          <code style={{fontSize: 12}}>POST /projects/{projectId}/functions/{fn.slug}/invoke</code>
-        </Descriptions.Item>
         <Descriptions.Item label={t("function.createdAt")}>
           {fn.createdAt ? new Date(fn.createdAt).toLocaleString() : "-"}
+        </Descriptions.Item>
+        <Descriptions.Item label={t("function.endpoint")} span={2}>
+          <code style={{fontSize: 12}}>POST /projects/{projectId}/functions/{fn.name}/invoke</code>
         </Descriptions.Item>
         <Descriptions.Item label={t("function.updatedAt")}>
           {fn.updatedAt ? new Date(fn.updatedAt).toLocaleString() : "-"}
@@ -104,7 +103,7 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
 
   // ---- Test Tab ----
   const testTab = (
-    <FunctionInvokePanel projectId={projectId} functionSlug={fn.slug}/>
+    <FunctionInvokePanel projectId={projectId} functionName={fn.name}/>
   );
 
   const tabItems = [

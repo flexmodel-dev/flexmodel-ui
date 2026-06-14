@@ -55,8 +55,8 @@ const FunctionEditor: React.FC = () => {
   const {t} = useTranslation();
   const {token} = theme.useToken();
   const navigate = useNavigate();
-  const {projectId, slug} = useParams<{ projectId: string; slug?: string }>();
-  const isEdit = !!slug;
+  const {projectId, name: fnName} = useParams<{ projectId: string; name?: string }>();
+  const isEdit = !!fnName;
 
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(isEdit);
@@ -74,9 +74,9 @@ const FunctionEditor: React.FC = () => {
 
   // Load existing function data
   useEffect(() => {
-    if (isEdit && slug && projectId) {
+    if (isEdit && fnName && projectId) {
       setLoading(true);
-      getFunction(projectId, slug)
+      getFunction(projectId, fnName)
         .then((fn) => {
           setFnData(fn);
           form.setFieldsValue({name: fn.name});
@@ -102,7 +102,7 @@ const FunctionEditor: React.FC = () => {
         })
         .finally(() => setLoading(false));
     }
-  }, [isEdit, slug, projectId, form, navigate, t]);
+  }, [isEdit, fnName, projectId, form, navigate, t]);
 
   // Load templates
   useEffect(() => {
@@ -192,10 +192,7 @@ const FunctionEditor: React.FC = () => {
       }
       setSubmitting(true);
 
-      const functionSlug = slug || values.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
+      const functionName = fnName || values.name;
 
       const data: FunctionDeployRequest = {
         name: values.name,
@@ -203,7 +200,7 @@ const FunctionEditor: React.FC = () => {
         timeout: 30,
       };
 
-      await deployFunction(projectId!, functionSlug, data);
+      await deployFunction(projectId!, functionName, data);
       message.success(t("function.deploySuccess"));
       navigate(`/project/${projectId}/functions`);
     } catch (err: any) {
@@ -376,7 +373,7 @@ const FunctionEditor: React.FC = () => {
             label: <span><PlayCircleOutlined/> {t("function.tabTest")}</span>,
             children: (
               <div style={{padding: token.padding, overflowY: "auto", flex: 1}}>
-                <FunctionInvokePanel projectId={projectId!} functionSlug={slug!}/>
+                <FunctionInvokePanel projectId={projectId!} functionName={fnName!}/>
               </div>
             ),
           }] : []),
@@ -406,7 +403,7 @@ const FunctionEditor: React.FC = () => {
             onClick={() => navigate(`/project/${projectId}/functions`)}
           />
           <Title level={5} style={{margin: 0}}>
-            {isEdit ? fnData?.name || slug : t("function.createNew")}
+            {isEdit ? fnData?.name || fnName : t("function.createNew")}
           </Title>
         </Space>
         <Space>

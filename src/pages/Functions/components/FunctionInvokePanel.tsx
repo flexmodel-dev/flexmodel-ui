@@ -25,12 +25,12 @@ const {Text, Paragraph} = Typography;
 
 interface FunctionInvokePanelProps {
   projectId: string;
-  functionSlug: string;
+  functionName: string;
 }
 
 const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
   projectId,
-  functionSlug,
+  functionName,
 }) => {
   const {t} = useTranslation();
   const {token} = theme.useToken();
@@ -88,7 +88,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
         body: body !== undefined ? body : undefined,
         query: Object.keys(query).length > 0 ? query : undefined,
       };
-      const res = await invokeFunction(projectId, functionSlug, req);
+      const res = await invokeFunction(projectId, functionName, req);
       setResponse(res);
     } catch (err: any) {
       setError(err?.message || String(err));
@@ -126,7 +126,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
             <Select.Option value="DELETE">DELETE</Select.Option>
           </Select>
           <code style={{flex: 1, fontSize: 12, padding: "4px 8px", background: token.colorFillSecondary, borderRadius: token.borderRadius}}>
-            /functions/{functionSlug}
+            /functions/{functionName}
           </code>
         </div>
 
