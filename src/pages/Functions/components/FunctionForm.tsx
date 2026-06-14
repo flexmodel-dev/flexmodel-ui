@@ -1,31 +1,27 @@
 import React, {useEffect, useState} from "react";
 import {
   Button,
-  Card,
   Form,
   Input,
   InputNumber,
   message,
   Modal,
   Select,
-  Space,
   Tabs,
   Tag,
   Typography,
 } from "antd";
 import {
   FileAddOutlined,
-  DeleteOutlined,
 } from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
 import ScriptEditor from "@/components/common/ScriptEditor";
 import type {
   FunctionResponse,
-  FunctionCreateRequest,
-  FunctionUpdateRequest,
+  FunctionDeployRequest,
   FunctionTemplate,
 } from "@/services/function";
-import {createFunction, updateFunction, getFunctionTemplates} from "@/services/function";
+import {deployFunction, getFunctionTemplates} from "@/services/function";
 
 const {Text} = Typography;
 
@@ -78,24 +74,17 @@ const FunctionForm: React.FC<FunctionFormProps> = ({
       if (editingFunction) {
         form.setFieldsValue({
           name: editingFunction.name,
-          slug: editingFunction.slug,
-          description: editingFunction.description,
           timeout: editingFunction.timeout,
         });
         // Parse source files
         if (editingFunction.sourceFiles) {
-          try {
-            const parsed = JSON.parse(editingFunction.sourceFiles);
-            const entries: FileEntry[] = Object.entries(parsed).map(([k, v]) => ({
-              filename: k,
-              content: v as string,
-            }));
-            if (entries.length > 0) {
-              setFiles(entries);
-              setActiveFile(entries[0].filename);
-            }
-          } catch {
-            setFiles([{filename: "index.ts", content: ""}]);
+          const entries: FileEntry[] = Object.entries(editingFunction.sourceFiles).map(([k, v]) => ({
+            filename: k,
+            content: v as string,
+          }));
+          if (entries.length > 0) {
+            setFiles(entries);
+            setActiveFile(entries[0].filename);
           }
         }
       } else {
@@ -113,17 +102,12 @@ const FunctionForm: React.FC<FunctionFormProps> = ({
     setSelectedTemplate(slug);
     const tpl = templates.find((t) => t.slug === slug);
     if (tpl) {
-      try {
-        const parsed = JSON.parse(tpl.sourceFiles);
-        const entries: FileEntry[] = Object.entries(parsed).map(([k, v]) => ({
-          filename: k,
-          content: v as string,
-        }));
-        setFiles(entries);
-        setActiveFile(entries[0]?.filename || "index.ts");
-      } catch {
-        // ignore
-      }
+      const entries: FileEntry[] = Object.entries(tpl.sourceFiles).map(([k, v]) => ({
+        filename: k,
+        content: v as string,
+      }));
+      setFiles(entries);
+      setActiveFile(entries[0]?.filename || "index.ts");
     }
   };
 
@@ -153,22 +137,6 @@ const FunctionForm: React.FC<FunctionFormProps> = ({
     ));
   };
 
-  const handleRenameFile = (oldName: string, newName: string) => {
-    if (oldName === "index.ts") return; // cannot rename main entry
-    if (!newName.endsWith(".ts") && !newName.endsWith(".js")) {
-      message.warning(t("function.fileNameFormat") || "File name must end with .ts or .js");
-      return;
-    }
-    if (files.some((f) => f.filename === newName)) {
-      message.warning(t("function.fileNameExists") || "File name already exists");
-      return;
-    }
-    setFiles(files.map((f) =>
-      f.filename === oldName ? {...f, filename: newName} : f
-    ));
-    if (activeFile === oldName) setActiveFile(newName);
-  };
-
   const activeFileContent = files.find((f) => f.filename === activeFile)?.content || "";
 
   const handleSubmit = async () => {
@@ -183,25 +151,13 @@ const FunctionForm: React.FC<FunctionFormProps> = ({
 
       setSubmitting(true);
 
-      if (isEdit) {
-        const data: FunctionUpdateRequest = {
-          description: values.description,
-          sourceFiles,
-          timeout: values.timeout,
-        };
-        await updateFunction(projectId, editingFunction!.slug, data);
-        message.success(t("function.updateSuccess"));
-      } else {
-        const data: FunctionCreateRequest = {
-          name: values.name,
-          slug: values.slug,
-          description: values.description,
-          sourceFiles,
-          timeout: values.timeout || 30,
-        };
-        await createFunction(projectId, data);
-        message.success(t("function.createSuccess"));
-      }
+      const data: FunctionDeployRequest = {
+        name: values.name,
+        sourceFiles,
+        timeout: values.timeout || 30,
+      };
+      await deployFunction(projectId, values.name, data);
+      message.success(t(isEdit ? "function.updateSuccess" : "function.createSuccess"));
 
       onSuccess();
     } catch (err: any) {
@@ -269,22 +225,6 @@ const FunctionForm: React.FC<FunctionFormProps> = ({
                     ]}
                   >
                     <Input placeholder="my-function" disabled={isEdit}/>
-                  </Form.Item>
-
-                  <Form.Item
-                    name="slug"
-                    label={t("function.slug")}
-                    rules={[
-                      {required: true, message: t("function.slugRequired")},
-                      {pattern: /^[a-z0-9]+(?:-[a-z0-9]+)*$/, message: t("function.slugFormat")},
-                      {max: 100},
-                    ]}
-                  >
-                    <Input placeholder="my-function" disabled={isEdit}/>
-                  </Form.Item>
-
-                  <Form.Item name="description" label={t("description")} rules={[{max: 500}]}>
-                    <Input.TextArea placeholder={t("function.descriptionPlaceholder")} rows={2}/>
                   </Form.Item>
 
                   <Form.Item

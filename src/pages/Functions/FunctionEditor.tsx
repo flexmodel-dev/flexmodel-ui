@@ -81,18 +81,13 @@ const FunctionEditor: React.FC = () => {
           setFnData(fn);
           form.setFieldsValue({name: fn.name});
           if (fn.sourceFiles) {
-            try {
-              const parsed = JSON.parse(fn.sourceFiles);
-              const entries: FileEntry[] = Object.entries(parsed).map(([k, v]) => ({
-                filename: k,
-                content: v as string,
-              }));
-              if (entries.length > 0) {
-                setFiles(entries);
-                setActiveFile(entries[0].filename);
-              }
-            } catch {
-              setFiles([{filename: "index.ts", content: ""}]);
+            const entries: FileEntry[] = Object.entries(fn.sourceFiles).map(([k, v]) => ({
+              filename: k,
+              content: v as string,
+            }));
+            if (entries.length > 0) {
+              setFiles(entries);
+              setActiveFile(entries[0].filename);
             }
           }
         })
@@ -167,19 +162,16 @@ const FunctionEditor: React.FC = () => {
 
   // ---- Template ----
   const handleApplyTemplate = useCallback((tpl: FunctionTemplate) => {
-    try {
-      const parsed = JSON.parse(tpl.sourceFiles);
-      const entries: FileEntry[] = Object.entries(parsed).map(([k, v]) => ({
-        filename: k,
-        content: v as string,
-      }));
+    const entries: FileEntry[] = Object.entries(tpl.sourceFiles).map(([k, v]) => ({
+      filename: k,
+      content: v as string,
+    }));
+    if (entries.length > 0) {
       setFiles(entries);
-      setActiveFile(entries[0]?.filename || "index.ts");
-      setTemplateDrawerVisible(false);
-      message.success(t("function.templateApplied"));
-    } catch {
-      message.error(t("function.templateApplyFailed"));
+      setActiveFile(entries[0].filename);
     }
+    setTemplateDrawerVisible(false);
+    message.success(t("function.templateApplied"));
   }, [t]);
 
   // ---- Submit (deploy / upsert) ----

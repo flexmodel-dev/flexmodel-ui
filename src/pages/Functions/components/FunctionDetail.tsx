@@ -40,12 +40,7 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
   }
 
   // Parse source files
-  let sourceFiles: Record<string, string> = {};
-  if (fn.sourceFiles) {
-    try {
-      sourceFiles = JSON.parse(fn.sourceFiles);
-    } catch {/* ignore */}
-  }
+  const sourceFiles = fn.sourceFiles || {};
   const fileList = Object.keys(sourceFiles);
 
   // ---- Overview Tab ----

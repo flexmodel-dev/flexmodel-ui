@@ -6,7 +6,7 @@ export interface FunctionResponse {
   id: string;
   projectId: string;
   name: string;
-  sourceFiles?: string;   // JSON string: filename → content
+  sourceFiles?: Record<string, string>;
   timeout: number;
   createdBy?: string;
   updatedBy?: string;
@@ -19,7 +19,7 @@ export interface FunctionTemplate {
   name: string;
   slug: string;
   description: string;
-  sourceFiles: string;  // JSON string
+  sourceFiles: Record<string, string>;
   tags?: string;         // JSON array string
   icon?: string;
   sortOrder: number;
@@ -37,6 +37,7 @@ export interface FunctionInvokeRequest {
   body?: any;
   query?: Record<string, string>;
 }
+
 
 export interface FunctionInvokeResponse {
   status: number;
