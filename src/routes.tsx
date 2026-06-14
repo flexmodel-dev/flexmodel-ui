@@ -42,6 +42,7 @@ import FlowDetail from "./pages/FlowDetail";
 import Project from "./pages/Project";
 import ApiKeys from "./pages/ApiKeys";
 import Functions from "./pages/Functions";
+import FunctionEditor from "./pages/Functions/FunctionEditor";
 
 export interface RouteConfig {
   path: string;
@@ -190,6 +191,22 @@ export const projectRoutes: RouteConfig[] = [
     element: <Functions />,
     icon: CodeOutlined,
     translationKey: "function.title",
+  },
+  {
+    path: "/project/:projectId/functions/editor",
+    element: <FunctionEditor />,
+    icon: CodeOutlined,
+    translationKey: "function.editor",
+    hideInMenu: true,
+    hideLayout: false,
+  },
+  {
+    path: "/project/:projectId/functions/editor/:slug",
+    element: <FunctionEditor />,
+    icon: CodeOutlined,
+    translationKey: "function.editor",
+    hideInMenu: true,
+    hideLayout: false,
   },
   {
     path: "/project/:projectId/storage",

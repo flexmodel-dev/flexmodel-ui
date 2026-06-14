@@ -6,9 +6,10 @@ import {registerGroovyLanguage} from '@/utils/monaco-groovy';
 interface ScriptEditorProps {
   value?: string;
   onChange?: (value: string | undefined) => void;
-  language?: 'javascript' | 'groovy' | 'sql' | 'json';
+  language?: 'javascript' | 'groovy' | 'sql' | 'json' | 'typescript';
   height?: string | number;
   readOnly?: boolean;
+  style?: React.CSSProperties;
 }
 
 const ScriptEditor: React.FC<ScriptEditorProps> = ({
@@ -17,6 +18,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
   language = 'javascript',
   height = '300px',
   readOnly = false,
+  style,
 }) => {
   const { token } = theme.useToken();
   const editorRef = useRef<any>(null);
@@ -47,7 +49,8 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       style={{
         border: `1px solid ${token.colorBorder}`,
         borderRadius: token.borderRadius,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        ...style,
       }}
     >
       <Editor

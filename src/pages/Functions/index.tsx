@@ -5,70 +5,45 @@ import {
   Input,
   message,
   Popconfirm,
-  Select,
   Space,
   Table,
-  Tag,
   Tooltip,
 } from "antd";
 import {
+  CodeOutlined,
   DeleteOutlined,
   EditOutlined,
-  EyeOutlined,
+  PlayCircleOutlined,
   PlusOutlined,
   ReloadOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
+import {useNavigate} from "react-router-dom";
 import PageContainer from "@/components/common/PageContainer";
-import FunctionForm from "./components/FunctionForm";
 import FunctionDetail from "./components/FunctionDetail";
-import type {FunctionResponse, FunctionUpdateRequest} from "@/services/function";
+import type {FunctionResponse} from "@/services/function";
 import {
   deleteFunction,
   getFunctionList,
   getFunction,
-  updateFunction,
 } from "@/services/function";
 import {useProject} from "@/store/appStore";
 
-const STATUS_COLORS: Record<string, string> = {
-  ACTIVE: "green",
-  CREATING: "blue",
-  UPDATING: "orange",
-  DEPLOY_FAILED: "red",
-  DELETING: "volcano",
-  INACTIVE: "default",
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  ACTIVE: "function.status.active",
-  CREATING: "function.status.creating",
-  UPDATING: "function.status.updating",
-  DEPLOY_FAILED: "function.status.deploy_failed",
-  DELETING: "function.status.deleting",
-  INACTIVE: "function.status.inactive",
-};
-
 const FunctionsPage: React.FC = () => {
   const {t} = useTranslation();
+  const navigate = useNavigate();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || "";
 
-  // List state
   const [functions, setFunctions] = useState<FunctionResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [searchName, setSearchName] = useState("");
-  const [filterStatus, setFilterStatus] = useState<string | undefined>();
 
-  // Form modal state
-  const [formVisible, setFormVisible] = useState(false);
-  const [editingFunction, setEditingFunction] = useState<FunctionResponse | null>(null);
-
-  // Detail drawer state
+  // Detail drawer
   const [detailVisible, setDetailVisible] = useState(false);
   const [detailFunction, setDetailFunction] = useState<FunctionResponse | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -79,37 +54,28 @@ const FunctionsPage: React.FC = () => {
     try {
       const res = await getFunctionList(projectId, {
         name: searchName || undefined,
-        status: filterStatus,
         page,
         size: pageSize,
       });
       setFunctions(res.list);
       setTotal(res.total);
     } catch {
-      message.error(t("function.load_failed"));
+      message.error(t("function.loadFailed"));
     } finally {
       setLoading(false);
     }
-  }, [projectId, searchName, filterStatus, page, pageSize, t]);
+  }, [projectId, searchName, page, pageSize, t]);
 
   useEffect(() => {
     loadList();
   }, [loadList]);
 
   const handleCreate = () => {
-    setEditingFunction(null);
-    setFormVisible(true);
+    navigate(`/project/${projectId}/functions/editor`);
   };
 
   const handleEdit = (fn: FunctionResponse) => {
-    setEditingFunction(fn);
-    setFormVisible(true);
-  };
-
-  const handleFormSuccess = () => {
-    setFormVisible(false);
-    setEditingFunction(null);
-    loadList();
+    navigate(`/project/${projectId}/functions/editor/${fn.slug}`);
   };
 
   const handleViewDetail = async (fn: FunctionResponse) => {
@@ -119,7 +85,6 @@ const FunctionsPage: React.FC = () => {
       const detail = await getFunction(projectId, fn.slug);
       setDetailFunction(detail);
     } catch {
-      // use the list item as fallback
       setDetailFunction(fn);
     } finally {
       setDetailLoading(false);
@@ -129,34 +94,11 @@ const FunctionsPage: React.FC = () => {
   const handleDelete = async (slug: string) => {
     try {
       await deleteFunction(projectId, slug);
-      message.success(t("function.delete_success"));
+      message.success(t("function.deleteSuccess"));
       loadList();
     } catch {
-      message.error(t("function.delete_failed"));
+      message.error(t("function.deleteFailed"));
     }
-  };
-
-  const handleUpdateInline = async (
-    slug: string,
-    data: FunctionUpdateRequest,
-  ) => {
-    try {
-      await updateFunction(projectId, slug, data);
-      message.success(t("function.update_success"));
-      loadList();
-    } catch {
-      message.error(t("function.update_failed"));
-    }
-  };
-
-  const getEndpointText = (fn: FunctionResponse): string => {
-    if (fn.triggers && fn.triggers.length > 0) {
-      const t = fn.triggers[0];
-      const method = t.method || "POST";
-      const path = t.path || `/functions/${fn.slug}`;
-      return `${method} ${path}`;
-    }
-    return "-";
   };
 
   const columns = [
@@ -164,41 +106,22 @@ const FunctionsPage: React.FC = () => {
       title: t("function.name"),
       dataIndex: "name",
       key: "name",
-      width: 180,
+      width: 200,
       render: (name: string, record: FunctionResponse) => (
-        <a onClick={() => handleViewDetail(record)}>{name}</a>
+        <a onClick={() => handleViewDetail(record)} style={{fontWeight: 500}}>
+          <CodeOutlined style={{marginRight: 8}}/>
+          {name}
+        </a>
       ),
-    },
-    {
-      title: t("function.slug"),
-      dataIndex: "slug",
-      key: "slug",
-      width: 150,
-    },
-    {
-      title: t("function.status"),
-      dataIndex: "status",
-      key: "status",
-      width: 130,
-      render: (status: string) => (
-        <Tag color={STATUS_COLORS[status] || "default"}>
-          {t(STATUS_LABELS[status] || status)}
-        </Tag>
-      ),
-    },
-    {
-      title: t("function.version"),
-      dataIndex: "currentVersion",
-      key: "currentVersion",
-      width: 80,
-      render: (v: number) => `v${v}`,
     },
     {
       title: t("function.endpoint"),
       key: "endpoint",
-      width: 220,
+      width: 280,
       render: (_: any, record: FunctionResponse) => (
-        <code style={{fontSize: 12}}>{getEndpointText(record)}</code>
+        <code style={{fontSize: 11, color: "#666"}}>
+          POST /functions/{record.slug}
+        </code>
       ),
     },
     {
@@ -209,23 +132,23 @@ const FunctionsPage: React.FC = () => {
       render: (timeout: number) => `${timeout}s`,
     },
     {
-      title: t("updated_at"),
+      title: t("function.updatedAt"),
       dataIndex: "updatedAt",
       key: "updatedAt",
-      width: 170,
+      width: 160,
       render: (date: string) => (date ? new Date(date).toLocaleString() : "-"),
     },
     {
-      title: t("operations"),
-      key: "operations",
-      width: 160,
+      title: t("function.actions"),
+      key: "actions",
+      width: 140,
       render: (_: any, record: FunctionResponse) => (
         <Space size="small">
-          <Tooltip title={t("function.view_detail")}>
+          <Tooltip title={t("function.invoke")}>
             <Button
               type="text"
               size="small"
-              icon={<EyeOutlined/>}
+              icon={<PlayCircleOutlined/>}
               onClick={() => handleViewDetail(record)}
             />
           </Tooltip>
@@ -238,19 +161,13 @@ const FunctionsPage: React.FC = () => {
             />
           </Tooltip>
           <Popconfirm
-            title={t("function.delete_confirm")}
-            description={t("function.delete_confirm_desc", {name: record.name})}
+            title={t("function.deleteConfirm")}
             onConfirm={() => handleDelete(record.slug)}
             okText={t("confirm")}
             cancelText={t("cancel")}
           >
             <Tooltip title={t("delete")}>
-              <Button
-                type="text"
-                size="small"
-                danger
-                icon={<DeleteOutlined/>}
-              />
+              <Button type="text" size="small" danger icon={<DeleteOutlined/>}/>
             </Tooltip>
           </Popconfirm>
         </Space>
@@ -258,57 +175,33 @@ const FunctionsPage: React.FC = () => {
     },
   ];
 
-  const toolbarExtra = (
-    <Space>
-      <Button icon={<ReloadOutlined/>} onClick={loadList}>
-        {t("refresh")}
-      </Button>
-      <Button type="primary" icon={<PlusOutlined/>} onClick={handleCreate}>
-        {t("function.create")}
-      </Button>
-    </Space>
-  );
-
-  const filterBar = (
-    <Space style={{marginBottom: 16}} wrap>
-      <Input
-        placeholder={t("function.search_by_name")}
-        prefix={<SearchOutlined/>}
-        value={searchName}
-        onChange={(e) => {
-          setSearchName(e.target.value);
-          setPage(1);
-        }}
-        style={{width: 220}}
-        allowClear
-      />
-      <Select
-        placeholder={t("function.filter_status")}
-        value={filterStatus}
-        onChange={(v) => {
-          setFilterStatus(v);
-          setPage(1);
-        }}
-        allowClear
-        style={{width: 150}}
-      >
-        {Object.entries(STATUS_LABELS).map(([key, label]) => (
-          <Select.Option key={key} value={key}>
-            {t(label)}
-          </Select.Option>
-        ))}
-      </Select>
-    </Space>
-  );
-
   return (
     <>
       <PageContainer
         title={t("function.title")}
-        extra={toolbarExtra}
+        extra={
+          <Space>
+            <Button icon={<ReloadOutlined/>} onClick={loadList}>
+              {t("refresh")}
+            </Button>
+            <Button type="primary" icon={<PlusOutlined/>} onClick={handleCreate}>
+              {t("function.create")}
+            </Button>
+          </Space>
+        }
         loading={loading}
       >
-        {filterBar}
+        <Space style={{marginBottom: 16}} wrap>
+          <Input
+            placeholder={t("function.searchByName")}
+            prefix={<SearchOutlined/>}
+            value={searchName}
+            onChange={(e) => { setSearchName(e.target.value); setPage(1); }}
+            style={{width: 220}}
+            allowClear
+          />
+        </Space>
+
         <Table
           columns={columns}
           dataSource={functions}
@@ -321,61 +214,28 @@ const FunctionsPage: React.FC = () => {
             total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total, range) =>
-              t("pagination_total_text", {
-                start: range[0],
-                end: range[1],
-                total,
-              }),
-            onChange: (p, s) => {
-              setPage(p);
-              setPageSize(s || 20);
-            },
-            onShowSizeChange: (_c: number, s: number) => {
-              setPage(1);
-              setPageSize(s);
-            },
+            showTotal: (total: number, range: [number, number]) =>
+              `${range[0]}-${range[1]} / ${total}`,
+            onChange: (p, s) => { setPage(p); setPageSize(s || 20); },
+            onShowSizeChange: (_c: number, s: number) => { setPage(1); setPageSize(s); },
           }}
         />
       </PageContainer>
 
-      {/* Create / Edit Modal */}
-      <FunctionForm
-        visible={formVisible}
-        editingFunction={editingFunction}
-        projectId={projectId}
-        onSuccess={handleFormSuccess}
-        onCancel={() => {
-          setFormVisible(false);
-          setEditingFunction(null);
-        }}
-      />
-
-      {/* Detail Drawer */}
       <Drawer
-        title={
-          detailFunction
-            ? `${t("function.detail")}: ${detailFunction.name}`
-            : t("function.detail")
-        }
+        title={detailFunction ? detailFunction.name : t("function.detail")}
         open={detailVisible}
-        onClose={() => {
-          setDetailVisible(false);
-          setDetailFunction(null);
-        }}
+        onClose={() => { setDetailVisible(false); setDetailFunction(null); }}
         width={800}
         destroyOnClose
       >
         <FunctionDetail
-          function={detailFunction}
+          fn={detailFunction}
           loading={detailLoading}
           projectId={projectId}
-          onUpdate={handleUpdateInline}
           onRefresh={() => {
             loadList();
-            if (detailFunction) {
-              handleViewDetail(detailFunction);
-            }
+            if (detailFunction) handleViewDetail(detailFunction);
           }}
         />
       </Drawer>

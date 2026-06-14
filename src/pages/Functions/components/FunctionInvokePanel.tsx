@@ -56,7 +56,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
         headers = JSON.parse(headersStr);
       }
     } catch {
-      message.error(t("function.invoke_headers_json_error"));
+      message.error(t("function.invokeHeadersJsonError"));
       setInvoking(false);
       return;
     }
@@ -66,7 +66,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
         body = JSON.parse(bodyStr);
       }
     } catch {
-      message.error(t("function.invoke_body_json_error"));
+      message.error(t("function.invokeBodyJsonError"));
       setInvoking(false);
       return;
     }
@@ -76,7 +76,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
         query = JSON.parse(queryStr);
       }
     } catch {
-      message.error(t("function.invoke_query_json_error"));
+      message.error(t("function.invokeQueryJsonError"));
       setInvoking(false);
       return;
     }
@@ -105,13 +105,13 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
   return (
     <div>
       <Paragraph type="secondary">
-        {t("function.invoke_hint")}
+        {t("function.invokeHint")}
       </Paragraph>
 
       {/* Request Builder */}
       <Card
         size="small"
-        title={t("function.invoke_request")}
+        title={t("function.invokeRequest")}
         style={{marginBottom: 16}}
       >
         <div style={{display: "flex", gap: 12, marginBottom: 12, alignItems: "center"}}>
@@ -135,7 +135,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
           items={[
             {
               key: "body",
-              label: t("function.invoke_body"),
+              label: t("function.invokeBody"),
               children: (
                 <div>
                   <ScriptEditor
@@ -149,7 +149,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
             },
             {
               key: "headers",
-              label: t("function.invoke_headers"),
+              label: t("function.invokeHeaders"),
               children: (
                 <div>
                   <ScriptEditor
@@ -163,7 +163,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
             },
             {
               key: "query",
-              label: t("function.invoke_query"),
+              label: t("function.invokeQuery"),
               children: (
                 <div>
                   <ScriptEditor
@@ -185,7 +185,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
             loading={invoking}
             onClick={handleInvoke}
           >
-            {t("function.invoke_send")}
+            {t("function.invokeSend")}
           </Button>
         </div>
       </Card>
@@ -194,16 +194,16 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
       {(response || error || invoking) && (
         <Card
           size="small"
-          title={t("function.invoke_response")}
+          title={t("function.invokeResponse")}
         >
           {invoking ? (
             <div style={{textAlign: "center", padding: 32}}>
-              <Spin tip={t("function.invoke_executing")}/>
+              <Spin tip={t("function.invokeExecuting")}/>
             </div>
           ) : error ? (
             <Alert
               type="error"
-              message={t("function.invoke_error")}
+              message={t("function.invokeError")}
               description={error}
               showIcon
             />
@@ -234,7 +234,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
                 items={[
                   {
                     key: "body",
-                    label: t("function.invoke_response_body"),
+                    label: t("function.invokeResponseBody"),
                     children: (
                       <ScriptEditor
                         language="json"
@@ -248,7 +248,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
                     ? [
                         {
                           key: "logs",
-                          label: t("function.invoke_logs"),
+                          label: t("function.invokeLogs"),
                           children: (
                             <div
                               style={{

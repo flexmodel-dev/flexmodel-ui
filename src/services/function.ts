@@ -2,59 +2,34 @@ import {api} from "@/utils/request";
 
 // ---- Types ----
 
-export interface TriggerRef {
-  id: string;
-  path: string;
-  method: string;
-  authMode: string;
-  enabled: boolean;
-}
-
 export interface FunctionResponse {
   id: string;
   projectId: string;
   name: string;
   slug: string;
-  description?: string;
-  entryPoint: string;
-  status: string;
-  currentVersion: number;
+  sourceFiles?: string;   // JSON string: filename → content
   timeout: number;
-  memoryLimit: number;
   createdBy?: string;
   updatedBy?: string;
   createdAt?: string;
   updatedAt?: string;
-  triggers?: TriggerRef[];
 }
 
-export interface FunctionVersionResponse {
+export interface FunctionTemplate {
   id: string;
-  functionId: string;
-  version: number;
-  createdBy?: string;
-  createdAt?: string;
-}
-
-export interface FunctionCreateRequest {
   name: string;
   slug: string;
-  description?: string;
-  sourceCode: string;
-  entryPoint?: string;
-  timeout?: number;
-  memoryLimit?: number;
-  triggerPath?: string;
-  triggerMethod?: string;
-  authMode?: string;
+  description: string;
+  sourceFiles: string;  // JSON string
+  tags?: string;         // JSON array string
+  icon?: string;
+  sortOrder: number;
 }
 
-export interface FunctionUpdateRequest {
-  description?: string;
-  sourceCode: string;
-  entryPoint?: string;
+export interface FunctionDeployRequest {
+  name: string;
+  sourceFiles: Record<string, string>;
   timeout?: number;
-  memoryLimit?: number;
 }
 
 export interface FunctionInvokeRequest {
@@ -81,23 +56,21 @@ export interface PageDTO<T> {
 
 // ---- Function CRUD ----
 
-/** Create a cloud function */
-export const createFunction = (
+export const deployFunction = (
   projectId: string,
-  data: FunctionCreateRequest,
+  slug: string,
+  data: FunctionDeployRequest,
 ): Promise<FunctionResponse> => {
-  return api.post(`/projects/${projectId}/functions`, data);
+  return api.post(`/projects/${projectId}/functions/${slug}/deploy`, data);
 };
 
-/** Get paginated function list */
 export const getFunctionList = (
   projectId: string,
-  params?: { name?: string; status?: string; page?: number; size?: number },
+  params?: { name?: string; page?: number; size?: number },
 ): Promise<PageDTO<FunctionResponse>> => {
   return api.get(`/projects/${projectId}/functions`, params);
 };
 
-/** Get function detail */
 export const getFunction = (
   projectId: string,
   slug: string,
@@ -105,16 +78,6 @@ export const getFunction = (
   return api.get(`/projects/${projectId}/functions/${slug}`);
 };
 
-/** Update a function */
-export const updateFunction = (
-  projectId: string,
-  slug: string,
-  data: FunctionUpdateRequest,
-): Promise<FunctionResponse> => {
-  return api.put(`/projects/${projectId}/functions/${slug}`, data);
-};
-
-/** Delete a function */
 export const deleteFunction = (
   projectId: string,
   slug: string,
@@ -122,26 +85,6 @@ export const deleteFunction = (
   return api.delete(`/projects/${projectId}/functions/${slug}`);
 };
 
-/** Rollback to a specific version */
-export const rollbackFunction = (
-  projectId: string,
-  slug: string,
-  version: number,
-): Promise<FunctionResponse> => {
-  return api.post(
-    `/projects/${projectId}/functions/${slug}/rollback?version=${version}`,
-  );
-};
-
-/** Get version history */
-export const getFunctionVersions = (
-  projectId: string,
-  slug: string,
-): Promise<FunctionVersionResponse[]> => {
-  return api.get(`/projects/${projectId}/functions/${slug}/versions`);
-};
-
-/** Invoke a function */
 export const invokeFunction = (
   projectId: string,
   slug: string,
@@ -150,45 +93,8 @@ export const invokeFunction = (
   return api.post(`/projects/${projectId}/functions/${slug}/invoke`, data);
 };
 
-// ---- Trigger Management ----
+// ---- Templates ----
 
-/** Get function triggers */
-export const getFunctionTriggers = (
-  projectId: string,
-  slug: string,
-): Promise<any[]> => {
-  return api.get(`/projects/${projectId}/functions/${slug}/triggers`);
-};
-
-/** Add a trigger */
-export const addFunctionTrigger = (
-  projectId: string,
-  slug: string,
-  data: any,
-): Promise<any> => {
-  return api.post(`/projects/${projectId}/functions/${slug}/triggers`, data);
-};
-
-/** Update a trigger */
-export const updateFunctionTrigger = (
-  projectId: string,
-  slug: string,
-  triggerId: string,
-  data: any,
-): Promise<any> => {
-  return api.put(
-    `/projects/${projectId}/functions/${slug}/triggers/${triggerId}`,
-    data,
-  );
-};
-
-/** Delete a trigger */
-export const deleteFunctionTrigger = (
-  projectId: string,
-  slug: string,
-  triggerId: string,
-): Promise<void> => {
-  return api.delete(
-    `/projects/${projectId}/functions/${slug}/triggers/${triggerId}`,
-  );
+export const getFunctionTemplates = (): Promise<FunctionTemplate[]> => {
+  return api.get("/function-templates");
 };
