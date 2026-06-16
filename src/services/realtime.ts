@@ -13,8 +13,7 @@ export interface RealtimePayload {
 
 export interface RealtimeChannel {
   id: string;
-  channel: string;
-  model: string;
+  channel: string | string[];
   unsubscribe: () => void;
 }
 
@@ -22,6 +21,7 @@ type RealtimeCallback = (payload: RealtimePayload) => void;
 
 class RealtimeClient {
   private ws: WebSocket | null = null;
+  private currentProjectId: string | null = null;
   private subscriptions = new Map<string, RealtimeCallback>();
   private subCounter = 0;
   private isConnecting = false;
@@ -31,28 +31,39 @@ class RealtimeClient {
   private reconnectInterval = 3000;
   private heartbeatInterval: ReturnType<typeof setInterval> | null = null;
 
-  constructor() {
-    this.connect();
-  }
-
-  private getWebSocketUrl(): string {
+  private getWebSocketUrl(projectId: string): string {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    return `${protocol}//${window.location.host}/api/realtime`;
+    return `${protocol}//${window.location.host}/api/projects/${projectId}/realtime`;
   }
 
-  connect(): void {
-    if (this.isConnecting || (this.ws && this.ws.readyState === WebSocket.OPEN)) {
+  /**
+   * 建立与指定项目的 WebSocket 连接。
+   * 如果已连接相同项目则复用，项目变更时自动重连。
+   */
+  connect(projectId: string): void {
+    // 相同项目且已连接，直接复用
+    if (this.currentProjectId === projectId && this.ws && this.ws.readyState === WebSocket.OPEN) {
       return;
     }
 
+    // 项目切换或断线，先断开旧连接
+    if (this.ws) {
+      this.isManualDisconnect = true;
+      this.ws.close();
+      this.ws = null;
+    }
+
+    this.currentProjectId = projectId;
     this.isConnecting = true;
-    const wsUrl = this.getWebSocketUrl();
+    this.isManualDisconnect = false;
+    this.reconnectAttempts = 0;
+    const wsUrl = this.getWebSocketUrl(projectId);
 
     try {
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
-        console.log('Realtime WebSocket connected');
+        console.log('Realtime WebSocket connected:', projectId);
         this.isConnecting = false;
         this.reconnectAttempts = 0;
         this.isManualDisconnect = false;
@@ -67,7 +78,7 @@ class RealtimeClient {
           if (data.type === 'system') {
             switch (data.event) {
               case 'subscribe_ok':
-                console.log(`Realtime subscribed: ${data.id} -> ${data.channel}`);
+                console.log(`Realtime subscribed: ${data.id} ->`, data.channel);
                 break;
               case 'unsubscribe_ok':
                 console.log(`Realtime unsubscribed: ${data.id}`);
@@ -103,7 +114,9 @@ class RealtimeClient {
           this.reconnectAttempts++;
           setTimeout(() => {
             console.log(`Realtime reconnecting... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-            this.connect();
+            if (this.currentProjectId) {
+              this.connect(this.currentProjectId);
+            }
           }, this.reconnectInterval);
         }
       };
@@ -118,7 +131,13 @@ class RealtimeClient {
     }
   }
 
-  subscribe(projectId: string, callback: RealtimeCallback, model: string = '*'): RealtimeChannel {
+  /**
+   * 订阅指定表（channel）的变更事件。
+   *
+   * @param channel  表名，支持单表字符串、多表数组或 "*" 通配符
+   * @param callback 收到变更事件时的回调
+   */
+  subscribe(channel: string | string[], callback: RealtimeCallback): RealtimeChannel {
     const id = `sub-${++this.subCounter}`;
     this.subscriptions.set(id, callback);
 
@@ -126,8 +145,7 @@ class RealtimeClient {
       this.ws!.send(JSON.stringify({
         type: 'subscribe',
         id,
-        channel: projectId,
-        model,
+        channel,
       }));
     };
 
@@ -147,8 +165,7 @@ class RealtimeClient {
 
     return {
       id,
-      channel: projectId,
-      model,
+      channel,
       unsubscribe: () => this.unsubscribe(id),
     };
   }
@@ -171,14 +188,16 @@ class RealtimeClient {
       this.ws.close();
       this.ws = null;
     }
+    this.currentProjectId = null;
     this.subscriptions.clear();
   }
 
   reconnect(): void {
-    this.isManualDisconnect = false;
-    this.disconnect();
-    this.reconnectAttempts = 0;
-    this.connect();
+    if (this.currentProjectId) {
+      const projectId = this.currentProjectId;
+      this.disconnect();
+      this.connect(projectId);
+    }
   }
 
   isConnected(): boolean {
