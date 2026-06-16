@@ -8,24 +8,7 @@ interface LogItemProps {
   token: any;
 }
 
-/** 一组颜色，按 model 名 hash 分配，保证同一 model 颜色一致 */
-const MODEL_COLORS = [
-  '#1677ff', '#52c41a', '#fa8c16', '#eb2f96', '#722ed1',
-  '#13c2c2', '#f5222d', '#2f54eb', '#faad14', '#a0d911',
-];
-
-function hashModel(model: string): number {
-  let hash = 0;
-  for (let i = 0; i < model.length; i++) {
-    hash = ((hash << 5) - hash) + model.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
 const LogItem: React.FC<LogItemProps> = React.memo(({ log, token }) => {
-  const modelColor = useMemo(() => MODEL_COLORS[hashModel(log.model) % MODEL_COLORS.length], [log.model]);
-
   const styles = useMemo(() => ({
     container: {
       position: 'relative' as const,
@@ -41,9 +24,8 @@ const LogItem: React.FC<LogItemProps> = React.memo(({ log, token }) => {
       flexShrink: 0,
     },
     model: {
-      color: modelColor,
+      color: token.colorText,
       flexShrink: 0,
-      fontWeight: 600,
     },
     content: {
       color: token.colorText,
@@ -63,7 +45,7 @@ const LogItem: React.FC<LogItemProps> = React.memo(({ log, token }) => {
       pointerEvents: 'none' as const,
       transition: 'opacity 0.15s',
     },
-  }), [token, modelColor]);
+  }), [token]);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(`${log.timestamp} ${log.message}`).then(() => {
