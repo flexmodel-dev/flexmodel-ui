@@ -276,7 +276,7 @@ const ProjectLayout: React.FC = () => {
             minSize={150}
             maxSize={600}
             renderPanel={() => (
-              <Console onToggle={() => setIsConsoleVisible((v) => !v)} />
+              <Console projectId={projectId} onToggle={() => setIsConsoleVisible((v) => !v)} />
             )}
           >
             {isProjectInitialized ? <Outlet key={currentProject?.id} /> : null}

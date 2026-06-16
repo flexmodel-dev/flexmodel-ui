@@ -6,13 +6,12 @@ import {
   DownOutlined,
   ReloadOutlined,
   SearchOutlined,
-  ThunderboltOutlined,
   VerticalAlignBottomOutlined,
   ZoomInOutlined,
   ZoomOutOutlined
 } from '@ant-design/icons';
 import {useConsoleLogs} from '@/hooks/useConsoleLogs.ts';
-import consoleWebSocketService from '@/services/console.ts';
+import realtimeClient from '@/services/realtime';
 import LogItem from './LogItem.tsx';
 import ConsolePerformanceMonitor from './ConsolePerformanceMonitor.tsx';
 import {useTranslation} from 'react-i18next';
@@ -22,13 +21,13 @@ const { Option } = Select;
 
 interface ConsoleProps {
   onToggle: () => void;
+  projectId?: string;
 }
 
 
-const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
+const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
   const { token } = theme.useToken();
   const { t } = useTranslation();
-  const [filterLevel, setFilterLevel] = useState<string>('ALL');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
   const [fontSize, setFontSize] = useState(12);
@@ -46,7 +45,8 @@ const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
     setAutoScrollEnabled
   } = useConsoleLogs({
     maxLogs: 1000, // 减少到1000条以提高性能
-    autoScroll: true
+    autoScroll: true,
+    projectId,
   });
 
   // 始终置底开关：选中后不管是否滚动，始终保持在底部
@@ -83,7 +83,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
   const toggleConnection = useCallback(() => {
     if (isConnected) {
       // 当前已连接，执行断开操作
-      consoleWebSocketService.disconnect();
+      realtimeClient.disconnect();
       message.success(t('console.ws_disconnected'));
     } else {
       // 当前未连接，执行连接操作
@@ -92,34 +92,12 @@ const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
     }
   }, [isConnected, reconnect, t]);
 
-  // 测试WebSocket连接 - 使用useCallback缓存
-  const testConnection = useCallback(() => {
-    if (isConnected) {
-      // 发送ping测试
-      consoleWebSocketService.ping();
-      message.success(t('console.ping_sent'));
-    } else {
-      message.warning(t('console.ws_not_connected'));
-    }
-  }, [isConnected, t]);
-
   // 手动滚动到底部
   const scrollToBottom = useCallback(() => {
     if (logsEndRef.current) {
       logsEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [logsEndRef]);
-
-  // 获取日志级别颜色 - 使用useCallback缓存
-  const getLevelColor = useCallback((level: string) => {
-    switch (level) {
-      case 'ERROR': return token.colorError;
-      case 'WARN': return token.colorWarning;
-      case 'INFO': return token.colorInfo;
-      case 'DEBUG': return token.colorSuccessText;
-      default: return token.colorText;
-    }
-  }, [token.colorError, token.colorWarning, token.colorInfo, token.colorTextSecondary, token.colorText]);
 
   // 防抖搜索
   useEffect(() => {
@@ -130,31 +108,22 @@ const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
     return () => clearTimeout(timer);
   }, [searchKeyword]);
 
-  // 过滤日志 - 使用useMemo缓存过滤结果，使用防抖后的搜索关键词
+  // 过滤日志 - 只按关键词过滤
   const filteredLogs = useMemo(() => {
-    let result = logs;
-
-    // 先进行级别和关键词过滤
-    if (debouncedSearchKeyword || filterLevel !== 'ALL') {
-      result = logs.filter(log => {
-        const levelMatch = filterLevel === 'ALL' || log.level === filterLevel;
-        const keywordMatch = !debouncedSearchKeyword ||
-          log.message.toLowerCase().includes(debouncedSearchKeyword.toLowerCase()) ||
-          log.source.toLowerCase().includes(debouncedSearchKeyword.toLowerCase());
-        return levelMatch && keywordMatch;
-      });
+    if (!debouncedSearchKeyword) {
+      if (displayLimit === -1 || logs.length <= displayLimit) return logs;
+      return logs.slice(-displayLimit);
     }
 
-    // 然后应用显示条数限制
-    if (displayLimit === -1) {
-      // -1 表示显示全部
-      return result;
-    } else if (result.length > displayLimit) {
-      return result.slice(-displayLimit);
-    }
+    const keyword = debouncedSearchKeyword.toLowerCase();
+    let result = logs.filter(log =>
+      log.message.toLowerCase().includes(keyword)
+    );
 
+    if (displayLimit === -1) return result;
+    if (result.length > displayLimit) return result.slice(-displayLimit);
     return result;
-  }, [logs, filterLevel, debouncedSearchKeyword, displayLimit]);
+  }, [logs, debouncedSearchKeyword, displayLimit]);
 
   // 添加调试信息和性能监控
   useEffect(() => {
@@ -180,7 +149,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
         }
       }, 100);
     }
-  }, [filteredLogs.length, displayLimit, filterLevel, debouncedSearchKeyword, logsEndRef]);
+  }, [filteredLogs.length, displayLimit, debouncedSearchKeyword, logsEndRef]);
 
   // 打开时滚动到底部（交由父组件控制可见性，这里仅在有日志时尝试）
   useEffect(() => {
@@ -241,18 +210,6 @@ const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
           />
           <Select
             size="small"
-            value={filterLevel}
-            onChange={setFilterLevel}
-            style={{ width: 100 }}
-          >
-            <Option value="ALL">{t('console.level_all')}</Option>
-            <Option value="ERROR">{t('console.level_error')}</Option>
-            <Option value="WARN">{t('console.level_warn')}</Option>
-            <Option value="INFO">{t('console.level_info')}</Option>
-            <Option value="DEBUG">{t('console.level_debug')}</Option>
-          </Select>
-          <Select
-            size="small"
             value={displayLimit}
             onChange={setDisplayLimit}
             style={{ width: 80 }}
@@ -278,14 +235,6 @@ const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
                 style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, marginLeft: -1 }}
               />
             </div>
-          </Tooltip>
-          <Tooltip title={t('console.test_connection')}>
-            <Button
-              size="small"
-              icon={<ThunderboltOutlined />}
-              onClick={testConnection}
-              disabled={!isConnected}
-            />
           </Tooltip>
           <Tooltip title={isConnected ? t('console.disconnect') : t('console.connect')}>
             <Button
@@ -352,9 +301,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle }) => {
             <LogItem
               key={log.id}
               log={log}
-              getLevelColor={getLevelColor}
               token={token}
-              searchKeyword={debouncedSearchKeyword}
             />
           ))
         )}

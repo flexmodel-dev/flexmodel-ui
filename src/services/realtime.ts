@@ -2,13 +2,14 @@ export type RealtimeEventType = 'INSERT' | 'UPDATE' | 'DELETE';
 
 export interface RealtimePayload {
   type: 'realtime';
-  id: string;
+  sub_id: string;
   event: RealtimeEventType;
-  schema: string;
   model: string;
-  commit_timestamp: string;
-  new: Record<string, any>;
-  old: Record<string, any>;
+  record_id: string | number;
+  timestamp: string;
+  affected_rows: number;
+  data?: Record<string, any>;
+  old_data?: Record<string, any>;
 }
 
 export interface RealtimeChannel {
@@ -94,7 +95,7 @@ class RealtimeClient {
 
           // 处理实时事件推送
           if (data.type === 'realtime') {
-            const callback = this.subscriptions.get(data.id);
+            const callback = this.subscriptions.get(data.sub_id);
             if (callback) {
               callback(data as RealtimePayload);
             }

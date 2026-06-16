@@ -13,17 +13,17 @@ import realtimeClient, { RealtimePayload, RealtimeChannel } from '@/services/rea
  * ```tsx
  * // 订阅指定表
  * const { isConnected, channel } = useRealtime('my_project', 'User', (payload) => {
- *   console.log(`${payload.event} on ${payload.model}:`, payload.new);
+ *   console.log(`${payload.event} on ${payload.model}:`, payload.data);
  * });
  *
  * // 订阅多张表
  * const { isConnected } = useRealtime('my_project', ['User', 'Order'], (payload) => {
- *   console.log(`${payload.event} on ${payload.model}:`, payload.new);
+ *   console.log(`${payload.event} on ${payload.model}:`, payload.data);
  * });
  *
  * // 订阅所有表
  * const { isConnected } = useRealtime('my_project', '*', (payload) => {
- *   console.log(`${payload.event} on ${payload.model}:`, payload.new);
+ *   console.log(`${payload.event} on ${payload.model}:`, payload.data);
  * });
  * ```
  */
