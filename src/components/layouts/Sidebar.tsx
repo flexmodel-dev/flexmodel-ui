@@ -135,7 +135,7 @@ const Sidebar: React.FC = () => {
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <div style={logoContainerStyle}>
           <img
-            src={`${import.meta.env.BASE_URL}/logo.png`}
+            src={`${import.meta.env.BASE_URL}logo.png`}
             width={32}
             alt="logo"
             style={logoStyle}

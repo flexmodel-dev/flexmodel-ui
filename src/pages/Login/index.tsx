@@ -158,7 +158,7 @@ const Login: React.FC = () => {
           gap: token.marginMD
         }}>
           <img
-            src={`${import.meta.env.BASE_URL}/logo.png`}
+            src={`${import.meta.env.BASE_URL}logo.png`}
             alt="logo"
             style={{
               width: 64,

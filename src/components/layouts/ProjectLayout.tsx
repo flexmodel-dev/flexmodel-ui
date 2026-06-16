@@ -206,7 +206,7 @@ const ProjectLayout: React.FC = () => {
               transition: 'all 0.3s'
             }}>
               <img
-                src={`${import.meta.env.BASE_URL}/logo.png`}
+                src={`${import.meta.env.BASE_URL}logo.png`}
                 width={28}
                 alt="logo"
                 style={{ marginRight: token.marginXS }}
@@ -249,7 +249,7 @@ const ProjectLayout: React.FC = () => {
             >
               <Button size="small" icon={<GlobalOutlined />}>{currentLocaleText}</Button>
             </Dropdown>
-            <a href={`${import.meta.env.BASE_URL}/swagger-ui/index.html`} target="_blank" rel="noopener noreferrer" style={{ color: token.colorText, cursor: 'pointer' }}>
+            <a href={`${import.meta.env.BASE_URL}swagger-ui/index.html`} target="_blank" rel="noopener noreferrer" style={{ color: token.colorText, cursor: 'pointer' }}>
               <FileSearchOutlined />
             </a>
             <UserInfo />

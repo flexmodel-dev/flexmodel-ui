@@ -84,7 +84,7 @@ const PlatformLayout: React.FC = () => {
               transition: 'all 0.3s'
             }}>
               <img
-                src={`${import.meta.env.BASE_URL}/logo.png`}
+                src={`${import.meta.env.BASE_URL}logo.png`}
                 width={28}
                 alt="logo"
                 style={{ marginRight: token.marginXS }}

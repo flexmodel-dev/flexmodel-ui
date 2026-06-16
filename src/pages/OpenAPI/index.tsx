@@ -13,7 +13,7 @@ const OpenAPI: React.FC = () => {
       extra={
         <Button
           type="primary"
-          href={`${import.meta.env.BASE_URL}/swagger-ui/index.html?theme=${isDark ? 'dark' : 'light'}`}
+          href={`${import.meta.env.BASE_URL}swagger-ui/index.html?theme=${isDark ? 'dark' : 'light'}`}
           target="_blank"
         >
           {t('open_api_try_it_out')}
@@ -27,7 +27,7 @@ const OpenAPI: React.FC = () => {
           border: 'none',
           flex: 1
         }}
-        src={`${import.meta.env.BASE_URL}/swagger-ui/index.html?theme=${isDark ? 'dark' : 'light'}`}
+        src={`${import.meta.env.BASE_URL}swagger-ui/index.html?theme=${isDark ? 'dark' : 'light'}`}
         title="OpenAPI Doc"
       />
     </PageContainer>

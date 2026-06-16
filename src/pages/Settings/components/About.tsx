@@ -33,7 +33,7 @@ const About: React.FC = () => {
                   width: '56px',
                   height: '56px',
                 }}
-                src={`${import.meta.env.BASE_URL}/logo.png`}
+                src={`${import.meta.env.BASE_URL}logo.png`}
                 alt="Flexmodel Logo"
               />
             </div>
