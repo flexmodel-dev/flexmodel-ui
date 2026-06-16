@@ -284,7 +284,8 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
         fontSize: `${fontSize}px`,
         lineHeight: '1.4',
         background: token.colorBgLayout,
-        width: '100%'
+        width: '100%',
+        whiteSpace: 'nowrap' as const,
       }} onScroll={handleContentScroll}>
         {filteredLogs.length === 0 ? (
           <div style={{

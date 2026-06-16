@@ -23,6 +23,7 @@ function mapRealtimeToLogEntry(payload: RealtimePayload): LogEntry {
   return {
     id: String(payload.record_id),
     timestamp: (payload.data?.created_at as string) || payload.timestamp,
+    model: payload.model,
     message: JSON.stringify(payload.data),
     data: payload.data,
     level: 'INFO',
