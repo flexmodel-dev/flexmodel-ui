@@ -38,7 +38,7 @@ export const useConsoleLogs = (options: UseConsoleLogsOptions = {}): UseConsoleL
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionState, setConnectionState] = useState<'connecting' | 'open' | 'closing' | 'closed'>('closed');
-  const [error, setError] = useState<string | null>(null);
+  const error: string | null = null;
 
   const logsEndRef = useRef<HTMLDivElement>(null);
   const autoScrollEnabledRef = useRef<boolean>(autoScroll);
@@ -109,7 +109,6 @@ export const useConsoleLogs = (options: UseConsoleLogsOptions = {}): UseConsoleL
     logs,
     isConnected,
     connectionState,
-    addLog: () => {},
     clearLogs,
     reconnect,
     error,
