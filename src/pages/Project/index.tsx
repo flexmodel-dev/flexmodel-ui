@@ -45,6 +45,7 @@ const Project: React.FC = () => {
   const { setCurrentProject } = useProject();
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [form] = Form.useForm();
   const [projects, setProjects] = useState<Project[]>([]);
@@ -88,6 +89,7 @@ const Project: React.FC = () => {
   const handleCreateModalOk = async () => {
     try {
       const values = await form.validateFields();
+      setCreateLoading(true);
       await createProject(values);
       setIsCreateModalVisible(false);
       form.resetFields();
@@ -96,6 +98,8 @@ const Project: React.FC = () => {
     } catch (error) {
       console.error('Validation failed:', error);
       message.error(t('project.createFailed'));
+    } finally {
+      setCreateLoading(false);
     }
   };
 
@@ -381,6 +385,7 @@ const Project: React.FC = () => {
         open={isCreateModalVisible}
         onOk={handleCreateModalOk}
         onCancel={handleCreateModalCancel}
+        confirmLoading={createLoading}
         okText={t('common.create')}
         cancelText={t('common.cancel')}
         width={600}
