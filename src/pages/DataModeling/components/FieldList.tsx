@@ -307,7 +307,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
         </Button>
       </div>
       <Table
-        rowKey={(record, index) => `${record.name}-${index}`}
+        rowKey={(record) => record.name}
         scroll={{ y: 450 }}
         dataSource={filteredFieldList}
         columns={columns}
