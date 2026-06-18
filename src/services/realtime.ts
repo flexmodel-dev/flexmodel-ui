@@ -25,7 +25,6 @@ class RealtimeClient {
   private currentProjectId: string | null = null;
   private subscriptions = new Map<string, RealtimeCallback>();
   private subCounter = 0;
-  private isConnecting = false;
   private isManualDisconnect = false;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 10;
@@ -55,7 +54,6 @@ class RealtimeClient {
     }
 
     this.currentProjectId = projectId;
-    this.isConnecting = true;
     this.isManualDisconnect = false;
     this.reconnectAttempts = 0;
     const wsUrl = this.getWebSocketUrl(projectId);
@@ -65,7 +63,6 @@ class RealtimeClient {
 
       this.ws.onopen = () => {
         console.log('Realtime WebSocket connected:', projectId);
-        this.isConnecting = false;
         this.reconnectAttempts = 0;
         this.isManualDisconnect = false;
         this.startHeartbeat();
@@ -108,7 +105,6 @@ class RealtimeClient {
 
       this.ws.onclose = (event) => {
         console.log('Realtime WebSocket disconnected:', event.code, event.reason);
-        this.isConnecting = false;
         this.stopHeartbeat();
 
         if (!this.isManualDisconnect && this.reconnectAttempts < this.maxReconnectAttempts) {
@@ -124,11 +120,9 @@ class RealtimeClient {
 
       this.ws.onerror = (error) => {
         console.error('Realtime WebSocket error:', error);
-        this.isConnecting = false;
       };
     } catch (error) {
       console.error('Failed to create Realtime WebSocket:', error);
-      this.isConnecting = false;
     }
   }
 
