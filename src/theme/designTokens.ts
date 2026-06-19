@@ -787,7 +787,7 @@ export const antdTheme = {
 /** Ant Design dark mode map tokens */
 export const antdDarkMapTokens = {
   // --- Seed overrides (dark) — original near-black primary is invisible on dark bg ---
-  colorPrimary: '#6badff',
+  colorPrimary: '#458fff',
   colorError: '#ff6b6b',
 
   // --- Text Colors (dark) — significantly brighter for readability ---
@@ -818,15 +818,15 @@ export const antdDarkMapTokens = {
   colorLinkActive: '#458fff',
 
   // --- Primary Derivations (dark) ---
-  colorPrimaryBg: 'rgba(255,255,255,0.12)',
-  colorPrimaryBgHover: 'rgba(255,255,255,0.16)',
-  colorPrimaryBorder: '#787e8c',
-  colorPrimaryBorderHover: '#bcc0cc',
-  colorPrimaryHover: '#787e8c',
-  colorPrimaryActive: '#bcc0cc',
-  colorPrimaryTextHover: '#bcc0cc',
+  colorPrimaryBg: 'rgba(69,143,255,0.15)',
+  colorPrimaryBgHover: 'rgba(69,143,255,0.25)',
+  colorPrimaryBorder: '#458fff',
+  colorPrimaryBorderHover: '#6ba3ff',
+  colorPrimaryHover: '#6ba3ff',
+  colorPrimaryActive: '#2b6fcc',
+  colorPrimaryTextHover: '#6ba3ff',
   colorPrimaryText: '#f5f6f8',
-  colorPrimaryTextActive: '#bcc0cc',
+  colorPrimaryTextActive: '#2b6fcc',
 
   // --- Info Derivations (dark) ---
   colorInfoBg: 'rgba(37,79,173,0.20)',
@@ -857,9 +857,7 @@ const darkComponentTokens = {
     defaultBg: '#2c323c',
     defaultColor: '#f5f6f8',
     defaultBorderColor: '#4a5260',
-    primaryBg: '#6badff',
     primaryColor: '#ffffff',
-    primaryHoverBg: '#8dc3ff',
   },
   Input: {
     colorBgContainer: '#2c323c',
