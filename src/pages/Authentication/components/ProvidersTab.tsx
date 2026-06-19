@@ -10,9 +10,9 @@ import {
 } from "@/services/auth-provider";
 import type { AuthProviderConfig } from "@/types/auth-provider";
 import OidcForm from "@/pages/Authentication/components/OidcForm";
-import ScriptForm from "@/pages/Authentication/components/ScriptForm";
+import FunctionForm from "@/pages/Authentication/components/FunctionForm";
 
-type AuthMethod = "none" | "oidc" | "script";
+type AuthMethod = "none" | "oidc" | "function";
 
 const ProvidersTab: React.FC = () => {
   const { t } = useTranslation();
@@ -51,7 +51,7 @@ const ProvidersTab: React.FC = () => {
   }, [fetchProviders]);
 
   const handleMethodChange = (method: AuthMethod) => {
-    form.resetFields(["issuer", "clientId", "clientSecret", "script"]);
+    form.resetFields(["issuer", "clientId", "clientSecret", "functionName"]);
     setAuthMethod(method);
   };
 
@@ -117,7 +117,7 @@ const ProvidersTab: React.FC = () => {
           >
             <Radio value="none">{t("auth_none")}</Radio>
             <Radio value="oidc">OpenID Connect (OIDC)</Radio>
-            <Radio value="script">{t("script")} (Script)</Radio>
+            <Radio value="function">{t("function")}</Radio>
           </Radio.Group>
         </Form.Item>
 
@@ -131,7 +131,7 @@ const ProvidersTab: React.FC = () => {
         )}
 
         {authMethod === "oidc" && <OidcForm />}
-        {authMethod === "script" && <ScriptForm />}
+        {authMethod === "function" && <FunctionForm />}
 
         <Form.Item>
           <Button type="primary" onClick={handleSave} loading={saving}>

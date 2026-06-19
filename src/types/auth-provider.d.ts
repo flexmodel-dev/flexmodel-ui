@@ -4,7 +4,7 @@
 export interface AuthProviderConfig {
   name: string;
   projectId?: string;
-  type: 'oidc' | 'script';
+  type: 'oidc' | 'function';
   enabled: boolean;
   config: Record<string, any>;
   createdAt?: string;
@@ -22,9 +22,9 @@ export interface OidcConfig {
 }
 
 /**
- * Script 配置
+ * Function 配置
  */
-export interface ScriptConfig {
-  type: 'script';
-  script: string;
+export interface FunctionConfig {
+  type: 'function';
+  functionName: string;
 }

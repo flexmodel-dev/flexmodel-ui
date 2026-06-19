@@ -121,10 +121,10 @@ const FunctionsPage: React.FC = () => {
     {
       title: t("function.endpoint"),
       key: "endpoint",
-      width: 280,
+      width: 420,
       render: (_: any, record: FunctionResponse) => (
         <code style={{fontSize: 12, color: token.colorTextSecondary}}>
-          POST /functions/{record.name}
+          POST /api/runtime/projects/{projectId}/functions/{record.name}
         </code>
       ),
     },

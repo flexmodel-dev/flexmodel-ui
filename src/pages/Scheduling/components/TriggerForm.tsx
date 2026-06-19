@@ -58,7 +58,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
         const fnList = await getFunctionList(projectId, { size: 1000 });
         setFunctions(fnList.list);
       } catch (error) {
-        console.error('获取边缘函数列表失败:', error);
+        console.error('获取云函数列表失败:', error);
       }
     };
     fetchFunctions();
