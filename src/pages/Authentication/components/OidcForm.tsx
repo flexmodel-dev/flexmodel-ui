@@ -1,9 +1,10 @@
 import React from "react";
-import { Form, Input } from "antd";
+import { Form, Input, theme } from "antd";
 import { useTranslation } from "react-i18next";
 
 const OidcForm: React.FC = () => {
   const { t } = useTranslation();
+  const { token } = theme.useToken();
   const issuer = Form.useWatch?.("issuer");
 
   return (
@@ -18,7 +19,7 @@ const OidcForm: React.FC = () => {
 
       {issuer && (
         <Form.Item label={t("oidc_discovery_endpoint")}>
-          <span style={{ wordBreak: "break-all", color: "#9297a0" }}>
+          <span style={{ wordBreak: "break-all", color: token.colorTextSecondary }}>
             {issuer}/.well-known/openid-configuration
           </span>
         </Form.Item>

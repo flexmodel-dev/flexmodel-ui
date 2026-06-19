@@ -3,10 +3,6 @@
 @import "tailwindcss/utilities";
 
 
-.ant-menu-item-selected {
-  @apply text-white bg-[#181d26] dark:bg-[#181d26] dark:text-white;
-}
-
 /* 页面内全屏样式 */
 .page-fullscreen {
   position: fixed !important;

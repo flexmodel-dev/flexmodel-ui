@@ -13,6 +13,7 @@ import {
   Row,
   Select,
   Space,
+  theme,
   Tooltip,
   Typography
 } from 'antd';
@@ -66,6 +67,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   onValidationChange,
 }, ref) => {
   const { currentProject } = useProject();
+  const { token } = theme.useToken();
   const projectId = currentProject?.id || '';
 
   const [form] = Form.useForm();
@@ -552,13 +554,13 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             <Form.Item label="源节点" name="sourceNode">
               <Input
                 disabled
-                suffix={<span style={{ color: '#9297a0', fontSize: '12px' }}>({getNodeName(selectedEdge.source)})</span>}
+                suffix={<span style={{ color: token.colorTextSecondary, fontSize: '12px' }}>({getNodeName(selectedEdge.source)})</span>}
               />
             </Form.Item>
             <Form.Item label="目标节点" name="targetNode">
               <Input
                 disabled
-                suffix={<span style={{ color: '#9297a0', fontSize: '12px' }}>({getNodeName(selectedEdge.target)})</span>}
+                suffix={<span style={{ color: token.colorTextSecondary, fontSize: '12px' }}>({getNodeName(selectedEdge.target)})</span>}
               />
             </Form.Item>
           </Form>
@@ -597,7 +599,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                     <Radio value="false">否</Radio>
                   </Radio.Group>
                 </Form.Item>
-                <div style={{ fontSize: '12px', color: '#41454d', marginTop: '8px' }}>
+                <div style={{ fontSize: '12px', color: token.colorText, marginTop: '8px' }}>
                   <p><strong>条件表达式说明：</strong></p>
                   <ul style={{ paddingLeft: '20px', marginTop: '4px' }}>
                     <li>使用 ${'{'}expression{'}'} 格式编写条件</li>
@@ -610,7 +612,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
               </>
             )}
             {!isGateway && (
-              <div style={{ color: '#9297a0', padding: '16px', textAlign: 'center' }}>
+              <div style={{ color: token.colorTextSecondary, padding: '16px', textAlign: 'center' }}>
                 普通连线无需设置条件
               </div>
             )}

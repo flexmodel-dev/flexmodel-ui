@@ -200,7 +200,7 @@ const Project: React.FC = () => {
               render: (text, record) => (
                 <div>
                   <div style={{ fontWeight: '500' }}>{text}</div>
-                  <div style={{ color: '#9297a0', fontSize: '12px' }}>{record.description}</div>
+                  <div style={{ color: token.colorTextSecondary, fontSize: '12px' }}>{record.description}</div>
                 </div>
               )
             },

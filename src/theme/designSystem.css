@@ -215,38 +215,38 @@
 }
 
 /* ==========================================================================
-   Dark Mode Overrides
+   Dark Mode Overrides — Significantly lifted for comfortable viewing
    ========================================================================== */
 html.dark {
-  --flex-color-canvas: #181d26;
-  --flex-color-surface-soft: #1d1f25;
-  --flex-color-surface-strong: #252830;
-  --flex-color-hairline: #32363a;
-  --flex-color-border-strong: #545860;
-  --flex-color-ink: #e0e2e6;
-  --flex-color-body: #9297a0;
-  --flex-color-muted: #6b6f78;
+  --flex-color-canvas: #232830;
+  --flex-color-surface-soft: #2c323c;
+  --flex-color-surface-strong: #363d48;
+  --flex-color-hairline: #4a5260;
+  --flex-color-border-strong: #787e8c;
+  --flex-color-ink: #f5f6f8;
+  --flex-color-body: #bcc0cc;
+  --flex-color-muted: #9499a6;
   --flex-color-link: #6badff;
   --flex-color-link-active: #458fff;
 
-  --flex-btn-primary-bg: #e0e2e6;
-  --flex-btn-primary-color: #181d26;
-  --flex-btn-secondary-bg: #1d1f25;
-  --flex-btn-secondary-color: #e0e2e6;
-  --flex-btn-secondary-border: 1px solid #32363a;
+  --flex-btn-primary-bg: #6badff;
+  --flex-btn-primary-color: #ffffff;
+  --flex-btn-secondary-bg: #2c323c;
+  --flex-btn-secondary-color: #f5f6f8;
+  --flex-btn-secondary-border: 1px solid #4a5260;
 
-  --flex-topnav-bg: #181d26;
-  --flex-topnav-color: #e0e2e6;
+  --flex-topnav-bg: #232830;
+  --flex-topnav-color: #f5f6f8;
 
-  --flex-input-bg: #1d1f25;
-  --flex-input-color: #e0e2e6;
-  --flex-input-border: 1px solid #32363a;
+  --flex-input-bg: #2c323c;
+  --flex-input-color: #f5f6f8;
+  --flex-input-border: 1px solid #4a5260;
 
-  --flex-card-bg: #1d1f25;
-  --flex-card-color: #e0e2e6;
+  --flex-card-bg: #2c323c;
+  --flex-card-color: #f5f6f8;
 
-  --flex-shadow-button: 0 2px 0 rgba(0, 0, 0, 0.15);
-  --flex-shadow-button-focus: 0 0 0 2px rgba(69, 143, 255, 0.25);
+  --flex-shadow-button: 0 2px 0 rgba(0, 0, 0, 0.25);
+  --flex-shadow-button-focus: 0 0 0 2px rgba(69, 143, 255, 0.4);
 }
 
 /* ==========================================================================

@@ -460,8 +460,8 @@ export const antdMapTokens = {
   colorLinkActive: colors['link-active'],
 
   // --- Primary Derivations ---
-  colorPrimaryBg: colors['surface-soft'],
-  colorPrimaryBgHover: colors['surface-strong'],
+  colorPrimaryBg: '#e6f4ff',
+  colorPrimaryBgHover: '#bae0ff',
   colorPrimaryBorder: colors.primary,
   colorPrimaryBorderHover: colors.primary,
   colorPrimaryHover: colors.body,
@@ -471,8 +471,8 @@ export const antdMapTokens = {
   colorPrimaryTextActive: colors['primary-active'],
 
   // --- Info Derivations ---
-  colorInfoBg: colors['surface-soft'],
-  colorInfoBgHover: colors['surface-strong'],
+  colorInfoBg: '#e6f4ff',
+  colorInfoBgHover: '#bae0ff',
   colorInfoBorder: colors['info-border'],
   colorInfoBorderHover: colors['info-border'],
   colorInfoHover: colors.info,
@@ -482,8 +482,8 @@ export const antdMapTokens = {
   colorInfoTextActive: colors.info,
 
   // --- Success Derivations ---
-  colorSuccessBg: colors['surface-soft'],
-  colorSuccessBgHover: colors['surface-strong'],
+  colorSuccessBg: '#f6ffed',
+  colorSuccessBgHover: '#d9f7be',
   colorSuccessBorder: colors['success-border'],
   colorSuccessBorderHover: colors['success-border'],
   colorSuccessHover: colors.success,
@@ -491,6 +491,28 @@ export const antdMapTokens = {
   colorSuccessTextHover: colors.success,
   colorSuccessText: colors.success,
   colorSuccessTextActive: colors.success,
+
+  // --- Warning Derivations ---
+  colorWarningBg: '#fffbe6',
+  colorWarningBgHover: '#fff1b8',
+  colorWarningBorder: '#faad14',
+  colorWarningBorderHover: '#faad14',
+  colorWarningHover: '#d48806',
+  colorWarningActive: '#ad6800',
+  colorWarningTextHover: '#d48806',
+  colorWarningText: '#ad6800',
+  colorWarningTextActive: '#ad6800',
+
+  // --- Error Derivations ---
+  colorErrorBg: '#fff2f0',
+  colorErrorBgHover: '#ffccc7',
+  colorErrorBorder: colors['signature-coral'],
+  colorErrorBorderHover: colors['signature-coral'],
+  colorErrorHover: '#cf1322',
+  colorErrorActive: '#a8071a',
+  colorErrorTextHover: '#cf1322',
+  colorErrorText: colors['signature-coral'],
+  colorErrorTextActive: '#a8071a',
 } as const;
 
 /**
@@ -764,27 +786,31 @@ export const antdTheme = {
 
 /** Ant Design dark mode map tokens */
 export const antdDarkMapTokens = {
-  // --- Text Colors (dark) ---
-  colorText: '#e0e2e6',
-  colorTextSecondary: '#9297a0',
-  colorTextTertiary: '#6b6f78',
-  colorTextQuaternary: '#545860',
+  // --- Seed overrides (dark) — original near-black primary is invisible on dark bg ---
+  colorPrimary: '#6badff',
+  colorError: '#ff6b6b',
 
-  // --- Background Colors (dark) ---
-  colorBgContainer: colors['surface-dark-elevated'],
-  colorBgElevated: '#252830',
-  colorBgLayout: colors['surface-dark'],
-  colorBgSpotlight: colors['surface-dark'],
+  // --- Text Colors (dark) — significantly brighter for readability ---
+  colorText: '#f5f6f8',
+  colorTextSecondary: '#bcc0cc',
+  colorTextTertiary: '#9499a6',
+  colorTextQuaternary: '#787e8c',
+
+  // --- Background Colors (dark) — lifted ~15% for comfortable viewing ---
+  colorBgContainer: '#2c323c',
+  colorBgElevated: '#363d48',
+  colorBgLayout: '#232830',
+  colorBgSpotlight: '#232830',
 
   // --- Fill Colors (dark) ---
-  colorFill: 'rgba(255,255,255,0.08)',
-  colorFillSecondary: 'rgba(255,255,255,0.06)',
-  colorFillTertiary: 'rgba(255,255,255,0.04)',
-  colorFillQuaternary: 'rgba(255,255,255,0.02)',
+  colorFill: 'rgba(255,255,255,0.12)',
+  colorFillSecondary: 'rgba(255,255,255,0.09)',
+  colorFillTertiary: 'rgba(255,255,255,0.06)',
+  colorFillQuaternary: 'rgba(255,255,255,0.04)',
 
-  // --- Border Colors (dark) ---
-  colorBorder: '#32363a',
-  colorBorderSecondary: '#252830',
+  // --- Border Colors (dark) — clearly visible ---
+  colorBorder: '#4a5260',
+  colorBorderSecondary: '#3c434e',
 
   // --- Link (dark) ---
   colorLink: '#6badff',
@@ -792,19 +818,19 @@ export const antdDarkMapTokens = {
   colorLinkActive: '#458fff',
 
   // --- Primary Derivations (dark) ---
-  colorPrimaryBg: 'rgba(255,255,255,0.08)',
-  colorPrimaryBgHover: 'rgba(255,255,255,0.12)',
-  colorPrimaryBorder: '#545860',
-  colorPrimaryBorderHover: '#9297a0',
-  colorPrimaryHover: '#545860',
-  colorPrimaryActive: '#9297a0',
-  colorPrimaryTextHover: '#9297a0',
-  colorPrimaryText: '#e0e2e6',
-  colorPrimaryTextActive: '#9297a0',
+  colorPrimaryBg: 'rgba(255,255,255,0.12)',
+  colorPrimaryBgHover: 'rgba(255,255,255,0.16)',
+  colorPrimaryBorder: '#787e8c',
+  colorPrimaryBorderHover: '#bcc0cc',
+  colorPrimaryHover: '#787e8c',
+  colorPrimaryActive: '#bcc0cc',
+  colorPrimaryTextHover: '#bcc0cc',
+  colorPrimaryText: '#f5f6f8',
+  colorPrimaryTextActive: '#bcc0cc',
 
   // --- Info Derivations (dark) ---
-  colorInfoBg: 'rgba(37,79,173,0.15)',
-  colorInfoBgHover: 'rgba(37,79,173,0.25)',
+  colorInfoBg: 'rgba(37,79,173,0.20)',
+  colorInfoBgHover: 'rgba(37,79,173,0.30)',
   colorInfoBorder: colors['info-border'],
   colorInfoBorderHover: '#6badff',
   colorInfoHover: '#6badff',
@@ -814,8 +840,8 @@ export const antdDarkMapTokens = {
   colorInfoTextActive: '#8dc3ff',
 
   // --- Success Derivations (dark) ---
-  colorSuccessBg: 'rgba(0,100,0,0.15)',
-  colorSuccessBgHover: 'rgba(0,100,0,0.25)',
+  colorSuccessBg: 'rgba(0,100,0,0.20)',
+  colorSuccessBgHover: 'rgba(0,100,0,0.30)',
   colorSuccessBorder: colors['success-border'],
   colorSuccessBorderHover: '#5bd465',
   colorSuccessHover: '#5bd465',
@@ -828,88 +854,90 @@ export const antdDarkMapTokens = {
 /** Dark-mode component color tokens */
 const darkComponentTokens = {
   Button: {
-    defaultBg: colors['surface-dark-elevated'],
-    defaultColor: '#e0e2e6',
-    defaultBorderColor: '#32363a',
-    primaryColor: colors['on-primary'],
+    defaultBg: '#2c323c',
+    defaultColor: '#f5f6f8',
+    defaultBorderColor: '#4a5260',
+    primaryBg: '#6badff',
+    primaryColor: '#ffffff',
+    primaryHoverBg: '#8dc3ff',
   },
   Input: {
-    colorBgContainer: colors['surface-dark-elevated'],
-    colorText: '#e0e2e6',
+    colorBgContainer: '#2c323c',
+    colorText: '#f5f6f8',
     activeBorderColor: colors['info-border'],
-    hoverBorderColor: '#9297a0',
+    hoverBorderColor: '#bcc0cc',
   },
   Card: {
-    colorBgContainer: colors['surface-dark-elevated'],
+    colorBgContainer: '#2c323c',
   },
   Layout: {
-    headerBg: colors['surface-dark'],
-    bodyBg: colors['surface-dark'],
-    siderBg: colors['surface-dark'],
-    triggerBg: colors['surface-dark'],
+    headerBg: '#2c323c',
+    bodyBg: '#232830',
+    siderBg: '#2c323c',
+    triggerBg: '#2c323c',
   },
   Menu: {
-    itemBg: colors['surface-dark'],
-    subMenuItemBg: colors['surface-dark'],
-    itemColor: '#9297a0',
-    itemSelectedBg: colors['surface-dark-elevated'],
-    itemSelectedColor: '#e0e2e6',
-    itemHoverBg: colors['surface-dark-elevated'],
-    itemHoverColor: '#e0e2e6',
-    itemActiveBg: colors['surface-dark-elevated'],
-    horizontalItemSelectedColor: '#e0e2e6',
-    subMenuItemSelectedColor: '#e0e2e6',
+    itemBg: '#2c323c',
+    subMenuItemBg: '#2c323c',
+    itemColor: '#bcc0cc',
+    itemSelectedBg: '#363d48',
+    itemSelectedColor: '#f5f6f8',
+    itemHoverBg: '#363d48',
+    itemHoverColor: '#f5f6f8',
+    itemActiveBg: '#363d48',
+    horizontalItemSelectedColor: '#f5f6f8',
+    subMenuItemSelectedColor: '#f5f6f8',
   },
   Table: {
-    headerBg: colors['surface-dark-elevated'],
-    headerColor: '#e0e2e6',
-    rowHoverBg: 'rgba(255,255,255,0.04)',
-    borderColor: '#32363a',
-    headerSplitColor: '#32363a',
+    headerBg: '#2c323c',
+    headerColor: '#f5f6f8',
+    rowHoverBg: 'rgba(255,255,255,0.06)',
+    borderColor: '#4a5260',
+    headerSplitColor: '#4a5260',
   },
   Tabs: {
-    inkBarColor: '#e0e2e6',
-    itemSelectedColor: '#e0e2e6',
-    itemHoverColor: '#e0e2e6',
-    itemColor: '#9297a0',
+    inkBarColor: '#f5f6f8',
+    itemSelectedColor: '#f5f6f8',
+    itemHoverColor: '#f5f6f8',
+    itemColor: '#bcc0cc',
   },
   Segmented: {
-    itemSelectedBg: '#e0e2e6',
-    itemSelectedColor: colors['surface-dark'],
-    trackBg: 'rgba(255,255,255,0.08)',
+    itemSelectedBg: '#f5f6f8',
+    itemSelectedColor: '#232830',
+    trackBg: 'rgba(255,255,255,0.12)',
   },
   Switch: {
-    handleBg: colors['surface-dark-elevated'],
+    handleBg: '#2c323c',
   },
   Breadcrumb: {
-    itemColor: '#6b6f78',
-    linkColor: '#9297a0',
-    separatorColor: '#6b6f78',
-    lastItemColor: '#e0e2e6',
+    itemColor: '#9499a6',
+    linkColor: '#bcc0cc',
+    separatorColor: '#9499a6',
+    lastItemColor: '#f5f6f8',
   },
   Pagination: {
-    itemActiveBg: '#e0e2e6',
-    itemActiveColorDisabled: colors['surface-dark'],
-    colorPrimary: colors['surface-dark'],
-    colorPrimaryHover: colors['surface-dark'],
+    itemActiveBg: '#f5f6f8',
+    itemActiveColorDisabled: '#232830',
+    colorPrimary: '#232830',
+    colorPrimaryHover: '#232830',
   },
   Slider: {
-    trackBg: '#e0e2e6',
-    trackHoverBg: '#e0e2e6',
-    handleColor: '#e0e2e6',
-    handleActiveColor: '#e0e2e6',
-    dotActiveBorderColor: '#e0e2e6',
+    trackBg: '#f5f6f8',
+    trackHoverBg: '#f5f6f8',
+    handleColor: '#f5f6f8',
+    handleActiveColor: '#f5f6f8',
+    dotActiveBorderColor: '#f5f6f8',
   },
   Progress: {
-    defaultColor: '#e0e2e6',
+    defaultColor: '#f5f6f8',
   },
   Tree: {
-    nodeHoverBg: 'rgba(255,255,255,0.04)',
-    nodeSelectedBg: 'rgba(255,255,255,0.06)',
+    nodeHoverBg: 'rgba(255,255,255,0.06)',
+    nodeSelectedBg: 'rgba(255,255,255,0.10)',
   },
   Collapse: {
-    headerBg: colors['surface-dark-elevated'],
-    contentBg: colors['surface-dark'],
+    headerBg: '#2c323c',
+    contentBg: '#232830',
   },
 } as const;
 

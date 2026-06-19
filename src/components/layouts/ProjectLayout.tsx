@@ -187,7 +187,7 @@ const ProjectLayout: React.FC = () => {
       overflow: "hidden"
     }}>
       <Layout.Header
-        className="bg-white dark:bg-[#181d26] border-b border-[#f8fafc] dark:border-[#1d1f25] shadow-sm dark:shadow-lg"
+        className="bg-white dark:bg-[#232830] border-b border-[#f8fafc] dark:border-[#4a5260] shadow-sm dark:shadow-lg"
         style={{
           padding: 0,
           height: token.controlHeight * 1.5,

@@ -20,19 +20,19 @@ $light-outline: rgba(0, 0, 0, 0.2);
 $light-primary: #181d26;             // {colors.primary}
 $light-link: #1b61c9;                // {colors.link}
 
-// Theme Dark
-$dark-background: #181d26;           // {colors.surface-dark}
-$dark-background-light: #1d1f25;     // {colors.surface-dark-elevated}
-$dark-background-lighter: color.scale($dark-background-light, $lightness: 5%);
-$dark-background-disabled: #252830;
-$dark-color: #ffffff;                // {colors.on-dark}
-$dark-color-light: #9297a0;          // {colors.border-strong}
-$dark-color-medium: #6b6f78;         // derived muted for dark
-$dark-color-dark: #545860;           // derived for dark
-$dark-border: #32363a;               // hairline for dark surfaces
+// Theme Dark — significantly lifted for comfortable viewing
+$dark-background: #232830;           // canvas (layout base)
+$dark-background-light: #2c323c;     // container (elevated surface)
+$dark-background-lighter: #363d48;   // strong (third elevation)
+$dark-background-disabled: #363d48;
+$dark-color: #f5f6f8;                // primary text (high contrast)
+$dark-color-light: #bcc0cc;          // secondary text (WCAG AA)
+$dark-color-medium: #9499a6;         // muted text (AA large text)
+$dark-color-dark: #787e8c;           // quaternary/disabled text
+$dark-border: #4a5260;               // clearly visible borders
 $dark-border-dark: color.scale($dark-border, $lightness: 10%);
-$dark-outline: #545860;
-$dark-primary: #e0e2e6;              // {colors.surface-strong} (primary on dark)
+$dark-outline: #787e8c;
+$dark-primary: #f5f6f8;              // primary action on dark
 $dark-link: #6badff;                 // link on dark
 
 // Global

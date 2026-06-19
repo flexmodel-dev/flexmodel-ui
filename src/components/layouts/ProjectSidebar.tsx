@@ -103,14 +103,16 @@ const ProjectSidebar: React.FC = () => {
     minHeight: "100%",
     transition: "width 0.3s cubic-bezier(0.4,0,0.2,1)",
     boxShadow: "2px 0 8px 0 rgba(0,0,0,0.04)",
-    overflow: "hidden"
-  }), []);
+    overflow: "hidden",
+    background: token.colorBgContainer
+  }), [token.colorBgContainer]);
 
   const menuStyle = useMemo(() => ({
     flex: 1,
     borderRight: 0,
-    overflow: "auto"
-  }), []);
+    overflow: "auto",
+    background: token.colorBgContainer
+  }), [token.colorBgContainer]);
 
   return (
     <Layout.Sider
@@ -137,7 +139,8 @@ const ProjectSidebar: React.FC = () => {
         <div style={{
           padding: token.padding,
           display: "flex",
-          justifyContent: isSidebarCollapsed ? "center" : "right"
+          justifyContent: isSidebarCollapsed ? "center" : "right",
+          backgroundColor: token.colorBgContainer
         }}>
           <Space>
             <Button
