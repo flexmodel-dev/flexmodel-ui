@@ -4,9 +4,16 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background-color: #ffffff;
+}
+
+html.dark,
+html.dark body {
+    background-color: #232830;
 }
 
 #app {
     width: 100%;
     height: 100%;
+    background-color: inherit;
 }

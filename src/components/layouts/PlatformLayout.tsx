@@ -65,12 +65,12 @@ const PlatformLayout: React.FC = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Layout.Header
-        className="bg-white dark:bg-[#232830] border-b border-[#f8fafc] dark:border-[#4a5260] shadow-sm dark:shadow-lg"
         style={{
           padding: 0,
           height: token.controlHeight * 1.5,
           lineHeight: `${token.controlHeight * 1.5}px`,
-          zIndex: 10
+          zIndex: 10,
+          borderBottom: `1px solid ${token.colorBorderSecondary}`,
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100%', padding: `0 ${token.paddingLG}px` }}>

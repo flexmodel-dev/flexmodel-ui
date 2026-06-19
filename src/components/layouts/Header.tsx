@@ -112,7 +112,6 @@ const Header: React.FC<HeaderProps> = ({ onToggleConsole }) => {
 
   return (
     <Layout.Header
-      className="bg-white dark:bg-[#232830] border-b border-[#f8fafc] dark:border-[#4a5260] shadow-sm dark:shadow-lg"
       style={{
         padding: 0,
         height: token.controlHeight * 1.5,
@@ -121,7 +120,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleConsole }) => {
         top: 0,
         left: isSidebarCollapsed ? 56 : 180, // 根据sidebar状态调整左边距
         right: 0,
-        transition: "left 0.3s cubic-bezier(0.4,0,0.2,1)" // 与sidebar动画同步
+        transition: "left 0.3s cubic-bezier(0.4,0,0.2,1)", // 与sidebar动画同步
+        borderBottom: `1px solid ${token.colorBorderSecondary}`,
       }}
     >
       <Row justify="space-between" align="middle" style={{ height: '100%' }}>
