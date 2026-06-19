@@ -48,7 +48,7 @@ body.dark-theme .swagger-ui .info .title {
 }
 
 body.dark-theme .swagger-ui .info .description {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .scheme-container {
@@ -81,7 +81,7 @@ body.dark-theme .swagger-ui .opblock .opblock-summary {
 }
 
 body.dark-theme .swagger-ui .opblock .opblock-summary-description {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .opblock .opblock-section-header {
@@ -154,13 +154,13 @@ body.dark-theme .swagger-ui .opblock-tag {
 }
 
 body.dark-theme .swagger-ui .opblock-tag small {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .opblock-description-wrapper p,
 body.dark-theme .swagger-ui .opblock-external-docs-wrapper p,
 body.dark-theme .swagger-ui .opblock-title_normal p {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .opblock-description-wrapper h4,
@@ -170,7 +170,7 @@ body.dark-theme .swagger-ui .opblock-title_normal h4 {
 }
 
 body.dark-theme .swagger-ui .tab li {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .tab li.active {
@@ -204,7 +204,7 @@ body.dark-theme .swagger-ui .response-col_status {
 
 body.dark-theme .swagger-ui .response-col_description__inner span,
 body.dark-theme .swagger-ui .response-col_description__inner p {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .response-col_links h4,
@@ -237,8 +237,8 @@ body.dark-theme .swagger-ui .model-toggle {
 }
 
 body.dark-theme .swagger-ui .model-box {
-    background-color: #2d2d2d;
-    border-color: #3d3d3d;
+    background-color: #2d2d2d !important;
+    border-color: #3d3d3d !important;
 }
 
 body.dark-theme .swagger-ui .prop-type {
@@ -332,7 +332,7 @@ body.dark-theme .swagger-ui .errors-wrapper .errors h4 {
 }
 
 body.dark-theme .swagger-ui .errors-wrapper .errors small {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .errors-wrapper .errors .error-line {
@@ -340,7 +340,7 @@ body.dark-theme .swagger-ui .errors-wrapper .errors .error-line {
 }
 
 body.dark-theme .swagger-ui .errors-wrapper .errors .error-line .error-line-text {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .errors-wrapper hgroup h4 {
@@ -348,9 +348,246 @@ body.dark-theme .swagger-ui .errors-wrapper hgroup h4 {
 }
 
 body.dark-theme .swagger-ui .errors-wrapper hgroup h5 {
-    color: #b0b0b0;
+    color: #e0e0e0;
 }
 
 body.dark-theme .swagger-ui .errors-wrapper hgroup span {
     color: #ff6b6b;
 }
+
+/* === 暗色模式文字可读性增强 === */
+/* 覆盖 Swagger UI 默认的深色文字（#3b4151 / #6c757d），确保暗色背景下可读 */
+
+/* API 描述区域 */
+body.dark-theme .swagger-ui .info .description p,
+body.dark-theme .swagger-ui .info .description span,
+body.dark-theme .swagger-ui .info .description div,
+body.dark-theme .swagger-ui .info .description li,
+body.dark-theme .swagger-ui .info .description a {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .info .description a {
+    color: #4d9df5 !important;
+}
+
+body.dark-theme .swagger-ui .info li,
+body.dark-theme .swagger-ui .info p,
+body.dark-theme .swagger-ui .info span {
+    color: #e0e0e0;
+}
+
+/* 操作块摘要 - 端点路径和描述 */
+body.dark-theme .swagger-ui .opblock-summary-path,
+body.dark-theme .swagger-ui .opblock-summary-path span,
+body.dark-theme .swagger-ui .opblock-summary-path a {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .opblock-summary-description {
+    color: #e0e0e !important;
+}
+
+/* 操作块标签区域 */
+body.dark-theme .swagger-ui .opblock-tag,
+body.dark-theme .swagger-ui .opblock-tag a,
+body.dark-theme .swagger-ui .opblock-tag span {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .opblock-tag small,
+body.dark-theme .swagger-ui .opblock-tag .description,
+body.dark-theme .swagger-ui .opblock-tag-section .opblock-tag small {
+    color: #c0c0c0 !important;
+}
+
+/* 操作块内部描述 */
+body.dark-theme .swagger-ui .opblock-description-wrapper p,
+body.dark-theme .swagger-ui .opblock-external-docs-wrapper p,
+body.dark-theme .swagger-ui .opblock-title_normal p,
+body.dark-theme .swagger-ui .opblock-description-wrapper,
+body.dark-theme .swagger-ui .opblock-external-docs-wrapper,
+body.dark-theme .swagger-ui .opblock-title_normal {
+    color: #9499a6 !important;
+}
+
+/* 参数和响应描述 */
+body.dark-theme .swagger-ui .parameters-col_description p,
+body.dark-theme .swagger-ui .parameters-col_description span,
+body.dark-theme .swagger-ui .parameters-col_description div {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .response-col_description__inner p,
+body.dark-theme .swagger-ui .response-col_description__inner span,
+body.dark-theme .swagger-ui .response-col_description__inner div {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .response-col_status,
+body.dark-theme .swagger-ui .response-col_status div {
+    color: #9499a6 !important;
+}
+
+/* 表格表头和内容 */
+body.dark-theme .swagger-ui table thead tr th,
+body.dark-theme .swagger-ui table thead tr td,
+body.dark-theme .swagger-ui table thead tr .parameters-col_name,
+body.dark-theme .swagger-ui table thead tr .parameters-col_description {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .parameters-col_name {
+    color: #9499a6 !important;
+}
+
+/* 模型区域 */
+body.dark-theme .swagger-ui .model-container,
+body.dark-theme .swagger-ui .models-control,
+body.dark-theme .swagger-ui .models-title {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .model .property,
+body.dark-theme .swagger-ui .model .property-primitive,
+body.dark-theme .swagger-ui .model .property-row {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .model-box,
+body.dark-theme .swagger-ui .model-box .model {
+    color: #9499a6 !important;
+}
+
+/* 通用文字覆盖 - 确保暗色模式下所有文字可读 */
+body.dark-theme .swagger-ui .markdown p,
+body.dark-theme .swagger-ui .markdown span,
+body.dark-theme .swagger-ui .markdown li,
+body.dark-theme .swagger-ui .markdown div {
+    color: #9499a6 !important;
+}
+
+body.dark-theme .swagger-ui .markdown a,
+body.dark-theme .swagger-ui .markdown code {
+    color: #4d9df5 !important;
+}
+
+body.dark-theme .swagger-ui .renderedMarkdown p,
+body.dark-theme .swagger-ui .renderedMarkdown span,
+body.dark-theme .swagger-ui .renderedMarkdown li,
+body.dark-theme .swagger-ui .renderedMarkdown div {
+    color: #9499a6 !important;
+}
+
+/* 标签组标题 */
+body.dark-theme .swagger-ui .tag-group .tag-group__title {
+    color: #9499a6 !important;
+}
+
+/* 信息区域版本和路径 */
+body.dark-theme .swagger-ui .info .base-url,
+body.dark-theme .swagger-ui .info .version {
+    color: #c0c0c0 !important;
+}
+
+body.dark-theme .swagger-ui .info hgroup.main a {
+    color: #4d9df5 !important;
+}
+
+/* === Schemas 区域背景色修复 === */
+/* 覆盖 Swagger UI 默认的白色背景，确保暗色模式下协调 */
+
+/* Schemas 整体容器 */
+body.dark-theme .swagger-ui .models {
+    background-color: transparent !important;
+}
+
+body.dark-theme .swagger-ui .models .wrapper {
+    background-color: transparent !important;
+}
+
+/* 单个模型容器 - 去除白色背景 */
+body.dark-theme .swagger-ui .model-container {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .swagger-ui .model-container:hover {
+    background-color: #333333 !important;
+}
+
+/* 模型盒子 - 确保深色背景 */
+body.dark-theme .swagger-ui .model-box {
+    background-color: #2d2d2d !important;
+    border-color: #3d3d3d !important;
+}
+
+body.dark-theme .swagger-ui .model-box .model {
+    background-color: transparent !important;
+    color: #e0e0e0 !important;
+}
+
+/* 模型内部对象 */
+body.dark-theme .swagger-ui .model .inner-object,
+body.dark-theme .swagger-ui .model .inner-object p,
+body.dark-theme .swagger-ui .model .inner-object span,
+body.dark-theme .swagger-ui .model .inner-object div {
+    background-color: transparent !important;
+    color: #e0e0e0 !important;
+}
+
+/* 模型标题 */
+body.dark-theme .swagger-ui .model-title,
+body.dark-theme .swagger-ui .model-title span,
+body.dark-theme .swagger-ui .model-title a {
+    background-color: transparent !important;
+    color: #e0e0e0 !important;
+}
+
+/* 模型展开/折叠按钮 */
+body.dark-theme .swagger-ui .model-toggle {
+    background-color: transparent !important;
+    color: #4d9df5 !important;
+}
+
+body.dark-theme .swagger-ui .model-toggle .collapsed {
+    background-color: transparent !important;
+    color: #4d9df5 !important;
+}
+
+/* 模型属性行 */
+body.dark-theme .swagger-ui .model .property-row,
+body.dark-theme .swagger-ui .model .property-row td,
+body.dark-theme .swagger-ui .model .property-row th {
+    background-color: transparent !important;
+    color: #e0e0e0 !important;
+}
+
+/* 模型属性名 */
+body.dark-theme .swagger-ui .model .property-name,
+body.dark-theme .swagger-ui .model .propertyName {
+    background-color: transparent !important;
+    color: #e0e0e0 !important;
+}
+
+/* 模型属性类型 */
+body.dark-theme .swagger-ui .model .prop-type,
+body.dark-theme .swagger-ui .model .property-type,
+body.dark-theme .swagger-ui .model .prop-format {
+    background-color: transparent !important;
+    color: #4d9df5 !important;
+}
+
+body.dark-theme .swagger-ui .model .property-primitive {
+    background-color: transparent !important;
+    color: #c0c0c0 !important;
+}
+
+/* 通用：清除 Schemas 区域所有可能的白色背景 */
+body.dark-theme .swagger-ui .models *,
+body.dark-theme .swagger-ui .model-container *,
+body.dark-theme .swagger-ui .model-box * {
+    background-color: transparent;
+}
+
+

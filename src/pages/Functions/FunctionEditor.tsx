@@ -217,7 +217,7 @@ const FunctionEditor: React.FC = () => {
         display: "flex", justifyContent: "center", alignItems: "center",
         flex: 1, height: "100%", background: token.colorBgLayout,
       }}>
-        <Spin size="large"/>
+        <Spin/>
       </div>
     );
   }
@@ -242,18 +242,18 @@ const FunctionEditor: React.FC = () => {
           <Button type="text" size="small" icon={<FileAddOutlined/>} onClick={handleAddFile}/>
         </Tooltip>
       </div>
-      <div style={{flex: 1, overflowY: "auto", padding: `${token.paddingXS}px 0`}}>
+      <div style={{flex: 1, overflowY: "auto", padding: `${token.paddingXS}px ${token.paddingXS}px`}}>
         {files.map((f) => (
           <div
             key={f.filename}
             style={{
               display: "flex", alignItems: "center", gap: 8,
-              padding: `4px ${token.padding}px`,
+              padding: `4px ${token.paddingSM}px`,
               cursor: "pointer", fontSize: 14,
-              background: activeFile === f.filename ? token.colorPrimaryBg : "transparent",
-              color: activeFile === f.filename ? token.colorPrimary : token.colorText,
-              borderLeft: activeFile === f.filename
-                ? `2px solid ${token.colorPrimary}` : "2px solid transparent",
+              borderRadius: token.borderRadiusSM,
+              background: activeFile === f.filename ? token.colorFillSecondary : "transparent",
+              color: token.colorText,
+              fontWeight: activeFile === f.filename ? 500 : 400,
             }}
             onClick={() => {
               if (renamingFile !== f.filename) setActiveFile(f.filename);
@@ -378,7 +378,9 @@ const FunctionEditor: React.FC = () => {
     <div style={{
       flex: 1, height: "100%", minHeight: 0,
       display: "flex", flexDirection: "column",
-      background: token.colorBgLayout, overflow: "hidden",
+      background: token.colorBgContainer, overflow: "hidden",
+      border: `1px solid ${token.colorBorderSecondary}`,
+      borderRadius: token.borderRadius,
     }}>
       {/* Header */}
       <div style={{
