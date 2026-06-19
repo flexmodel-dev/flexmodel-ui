@@ -858,6 +858,9 @@ const darkComponentTokens = {
     defaultColor: '#f5f6f8',
     defaultBorderColor: '#4a5260',
     primaryColor: '#ffffff',
+    primaryShadow: 'none',
+    defaultShadow: 'none',
+    dangerShadow: 'none',
   },
   Input: {
     colorBgContainer: '#2c323c',
