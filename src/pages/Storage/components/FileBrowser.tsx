@@ -7,8 +7,7 @@ import {
   DownloadOutlined,
   DeleteOutlined,
   PlusOutlined,
-  ReloadOutlined,
-  CopyOutlined
+  ReloadOutlined, LinkOutlined,
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import type {FileItem} from '@/types/storage';
@@ -205,7 +204,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
               <Button
                 type="text"
                 size="small"
-                icon={<CopyOutlined/>}
+                icon={<LinkOutlined />}
                 onClick={() => handleCopyLink(record)}
                 title={t('copy_link')}
               />
