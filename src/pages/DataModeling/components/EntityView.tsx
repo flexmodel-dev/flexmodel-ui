@@ -39,8 +39,8 @@ const EntityView = ({model}: Props) => {
   };
 
   return (
-    <>
-      <Row align="middle" justify="space-between" style={{marginBottom: 16}}>
+    <div style={{height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0}}>
+      <Row align="middle" justify="space-between" style={{marginBottom: 16, flexShrink: 0}}>
         <Col>
           <Space align="center">
             <Typography.Title level={5} style={{margin: 0}}>
@@ -72,8 +72,10 @@ const EntityView = ({model}: Props) => {
           />
         </Col>
       </Row>
-      {renderContent()}
-    </>
+      <div style={{flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column'}}>
+        {renderContent()}
+      </div>
+    </div>
   );
 };
 

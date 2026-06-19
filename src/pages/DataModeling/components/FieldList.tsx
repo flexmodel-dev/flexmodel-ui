@@ -20,6 +20,7 @@ import FieldForm, {FieldInitialValues} from "./FieldForm.tsx";
 import {Entity, Field, TypedFieldSchema} from "@/types/data-modeling";
 import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
+import {useTableScrollHeight} from "@/hooks/useTableScrollHeight.ts";
 
 interface FieldListProps {
   model: Entity;
@@ -40,6 +41,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
   );
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const fieldFormRef = useRef<any>(null);
+  const { containerRef, scrollY } = useTableScrollHeight();
 
   const fetchFields = useCallback(async () => {
     setFieldList(model?.fields);
@@ -284,9 +286,9 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
   ];
 
   return (
-    <>
+    <div style={{height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0}}>
       <div
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}
+        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, flexShrink: 0 }}
       >
         <Input
           size="small"
@@ -306,13 +308,15 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
           {t("new_field")}
         </Button>
       </div>
-      <Table
-        rowKey={(record) => record.name}
-        scroll={{ y: 450 }}
-        dataSource={filteredFieldList}
-        columns={columns}
-        pagination={false}
-      />
+      <div ref={containerRef} style={{flex: 1, minHeight: 0, overflow: 'hidden'}}>
+        <Table
+          rowKey={(record) => record.name}
+          scroll={{ y: scrollY }}
+          dataSource={filteredFieldList}
+          columns={columns}
+          pagination={false}
+        />
+      </div>
       <Modal
         title={t("field_form_title")}
         open={changeDialogVisible}
@@ -329,7 +333,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
           onCancel={handleModalCancel}
         />
       </Modal>
-    </>
+    </div>
   );
 };
 

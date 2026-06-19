@@ -32,21 +32,18 @@ export interface FunctionDeployRequest {
 }
 
 export interface FunctionInvokeRequest {
-  method?: string;
-  headers?: Record<string, string>;
-  body?: any;
-  query?: Record<string, string>;
+  input?: any;
 }
 
+export interface FunctionInvokeMeta {
+  executionTimeMs: number;
+  logs?: Array<{ level: string; message: string; data?: any }>;
+}
 
-export interface FunctionInvokeResponse {
+export interface FunctionInvokeResult {
   status: number;
-  headers?: Record<string, string>;
-  body?: any;
-  _meta?: {
-    executionTimeMs: number;
-    logs?: Array<{ level: string; message: string; data?: any }>;
-  };
+  data: any;
+  meta?: FunctionInvokeMeta;
 }
 
 export interface PageDTO<T> {
@@ -85,12 +82,23 @@ export const deleteFunction = (
   return api.delete(`/projects/${projectId}/functions/${encodeURIComponent(name)}`);
 };
 
-export const invokeFunction = (
+export const invokeFunction = async (
   projectId: string,
   name: string,
   data: FunctionInvokeRequest,
-): Promise<FunctionInvokeResponse> => {
-  return api.post(`/projects/${projectId}/functions/${encodeURIComponent(name)}/invoke`, data);
+): Promise<FunctionInvokeResult> => {
+  const response = await api.rawPost(
+    `/runtime/projects/${projectId}/functions/${encodeURIComponent(name)}`,
+    data,
+  );
+
+  let meta: FunctionInvokeMeta | undefined;
+  const metaStr = response.headers['x-function-meta'];
+  if (metaStr) {
+    try { meta = JSON.parse(metaStr); } catch { /* ignore */ }
+  }
+
+  return { status: response.status, data: response.data, meta };
 };
 
 // ---- Templates ----

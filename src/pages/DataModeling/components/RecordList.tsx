@@ -8,6 +8,7 @@ import type {Field, MRecord, RecordListProps} from '@/types/data-modeling.d.ts';
 import RecordForm from './RecordForm';
 import dayjs from 'dayjs';
 import {useProject} from "@/store/appStore";
+import {useTableScrollHeight} from "@/hooks/useTableScrollHeight.ts";
 
 const { TextArea } = Input;
 
@@ -25,6 +26,7 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
   const [searchValue, setSearchValue] = useState('');
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [form] = Form.useForm();
+  const { containerRef, scrollY } = useTableScrollHeight();
 
   const idField = model?.fields?.find((f: Field) => f.identity === true);
 
@@ -196,12 +198,16 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
 
   const renderContent = () => {
     if (!model) {
-      return <Empty />;
+      return (
+        <div style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Empty />
+        </div>
+      );
     }
 
     return (
-      <>
-        <div style={{ marginBottom: 16 }}>
+      <div style={{height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0}}>
+        <div style={{ marginBottom: 16, flexShrink: 0 }}>
 
           {searchExpanded && (
             <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
@@ -215,8 +221,8 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
               <Button
                 type="primary"
                 icon={<SearchOutlined />}
+                size="small"
                 onClick={handleSearch}
-                style={{ height: 'auto' }}
               >
                 {t('search') || 'Search'}
               </Button>
@@ -224,7 +230,7 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
           )}
         </div>
 
-        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
           <Space>
             <Button
               type="text"
@@ -245,11 +251,11 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
           </Space>
         </div>
 
-        <Table
-            sticky
+        <div ref={containerRef} style={{flex: 1, minHeight: 0, overflow: 'hidden'}}>
+          <Table
             loading={loading}
             scroll={{
-              y: 'calc(100vh - 260px)',
+              y: scrollY,
               x: 'max-content'
             }}
             columns={columns}
@@ -269,7 +275,8 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
               size: "small"
             }}
           />
-      </>
+        </div>
+      </div>
     );
   };
 
@@ -327,10 +334,10 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
   };
 
   return (
-    <>
+    <div style={{height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0}}>
       {renderContent()}
       {renderModal()}
-    </>
+    </div>
   );
 };
 

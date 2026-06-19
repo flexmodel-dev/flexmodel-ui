@@ -6,6 +6,7 @@ import IndexForm from "./IndexForm";
 import {Entity, Index} from "@/types/data-modeling";
 import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
+import {useTableScrollHeight} from "@/hooks/useTableScrollHeight.ts";
 
 interface IndexListProps {
   model: Entity;
@@ -23,6 +24,7 @@ const IndexList: React.FC<IndexListProps> = ({model}) => {
   const [currentVal, setCurrentVal] = useState<Index>({name: '', fields: [], unique: false});
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const indexFormRef = useRef<any>(null);
+  const { containerRef, scrollY } = useTableScrollHeight();
 
   const fetchIndexes = useCallback(async () => {
     setIndexList(model?.indexes || []);
@@ -166,8 +168,8 @@ const IndexList: React.FC<IndexListProps> = ({model}) => {
   ];
 
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+    <div style={{height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0}}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexShrink: 0 }}>
         <Input
           size="small"
           placeholder={t("search_indexes")}
@@ -186,13 +188,15 @@ const IndexList: React.FC<IndexListProps> = ({model}) => {
           {t('new_index')}
         </Button>
       </div>
-      <Table
-        rowKey="name"
-        scroll={{ y: 450 }}
-        dataSource={filteredIndexList}
-        columns={columns}
-        pagination={false}
-      />
+      <div ref={containerRef} style={{flex: 1, minHeight: 0, overflow: 'hidden'}}>
+        <Table
+          rowKey="name"
+          scroll={{ y: scrollY }}
+          dataSource={filteredIndexList}
+          columns={columns}
+          pagination={false}
+        />
+      </div>
       <Modal
         title={t("index_form_title")}
         open={changeDialogVisible}
@@ -209,7 +213,7 @@ const IndexList: React.FC<IndexListProps> = ({model}) => {
           onCancel={handleModalCancel}
         />
       </Modal>
-    </>
+    </div>
   );
 };
 

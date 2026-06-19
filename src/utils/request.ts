@@ -211,7 +211,19 @@ export const api = {
   delete: <T = any>(url: string): Promise<T> =>
     request({ url, method: 'delete' }),
   request: <T = any>(config: AxiosRequestConfig): Promise<T> =>
-    request(config)
+    request(config),
+  /**
+   * Raw POST that returns full AxiosResponse, bypassing error interceptor.
+   * Useful for endpoints where 4xx/5xx are valid business responses (e.g. function invoke).
+   * 401 errors still propagate to trigger auth handling.
+   */
+  rawPost: (url: string, data?: any): Promise<AxiosResponse> =>
+    axiosInstance.post(url, data).catch((error: AxiosError) => {
+      if (error.response && error.response.status !== 401) {
+        return error.response;
+      }
+      throw error;
+    }),
 }
 
 // 兼容原有导出

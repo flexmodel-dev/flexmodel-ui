@@ -59,7 +59,7 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
           {fn.createdAt ? new Date(fn.createdAt).toLocaleString() : "-"}
         </Descriptions.Item>
         <Descriptions.Item label={t("function.endpoint")} span={2}>
-          <code style={{fontSize: 12}}>POST /projects/{projectId}/functions/{fn.name}/invoke</code>
+          <code style={{fontSize: 12}}>POST /api/runtime/projects/{projectId}/functions/{fn.name}</code>
         </Descriptions.Item>
         <Descriptions.Item label={t("function.updatedAt")}>
           {fn.updatedAt ? new Date(fn.updatedAt).toLocaleString() : "-"}

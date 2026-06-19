@@ -132,7 +132,7 @@ const ModelingPage: React.FC = () => {
       ]}
     >
       {viewMode === 'list' ? (<>
-        <Splitter>
+        <Splitter style={{height: '100%'}}>
           <Splitter.Panel
             defaultSize="20%"
             max="40%"
@@ -146,7 +146,7 @@ const ModelingPage: React.FC = () => {
               />
           </Splitter.Panel>
           <Splitter.Panel>
-            <div className="pl-2">
+            <div style={{height: '100%', display: 'flex', flexDirection: 'column', paddingLeft: 8, minHeight: 0}}>
               {activeModel?.type === "enum" && (
                 <div style={{marginBottom: 16, display: 'flex', justifyContent: 'flex-end'}}>
                   <Space>

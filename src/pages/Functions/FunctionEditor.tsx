@@ -41,7 +41,7 @@ import {
 
 const {Text, Title} = Typography;
 
-const DEFAULT_INDEX_CODE = `export default async function(req, ctx) {
+const DEFAULT_INDEX_CODE = `export default async function(input, ctx) {
   const data = await ctx.flexmodel.data.find("Example");
   return ctx.json({ hello: "world", total: data.total });
 }`;

@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   message,
-  Select,
   Space,
   Spin,
   Tabs,
@@ -16,8 +15,7 @@ import {SendOutlined} from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
 import ScriptEditor from "@/components/common/ScriptEditor";
 import type {
-  FunctionInvokeRequest,
-  FunctionInvokeResponse,
+  FunctionInvokeResult,
 } from "@/services/function";
 import {invokeFunction} from "@/services/function";
 
@@ -34,12 +32,9 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
 }) => {
   const {t} = useTranslation();
   const {token} = theme.useToken();
-  const [method, setMethod] = useState("POST");
-  const [headersStr, setHeadersStr] = useState('{"Content-Type": "application/json"}');
-  const [bodyStr, setBodyStr] = useState("{}");
-  const [queryStr, setQueryStr] = useState("");
+  const [inputStr, setInputStr] = useState("{}");
   const [invoking, setInvoking] = useState(false);
-  const [response, setResponse] = useState<FunctionInvokeResponse | null>(null);
+  const [response, setResponse] = useState<FunctionInvokeResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleInvoke = async () => {
@@ -47,48 +42,20 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
     setResponse(null);
     setError(null);
 
-    let headers: Record<string, string> = {};
-    let body: any = undefined;
-    let query: Record<string, string> = {};
+    let input: any = undefined;
 
     try {
-      if (headersStr.trim()) {
-        headers = JSON.parse(headersStr);
+      if (inputStr.trim()) {
+        input = JSON.parse(inputStr);
       }
     } catch {
-      message.error(t("function.invokeHeadersJsonError"));
+      message.error(t("function.invokeInputJsonError"));
       setInvoking(false);
       return;
     }
 
     try {
-      if (bodyStr.trim()) {
-        body = JSON.parse(bodyStr);
-      }
-    } catch {
-      message.error(t("function.invokeBodyJsonError"));
-      setInvoking(false);
-      return;
-    }
-
-    try {
-      if (queryStr.trim()) {
-        query = JSON.parse(queryStr);
-      }
-    } catch {
-      message.error(t("function.invokeQueryJsonError"));
-      setInvoking(false);
-      return;
-    }
-
-    try {
-      const req: FunctionInvokeRequest = {
-        method,
-        headers: Object.keys(headers).length > 0 ? headers : undefined,
-        body: body !== undefined ? body : undefined,
-        query: Object.keys(query).length > 0 ? query : undefined,
-      };
-      const res = await invokeFunction(projectId, functionName, req);
+      const res = await invokeFunction(projectId, functionName, { input });
       setResponse(res);
     } catch (err: any) {
       setError(err?.message || String(err));
@@ -97,9 +64,9 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
     }
   };
 
-  const formatBody = (body: any): string => {
-    if (typeof body === "string") return body;
-    return JSON.stringify(body, null, 2);
+  const formatData = (data: any): string => {
+    if (typeof data === "string") return data;
+    return JSON.stringify(data, null, 2);
   };
 
   return (
@@ -114,68 +81,20 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
         title={t("function.invokeRequest")}
         style={{marginBottom: 16}}
       >
-        <div style={{display: "flex", gap: 12, marginBottom: 12, alignItems: "center"}}>
-          <Select
-            value={method}
-            onChange={setMethod}
-            style={{width: 100}}
-          >
-            <Select.Option value="GET">GET</Select.Option>
-            <Select.Option value="POST">POST</Select.Option>
-            <Select.Option value="PUT">PUT</Select.Option>
-            <Select.Option value="DELETE">DELETE</Select.Option>
-          </Select>
-          <code style={{flex: 1, fontSize: 12, padding: "4px 8px", background: token.colorFillSecondary, borderRadius: token.borderRadius}}>
-            /functions/{functionName}
+        <div style={{marginBottom: 12}}>
+          <code style={{fontSize: 12, padding: "4px 8px", background: token.colorFillSecondary, borderRadius: token.borderRadius}}>
+            POST /api/runtime/projects/{projectId}/functions/{functionName}
           </code>
         </div>
 
-        <Tabs
-          size="small"
-          items={[
-            {
-              key: "body",
-              label: t("function.invokeBody"),
-              children: (
-                <div>
-                  <ScriptEditor
-                    language="json"
-                    height={160}
-                    value={bodyStr}
-                    onChange={(v) => setBodyStr(v || "{}")}
-                  />
-                </div>
-              ),
-            },
-            {
-              key: "headers",
-              label: t("function.invokeHeaders"),
-              children: (
-                <div>
-                  <ScriptEditor
-                    language="json"
-                    height={160}
-                    value={headersStr}
-                    onChange={(v) => setHeadersStr(v || "{}")}
-                  />
-                </div>
-              ),
-            },
-            {
-              key: "query",
-              label: t("function.invokeQuery"),
-              children: (
-                <div>
-                  <ScriptEditor
-                    language="json"
-                    height={160}
-                    value={queryStr}
-                    onChange={(v) => setQueryStr(v || "")}
-                  />
-                </div>
-              ),
-            },
-          ]}
+        <div style={{marginBottom: 8}}>
+          <Text strong>{t("function.invokeInput")}</Text>
+        </div>
+        <ScriptEditor
+          language="json"
+          height={160}
+          value={inputStr}
+          onChange={(v) => setInputStr(v || "{}")}
         />
 
         <div style={{marginTop: 12, textAlign: "right"}}>
@@ -222,9 +141,9 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
                 >
                   {response.status}
                 </Tag>
-                {response._meta && (
+                {response.meta && (
                   <Text type="secondary">
-                    {response._meta.executionTimeMs}ms
+                    {response.meta.executionTimeMs}ms
                   </Text>
                 )}
               </Space>
@@ -240,11 +159,11 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
                         language="json"
                         height={200}
                         readOnly
-                        value={formatBody(response.body)}
+                        value={formatData(response.data)}
                       />
                     ),
                   },
-                  ...(response._meta?.logs && response._meta.logs.length > 0
+                  ...(response.meta?.logs && response.meta.logs.length > 0
                     ? [
                         {
                           key: "logs",
@@ -261,7 +180,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
                                 fontSize: 12,
                               }}
                             >
-                              {response._meta.logs.map((log, i) => (
+                              {response.meta.logs.map((log, i) => (
                                 <div
                                   key={i}
                                   style={{
