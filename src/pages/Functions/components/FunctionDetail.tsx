@@ -7,7 +7,7 @@ import {
   theme,
 } from "antd";
 import {
-  CodeOutlined,
+  FunctionOutlined,
   PlayCircleOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
@@ -111,7 +111,7 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
     },
     {
       key: "code",
-      label: <span><CodeOutlined/> {t("function.tabCode")}</span>,
+      label: <span><FunctionOutlined/> {t("function.tabCode")}</span>,
       children: codeTab,
     },
     {

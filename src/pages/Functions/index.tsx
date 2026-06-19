@@ -11,9 +11,8 @@ import {
   Tooltip,
 } from "antd";
 import {
-  CodeOutlined,
   DeleteOutlined,
-  EditOutlined,
+  EditOutlined, FunctionOutlined,
   PlayCircleOutlined,
   PlusOutlined,
   ReloadOutlined,
@@ -114,7 +113,7 @@ const FunctionsPage: React.FC = () => {
           onClick={() => handleViewDetail(record)}
           style={{color: token.colorLink, fontWeight: 500, cursor: "pointer"}}
         >
-          <CodeOutlined style={{marginRight: 8}}/>
+          <FunctionOutlined style={{marginRight: 8}}/>
           {name}
         </a>
       ),

@@ -27,7 +27,7 @@ import {
   CloudUploadOutlined,
   AppstoreOutlined,
   DashboardOutlined,
-  KeyOutlined,
+  KeyOutlined, FunctionOutlined,
 } from "@ant-design/icons";
 import GraphQLAPI from "@/pages/GraphQLAPI";
 import OpenAPI from "@/pages/OpenAPI";
@@ -189,7 +189,7 @@ export const projectRoutes: RouteConfig[] = [
   {
     path: "/project/:projectId/functions",
     element: <Functions />,
-    icon: CodeOutlined,
+    icon: FunctionOutlined,
     translationKey: "function.title",
   },
   {

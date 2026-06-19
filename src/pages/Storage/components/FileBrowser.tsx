@@ -7,7 +7,8 @@ import {
   DownloadOutlined,
   DeleteOutlined,
   PlusOutlined,
-  ReloadOutlined
+  ReloadOutlined,
+  CopyOutlined
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import type {FileItem} from '@/types/storage';
@@ -114,6 +115,17 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
     }
   };
 
+  const handleCopyLink = async (file: FileItem) => {
+    const objectPath = file.path.startsWith('/') ? file.path.substring(1) : file.path;
+    const url = `${window.location.origin}/api/projects/${projectId}/buckets/${bucketName}/objects/${objectPath}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      message.success(t('copy_link_success'));
+    } catch {
+      message.error(t('copy_link_failed'));
+    }
+  };
+
   const handleDownload = async (file: FileItem) => {
     try {
       message.loading({content: t('downloading', {name: file.name}), key: 'download'});
@@ -189,14 +201,22 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
       render: (_: any, record: FileItem) => (
         <Space size="small">
           {record.type === 'file' && (
-            <Button
-              type="link"
-              size="small"
-              icon={<DownloadOutlined/>}
-              onClick={() => handleDownload(record)}
-            >
-              {t('download')}
-            </Button>
+            <>
+              <Button
+                type="text"
+                size="small"
+                icon={<CopyOutlined/>}
+                onClick={() => handleCopyLink(record)}
+                title={t('copy_link')}
+              />
+              <Button
+                type="text"
+                size="small"
+                icon={<DownloadOutlined/>}
+                onClick={() => handleDownload(record)}
+                title={t('download')}
+              />
+            </>
           )}
           <Popconfirm
             title={t('delete_confirm')}
@@ -205,9 +225,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
             okText={t('confirm')}
             cancelText={t('cancel')}
           >
-            <Button type="link" size="small" danger icon={<DeleteOutlined/>}>
-              {t('delete')}
-            </Button>
+            <Button type="text" size="small" danger icon={<DeleteOutlined/>} title={t('delete')}/>
           </Popconfirm>
         </Space>
       ),

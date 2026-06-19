@@ -65,7 +65,7 @@ src/
 │   ├── Overview/        # 项目概览与监控
 │   ├── Member/          # 成员与角色管理
 │   ├── Settings/        # 系统设置
-│   ├── Functions/          # 云函数管理（创建、编辑、部署）
+│   ├── Functions/          # 边缘函数管理（创建、编辑、部署）
 ├── services/            # API 请求封装
 ├── store/               # Redux & Zustand 状态管理
 ├── hooks/               # 自定义 Hooks

@@ -32,7 +32,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
   const { t } = useTranslation();
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
-  
+
   const [internalForm] = Form.useForm();
   const form = externalForm || internalForm;
   const [triggerFormType, setTriggerFormType] = useState<TriggerFormType>(eventOnly ? 'event' : 'interval');
@@ -58,7 +58,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
         const fnList = await getFunctionList(projectId, { size: 1000 });
         setFunctions(fnList.list);
       } catch (error) {
-        console.error('获取云函数列表失败:', error);
+        console.error('获取边缘函数列表失败:', error);
       }
     };
     fetchFunctions();

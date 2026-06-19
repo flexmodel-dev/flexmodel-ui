@@ -16,7 +16,7 @@ import {
 import {
   ArrowLeftOutlined,
   CheckOutlined,
-  CodeOutlined,
+  FunctionOutlined,
   DeleteOutlined,
   EditOutlined,
   FileAddOutlined,
@@ -347,7 +347,7 @@ const FunctionEditor: React.FC = () => {
         items={[
           {
             key: "code",
-            label: <span><CodeOutlined/> {t("function.tabCode")}</span>,
+            label: <span><FunctionOutlined/> {t("function.tabCode")}</span>,
             children: (
               <div style={{flex: 1, overflow: "hidden"}}>
                 <ScriptEditor
@@ -402,7 +402,7 @@ const FunctionEditor: React.FC = () => {
         </Space>
         <Space>
           <Button
-            icon={<CodeOutlined/>}
+            icon={<FunctionOutlined/>}
             onClick={() => setTemplateDrawerVisible(true)}
           >
             {t("function.templates")}
