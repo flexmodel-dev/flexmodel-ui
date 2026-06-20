@@ -231,7 +231,7 @@ const FunctionsPage: React.FC = () => {
         open={detailVisible}
         onClose={() => { setDetailVisible(false); setDetailFunction(null); }}
         width={800}
-        destroyOnClose
+        destroyOnHidden
       >
         <FunctionDetail
           fn={detailFunction}

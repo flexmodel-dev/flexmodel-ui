@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, message, theme, Typography, Divider } from 'antd';
+import { Button, Form, Input, Menu, message, theme, Typography, Divider } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { getProject, patchProject } from '@/services/project';
 import { useProject } from '@/store/appStore';
 import { PageContainer } from '@/components/common';
+import ProvidersTab from '@/pages/Authentication/components/ProvidersTab';
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
+
+type ProjectSettingsTabKey = 'base' | 'auth';
 
 const ProjectSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -16,6 +19,19 @@ const ProjectSettings: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [searchParams] = useSearchParams();
+  const defaultTab = (searchParams.get('tab') as ProjectSettingsTabKey) || 'base';
+  const [selectKey, setSelectKey] = useState<ProjectSettingsTabKey>(defaultTab);
+
+  const menuMap: Record<ProjectSettingsTabKey, string> = {
+    base: t('settings_basic_settings'),
+    auth: t('authentication'),
+  };
+
+  const menuItems = (Object.keys(menuMap) as ProjectSettingsTabKey[]).map((key) => ({
+    key,
+    label: menuMap[key],
+  }));
 
   useEffect(() => {
     if (!projectId) return;
@@ -51,54 +67,80 @@ const ProjectSettings: React.FC = () => {
 
   const isDefaultProject = projectId === 'default';
 
-  return (
-    <PageContainer title={t('project_settings')} loading={loading}>
-      <div style={{ maxWidth: 600, padding: `${token.paddingLG}px 0` }}>
-        <Form
-          form={form}
-          layout="vertical"
-          disabled={isDefaultProject}
-        >
-          <Form.Item
-            label={t('project.name')}
-            name="name"
-            rules={[
-              { required: true, message: t('project.nameRequired') },
-            ]}
-          >
-            <Input placeholder={t('project.namePlaceholder')} />
-          </Form.Item>
+  const renderContent = () => {
+    switch (selectKey) {
+      case 'base':
+        return (
+          <Form
+              form={form}
+              layout="vertical"
+              disabled={isDefaultProject}
+              style={{ maxWidth: 800 }}
+            >
+              <Form.Item
+                label={t('project.name')}
+                name="name"
+                rules={[
+                  { required: true, message: t('project.nameRequired') },
+                ]}
+              >
+                <Input placeholder={t('project.namePlaceholder')} />
+              </Form.Item>
 
-          <Form.Item
-            label={t('project.description')}
-            name="description"
-          >
-            <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')} />
-          </Form.Item>
+              <Form.Item
+                label={t('project.description')}
+                name="description"
+              >
+                <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')} />
+              </Form.Item>
 
-          {!isDefaultProject && (
-            <Form.Item>
-              <Button type="primary" loading={saving} onClick={handleSave}>
-                {t('save')}
-              </Button>
-            </Form.Item>
-          )}
+              {!isDefaultProject && (
+                <Form.Item>
+                  <Button type="primary" loading={saving} onClick={handleSave}>
+                    {t('save')}
+                  </Button>
+                </Form.Item>
+              )}
 
-          {isDefaultProject && (
-            <Text type="secondary">{t('project.defaultProjectNotEditable')}</Text>
-          )}
-        </Form>
-
-        <Divider />
-
-        <div style={{ color: token.colorTextSecondary, fontSize: token.fontSizeSM }}>
-          <div><Text type="secondary">{t('project.projectId')}: </Text><Text code>{projectId}</Text></div>
-          {currentProject?.databaseName && (
-            <div style={{ marginTop: token.marginXS }}>
-              <Text type="secondary">{t('project.databaseName')}: </Text>
-              <Text code>{currentProject.databaseName}</Text>
+              {isDefaultProject && (
+                <Text type="secondary">{t('project.defaultProjectNotEditable')}</Text>
+              )}
+               <Divider />
+               <div style={{ color: token.colorTextSecondary, fontSize: token.fontSizeSM, maxWidth: 600 }}>
+              <div><Text type="secondary">{t('project.projectId')}: </Text><Text code>{projectId}</Text></div>
+              {currentProject?.databaseName && (
+                <div style={{ marginTop: token.marginXS }}>
+                  <Text type="secondary">{t('project.databaseName')}: </Text>
+                  <Text code>{currentProject.databaseName}</Text>
+                </div>
+              )}
             </div>
-          )}
+            </Form>
+        );
+      case 'auth':
+        return <ProvidersTab />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <PageContainer loading={loading}>
+      <div className="flex w-full h-full">
+        <div className="w-[200px] h-full">
+          <Menu
+            className="h-full"
+            mode="inline"
+            selectedKeys={[selectKey]}
+            onClick={({ key }) => setSelectKey(key as ProjectSettingsTabKey)}
+            items={menuItems}
+          />
+        </div>
+        <div className="flex-1 px-10 py-2">
+          <div style={{ marginBottom: token.marginLG }}>
+            <Title level={3} style={{ margin: 0 }}>{menuMap[selectKey]}</Title>
+          </div>
+          {renderContent()}
         </div>
       </div>
     </PageContainer>

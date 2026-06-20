@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Badge, Button, Card, Col, DatePicker, List, Row, Space, theme} from "antd";
+import {Badge, Button, Card, Col, DatePicker, Row, Space, theme} from "antd";
 import ReactECharts from "echarts-for-react";
 import dayjs, {Dayjs} from "dayjs";
 import {useTranslation} from "react-i18next";
@@ -238,16 +238,16 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
               <div style={{ fontSize: "16px", fontWeight: "500", marginBottom: "16px", color: token.colorText }}>
                 {t("api_ranking")}
               </div>
-              <List
+              <div
                 style={{
                   flex: 1,
                   overflowY: "auto",
                   overflowX: "hidden",
                 }}
                 className="flex flex-col relative"
-                dataSource={rankingData}
-                renderItem={(item, index) => (
-                  <List.Item style={{ padding: "10px 10px" }}>
+              >
+                {rankingData.map((item, index) => (
+                  <div key={item.name} style={{ padding: "10px 10px" }}>
                     <div className="flex w-full justify-between items-center gap-2">
                       <Space className="overflow-hidden flex-1 min-w-0">
                         <Badge count={index + 1} showZero color={index < 3 ? token.colorError : token.colorPrimary} />{" "}
@@ -255,9 +255,9 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
                       </Space>
                       <span style={{ color: token.colorText, flexShrink: 0 }}>{item.total}</span>
                     </div>
-                  </List.Item>
-                )}
-              />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </Card>

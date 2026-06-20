@@ -109,7 +109,7 @@ const ProvidersTab: React.FC = () => {
 
   return (
     <Spin spinning={loading}>
-      <Form form={form} layout="vertical" style={{ maxWidth: 600, margin: '0 auto' }}>
+      <Form form={form} layout="vertical" style={{ maxWidth: 800 }}>
         <Form.Item label={t("auth_method")}>
           <Radio.Group
             value={authMethod}

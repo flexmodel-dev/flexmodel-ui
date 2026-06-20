@@ -1,5 +1,4 @@
 import {useRoutes} from "react-router-dom";
-import Authentication from "./pages/Authentication";
 import Settings from "./pages/Settings";
 import Overview from "./pages/Overview";
 import DataView from "./pages/DataView";
@@ -214,12 +213,6 @@ export const projectRoutes: RouteConfig[] = [
     element: <Storage />,
     icon: CloudUploadOutlined,
     translationKey: "storage",
-  },
-  {
-    path: "/project/:projectId/authentication",
-    element: <Authentication />,
-    icon: UserOutlined,
-    translationKey: "authentication",
   },
   {
     path: "/project/:projectId/settings",

@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react";
 import {
-  List,
   Button,
   Modal,
   Form,
@@ -203,7 +202,8 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
 
   useEffect(() => {
     onMenuItemsChange?.(breadcrumbMenuItems);
-  }, [breadcrumbMenuItems, onMenuItemsChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [branches.length, currentBranch, t]);
 
   return (
     <>
@@ -222,7 +222,7 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
           createForm.resetFields();
         }}
         confirmLoading={createLoading}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form form={createForm} layout="vertical" initialValues={{ sourceBranch: "main" }}>
           <Form.Item
@@ -253,33 +253,21 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
         width={480}
       >
         <Spin spinning={manageLoading}>
-          <List
-            dataSource={branches}
-            renderItem={(item) => {
+          <div style={{ display: 'flex', flexDirection: 'column', gap: token.marginXS }}>
+            {branches.map((item) => {
               const isCurrent = item.name === currentBranch;
               const canDelete = item.name !== "main" && !isCurrent;
               return (
-                <List.Item
-                  actions={
-                    canDelete
-                      ? [
-                          <Popconfirm
-                            key="delete"
-                            title={t("branch.deleteConfirm", { name: item.name })}
-                            onConfirm={() => handleDelete(item.name)}
-                            okText={t("common.confirm")}
-                            cancelText={t("common.cancel")}
-                          >
-                            <Button
-                              type="text"
-                              danger
-                              icon={<DeleteOutlined />}
-                              size="small"
-                            />
-                          </Popconfirm>,
-                        ]
-                      : undefined
-                  }
+                <div
+                  key={item.name}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: `${token.paddingSM}px ${token.paddingSM}px`,
+                    borderRadius: token.borderRadius,
+                    backgroundColor: token.colorFillQuaternary,
+                  }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: token.marginXS }}>
                     <BranchesOutlined />
@@ -295,10 +283,25 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
                       </Tag>
                     )}
                   </div>
-                </List.Item>
+                  {canDelete && (
+                    <Popconfirm
+                      title={t("branch.deleteConfirm", { name: item.name })}
+                      onConfirm={() => handleDelete(item.name)}
+                      okText={t("common.confirm")}
+                      cancelText={t("common.cancel")}
+                    >
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        size="small"
+                      />
+                    </Popconfirm>
+                  )}
+                </div>
               );
-            }}
-          />
+            })}
+          </div>
         </Spin>
       </Modal>
 
@@ -312,7 +315,7 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
           mergeForm.resetFields();
         }}
         confirmLoading={mergeLoading}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form form={mergeForm} layout="vertical" initialValues={{ targetBranch: "main", conflictStrategy: "SKIP" }}>
           <Form.Item

@@ -146,14 +146,22 @@ const StorageManagement: React.FC = () => {
                         <BucketForm/>
                       </Form>
                     ) : (
-                      <Tabs activeKey={activeTab} onChange={setActiveTab}>
-                        <Tabs.TabPane key="browser" tab={t('file_browser')}>
-                          <FileBrowser bucketName={activeBucket.name} projectId={projectId}/>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane key="config" tab={t('configuration')}>
-                          <BucketView data={activeBucket}/>
-                        </Tabs.TabPane>
-                      </Tabs>
+                      <Tabs
+                        activeKey={activeTab}
+                        onChange={setActiveTab}
+                        items={[
+                          {
+                            key: 'browser',
+                            label: t('file_browser'),
+                            children: <FileBrowser bucketName={activeBucket.name} projectId={projectId}/>,
+                          },
+                          {
+                            key: 'config',
+                            label: t('configuration'),
+                            children: <BucketView data={activeBucket}/>,
+                          },
+                        ]}
+                      />
                     )}
                   </Col>
                 </Row>

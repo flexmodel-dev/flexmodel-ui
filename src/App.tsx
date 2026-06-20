@@ -1,5 +1,5 @@
 import {HashRouter, Route, Routes, Navigate} from "react-router-dom";
-import {ConfigProvider} from "antd";
+import {ConfigProvider, App as AntdApp} from "antd";
 import PlatformLayout from "./components/layouts/PlatformLayout";
 import ProjectLayout from "./components/layouts/ProjectLayout";
 import Login from "./pages/Login";
@@ -64,6 +64,7 @@ const App = () => {
       locale={locale}
       theme={theme}
     >
+      <AntdApp>
       <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -117,6 +118,7 @@ const App = () => {
           } /> */}
         </Routes>
       </HashRouter>
+      </AntdApp>
     </ConfigProvider>
   );
 }

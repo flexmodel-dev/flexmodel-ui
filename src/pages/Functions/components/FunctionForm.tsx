@@ -206,7 +206,7 @@ const FunctionForm: React.FC<FunctionFormProps> = ({
       onOk={handleSubmit}
       confirmLoading={submitting}
       width={900}
-      destroyOnClose
+      destroyOnHidden
       okText={t("function.deploy")}
       cancelText={t("cancel")}
     >

@@ -203,28 +203,37 @@ const Member: React.FC = () => {
         <Tabs
           activeKey={activeTab}
           onChange={(key) => setSearchParams({ tab: key })}
-        >
-          <Tabs.TabPane key="users" tab={t("member.user")}>
-            <UserList
-              users={filteredUsers}
-              loading={loading}
-              onSearch={handleMemberSearch}
-              onAdd={handleUserAdd}
-              onEdit={handleUserEdit}
-              onDelete={handleUserDelete}
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane key="roles" tab={t("platform.role")}>
-            <RoleList
-              roles={filteredRoles}
-              loading={roleLoading}
-              onSearch={handleRoleSearch}
-              onAdd={handleRoleAdd}
-              onEdit={handleRoleEdit}
-              onDelete={handleRoleDelete}
-            />
-          </Tabs.TabPane>
-        </Tabs>
+          items={[
+            {
+              key: 'users',
+              label: t('member.user'),
+              children: (
+                <UserList
+                  users={filteredUsers}
+                  loading={loading}
+                  onSearch={handleMemberSearch}
+                  onAdd={handleUserAdd}
+                  onEdit={handleUserEdit}
+                  onDelete={handleUserDelete}
+                />
+              ),
+            },
+            {
+              key: 'roles',
+              label: t('platform.role'),
+              children: (
+                <RoleList
+                  roles={filteredRoles}
+                  loading={roleLoading}
+                  onSearch={handleRoleSearch}
+                  onAdd={handleRoleAdd}
+                  onEdit={handleRoleEdit}
+                  onDelete={handleRoleDelete}
+                />
+              ),
+            },
+          ]}
+        />
       </PageContainer>
       <UserModal
         visible={modalVisible}
