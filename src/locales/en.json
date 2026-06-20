@@ -399,6 +399,7 @@
   "settings_about": "About",
   "settings_app_name": "Application Name",
   "settings_global_api_rate_limiting": "Global API rate limiting",
+  "project_settings": "Project Settings",
   "settings_proxy": "Proxy",
   "form_save_success": "Saved successfully",
   "form_save_failed": "Failed to save",
@@ -594,7 +595,10 @@
     "api": "APIs",
     "dataSource": "Data Sources",
     "flow": "Flows",
-    "storage": "Storages"
+    "storage": "Storages",
+    "updateFailed": "Failed to update project",
+    "defaultProjectNotEditable": "The default project cannot be modified",
+    "databaseName": "Database Name"
   },
   "common": {
     "confirm": "Confirm",

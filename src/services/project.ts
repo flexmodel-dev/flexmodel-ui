@@ -41,6 +41,16 @@ export const updateProject = (projectId: string, data: ProjectUpdateRequest): Pr
 };
 
 /**
+ * 部分更新项目信息（PATCH）
+ * @param projectId 项目ID
+ * @param data 项目信息
+ * @returns 更新后的项目信息
+ */
+export const patchProject = (projectId: string, data: ProjectUpdateRequest): Promise<Project> => {
+  return api.patch(`/projects/${projectId}`, data);
+};
+
+/**
  * 删除项目
  * @param projectId 项目ID
  */

@@ -43,6 +43,7 @@ import Project from "./pages/Project";
 import ApiKeys from "./pages/ApiKeys";
 import Functions from "./pages/Functions";
 import FunctionEditor from "./pages/Functions/FunctionEditor";
+import ProjectSettings from "./pages/ProjectSettings";
 
 export interface RouteConfig {
   path: string;
@@ -219,6 +220,12 @@ export const projectRoutes: RouteConfig[] = [
     element: <Authentication />,
     icon: UserOutlined,
     translationKey: "authentication",
+  },
+  {
+    path: "/project/:projectId/settings",
+    element: <ProjectSettings />,
+    icon: SettingOutlined,
+    translationKey: "project_settings",
   },
 ];
 

@@ -400,6 +400,7 @@
   "settings_proxy": "代理",
   "settings_app_name": "应用名称",
   "settings_global_api_rate_limiting": "全局接口限流",
+  "project_settings": "项目设置",
   "form_save_success": "保存成功",
   "form_save_failed": "保存失败",
   "form_delete_success": "删除成功",
@@ -941,7 +942,10 @@
     "api": "个API",
     "dataSource": "个数据源",
     "flow": "个流程",
-    "storage": "个存储"
+    "storage": "个存储",
+    "updateFailed": "项目更新失败",
+    "defaultProjectNotEditable": "默认项目不支持修改",
+    "databaseName": "数据库名"
   },
   "common": {
     "confirm": "确定",
