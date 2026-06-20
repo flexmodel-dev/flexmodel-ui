@@ -27,7 +27,7 @@ const PlatformLayout: React.FC = () => {
   const { i18n } = useTranslation();
   const { token } = antdTheme.useToken();
   const [mcpDrawerOpen, setMcpDrawerOpen] = useState(false);
-  const mcpUrl = useMemo(() => `${window.location.origin}/api/mcp`, []);
+  const mcpUrl = useMemo(() => `${window.location.origin}/api/mcp?api_key=<your_api_key>`, []);
 
   const toggleDarkMode = useCallback(() => {
     const newDarkMode = !isDark;

@@ -218,7 +218,7 @@ export const projectRoutes: RouteConfig[] = [
     path: "/project/:projectId/settings",
     element: <ProjectSettings />,
     icon: SettingOutlined,
-    translationKey: "project_settings",
+    translationKey: "project.settings",
   },
 ];
 
