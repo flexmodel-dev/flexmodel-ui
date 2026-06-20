@@ -6,12 +6,10 @@ export interface ApiKey {
   name: string;
   keyPrefix: string;
   keyType: 'anon' | 'service' | 'custom';
-  scopes: string;
   projectIds?: string;
   readOnly: boolean;
   expiresAt: string | null;
   lastUsedAt: string | null;
-  enabled: boolean;
   createdAt: string;
   /** 仅在创建时返回一次 */
   key?: string | null;
@@ -23,7 +21,6 @@ export interface ApiKey {
 export interface CreateApiKeyRequest {
   name: string;
   keyType?: string;
-  scopes?: string;
   projectIds?: string;
   readOnly?: boolean;
 }

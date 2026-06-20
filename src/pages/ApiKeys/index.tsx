@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, message, Modal, Popconfirm, Space, Table, Tag, Typography, Input, Form, Switch } from "antd";
+import { Button, message, Modal, Popconfirm, Space, Table, Tag, Typography, Input, Form, Switch, Select } from "antd";
 import { CopyOutlined, DeleteOutlined, ReloadOutlined, PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { getApiKeys, createApiKey, regenerateApiKey, deleteApiKey } from "@/services/api-key";
+import { getProjects } from "@/services/project";
 import type { ApiKey, CreateApiKeyRequest } from "@/types/api-key";
+import type { Project } from "@/types/project";
 import { PageContainer } from "@/components/common";
 
 const { Text } = Typography;
@@ -15,6 +17,7 @@ const ApiKeys: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [newKeyValue, setNewKeyValue] = useState<string | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [form] = Form.useForm();
 
   const fetchKeys = useCallback(async () => {
@@ -29,9 +32,19 @@ const ApiKeys: React.FC = () => {
     }
   }, [t]);
 
+  const fetchProjects = useCallback(async () => {
+    try {
+      const data = await getProjects({});
+      setProjects(data);
+    } catch {
+      // silently ignore
+    }
+  }, []);
+
   useEffect(() => {
     fetchKeys();
-  }, [fetchKeys]);
+    fetchProjects();
+  }, [fetchKeys, fetchProjects]);
 
   const handleCreate = async () => {
     try {
@@ -39,8 +52,7 @@ const ApiKeys: React.FC = () => {
       const req: CreateApiKeyRequest = {
         name: values.name,
         keyType: "custom",
-        scopes: values.scopes || "*",
-        projectIds: values.projectIds || "",
+        projectIds: (values.projectIds as string[] | undefined)?.join(",") || "",
         readOnly: values.readOnly ?? false,
       };
       const res = await createApiKey(req);
@@ -109,29 +121,26 @@ const ApiKeys: React.FC = () => {
       render: (prefix: string) => <Text code>{prefix}...</Text>,
     },
     {
-      title: t("scopes"),
-      dataIndex: "scopes",
-      key: "scopes",
-      render: (scopes: string) => scopes === "*" ? <Tag color="green">*</Tag> : scopes,
-    },
-    {
       title: t("project_ids"),
       dataIndex: "projectIds",
       key: "projectIds",
-      render: (projectIds: string) =>
-        !projectIds ? <Tag color="green">{t("all_projects")}</Tag> : projectIds,
+      render: (projectIds: string) => {
+        if (!projectIds) return <Tag color="green">{t("all_projects")}</Tag>;
+        const nameMap = Object.fromEntries(projects.map(p => [p.id, p.name]));
+        return (
+          <Space size={[0, 4]} wrap>
+            {projectIds.split(",").map(id => (
+              <Tag key={id}>{nameMap[id] || id}</Tag>
+            ))}
+          </Space>
+        );
+      },
     },
     {
       title: t("read_only"),
       dataIndex: "readOnly",
       key: "readOnly",
       render: (readOnly: boolean) => readOnly ? <Tag>{t("yes")}</Tag> : <Tag color="orange">{t("no")}</Tag>,
-    },
-    {
-      title: t("enabled"),
-      dataIndex: "enabled",
-      key: "enabled",
-      render: (enabled: boolean) => enabled ? <Tag color="green">{t("yes")}</Tag> : <Tag color="red">{t("no")}</Tag>,
     },
     {
       title: t("actions"),
@@ -187,15 +196,17 @@ const ApiKeys: React.FC = () => {
         onOk={handleCreate}
         okText={t("create")}
       >
-        <Form form={form} layout="vertical" initialValues={{ scopes: "*", readOnly: false }}>
+        <Form form={form} layout="vertical" initialValues={{ readOnly: false }}>
           <Form.Item name="name" label={t("name")} rules={[{ required: true, message: t("name_required") }]}>
             <Input placeholder={t("api_key_name_placeholder")} />
           </Form.Item>
-          <Form.Item name="scopes" label={t("scopes")}>
-            <Input placeholder="* 或 read,write" />
-          </Form.Item>
           <Form.Item name="projectIds" label={t("project_ids")}>
-            <Input placeholder={t("project_ids_placeholder")} />
+            <Select
+              mode="multiple"
+              allowClear
+              placeholder={t("project_ids_placeholder")}
+              options={projects.map(p => ({ label: p.name, value: p.id }))}
+            />
           </Form.Item>
           <Form.Item name="readOnly" label={t("read_only")} valuePropName="checked">
             <Switch />
