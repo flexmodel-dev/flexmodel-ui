@@ -15,579 +15,815 @@ body {
     background: #fafafa;
 }
 
-/* 夜间模式样式 */
+/* ============================================================
+   Swagger UI 暗色模式主题
+   通过 body.dark-theme 类激活
+
+   色板与 flexmodel designSystem.css dark mode 保持统一：
+     背景层：  #232830 (layout) / #2c323c (container) / #363d48 (elevated)
+     边框：    #3c434e / #4a5260
+     主文字：  #f5f6f8
+     次文字：  #bcc0cc
+     弱文字：  #9499a6
+     链接/蓝： #6badff
+     红/错误： #ff6b6b
+     绿/成功： #39bf45
+   ============================================================ */
+
+/* --- CSS 变量（对齐 designSystem.css dark mode token） --- */
 body.dark-theme {
-    background: #1a1a1a;
+    --bg-layout: #232830;
+    --bg-container: #2c323c;
+    --bg-elevated: #363d48;
+    --bg-input: #2c323c;
+    --border: #4a5260;
+    --border-secondary: #3c434e;
+    --border-strong: #787e8c;
+    --text-primary: #f5f6f8;
+    --text-secondary: #bcc0cc;
+    --text-muted: #9499a6;
+    --text-quaternary: #787e8c;
+    --link: #6badff;
+    --link-active: #458fff;
+    --accent-red: #ff6b6b;
+    --accent-green: #39bf45;
+    --accent-yellow: #d9a441;
+
+    background: var(--bg-layout);
+    color: var(--text-primary);
 }
 
-body.dark-theme .swagger-ui {
-    color: #e0e0e0;
+/* === 全局文字可读性 === */
+body.dark-theme .swagger-ui,
+body.dark-theme .swagger-ui .wrapper,
+body.dark-theme .swagger-ui .opblock-tag,
+body.dark-theme .swagger-ui .info,
+body.dark-theme .swagger-ui .tab li {
+    color: var(--text-primary);
 }
 
+/* === Topbar === */
 body.dark-theme .swagger-ui .topbar {
-    background-color: #2d2d2d;
-    border-bottom: 1px solid #3d3d3d;
+    background-color: var(--bg-container);
+    border-bottom: 1px solid var(--border);
 }
 
 body.dark-theme .swagger-ui .topbar .download-url-wrapper .download-url-button {
-    background-color: #3d3d3d;
-    color: #e0e0e0;
-    border-color: #4d4d4d;
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border);
 }
 
 body.dark-theme .swagger-ui .topbar .download-url-wrapper .download-url-button:hover {
-    background-color: #4d4d4d;
+    background-color: var(--border);
 }
 
-body.dark-theme .swagger-ui .info {
-    margin: 20px 0;
+body.dark-theme .swagger-ui .topbar a {
+    color: var(--link);
 }
 
+/* === Info 区域 === */
 body.dark-theme .swagger-ui .info .title {
-    color: #e0e0e0;
+    color: var(--text-primary);
 }
 
-body.dark-theme .swagger-ui .info .description {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .scheme-container {
-    background-color: #2d2d2d;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
-}
-
-body.dark-theme .swagger-ui .scheme-container .schemes > label {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .scheme-container .schemes > select {
-    background-color: #3d3d3d;
-    color: #e0e0e0;
-    border-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .loading-container {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .opblock {
-    background-color: #2d2d2d;
-    border-color: #3d3d3d;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
-}
-
-body.dark-theme .swagger-ui .opblock .opblock-summary {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock .opblock-summary-description {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .opblock .opblock-section-header {
-    background-color: #252525;
-    border-bottom: 1px solid #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock .opblock-section-header h4 {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-get {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-get .opblock-summary {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-post {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-post .opblock-summary {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-put {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-put .opblock-summary {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-delete {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-delete .opblock-summary {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-patch {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-patch .opblock-summary {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-head {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-head .opblock-summary {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-options {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock.opblock-options .opblock-summary {
-    border-color: #3d3d3d;
-}
-
-body.dark-theme .swagger-ui .opblock-tag {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .opblock-tag small {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .opblock-description-wrapper p,
-body.dark-theme .swagger-ui .opblock-external-docs-wrapper p,
-body.dark-theme .swagger-ui .opblock-title_normal p {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .opblock-description-wrapper h4,
-body.dark-theme .swagger-ui .opblock-external-docs-wrapper h4,
-body.dark-theme .swagger-ui .opblock-title_normal h4 {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .tab li {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .tab li.active {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .tab li:first-of-type::after {
-    background-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .parameters-col_description p,
-body.dark-theme .swagger-ui .parameters-col_description input[type="text"],
-body.dark-theme .swagger-ui .parameters-col_description textarea {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .parameters-col_description input[type="text"],
-body.dark-theme .swagger-ui .parameters-col_description textarea {
-    background-color: #3d3d3d;
-    border-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .parameters-col_description input[type="text"]::placeholder,
-body.dark-theme .swagger-ui .parameters-col_description textarea::placeholder {
-    color: #808080;
-}
-
-body.dark-theme .swagger-ui .response-col_status {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .response-col_description__inner span,
-body.dark-theme .swagger-ui .response-col_description__inner p {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .response-col_links h4,
-body.dark-theme .swagger-ui .response-col_links h5 {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .response-col_links a {
-    color: #4d9df5;
-}
-
-body.dark-theme .swagger-ui .model-title {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .model .property {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .model .property-row .star {
-    color: #ff6b6b;
-}
-
-body.dark-theme .swagger-ui .model .property-row .prop-type {
-    color: #4d9df5;
-}
-
-body.dark-theme .swagger-ui .model-toggle {
-    color: #4d9df5;
-}
-
-body.dark-theme .swagger-ui .model-box {
-    background-color: #2d2d2d !important;
-    border-color: #3d3d3d !important;
-}
-
-body.dark-theme .swagger-ui .prop-type {
-    color: #4d9df5;
-}
-
-body.dark-theme .swagger-ui .scheme-container .schemes > label {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .scheme-container .schemes > select {
-    background-color: #3d3d3d;
-    color: #e0e0e0;
-    border-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .execute-wrapper {
-    background-color: #2d2d2d;
-}
-
-body.dark-theme .swagger-ui .btn {
-    background-color: #3d3d3d;
-    color: #e0e0e0;
-    border-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .btn:hover {
-    background-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .btn.execute {
-    background-color: #4caf50;
-    color: white;
-    border-color: #4caf50;
-}
-
-body.dark-theme .swagger-ui .btn.execute:hover {
-    background-color: #43a047;
-}
-
-body.dark-theme .swagger-ui textarea,
-body.dark-theme .swagger-ui input[type="text"],
-body.dark-theme .swagger-ui input[type="password"] {
-    background-color: #3d3d3d;
-    color: #e0e0e0;
-    border-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui textarea:focus,
-body.dark-theme .swagger-ui input[type="text"]:focus,
-body.dark-theme .swagger-ui input[type="password"]:focus {
-    border-color: #4d9df5;
-}
-
-body.dark-theme .swagger-ui select {
-    background-color: #3d3d3d;
-    color: #e0e0e0;
-    border-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .response-control-media-type__title {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .response-control-media-type > select {
-    background-color: #3d3d3d;
-    color: #e0e0e0;
-    border-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .servers > label {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .servers > select {
-    background-color: #3d3d3d;
-    color: #e0e0e0;
-    border-color: #4d4d4d;
-}
-
-body.dark-theme .swagger-ui .servers-title {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .loading-container .loading {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .errors-wrapper .errors h4 {
-    color: #ff6b6b;
-}
-
-body.dark-theme .swagger-ui .errors-wrapper .errors small {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .errors-wrapper .errors .error-line {
-    color: #ff6b6b;
-}
-
-body.dark-theme .swagger-ui .errors-wrapper .errors .error-line .error-line-text {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .errors-wrapper hgroup h4 {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .errors-wrapper hgroup h5 {
-    color: #e0e0e0;
-}
-
-body.dark-theme .swagger-ui .errors-wrapper hgroup span {
-    color: #ff6b6b;
-}
-
-/* === 暗色模式文字可读性增强 === */
-/* 覆盖 Swagger UI 默认的深色文字（#3b4151 / #6c757d），确保暗色背景下可读 */
-
-/* API 描述区域 */
+body.dark-theme .swagger-ui .info .description,
 body.dark-theme .swagger-ui .info .description p,
 body.dark-theme .swagger-ui .info .description span,
 body.dark-theme .swagger-ui .info .description div,
 body.dark-theme .swagger-ui .info .description li,
-body.dark-theme .swagger-ui .info .description a {
-    color: #9499a6 !important;
-}
-
-body.dark-theme .swagger-ui .info .description a {
-    color: #4d9df5 !important;
-}
-
-body.dark-theme .swagger-ui .info li,
 body.dark-theme .swagger-ui .info p,
-body.dark-theme .swagger-ui .info span {
-    color: #e0e0e0;
+body.dark-theme .swagger-ui .info span,
+body.dark-theme .swagger-ui .info li {
+    color: var(--text-secondary) !important;
 }
 
-/* 操作块摘要 - 端点路径和描述 */
-body.dark-theme .swagger-ui .opblock-summary-path,
-body.dark-theme .swagger-ui .opblock-summary-path span,
-body.dark-theme .swagger-ui .opblock-summary-path a {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .info .description a,
+body.dark-theme .swagger-ui .info hgroup.main a,
+body.dark-theme .swagger-ui .info a {
+    color: var(--link) !important;
 }
 
-body.dark-theme .swagger-ui .opblock-summary-description {
-    color: #e0e0e !important;
+body.dark-theme .swagger-ui .info .base-url,
+body.dark-theme .swagger-ui .info .version {
+    color: var(--text-muted) !important;
 }
 
-/* 操作块标签区域 */
+/* === Server 选择器 === */
+body.dark-theme .swagger-ui .scheme-container {
+    background-color: var(--bg-container);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .swagger-ui .scheme-container .schemes > label,
+body.dark-theme .swagger-ui .servers > label,
+body.dark-theme .swagger-ui .servers-title {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .scheme-container .schemes > select,
+body.dark-theme .swagger-ui .servers > select {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+/* === Loading === */
+body.dark-theme .swagger-ui .loading-container,
+body.dark-theme .swagger-ui .loading-container .loading {
+    color: var(--text-muted);
+}
+
+/* === Tab 栏 === */
+body.dark-theme .swagger-ui .tab li {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .tab li.active {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .tab li:first-of-type::after {
+    background-color: var(--border);
+}
+
+/* === Tag 分组标题 === */
 body.dark-theme .swagger-ui .opblock-tag,
 body.dark-theme .swagger-ui .opblock-tag a,
 body.dark-theme .swagger-ui .opblock-tag span {
-    color: #9499a6 !important;
+    color: var(--text-primary) !important;
 }
 
 body.dark-theme .swagger-ui .opblock-tag small,
 body.dark-theme .swagger-ui .opblock-tag .description,
 body.dark-theme .swagger-ui .opblock-tag-section .opblock-tag small {
-    color: #c0c0c0 !important;
+    color: var(--text-secondary) !important;
 }
 
-/* 操作块内部描述 */
-body.dark-theme .swagger-ui .opblock-description-wrapper p,
-body.dark-theme .swagger-ui .opblock-external-docs-wrapper p,
-body.dark-theme .swagger-ui .opblock-title_normal p,
+body.dark-theme .swagger-ui .tag-group .tag-group__title {
+    color: var(--text-primary) !important;
+}
+
+/* === Opblock 操作块 === */
+body.dark-theme .swagger-ui .opblock {
+    background-color: var(--bg-container);
+    border-color: var(--border-secondary);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .swagger-ui .opblock .opblock-summary {
+    border-color: var(--border-secondary);
+}
+
+body.dark-theme .swagger-ui .opblock .opblock-summary-description {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-theme .swagger-ui .opblock-summary-path,
+body.dark-theme .swagger-ui .opblock-summary-path span,
+body.dark-theme .swagger-ui .opblock-summary-path a {
+    color: var(--text-primary) !important;
+}
+
+body.dark-theme .swagger-ui .opblock .opblock-section-header {
+    background-color: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-secondary);
+}
+
+body.dark-theme .swagger-ui .opblock .opblock-section-header h4 {
+    color: var(--text-primary);
+}
+
+/* 各 HTTP 方法左边框 */
+body.dark-theme .swagger-ui .opblock.opblock-get,
+body.dark-theme .swagger-ui .opblock.opblock-post,
+body.dark-theme .swagger-ui .opblock.opblock-put,
+body.dark-theme .swagger-ui .opblock.opblock-delete,
+body.dark-theme .swagger-ui .opblock.opblock-patch,
+body.dark-theme .swagger-ui .opblock.opblock-head,
+body.dark-theme .swagger-ui .opblock.opblock-options {
+    border-color: var(--border-secondary);
+    background-color: var(--bg-container);
+}
+
+body.dark-theme .swagger-ui .opblock.opblock-get .opblock-summary,
+body.dark-theme .swagger-ui .opblock.opblock-post .opblock-summary,
+body.dark-theme .swagger-ui .opblock.opblock-put .opblock-summary,
+body.dark-theme .swagger-ui .opblock.opblock-delete .opblock-summary,
+body.dark-theme .swagger-ui .opblock.opblock-patch .opblock-summary,
+body.dark-theme .swagger-ui .opblock.opblock-head .opblock-summary,
+body.dark-theme .swagger-ui .opblock.opblock-options .opblock-summary {
+    border-color: var(--border-secondary);
+}
+
+/* === 操作块内部描述 === */
 body.dark-theme .swagger-ui .opblock-description-wrapper,
+body.dark-theme .swagger-ui .opblock-description-wrapper p,
 body.dark-theme .swagger-ui .opblock-external-docs-wrapper,
-body.dark-theme .swagger-ui .opblock-title_normal {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .opblock-external-docs-wrapper p,
+body.dark-theme .swagger-ui .opblock-title_normal,
+body.dark-theme .swagger-ui .opblock-title_normal p {
+    color: var(--text-secondary) !important;
 }
 
-/* 参数和响应描述 */
-body.dark-theme .swagger-ui .parameters-col_description p,
-body.dark-theme .swagger-ui .parameters-col_description span,
-body.dark-theme .swagger-ui .parameters-col_description div {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .opblock-description-wrapper h4,
+body.dark-theme .swagger-ui .opblock-external-docs-wrapper h4,
+body.dark-theme .swagger-ui .opblock-title_normal h4 {
+    color: var(--text-primary);
 }
 
-body.dark-theme .swagger-ui .response-col_description__inner p,
-body.dark-theme .swagger-ui .response-col_description__inner span,
-body.dark-theme .swagger-ui .response-col_description__inner div {
-    color: #9499a6 !important;
-}
-
-body.dark-theme .swagger-ui .response-col_status,
-body.dark-theme .swagger-ui .response-col_status div {
-    color: #9499a6 !important;
-}
-
-/* 表格表头和内容 */
+/* === 表格表头和内容 === */
 body.dark-theme .swagger-ui table thead tr th,
 body.dark-theme .swagger-ui table thead tr td,
 body.dark-theme .swagger-ui table thead tr .parameters-col_name,
 body.dark-theme .swagger-ui table thead tr .parameters-col_description {
-    color: #9499a6 !important;
+    color: var(--text-muted) !important;
+    border-color: var(--border-secondary) !important;
 }
 
-body.dark-theme .swagger-ui .parameters-col_name {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui table tbody tr td {
+    border-color: var(--border-secondary) !important;
 }
 
-/* 模型区域 */
-body.dark-theme .swagger-ui .model-container,
-body.dark-theme .swagger-ui .models-control,
-body.dark-theme .swagger-ui .models-title {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .parameters-col_name,
+body.dark-theme .swagger-ui .parameters-col_name p,
+body.dark-theme .swagger-ui .parameters-col_name span {
+    color: var(--text-primary) !important;
 }
 
-body.dark-theme .swagger-ui .model .property,
-body.dark-theme .swagger-ui .model .property-primitive,
-body.dark-theme .swagger-ui .model .property-row {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .parameters-col_description,
+body.dark-theme .swagger-ui .parameters-col_description p,
+body.dark-theme .swagger-ui .parameters-col_description span,
+body.dark-theme .swagger-ui .parameters-col_description div {
+    color: var(--text-secondary) !important;
 }
 
-body.dark-theme .swagger-ui .model-box,
-body.dark-theme .swagger-ui .model-box .model {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .parameters-col_description input[type="text"],
+body.dark-theme .swagger-ui .parameters-col_description textarea {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
 }
 
-/* 通用文字覆盖 - 确保暗色模式下所有文字可读 */
-body.dark-theme .swagger-ui .markdown p,
-body.dark-theme .swagger-ui .markdown span,
-body.dark-theme .swagger-ui .markdown li,
-body.dark-theme .swagger-ui .markdown div {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .parameters-col_description input[type="text"]::placeholder,
+body.dark-theme .swagger-ui .parameters-col_description textarea::placeholder {
+    color: var(--text-quaternary);
 }
 
-body.dark-theme .swagger-ui .markdown a,
-body.dark-theme .swagger-ui .markdown code {
-    color: #4d9df5 !important;
+/* 参数类型标签 */
+body.dark-theme .swagger-ui .parameter__type {
+    color: var(--link);
 }
 
-body.dark-theme .swagger-ui .renderedMarkdown p,
-body.dark-theme .swagger-ui .renderedMarkdown span,
-body.dark-theme .swagger-ui .renderedMarkdown li,
-body.dark-theme .swagger-ui .renderedMarkdown div {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .parameter__extension {
+    color: var(--text-quaternary);
 }
 
-/* 标签组标题 */
-body.dark-theme .swagger-ui .tag-group .tag-group__title {
-    color: #9499a6 !important;
+body.dark-theme .swagger-ui .prop-format {
+    color: var(--text-quaternary);
 }
 
-/* 信息区域版本和路径 */
-body.dark-theme .swagger-ui .info .base-url,
-body.dark-theme .swagger-ui .info .version {
-    color: #c0c0c0 !important;
+/* === 响应区域 === */
+body.dark-theme .swagger-ui .response-col_status,
+body.dark-theme .swagger-ui .response-col_status div {
+    color: var(--text-secondary) !important;
 }
 
-body.dark-theme .swagger-ui .info hgroup.main a {
-    color: #4d9df5 !important;
+body.dark-theme .swagger-ui .response-col_description__inner,
+body.dark-theme .swagger-ui .response-col_description__inner span,
+body.dark-theme .swagger-ui .response-col_description__inner p,
+body.dark-theme .swagger-ui .response-col_description__inner div {
+    color: var(--text-secondary) !important;
 }
 
-/* === Schemas 区域背景色修复 === */
-/* 覆盖 Swagger UI 默认的白色背景，确保暗色模式下协调 */
+body.dark-theme .swagger-ui .response-col_links h4,
+body.dark-theme .swagger-ui .response-col_links h5 {
+    color: var(--text-primary);
+}
 
-/* Schemas 整体容器 */
+body.dark-theme .swagger-ui .response-col_links a {
+    color: var(--link);
+}
+
+body.dark-theme .swagger-ui .response-control-media-type__title {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .response-control-media-type > select {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+/* 响应体示例 */
+body.dark-theme .swagger-ui .highlight-code {
+    background-color: var(--bg-elevated) !important;
+}
+
+body.dark-theme .swagger-ui .highlight-code code {
+    color: var(--text-primary) !important;
+}
+
+body.dark-theme .swagger-ui .example,
+body.dark-theme .swagger-ui .example .section-header {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui pre.example {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-secondary);
+}
+
+/* === 按钮 === */
+body.dark-theme .swagger-ui .btn {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+body.dark-theme .swagger-ui .btn:hover {
+    background-color: var(--border);
+}
+
+body.dark-theme .swagger-ui .btn.execute {
+    background-color: var(--accent-green);
+    color: #fff;
+    border-color: var(--accent-green);
+}
+
+body.dark-theme .swagger-ui .btn.execute:hover {
+    background-color: #2fa83c;
+}
+
+body.dark-theme .swagger-ui .btn.btn-clear {
+    background-color: transparent;
+    color: var(--accent-red);
+    border-color: var(--accent-red);
+}
+
+/* === 表单元素 === */
+body.dark-theme .swagger-ui textarea,
+body.dark-theme .swagger-ui input[type="text"],
+body.dark-theme .swagger-ui input[type="password"],
+body.dark-theme .swagger-ui input[type="file"],
+body.dark-theme .swagger-ui input[type="number"],
+body.dark-theme .swagger-ui input[type="email"] {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+body.dark-theme .swagger-ui textarea:focus,
+body.dark-theme .swagger-ui input[type="text"]:focus,
+body.dark-theme .swagger-ui input[type="password"]:focus {
+    border-color: var(--link);
+    outline: none;
+}
+
+body.dark-theme .swagger-ui select {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+body.dark-theme .swagger-ui select option {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+}
+
+/* Checkbox / radio */
+body.dark-theme .swagger-ui input[type="checkbox"] + label span,
+body.dark-theme .swagger-ui input[type="radio"] + label span {
+    background-color: var(--bg-input);
+    border-color: var(--border);
+}
+
+/* === Execute 区域 === */
+body.dark-theme .swagger-ui .execute-wrapper {
+    background-color: var(--bg-elevated);
+}
+
+body.dark-theme .swagger-ui .execute-wrapper .btn {
+    color: #fff;
+}
+
+/* Curl 命令 */
+body.dark-theme .swagger-ui .curl-command {
+    background-color: var(--bg-elevated);
+}
+
+body.dark-theme .swagger-ui .curl-command .copy-to-clipboard {
+    color: var(--text-muted);
+}
+
+body.dark-theme .swagger-ui .curl-command textarea {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+}
+
+/* === Responses 区域 === */
+body.dark-theme .swagger-ui .responses-inner {
+    background-color: var(--bg-elevated);
+}
+
+body.dark-theme .swagger-ui .responses-inner h4,
+body.dark-theme .swagger-ui .responses-inner h5 {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .server {
+    color: var(--text-secondary);
+}
+
+/* 响应状态码颜色 */
+body.dark-theme .swagger-ui .opblock .opblock-summary .opblock-summary-response .response-col_status {
+    color: var(--text-primary);
+}
+
+/* === 代码高亮 / JSON 渲染 === */
+body.dark-theme .swagger-ui .microlight {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-theme .swagger-ui code,
+body.dark-theme .swagger-ui pre {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .language-json,
+body.dark-theme .swagger-ui .language-xml {
+    color: var(--text-primary);
+}
+
+/* === Schemas / Models 区域 === */
 body.dark-theme .swagger-ui .models {
     background-color: transparent !important;
+    border-color: var(--border-secondary) !important;
 }
 
 body.dark-theme .swagger-ui .models .wrapper {
     background-color: transparent !important;
 }
 
-/* 单个模型容器 - 去除白色背景 */
 body.dark-theme .swagger-ui .model-container {
-    background-color: #2d2d2d !important;
-    color: #e0e0e0 !important;
+    background-color: var(--bg-container) !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 4px;
 }
 
 body.dark-theme .swagger-ui .model-container:hover {
-    background-color: #333333 !important;
+    background-color: #313843 !important;
 }
 
-/* 模型盒子 - 确保深色背景 */
+body.dark-theme .swagger-ui .model-container .model-title,
+body.dark-theme .swagger-ui .model-container .model-title span,
+body.dark-theme .swagger-ui .model-container .model-title a {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-theme .swagger-ui .models-control,
+body.dark-theme .swagger-ui .models-title {
+    color: var(--text-primary) !important;
+}
+
 body.dark-theme .swagger-ui .model-box {
-    background-color: #2d2d2d !important;
-    border-color: #3d3d3d !important;
+    background-color: var(--bg-container) !important;
+    border-color: var(--border-secondary) !important;
 }
 
 body.dark-theme .swagger-ui .model-box .model {
     background-color: transparent !important;
-    color: #e0e0e0 !important;
+    color: var(--text-primary) !important;
 }
 
-/* 模型内部对象 */
+body.dark-theme .swagger-ui .model-title {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .model-toggle {
+    background-color: transparent !important;
+    color: var(--link) !important;
+}
+
+body.dark-theme .swagger-ui .model .property,
+body.dark-theme .swagger-ui .model .property-primitive,
+body.dark-theme .swagger-ui .model .property-row,
+body.dark-theme .swagger-ui .model .property-row td,
+body.dark-theme .swagger-ui .model .property-row th {
+    background-color: transparent !important;
+    color: var(--text-secondary) !important;
+}
+
+body.dark-theme .swagger-ui .model .property-name,
+body.dark-theme .swagger-ui .model .propertyName {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-theme .swagger-ui .model .property .star {
+    color: var(--accent-red);
+}
+
+body.dark-theme .swagger-ui .model .prop-type,
+body.dark-theme .swagger-ui .model .property-type {
+    background-color: transparent !important;
+    color: var(--link) !important;
+}
+
+body.dark-theme .swagger-ui .prop-type {
+    color: var(--link);
+}
+
 body.dark-theme .swagger-ui .model .inner-object,
 body.dark-theme .swagger-ui .model .inner-object p,
 body.dark-theme .swagger-ui .model .inner-object span,
 body.dark-theme .swagger-ui .model .inner-object div {
     background-color: transparent !important;
-    color: #e0e0e0 !important;
+    color: var(--text-secondary) !important;
 }
 
-/* 模型标题 */
-body.dark-theme .swagger-ui .model-title,
-body.dark-theme .swagger-ui .model-title span,
-body.dark-theme .swagger-ui .model-title a {
-    background-color: transparent !important;
-    color: #e0e0e0 !important;
-}
-
-/* 模型展开/折叠按钮 */
-body.dark-theme .swagger-ui .model-toggle {
-    background-color: transparent !important;
-    color: #4d9df5 !important;
-}
-
-body.dark-theme .swagger-ui .model-toggle .collapsed {
-    background-color: transparent !important;
-    color: #4d9df5 !important;
-}
-
-/* 模型属性行 */
-body.dark-theme .swagger-ui .model .property-row,
-body.dark-theme .swagger-ui .model .property-row td,
-body.dark-theme .swagger-ui .model .property-row th {
-    background-color: transparent !important;
-    color: #e0e0e0 !important;
-}
-
-/* 模型属性名 */
-body.dark-theme .swagger-ui .model .property-name,
-body.dark-theme .swagger-ui .model .propertyName {
-    background-color: transparent !important;
-    color: #e0e0e0 !important;
-}
-
-/* 模型属性类型 */
-body.dark-theme .swagger-ui .model .prop-type,
-body.dark-theme .swagger-ui .model .property-type,
-body.dark-theme .swagger-ui .model .prop-format {
-    background-color: transparent !important;
-    color: #4d9df5 !important;
-}
-
-body.dark-theme .swagger-ui .model .property-primitive {
-    background-color: transparent !important;
-    color: #c0c0c0 !important;
-}
-
-/* 通用：清除 Schemas 区域所有可能的白色背景 */
+/* 清除 Schemas 区域所有白色背景 */
 body.dark-theme .swagger-ui .models *,
 body.dark-theme .swagger-ui .model-container *,
 body.dark-theme .swagger-ui .model-box * {
     background-color: transparent;
 }
 
+/* === Markdown / Rendered 内容 === */
+body.dark-theme .swagger-ui .markdown,
+body.dark-theme .swagger-ui .markdown p,
+body.dark-theme .swagger-ui .markdown span,
+body.dark-theme .swagger-ui .markdown li,
+body.dark-theme .swagger-ui .markdown div {
+    color: var(--text-secondary) !important;
+}
 
+body.dark-theme .swagger-ui .markdown a,
+body.dark-theme .swagger-ui .markdown code {
+    color: var(--link) !important;
+}
+
+body.dark-theme .swagger-ui .markdown h1,
+body.dark-theme .swagger-ui .markdown h2,
+body.dark-theme .swagger-ui .markdown h3,
+body.dark-theme .swagger-ui .markdown h4,
+body.dark-theme .swagger-ui .markdown h5,
+body.dark-theme .swagger-ui .markdown h6 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-theme .swagger-ui .markdown pre {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border-secondary);
+}
+
+body.dark-theme .swagger-ui .markdown pre code {
+    color: var(--text-primary) !important;
+    background-color: transparent !important;
+}
+
+body.dark-theme .swagger-ui .markdown table th {
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+}
+
+body.dark-theme .swagger-ui .markdown table td {
+    color: var(--text-secondary);
+    border-color: var(--border-secondary);
+}
+
+body.dark-theme .swagger-ui .markdown blockquote {
+    color: var(--text-muted);
+    border-left-color: var(--border-secondary);
+}
+
+body.dark-theme .swagger-ui .renderedMarkdown,
+body.dark-theme .swagger-ui .renderedMarkdown p,
+body.dark-theme .swagger-ui .renderedMarkdown span,
+body.dark-theme .swagger-ui .renderedMarkdown li,
+body.dark-theme .swagger-ui .renderedMarkdown div {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-theme .swagger-ui .renderedMarkdown a {
+    color: var(--link) !important;
+}
+
+/* === Errors === */
+body.dark-theme .swagger-ui .errors-wrapper {
+    background-color: rgba(255, 107, 107, 0.1);
+    border-color: var(--accent-red);
+}
+
+body.dark-theme .swagger-ui .errors-wrapper .errors h4 {
+    color: var(--accent-red);
+}
+
+body.dark-theme .swagger-ui .errors-wrapper .errors small {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .errors-wrapper .errors .error-line {
+    color: var(--accent-red);
+}
+
+body.dark-theme .swagger-ui .errors-wrapper .errors .error-line .error-line-text {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .errors-wrapper hgroup h4 {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .errors-wrapper hgroup h5 {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .errors-wrapper hgroup span {
+    color: var(--accent-red);
+}
+
+/* === Auth 弹窗 === */
+body.dark-theme .swagger-ui .dialog-ux .modal-ux {
+    background-color: var(--bg-container);
+    border-color: var(--border);
+}
+
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-header h3 {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-header button svg {
+    fill: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-content h4 {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-content p,
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-content span,
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-content label {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-content input[type="text"],
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-content input[type="password"] {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-content .btn {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+body.dark-theme .swagger-ui .dialog-ux .modal-ux-content .btn:hover {
+    background-color: var(--border);
+}
+
+/* auth 按钮图标 */
+body.dark-theme .swagger-ui .authorization__btn svg {
+    fill: var(--text-muted);
+}
+
+body.dark-theme .swagger-ui .authorization__btn.locked svg {
+    fill: var(--accent-green);
+}
+
+/* === Scope 区域 === */
+body.dark-theme .swagger-ui .scopes h2 {
+    color: var(--text-primary);
+}
+
+body.dark-theme .swagger-ui .scopes .scope-info {
+    color: var(--text-secondary);
+}
+
+/* === 滚动条美化 === */
+body.dark-theme ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #1e2229;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: #4a5260;
+    border-radius: 4px;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #5c6574;
+}
+
+/* === 分割线 === */
+body.dark-theme .swagger-ui hr {
+    border-color: var(--border-secondary);
+}
+
+/* === 链接 === */
+body.dark-theme .swagger-ui a {
+    color: var(--link);
+}
+
+/* === Copy 按钮 === */
+body.dark-theme .swagger-ui .copy-to-clipboard {
+    color: var(--text-muted);
+}
+
+body.dark-theme .swagger-ui .copy-to-clipboard:hover {
+    color: var(--text-primary);
+}
+
+/* === 响应体内容类型选择 === */
+body.dark-theme .swagger-ui .response-content-type select {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+/* === 请求体区域 === */
+body.dark-theme .swagger-ui .body-param {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+body.dark-theme .swagger-ui .body-param__example,
+body.dark-theme .swagger-ui .body-param-options {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .body-param-options label {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .body-param-options select {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+/* === 文件上传 === */
+body.dark-theme .swagger-ui .file-upload {
+    border-color: var(--border-secondary);
+}
+
+body.dark-theme .swagger-ui .file-upload .file-upload__input {
+    color: var(--text-muted);
+}
+
+/* === Section headers / collapsible === */
+body.dark-theme .swagger-ui .opblock-section-header {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-secondary);
+}
+
+body.dark-theme .swagger-ui .opblock-section-header label {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .swagger-ui .expand-methods svg,
+body.dark-theme .swagger-ui .expand-operation svg {
+    fill: var(--text-muted);
+}
+
+/* === Arrow / Toggle icons === */
+body.dark-theme .swagger-ui .arrow {
+    border-color: var(--text-muted);
+}
+
+body.dark-theme .swagger-ui .opblock .opblock-summary .view-line-link svg,
+body.dark-theme .swagger-ui .opblock .opblock-summary .try-out svg {
+    fill: var(--text-muted);
+}
+
+/* === HTTP 方法标签色 — 与蓝灰色调协调 === */
+body.dark-theme .swagger-ui .opblock-get .opblock-summary-method {
+    background-color: #458fff;
+}
+
+body.dark-theme .swagger-ui .opblock-post .opblock-summary-method {
+    background-color: #2ea043;
+}
+
+body.dark-theme .swagger-ui .opblock-put .opblock-summary-method {
+    background-color: #9e6a03;
+}
+
+body.dark-theme .swagger-ui .opblock-delete .opblock-summary-method {
+    background-color: #da3633;
+}
+
+body.dark-theme .swagger-ui .opblock-patch .opblock-summary-method {
+    background-color: #458fff;
+    opacity: 0.7;
+}
