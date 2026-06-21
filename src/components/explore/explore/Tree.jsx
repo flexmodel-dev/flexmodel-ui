@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-import get from 'lodash.get'
 import React, {useEffect, useState} from 'react'
 
 import {IconChevronDown, IconChevronRight, IconFile, IconFolder} from '../icons/Icons.jsx'
@@ -23,11 +21,11 @@ function Tree({ tree, selected, onClickItem, renderMore, renderIcon, compact = f
         mapRec.forEach(item => {
           if (item.type === 'folder') {
             acc.push({
-              filename: get(item, 'filename'),
-              path: get(item, 'path'),
-              hidden: get(item, 'hidden', false),
+              filename: item?.filename,
+              path: item?.path,
+              hidden: item?.hidden ?? false,
             })
-            if (get(item, 'children')) {
+            if (item?.children) {
               recursive(item.children, acc)
             }
           }
@@ -42,7 +40,7 @@ function Tree({ tree, selected, onClickItem, renderMore, renderIcon, compact = f
   const renderItem = (item, depth = 0) => {
     if (item.type === 'folder') {
       const folder = folders.find(f => f.path === item.path)
-      const isHidden = get(folder, `hidden`, true)
+      const isHidden = folder?.hidden ?? true
       return (
         <li
           key={`li${item.path}`}
@@ -63,12 +61,12 @@ function Tree({ tree, selected, onClickItem, renderMore, renderIcon, compact = f
               onClick={e => {
                 e.preventDefault()
                 setFolders(folders => folders.map(f =>
-                  f.path === item.path ? { ...f, hidden: !get(f, 'hidden', true) } : f
+                  f.path === item.path ? { ...f, hidden: !(f?.hidden ?? true) } : f
                 ))
               }}
             >
               <span key={`s2${item.path}`} className='text' style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {get(item, 'children.length', 0) > 0 && (
+                {(item?.children?.length ?? 0) > 0 && (
                   isHidden ? <IconChevronRight /> : <IconChevronDown />
                 )}
                 <span key={`s3${item.path}`} className='icon'>
@@ -80,7 +78,7 @@ function Tree({ tree, selected, onClickItem, renderMore, renderIcon, compact = f
             {/* 文件夹hover时显示更多按钮 */}
             {typeof renderMore === 'function' && hoverFilePath === item.path && renderMore(item, depth)}
           </div>
-          {get(item, 'children') && (
+          {item?.children && (
             <ul className='ul' key={`ul${item.path}`}>
               {item.children.map(it => renderItem(it, depth + 1))}
             </ul>
@@ -89,9 +87,9 @@ function Tree({ tree, selected, onClickItem, renderMore, renderIcon, compact = f
       )
     }
     // File
-    // const isDisabled = get(item, 'language') === null
+    // const isDisabled = item?.language === null
     const isDisabled = false;
-    const isSelected = get(selected, 'path') === get(item, 'path')
+    const isSelected = selected?.path === item?.path
     return (
       <li
         key={`li${item.path}`}
@@ -136,23 +134,6 @@ function Tree({ tree, selected, onClickItem, renderMore, renderIcon, compact = f
       {tree.children.map(item => renderItem(item, 0))}
     </ul>
   )
-}
-
-Tree.propTypes = {
-  tree: PropTypes.shape({
-    children: PropTypes.arrayOf(
-      PropTypes.shape({
-        type: PropTypes.string,
-      })
-    ),
-  }).isRequired,
-  selected: PropTypes.shape({
-    path: PropTypes.string.isRequired,
-  }).isRequired,
-  onClickItem: PropTypes.func.isRequired,
-  renderMore: PropTypes.func,
-  renderIcon: PropTypes.func,
-  compact: PropTypes.bool,
 }
 
 export default Tree

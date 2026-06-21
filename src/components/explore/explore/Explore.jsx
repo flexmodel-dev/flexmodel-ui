@@ -1,19 +1,15 @@
 import '../styles/explore.scss'
 
-import FileSaver from 'file-saver'
 import JSZip from 'jszip'
-import PropTypes from 'prop-types'
-import get from 'lodash.get'
 import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
-import {toast} from 'react-toastify'
 import {useTranslation} from 'react-i18next'
 
 import Code from './Code'
 import Loading from './Loading'
 import Tree from './Tree'
 import {createTree, findRoot} from '../utils/Zip'
-import {Col, Divider, Row} from "antd";
+import {Col, Divider, message, Row} from "antd";
 
 const Explore = forwardRef(function Explore({onClose, projectName, blob}, ref) {
   const {t} = useTranslation()
@@ -43,7 +39,7 @@ const Explore = forwardRef(function Explore({onClose, projectName, blob}, ref) {
       } catch (e) {
         // dispatch({ type: 'EXPLORE_UPDATE', payload: { open: false } })
         console.error(e)
-        toast.error(e.message)
+        message.error(e.message)
       }
     }
     if (blob) {
@@ -62,11 +58,21 @@ const Explore = forwardRef(function Explore({onClose, projectName, blob}, ref) {
     const blobFile = new Blob([file.content], {
       type: 'text/plain;charset=utf-8',
     })
-    FileSaver.saveAs(blobFile, file.filename)
+    const url = URL.createObjectURL(blobFile)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = file.filename
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   const downloadZip = () => {
-    FileSaver.saveAs(blob, projectName)
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = projectName
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -99,7 +105,7 @@ const Explore = forwardRef(function Explore({onClose, projectName, blob}, ref) {
                       <Row justify="space-between" align="middle">
                         <Col>
                           <strong>
-                            {get(selected, 'filename')}
+                            {selected?.filename}
                           </strong>
                         </Col>
                         <Col>
@@ -117,7 +123,7 @@ const Explore = forwardRef(function Explore({onClose, projectName, blob}, ref) {
                             <Divider orientation="vertical" />
                             <CopyToClipboard
                               onCopy={onCopy}
-                              text={get(selected, 'content', '')}
+                              text={selected?.content ?? ''}
                             >
                               <a
                                 href='/#'
@@ -129,7 +135,7 @@ const Explore = forwardRef(function Explore({onClose, projectName, blob}, ref) {
                                 {button}
                               </a>
                             </CopyToClipboard>
-                            {get(selected, 'language') === 'markdown' && (
+                            {selected?.language === 'markdown' && (
                               <>
                                 <Divider orientation="vertical" />
                                 <a
@@ -137,12 +143,12 @@ const Explore = forwardRef(function Explore({onClose, projectName, blob}, ref) {
                                   onClick={e => {
                                     e.preventDefault()
                                     const newSelected = {...selected}
-                                    newSelected.force = !get(selected, 'force', false)
+                                    newSelected.force = !(selected?.force ?? false)
                                     setSelected(newSelected)
                                   }}
                                   className='action'
                                 >
-                                  {get(selected, 'force', false)
+                                  {(selected?.force ?? false)
                                     ? t('explore.preview')
                                     : t('explore.view_source')}
                                 </a>
@@ -170,15 +176,5 @@ const Explore = forwardRef(function Explore({onClose, projectName, blob}, ref) {
     </div>
   )
 });
-
-Explore.defaultProps = {
-  projectName: '',
-  blob: null,
-}
-
-Explore.propTypes = {
-  projectName: PropTypes.string,
-  blob: PropTypes.instanceOf(Blob),
-}
 
 export default Explore

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import React from 'react'
 
 import Placeholder from '../form/Placeholder.jsx'
@@ -74,10 +73,6 @@ function Loading({ onClose }) {
       </div>
     </>
   )
-}
-
-Loading.propTypes = {
-  onClose: PropTypes.func.isRequired,
 }
 
 export default Loading

@@ -1,5 +1,3 @@
-import get from 'lodash.get'
-
 const FILE_EXTENSION = {
   js: 'javascript',
   md: 'markdown',
@@ -20,7 +18,7 @@ export const getLanguage = file => {
     return null
   }
   const extension = file.split(`.`).pop()
-  return get(FILE_EXTENSION, extension, null)
+  return FILE_EXTENSION[extension] ?? null
 }
 
 export const createTree = (files, path, fileName, zip) => {
