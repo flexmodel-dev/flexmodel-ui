@@ -8,6 +8,7 @@ import { useLocale, useTheme, useProject } from "@/store/appStore";
 import { useTranslation } from "react-i18next";
 import { Locale } from "antd/es/locale";
 import {
+  ApiOutlined,
   AppstoreOutlined,
   CodeOutlined,
   FileSearchOutlined,
@@ -25,6 +26,7 @@ import BranchSwitcher from "@/components/common/BranchSwitcher";
 import { Outlet } from "react-router-dom";
 import { getFullRoutePath, shouldHideLayout } from "@/routes";
 import UserInfo from "@/components/UserInfo";
+import McpConnectionDrawer from "@/components/common/McpConnectionDrawer";
 import { getProject, getProjects } from "@/services/project";
 import type { Project } from "@/types/project";
 
@@ -43,6 +45,8 @@ const ProjectLayout: React.FC = () => {
   const [isProjectInitialized, setIsProjectInitialized] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [branchMenuItems, setBranchMenuItems] = React.useState<any[]>([]);
+
+  const [mcpDrawerOpen, setMcpDrawerOpen] = React.useState(false);
 
   useEffect(() => {
     const initializeProject = async () => {
@@ -230,6 +234,7 @@ const ProjectLayout: React.FC = () => {
           </div>
 
           <Space size={token.marginSM}>
+            <Button size="small" icon={<ApiOutlined />} onClick={() => setMcpDrawerOpen(true)}>{t('platform.mcp_connection')}</Button>
             <Button
               size="small"
               icon={<CodeOutlined />}
@@ -283,6 +288,7 @@ const ProjectLayout: React.FC = () => {
           </ResizablePanel>
         </Layout.Content>
       </Layout>
+      <McpConnectionDrawer open={mcpDrawerOpen} onClose={() => setMcpDrawerOpen(false)} />
 
     </Layout>
   );

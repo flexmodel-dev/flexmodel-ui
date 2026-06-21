@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Layout, Button, Drawer, Dropdown, Space, Switch, Typography, theme as antdTheme } from "antd";
+import { Layout, Button, Dropdown, Space, Switch, theme as antdTheme } from "antd";
 import type { MenuProps } from "antd";
 import enUS from "antd/locale/en_US";
 import zhCN from "antd/locale/zh_CN";
@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import PlatformSidebar from "./PlatformSidebar";
 import { Outlet } from "react-router-dom";
 import UserInfo from "@/components/UserInfo";
+import McpConnectionDrawer from "@/components/common/McpConnectionDrawer";
 
 const PlatformLayout: React.FC = () => {
   const { t } = useTranslation();
@@ -27,7 +28,6 @@ const PlatformLayout: React.FC = () => {
   const { i18n } = useTranslation();
   const { token } = antdTheme.useToken();
   const [mcpDrawerOpen, setMcpDrawerOpen] = useState(false);
-  const mcpUrl = useMemo(() => `${window.location.origin}/api/mcp?api_key=<your_api_key>`, []);
 
   const toggleDarkMode = useCallback(() => {
     const newDarkMode = !isDark;
@@ -155,77 +155,7 @@ const PlatformLayout: React.FC = () => {
           <Outlet />
         </Layout.Content>
       </Layout>
-      <Drawer
-        title={t('platform.mcp_drawer_title')}
-        open={mcpDrawerOpen}
-        onClose={() => setMcpDrawerOpen(false)}
-        width={560}
-        destroyOnHidden
-      >
-        <Typography.Paragraph strong style={{ fontSize: token.fontSizeLG }}>{t('platform.mcp_overview_title')}</Typography.Paragraph>
-        <Typography.Paragraph>{t('platform.mcp_overview_desc')}</Typography.Paragraph>
-
-        <Typography.Paragraph strong style={{ fontSize: token.fontSizeLG }}>{t('platform.mcp_endpoint_title')}</Typography.Paragraph>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: token.marginSM,
-          padding: token.padding,
-          backgroundColor: token.colorFillQuaternary,
-          borderRadius: token.borderRadiusLG,
-          border: `1px solid ${token.colorBorderSecondary}`,
-          marginBottom: token.marginLG,
-        }}>
-          <Typography.Text code copyable={{ text: mcpUrl }} style={{ flex: 1, wordBreak: 'break-all' }}>{mcpUrl}</Typography.Text>
-        </div>
-
-        <Typography.Paragraph strong style={{ fontSize: token.fontSizeLG }}>{t('platform.mcp_tools_title')}</Typography.Paragraph>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: token.marginSM, marginBottom: token.marginLG }}>
-          {[
-            { label: t('platform.mcp_project_tools'), desc: t('platform.mcp_project_tools_desc') },
-            { label: t('platform.mcp_modeling_tools'), desc: t('platform.mcp_modeling_tools_desc') },
-            { label: t('platform.mcp_data_tools'), desc: t('platform.mcp_data_tools_desc') },
-          ].map((item) => (
-            <div key={item.label} style={{
-              padding: token.padding,
-              backgroundColor: token.colorFillQuaternary,
-              borderRadius: token.borderRadius,
-              border: `1px solid ${token.colorBorderSecondary}`,
-            }}>
-              <Typography.Text strong>{item.label}</Typography.Text>
-              <br />
-              <Typography.Text type="secondary" style={{ fontSize: token.fontSizeSM }}>{item.desc}</Typography.Text>
-            </div>
-          ))}
-        </div>
-
-        <Typography.Paragraph strong style={{ fontSize: token.fontSizeLG }}>{t('platform.mcp_config_title')}</Typography.Paragraph>
-        <Typography.Text type="secondary">{t('platform.mcp_config_subtitle')}</Typography.Text>
-        <pre style={{
-          padding: token.padding,
-          backgroundColor: token.colorFillQuaternary,
-          borderRadius: token.borderRadius,
-          border: `1px solid ${token.colorBorderSecondary}`,
-          overflow: 'auto',
-          marginTop: token.marginSM,
-          marginBottom: token.marginSM,
-        }}>{JSON.stringify({ mcpServers: { flexmodel: { url: mcpUrl } } }, null, 2)}</pre>
-        <Typography.Text type="secondary" style={{ fontSize: token.fontSizeSM }}>{t('platform.mcp_config_note')}</Typography.Text>
-
-        <Typography.Paragraph strong style={{ fontSize: token.fontSizeLG, marginTop: token.marginLG }}>{t('platform.mcp_scenarios_title')}</Typography.Paragraph>
-        <ul style={{ paddingLeft: token.paddingLG }}>
-          {[
-            t('platform.mcp_scenario_1'),
-            t('platform.mcp_scenario_2'),
-            t('platform.mcp_scenario_3'),
-            t('platform.mcp_scenario_4'),
-          ].map((scenario, i) => (
-            <li key={i} style={{ marginBottom: token.marginXS }}>
-              <Typography.Text>{scenario}</Typography.Text>
-            </li>
-          ))}
-        </ul>
-      </Drawer>
+      <McpConnectionDrawer open={mcpDrawerOpen} onClose={() => setMcpDrawerOpen(false)} />
     </Layout>
   );
 };
