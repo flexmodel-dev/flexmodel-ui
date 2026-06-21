@@ -1,24 +1,58 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
-import {Button, Drawer, Dropdown, Input, message, Modal, Spin} from "antd";
-import type {MenuProps} from "antd";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {Button, Drawer, Dropdown, Input, message, Modal, Spin, Tree} from "antd";
+import type {MenuProps, TreeDataNode} from "antd";
 import {MoreOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {createModel, dropModel, getModelList, executeFml} from "@/services/model.ts";
 import {useTranslation} from "react-i18next";
 import {useLocale} from "@/store/appStore.ts";
 import {useProject} from "@/store/appStore";
 import type {Model} from '@/types/data-modeling';
-import {
-  IconEntityFolder,
-  IconEnum,
-  IconEnumFolder,
-  IconFile,
-  IconFolder,
-  IconModel
-} from '@/components/explore/icons/Icons.jsx';
-import '@/components/explore/styles/explore.scss';
-import Tree from '@/components/explore/explore/Tree.jsx';
 import ModelForm from "@/pages/DataModeling/components/ModelForm";
 import FmlModelForm from "@/pages/DataModeling/components/FmlModelForm";
+
+// --- Inline icons (migrated from @/components/explore/icons/Icons.jsx) ---
+const IconFolder = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 512 512" width="18" height="18">
+    <path fill="#FAAD14" d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/>
+  </svg>
+);
+
+const IconFile = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 384 512" width="18" height="18">
+    <path fill="currentColor" d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"/>
+  </svg>
+);
+
+const IconModel = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
+    <rect x="3" y="5" width="18" height="14" rx="2" fill="#4F8CFF"/>
+    <rect x="7" y="9" width="10" height="6" rx="1" fill="#fff"/>
+    <rect x="9" y="11" width="6" height="2" rx="1" fill="#4F8CFF"/>
+  </svg>
+);
+
+const IconEnum = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
+    <circle cx="12" cy="12" r="9" fill="#39bf45"/>
+    <text x="12" y="16" textAnchor="middle" fontSize="10" fill="#fff" fontFamily="Arial" fontWeight="bold">E</text>
+  </svg>
+);
+
+const IconEntityFolder = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
+    <rect x="2" y="7" width="20" height="11" rx="2.5" fill="#FAAD14"/>
+    <rect x="2" y="5" width="10" height="4" rx="1.5" fill="#FFE58F"/>
+    <rect x="6" y="13" width="12" height="1.2" rx="0.6" fill="#fff"/>
+  </svg>
+);
+
+const IconEnumFolder = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
+    <rect x="2" y="7" width="20" height="11" rx="2.5" fill="#FAAD14"/>
+    <rect x="2" y="5" width="10" height="4" rx="1.5" fill="#FFE58F"/>
+    <text x="12" y="16" textAnchor="middle" fontSize="9" fill="#fff" fontFamily="Arial" fontWeight="bold">En</text>
+  </svg>
+);
 
 const IconNativeQueryFolder = () => (
   <svg
@@ -53,18 +87,125 @@ const IconNativeQueryModel = () => (
   </svg>
 );
 
+// --- Icon helpers: map group key / model type to the correct icon ---
+// Wrapped in a sized container for consistent alignment inside antd Tree
+function IconWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 18,
+        height: 18,
+        flexShrink: 0,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function getGroupIcon(key: string, expanded: boolean): React.ReactNode {
+  switch (key) {
+    case '__entity_group':
+      return <IconWrapper>{expanded ? <IconEntityFolderOpen /> : <IconEntityFolder />}</IconWrapper>;
+    case '__enum_group':
+      return <IconWrapper>{expanded ? <IconEnumFolderOpen /> : <IconEnumFolder />}</IconWrapper>;
+    case '__native_query_group':
+      return <IconWrapper>{expanded ? <IconNativeQueryFolderOpen /> : <IconNativeQueryFolder />}</IconWrapper>;
+    default:
+      return <IconWrapper><IconFolder /></IconWrapper>;
+  }
+}
+
+function getModelIcon(modelType?: string): React.ReactNode {
+  switch (modelType) {
+    case 'entity': return <IconWrapper><IconModel /></IconWrapper>;
+    case 'enum': return <IconWrapper><IconEnum /></IconWrapper>;
+    case 'native_query': return <IconWrapper><IconNativeQueryModel /></IconWrapper>;
+    default: return <IconWrapper><IconFile /></IconWrapper>;
+  }
+}
+
+// --- Open-folder icons (expanded state) ---
+// Tilted lid + visible inside to clearly distinguish from closed folder
+const IconEntityFolderOpen = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
+    <path d="M4 3 L16 3 L12 6 L4 6 Z" fill="#FFE58F"/>
+    <path d="M2 7 H22 V18 Q22 20 20 20 H4 Q2 20 2 18 V7 Z" fill="#FAAD14"/>
+    <rect x="4" y="7" width="16" height="3" fill="#FFD580"/>
+    <rect x="6" y="14" width="12" height="1.2" rx="0.6" fill="#fff"/>
+  </svg>
+);
+
+const IconEnumFolderOpen = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
+    <path d="M4 3 L16 3 L12 6 L4 6 Z" fill="#FFE58F"/>
+    <path d="M2 7 H22 V18 Q22 20 20 20 H4 Q2 20 2 18 V7 Z" fill="#FAAD14"/>
+    <rect x="4" y="7" width="16" height="3" fill="#FFD580"/>
+    <text x="12" y="16" textAnchor="middle" fontSize="9" fill="#fff" fontFamily="Arial" fontWeight="bold">En</text>
+  </svg>
+);
+
+const IconNativeQueryFolderOpen = () => (
+  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
+    <path d="M4 3 L16 3 L12 6 L4 6 Z" fill="#F4D35E"/>
+    <path d="M2 7 H22 V18 Q22 20 20 20 H4 Q2 20 2 18 V7 Z" fill="#D9A441"/>
+    <rect x="4" y="7" width="16" height="3" fill="#E5B030"/>
+    <text x="12" y="16" textAnchor="middle" fontSize="9" fill="#fff" fontFamily="Arial" fontWeight="bold">NQ</text>
+  </svg>
+);
+
+// --- Hover-aware title for leaf nodes (shows "more" actions on hover) ---
+const TreeNodeTitle: React.FC<{
+  node: any;
+  editable: boolean;
+  onDelete: () => void;
+  t: (key: string) => string;
+}> = ({ node, editable, onDelete, t }) => {
+  const [hovered, setHovered] = useState(false);
+
+  if (!node.isLeaf) {
+    return <span style={{ lineHeight: '28px' }}>{String(node.title ?? '')}</span>;
+  }
+
+  const menuItems: MenuProps["items"] = editable ? [
+    {
+      key: "delete",
+      label: t("delete"),
+      danger: true,
+      onClick: onDelete,
+    },
+  ] : [];
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        lineHeight: '28px',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {String(node.title ?? '')}
+      </span>
+      {hovered && menuItems.length > 0 && (
+        <Dropdown menu={{ items: menuItems }} trigger={["hover"]}>
+          <MoreOutlined onClick={e => e.stopPropagation()} />
+        </Dropdown>
+      )}
+    </span>
+  );
+};
+
 interface ModelTree {
   name: string;
   children?: ModelTree[];
-}
-
-interface TreeItem {
-  type: 'folder' | 'file';
-  filename: string;
-  path: string;
-  children?: TreeItem[];
-  data?: any;
-  modelType?: string;
 }
 
 interface ModelBrowserProps {
@@ -85,7 +226,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
   const [modelList, setModelList] = useState<ModelTree[]>([]);
-  const [expandedKeys, setExpandedKeys] = useState<any[]>([]);
+  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [filteredModelList, setFilteredModelList] = useState<ModelTree[]>([]);
   const [activeModel, setActiveModel] = useState<any>(null);
   const [modelLoading, setModelLoading] = useState<boolean>(false);
@@ -285,22 +426,77 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     return order.map((type) => groups[type]).filter(Boolean);
   };
 
-  function convertToTreeData(list: ModelTree[]): TreeItem[] {
-    return list.map((group: ModelTree) => ({
-      type: 'folder' as const,
-      filename: group.name,
-      path: (group as any).key || group.name,
-      children: (group.children || []).map((item: any) => ({
-        type: 'file' as const,
-        filename: item.name,
-        path: ((group as any).key || group.name) + '/' + item.name,
-        data: item.data,
-        modelType: item.data?.type,
-      })),
-    }));
-  }
+  // ---- antd Tree data: convert filtered model groups into DataNode[] ----
+  const treeData = useMemo((): TreeDataNode[] => {
+    return filteredModelList.map((group: ModelTree) => {
+      const groupKey = (group as any).key || group.name;
+      return {
+        key: groupKey,
+        title: group.name,
+        icon: getGroupIcon(groupKey, expandedKeys.includes(groupKey)),
+        selectable: true,
+        isLeaf: false,
+        children: (group.children || []).map((item: any) => {
+          const leafKey = groupKey + '/' + item.name;
+          return {
+            key: leafKey,
+            title: item.name,
+            icon: getModelIcon(item.data?.type),
+            isLeaf: true,
+            selectable: true,
+            data: item.data || item,
+            modelType: item.data?.type,
+          };
+        }),
+      };
+    });
+  }, [filteredModelList, expandedKeys]);
 
-  const treeData = useMemo(() => ({children: convertToTreeData(filteredModelList)}), [filteredModelList]);
+  // ---- antd Tree selected keys ----
+  const selectedKeys = useMemo(() => {
+    if (!activeModel || !activeModel.name) return [];
+    const group = filteredModelList.find(g =>
+      (g.children || []).some(c => c.name === activeModel.name)
+    );
+    if (group) {
+      const groupKey = (group as any).key || group.name;
+      return [groupKey + '/' + activeModel.name];
+    }
+    return [activeModel.name];
+  }, [activeModel, filteredModelList]);
+
+  // ---- antd Tree event handlers ----
+  const handleTreeSelect = useCallback((keys: React.Key[], info: any) => {
+    if (keys.length === 0) return;
+    const node = info.node;
+    // 点击一级目录（非叶子节点）切换展开/折叠
+    if (!node.isLeaf) {
+      const key = node.key as React.Key;
+      setExpandedKeys(prev =>
+        prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+      );
+      return;
+    }
+    // 叶子节点：选中模型
+    if (node.data) {
+      setActiveModel(node.data);
+      onSelect(node.data);
+    }
+  }, [onSelect]);
+
+  const handleTreeExpand = useCallback((keys: React.Key[]) => {
+    setExpandedKeys(keys);
+  }, []);
+
+  // ---- antd Tree titleRender: inject hover "more" button for leaf nodes ----
+  const titleRender = useCallback((nodeData: any) => (
+    <TreeNodeTitle
+      node={nodeData}
+      editable={editable}
+      onDelete={() => setDeleteDialogVisible(true)}
+      t={t}
+    />
+  ), [editable, t]);
 
   const searchRowStyle = {
     display: 'flex',
@@ -315,7 +511,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     minHeight: 0,
     maxHeight: 'calc(100vh - 200px)',
     overflow: 'auto',
-    padding: '0 4px',
+    padding: '0 8px 0 0',
   };
 
   const inputStyle = {
@@ -369,54 +565,79 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
 
       <div style={treeContainerStyle}>
         <div style={{height: '100%', overflow: 'auto', maxHeight: '100%'}}>
-          <Spin spinning={modelLoading} size="small">
+          <style>{`
+            /* --- 基础节点样式 --- */
+            .model-explorer-tree.ant-tree {
+              font-size: 14px;
+              line-height: 32px;
+              color: #1e293b;
+              background: transparent;
+            }
+            .model-explorer-tree .ant-tree-treenode {
+              border-radius: 6px;
+              margin: 1px 4px;
+              transition: background 0.12s ease;
+              align-items: center;
+            }
+            /* --- 隐藏开关图标 --- */
+            .model-explorer-tree .ant-tree-switcher {
+              display: none;
+            }
+            /* --- 缩进 --- */
+            .model-explorer-tree .ant-tree-indent-unit {
+              width: 18px;
+            }
+            /* --- 图标垂直居中 --- */
+            .model-explorer-tree .ant-tree-iconEle {
+              display: inline-flex !important;
+              align-items: center;
+              justify-content: center;
+            }
+            /* --- 图标+标题 同行弹性布局 --- */
+            .model-explorer-tree .ant-tree-node-content-wrapper {
+              display: inline-flex !important;
+              align-items: center !important;
+              border-radius: 6px;
+            }
+            .model-explorer-tree .ant-tree-title {
+              flex: 1;
+              min-width: 0;
+            }
+            /* --- 悬停 --- */
+            .model-explorer-tree .ant-tree-node-content-wrapper:hover {
+              background: #f8fafc;
+            }
+            /* --- 选中 --- */
+            .model-explorer-tree .ant-tree-node-selected {
+              background: #e0e2e6 !important;
+              color: #181d26 !important;
+              border-radius: 6px;
+              font-weight: 500;
+            }
+            /* --- 夜间模式 --- */
+            .dark .model-explorer-tree.ant-tree {
+              color: rgba(255, 255, 255, 0.85);
+            }
+            .dark .model-explorer-tree .ant-tree-node-content-wrapper:hover {
+              background: rgba(255, 255, 255, 0.06);
+            }
+            .dark .model-explorer-tree .ant-tree-node-selected {
+              background: rgba(255, 255, 255, 0.06) !important;
+              color: rgba(255, 255, 255, 0.85) !important;
+            }
+          `}</style>
+          <Spin spinning={modelLoading} size="small" style={{ minHeight: 200 }}>
             <Tree
-              tree={treeData}
-              selected={activeModel ? {
-                path: (() => {
-                  const group = filteredModelList.find(g => (g.children || []).some(c => c.name === activeModel.name));
-                  if (group) return ((group as any).key || group.name) + '/' + activeModel.name;
-                  return activeModel.name;
-                })()
-              } : {path: ''}}
-              onClickItem={(item: any) => {
-                setActiveModel(item.data || item);
-                if (item.data) onSelect(item.data);
-              }}
-              renderMore={(item: any) => {
-                if (item.type !== 'file') return null;
-                const menuItems: MenuProps["items"] = [
-                  {
-                    key: "delete",
-                    label: t("delete"),
-                    danger: true,
-                    onClick: () => setDeleteDialogVisible(true),
-                  },
-                ];
-                return (
-                  <Dropdown
-                    menu={{items: menuItems}}
-                    trigger={["click"]}
-                  >
-                    <MoreOutlined onClick={e => e.stopPropagation()}
-                    />
-                  </Dropdown>
-                );
-              }}
-              renderIcon={(item: any, nodeType: any) => {
-                if (nodeType === 'file') {
-                  if (item.modelType === 'entity') return <IconModel key={`model${item.path}`}/>;
-                  if (item.modelType === 'enum') return <IconEnum key={`enum${item.path}`}/>;
-                  if (item.modelType === 'native_query') return <IconNativeQueryModel key={`query${item.path}`}/>;
-                  return <IconFile key={`file${item.path}`}/>;
-                }
-                if (item.path === '__entity_group') return <IconEntityFolder key={`entityfolder${item.path}`}/>;
-                if (item.path === '__enum_group') return <IconEnumFolder key={`enumfolder${item.path}`}/>;
-                if (item.path === '__native_query_group') return <IconNativeQueryFolder
-                  key={`queryfolder${item.path}`}/>;
-                return <IconFolder key={`folder${item.path}`}/>;
-              }}
-              compact={true}
+              className="model-explorer-tree"
+              treeData={treeData}
+              selectedKeys={selectedKeys}
+              expandedKeys={expandedKeys}
+              onSelect={handleTreeSelect}
+              onExpand={handleTreeExpand}
+              showIcon
+              titleRender={titleRender}
+              blockNode
+              style={{ background: 'transparent' }}
             />
           </Spin>
         </div>

@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
-
     "@graphiql/plugin-explorer": "5.0.0",
     "@monaco-editor/react": "^4.7.0",
     "@xyflow/react": "^12.8.4",
@@ -23,10 +22,8 @@
     "graphiql": "5.0.0",
     "graphql": "16.9.0",
     "i18next": "^23.16.4",
-    "jszip": "^3.2.2",
     "monaco-editor": "0.55.1",
     "react": "^18.3.1",
-    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.1.0",
     "react-router-dom": "^6.26.1",
@@ -46,7 +43,6 @@
     "globals": "^15.9.0",
     "i18next-browser-languagedetector": "^8.0.0",
     "postcss": "^8.4.49",
-    "sass": "^1.81.0",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
