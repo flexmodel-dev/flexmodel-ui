@@ -74,6 +74,6 @@ export const dropIndex = (projectId: string, modelName: string, indexName: strin
 /**
  * 执行FML
  */
-export const executeFml = (projectId: string, fml: string): Promise<(EntitySchema | EnumSchema | NativeQuerySchema)[]> => {
+export const executeFml = (projectId: string, fml: string): Promise<Boolean> => {
   return api.post(`/projects/${projectId}/models/fml/execute`, { fml })
 }
