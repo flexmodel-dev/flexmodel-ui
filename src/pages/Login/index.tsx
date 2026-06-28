@@ -10,7 +10,6 @@ import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
 import {applyDarkMode, setDarkModeToStorage} from '@/utils/darkMode';
-import ParticleBackground from '@/components/common/ParticleBackground';
 
 const {Title, Text} = Typography;
 
@@ -113,13 +112,11 @@ const Login: React.FC = () => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: `linear-gradient(135deg, ${token.colorBorderBg} 0%, ${token.colorBgContainer} 100%)`,
+      background: token.colorFillQuaternary,
       padding: token.padding,
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* 粒子背景 */}
-      <ParticleBackground particleCount={160} speed={0.6}/>
 
       {/* 右上角主题和语言切换 */}
       <div style={{

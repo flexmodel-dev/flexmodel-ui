@@ -3,11 +3,7 @@ window.onload = function() {
 
   // 获取 OpenAPI JSON 的 URL
   function getOpenApiUrl() {
-    const projectId = localStorage.getItem('projectId');
-    if (projectId) {
-      return `/api/projects/${projectId}/docs/openapi.json`;
-    }
-    return '/api/docs/openapi.json';
+    return '/api/openapi.json';
   }
 
   // 获取URL参数中的主题设置
@@ -33,26 +29,11 @@ window.onload = function() {
   // the following lines will be replaced by docker/configurator, when it runs in a docker-container
   window.ui = SwaggerUIBundle({
     url: getOpenApiUrl(),
-    urls: [
-      /*{
-        url: getOpenApiUrl(),
-        name: 'Project Definition API'
-      },*/
-      {
-        url: '/api/openapi',
-        name: 'Platform API'
-      }
-    ],
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
-      SwaggerUIBundle.presets.apis,
-      SwaggerUIStandalonePreset
-    ],
-    plugins: [
-      SwaggerUIBundle.plugins.DownloadUrl
-    ],
-    layout: "StandaloneLayout"
+      SwaggerUIBundle.presets.apis
+    ]
   });
 
   //</editor-fold>
