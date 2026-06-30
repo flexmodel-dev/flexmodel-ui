@@ -43,6 +43,7 @@ const McpConnectionDrawer: React.FC<McpConnectionDrawerProps> = ({ open, onClose
           { label: t('platform.mcp_project_tools'), desc: t('platform.mcp_project_tools_desc') },
           { label: t('platform.mcp_modeling_tools'), desc: t('platform.mcp_modeling_tools_desc') },
           { label: t('platform.mcp_data_tools'), desc: t('platform.mcp_data_tools_desc') },
+          { label: t('platform.mcp_function_tools'), desc: t('platform.mcp_function_tools_desc') },
         ].map((item) => (
           <div key={item.label} style={{
             padding: token.padding,
