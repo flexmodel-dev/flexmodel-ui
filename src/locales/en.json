@@ -394,7 +394,6 @@
   "idp_social": "Social",
   "api_keys_load_failed_legacy": "Failed to load API Keys",
   "settings_basic_settings": "Basic Settings",
-  "settings_security": "Security",
   "settings_about": "About",
   "settings_app_name": "Application Name",
   "settings_global_api_rate_limiting": "Global API rate limiting",

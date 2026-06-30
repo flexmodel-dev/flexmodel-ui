@@ -4,7 +4,6 @@ import About from "@/pages/Settings/components/About";
 import Base from "@/pages/Settings/components/Base";
 import Proxy from "@/pages/Settings/components/Proxy";
 import { getSettings, saveSettings as reqSaveSettings, } from "@/services/settings.ts";
-import Security from "@/pages/Settings/components/Security";
 import { useTranslation } from "react-i18next";
 import type { Settings } from "@/types/settings";
 import { PageContainer } from "@/components/common";
@@ -15,7 +14,7 @@ type OnChangeHandler = (data: Partial<Settings>) => void;
 const Settings: React.FC = () => {
   const { token } = theme.useToken();
   const { t } = useTranslation();
-  type SettingsStateKeys = "base" | "security" | "proxy" | "about";
+  type SettingsStateKeys = "base" | "proxy" | "about";
 
   type SettingsState = {
     mode: "inline" | "horizontal";
@@ -24,8 +23,6 @@ const Settings: React.FC = () => {
 
   const menuMap: Record<SettingsStateKeys, React.ReactNode> = {
     base: t("settings_basic_settings"),
-    /*variables: 'Variables',*/
-    security: t("settings_security"),
     proxy: t("settings_proxy"),
     about: t("settings_about"),
   };
@@ -35,8 +32,6 @@ const Settings: React.FC = () => {
     switch (selectKey) {
       case "base":
         return <Base settings={settings} onChange={onChange} />;
-      case "security":
-        return <Security settings={settings} onChange={onChange} />;
       case "proxy":
         return <Proxy settings={settings} onChange={onChange} />;
       /*case 'variables':
