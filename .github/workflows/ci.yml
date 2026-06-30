@@ -30,7 +30,7 @@ jobs:
       - name: Build and push UI image
         uses: docker/build-push-action@v6
         with:
-          context: flexmodel-ui
+          context: .
           push: true
           tags: cjbi/flexmodel-ui:latest
           cache-from: type=gha
