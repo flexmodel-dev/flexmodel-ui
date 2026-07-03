@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Button, Drawer, Dropdown, Input, message, Modal, Spin, Tree} from "antd";
 import type {MenuProps, TreeDataNode} from "antd";
-import {MoreOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
+import {CodeOutlined, DatabaseOutlined, FileOutlined, FolderOutlined, FolderOpenOutlined, MoreOutlined, PlusOutlined, SearchOutlined, TagsOutlined} from "@ant-design/icons";
 import {createModel, dropModel, getModelList, executeFml} from "@/services/model.ts";
 import {useTranslation} from "react-i18next";
 import {useLocale} from "@/store/appStore.ts";
@@ -10,152 +10,28 @@ import type {Model} from '@/types/data-modeling';
 import ModelForm from "@/pages/DataModeling/components/ModelForm";
 import FmlModelForm from "@/pages/DataModeling/components/FmlModelForm";
 
-// --- Inline icons (migrated from @/components/explore/icons/Icons.jsx) ---
-const IconFolder = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 512 512" width="18" height="18">
-    <path fill="#FAAD14" d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/>
-  </svg>
-);
-
-const IconFile = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 384 512" width="18" height="18">
-    <path fill="currentColor" d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"/>
-  </svg>
-);
-
-const IconModel = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
-    <rect x="3" y="5" width="18" height="14" rx="2" fill="#4F8CFF"/>
-    <rect x="7" y="9" width="10" height="6" rx="1" fill="#fff"/>
-    <rect x="9" y="11" width="6" height="2" rx="1" fill="#4F8CFF"/>
-  </svg>
-);
-
-const IconEnum = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
-    <circle cx="12" cy="12" r="9" fill="#39bf45"/>
-    <text x="12" y="16" textAnchor="middle" fontSize="10" fill="#fff" fontFamily="Arial" fontWeight="bold">E</text>
-  </svg>
-);
-
-const IconEntityFolder = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
-    <rect x="2" y="7" width="20" height="11" rx="2.5" fill="#FAAD14"/>
-    <rect x="2" y="5" width="10" height="4" rx="1.5" fill="#FFE58F"/>
-    <rect x="6" y="13" width="12" height="1.2" rx="0.6" fill="#fff"/>
-  </svg>
-);
-
-const IconEnumFolder = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
-    <rect x="2" y="7" width="20" height="11" rx="2.5" fill="#FAAD14"/>
-    <rect x="2" y="5" width="10" height="4" rx="1.5" fill="#FFE58F"/>
-    <text x="12" y="16" textAnchor="middle" fontSize="9" fill="#fff" fontFamily="Arial" fontWeight="bold">En</text>
-  </svg>
-);
-
-const IconNativeQueryFolder = () => (
-  <svg
-    aria-hidden='true'
-    focusable='false'
-    data-icon='native-query-folder'
-    role='img'
-    xmlns='http://www.w3.org/2000/svg'
-    viewBox='0 0 24 24'
-    className='icon-native-query-folder'
-    width='18' height='18'
-  >
-    <rect x='2' y='7' width='20' height='11' rx='2.5' fill='#D9A441'/>
-    <rect x='2' y='5' width='10' height='4' rx='1.5' fill='#F4D35E'/>
-    <text x='12' y='16' textAnchor='middle' fontSize='9' fill='#ffffff' fontFamily='Arial' fontWeight='bold'>NQ</text>
-  </svg>
-);
-
-const IconNativeQueryModel = () => (
-  <svg
-    aria-hidden='true'
-    focusable='false'
-    data-icon='native-query-model'
-    role='img'
-    xmlns='http://www.w3.org/2000/svg'
-    viewBox='0 0 24 24'
-    className='icon-native-query-model'
-    width='18' height='18'
-  >
-    <circle cx='12' cy='12' r='9' fill='#41454D'/>
-    <text x='12' y='16' textAnchor='middle' fontSize='10' fill='#ffffff' fontFamily='Arial' fontWeight='bold'>Q</text>
-  </svg>
-);
-
-// --- Icon helpers: map group key / model type to the correct icon ---
-// Wrapped in a sized container for consistent alignment inside antd Tree
-function IconWrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 18,
-        height: 18,
-        flexShrink: 0,
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
+// --- Icon helpers: map group key / model type to the correct antd icon ---
 function getGroupIcon(key: string, expanded: boolean): React.ReactNode {
   switch (key) {
     case '__entity_group':
-      return <IconWrapper>{expanded ? <IconEntityFolderOpen /> : <IconEntityFolder />}</IconWrapper>;
+      return expanded ? <FolderOpenOutlined /> : <FolderOutlined />;
     case '__enum_group':
-      return <IconWrapper>{expanded ? <IconEnumFolderOpen /> : <IconEnumFolder />}</IconWrapper>;
+      return expanded ? <FolderOpenOutlined /> : <FolderOutlined />;
     case '__native_query_group':
-      return <IconWrapper>{expanded ? <IconNativeQueryFolderOpen /> : <IconNativeQueryFolder />}</IconWrapper>;
+      return expanded ? <FolderOpenOutlined /> : <FolderOutlined />;
     default:
-      return <IconWrapper><IconFolder /></IconWrapper>;
+      return expanded ? <FolderOpenOutlined /> : <FolderOutlined />;
   }
 }
 
 function getModelIcon(modelType?: string): React.ReactNode {
   switch (modelType) {
-    case 'entity': return <IconWrapper><IconModel /></IconWrapper>;
-    case 'enum': return <IconWrapper><IconEnum /></IconWrapper>;
-    case 'native_query': return <IconWrapper><IconNativeQueryModel /></IconWrapper>;
-    default: return <IconWrapper><IconFile /></IconWrapper>;
+    case 'entity': return <DatabaseOutlined />;
+    case 'enum': return <TagsOutlined />;
+    case 'native_query': return <CodeOutlined />;
+    default: return <FileOutlined />;
   }
 }
-
-// --- Open-folder icons (expanded state) ---
-// Tilted lid + visible inside to clearly distinguish from closed folder
-const IconEntityFolderOpen = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
-    <path d="M4 3 L16 3 L12 6 L4 6 Z" fill="#FFE58F"/>
-    <path d="M2 7 H22 V18 Q22 20 20 20 H4 Q2 20 2 18 V7 Z" fill="#FAAD14"/>
-    <rect x="4" y="7" width="16" height="3" fill="#FFD580"/>
-    <rect x="6" y="14" width="12" height="1.2" rx="0.6" fill="#fff"/>
-  </svg>
-);
-
-const IconEnumFolderOpen = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
-    <path d="M4 3 L16 3 L12 6 L4 6 Z" fill="#FFE58F"/>
-    <path d="M2 7 H22 V18 Q22 20 20 20 H4 Q2 20 2 18 V7 Z" fill="#FAAD14"/>
-    <rect x="4" y="7" width="16" height="3" fill="#FFD580"/>
-    <text x="12" y="16" textAnchor="middle" fontSize="9" fill="#fff" fontFamily="Arial" fontWeight="bold">En</text>
-  </svg>
-);
-
-const IconNativeQueryFolderOpen = () => (
-  <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" width="18" height="18">
-    <path d="M4 3 L16 3 L12 6 L4 6 Z" fill="#F4D35E"/>
-    <path d="M2 7 H22 V18 Q22 20 20 20 H4 Q2 20 2 18 V7 Z" fill="#D9A441"/>
-    <rect x="4" y="7" width="16" height="3" fill="#E5B030"/>
-    <text x="12" y="16" textAnchor="middle" fontSize="9" fill="#fff" fontFamily="Arial" fontWeight="bold">NQ</text>
-  </svg>
-);
 
 // --- Hover-aware title for leaf nodes (shows "more" actions on hover) ---
 const TreeNodeTitle: React.FC<{
@@ -502,8 +378,8 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    padding: '8px 8px 4px 4px',
-    gap: '8px',
+    padding: '0px 8px 12px 8px', // spacing.xs horizontal, spacing.sm bottom
+    gap: '8px', // spacing.xs
   };
 
   const treeContainerStyle = {
@@ -511,23 +387,23 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
     minHeight: 0,
     maxHeight: 'calc(100vh - 200px)',
     overflow: 'auto',
-    padding: '0 8px 0 0',
+    padding: '0 8px 8px 0', // spacing.xs right, spacing.xs bottom
   };
 
   const inputStyle = {
     width: '100%',
-    borderRadius: '6px',
+    borderRadius: '6px', // rounded.sm
   };
 
   const containerStyle = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column' as const,
-    padding: '4px 0',
+    padding: '8px 0', // spacing.xs
   };
 
   return (
-    <div style={containerStyle} className="pr-2">
+    <div style={containerStyle}>
       <div style={searchRowStyle}>
         <Input
           placeholder={t("search_models")}
@@ -566,64 +442,23 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
       <div style={treeContainerStyle}>
         <div style={{height: '100%', overflow: 'auto', maxHeight: '100%'}}>
           <style>{`
-            /* --- 基础节点样式 --- */
-            .model-explorer-tree.ant-tree {
-              font-size: 14px;
-              line-height: 32px;
-              color: #1e293b;
-              background: transparent;
-            }
-            .model-explorer-tree .ant-tree-treenode {
-              border-radius: 6px;
-              margin: 1px 4px;
-              transition: background 0.12s ease;
-              align-items: center;
-            }
-            /* --- 隐藏开关图标 --- */
-            .model-explorer-tree .ant-tree-switcher {
-              display: none;
-            }
-            /* --- 缩进 --- */
-            .model-explorer-tree .ant-tree-indent-unit {
-              width: 18px;
-            }
-            /* --- 图标垂直居中 --- */
             .model-explorer-tree .ant-tree-iconEle {
               display: inline-flex !important;
               align-items: center;
               justify-content: center;
             }
-            /* --- 图标+标题 同行弹性布局 --- */
             .model-explorer-tree .ant-tree-node-content-wrapper {
               display: inline-flex !important;
               align-items: center !important;
-              border-radius: 6px;
+              border-radius: 6px; /* rounded.sm */
+              padding: 2px 4px; /* tighter hit area */
             }
             .model-explorer-tree .ant-tree-title {
               flex: 1;
               min-width: 0;
             }
-            /* --- 悬停 --- */
-            .model-explorer-tree .ant-tree-node-content-wrapper:hover {
-              background: #f8fafc;
-            }
-            /* --- 选中 --- */
-            .model-explorer-tree .ant-tree-node-selected {
-              background: #e0e2e6 !important;
-              color: #181d26 !important;
-              border-radius: 6px;
-              font-weight: 500;
-            }
-            /* --- 夜间模式 --- */
-            .dark .model-explorer-tree.ant-tree {
-              color: rgba(255, 255, 255, 0.85);
-            }
-            .dark .model-explorer-tree .ant-tree-node-content-wrapper:hover {
-              background: rgba(255, 255, 255, 0.06);
-            }
-            .dark .model-explorer-tree .ant-tree-node-selected {
-              background: rgba(255, 255, 255, 0.06) !important;
-              color: rgba(255, 255, 255, 0.85) !important;
+            .model-explorer-tree .ant-tree-treenode {
+              padding: 2px 0; /* spacing.xxs vertical between rows */
             }
           `}</style>
           <Spin spinning={modelLoading} size="small" style={{ minHeight: 200 }}>

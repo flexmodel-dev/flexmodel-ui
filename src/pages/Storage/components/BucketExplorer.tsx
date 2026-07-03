@@ -122,12 +122,12 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
     },
   ];
 
-  const searchRowStyle: React.CSSProperties = {
+  const searchRowStyle = {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    padding: token.paddingXS,
-    gap: token.paddingXS,
+    padding: '8px 8px 12px 8px', // spacing.xs horizontal, spacing.sm bottom
+    gap: '8px', // spacing.xs
   };
 
   return (

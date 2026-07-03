@@ -6,6 +6,7 @@ import { getProject, patchProject } from '@/services/project';
 import { useProject } from '@/store/appStore';
 import { PageContainer } from '@/components/common';
 import ProvidersTab from '@/pages/Authentication/components/ProvidersTab';
+import { spacing } from '@/theme/designTokens';
 
 const { Title, Text } = Typography;
 
@@ -127,7 +128,7 @@ const ProjectSettings: React.FC = () => {
   return (
     <PageContainer loading={loading}>
       <div className="flex w-full h-full">
-        <div className="w-[200px] h-full">
+        <div style={{ width: 240, borderRight: `1px solid ${token.colorBorderSecondary}` }}>
           <Menu
             className="h-full"
             mode="inline"
@@ -136,8 +137,8 @@ const ProjectSettings: React.FC = () => {
             items={menuItems}
           />
         </div>
-        <div className="flex-1 px-10 py-2">
-          <div style={{ marginBottom: token.marginLG }}>
+        <div className="flex-1" style={{ padding: `${spacing.md}px ${spacing.xl}px` }}>
+          <div style={{ marginBottom: spacing.lg }}>
             <Title level={3} style={{ margin: 0 }}>{menuMap[selectKey]}</Title>
           </div>
           {renderContent()}

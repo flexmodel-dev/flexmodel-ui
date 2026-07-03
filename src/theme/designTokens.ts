@@ -444,11 +444,7 @@ export const antdMapTokens = {
   colorBgSpotlight: colors['surface-dark'],
   colorBgMask: 'rgba(0,0,0,0.45)',
 
-  // --- Fill Colors ---
-  colorFill: colors['surface-strong'],
-  colorFillSecondary: colors['surface-strong'],
-  colorFillTertiary: colors['surface-soft'],
-  colorFillQuaternary: colors['surface-soft'],
+
 
   // --- Border Colors ---
   colorBorder: colors.hairline,

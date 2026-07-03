@@ -11,6 +11,7 @@ import BucketForm from "@/pages/Storage/components/BucketForm";
 import FileBrowser from "@/pages/Storage/components/FileBrowser";
 import {useProject} from "@/store/appStore";
 import {CloudOutlined, HddOutlined} from "@ant-design/icons";
+import {spacing} from "@/theme/designTokens.ts";
 
 const {Title} = Typography;
 
@@ -30,7 +31,8 @@ const StorageManagement: React.FC = () => {
 
   // Load provider info on mount
   React.useEffect(() => {
-    getGlobalProfile().then(profile => setProviderInfo(profile.storageProvider)).catch(() => {});
+    getGlobalProfile().then(profile => setProviderInfo(profile.storageProvider)).catch(() => {
+    });
   }, []);
 
   const handleSelect = (bucket: BucketSchema) => {
@@ -94,7 +96,7 @@ const StorageManagement: React.FC = () => {
       >
         <Splitter style={{height: '100%'}}>
           <Splitter.Panel max="20%" collapsible>
-            <div style={{height: '100%', overflow: 'hidden'}}>
+            <div style={{height: '100%', paddingRight: spacing.md}}>
               <BucketExplorer
                 onSelect={handleSelect}
                 setDeleteVisible={setDeleteVisible}

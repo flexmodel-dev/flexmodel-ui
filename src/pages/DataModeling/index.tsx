@@ -12,6 +12,7 @@ import ERDiagram from "@/pages/DataModeling/components/ERDiagramView";
 import {useProject} from "@/store/appStore";
 import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
 import ERView from "@/pages/DataView/components/ERView.tsx";
+import {spacing} from "@/theme/designTokens";
 
 const ModelingPage: React.FC = () => {
   const {t} = useTranslation();
@@ -138,17 +139,19 @@ const ModelingPage: React.FC = () => {
             max="40%"
             collapsible
           >
-
-            <ModelExplorer
+            <div style={{height: '100%', paddingRight: spacing.md}}>
+              <ModelExplorer
                 editable
                 onSelect={handleItemChange}
                 version={selectModelVersion}
               />
+            </div>
           </Splitter.Panel>
           <Splitter.Panel>
-            <div style={{height: '100%', display: 'flex', flexDirection: 'column', paddingLeft: 8, minHeight: 0}}>
+            <div
+              style={{height: '100%', display: 'flex', flexDirection: 'column', paddingLeft: spacing.lg, minHeight: 0}}>
               {activeModel?.type === "enum" && (
-                <div style={{marginBottom: 16, display: 'flex', justifyContent: 'flex-end'}}>
+                <div style={{marginBottom: spacing.md, display: 'flex', justifyContent: 'flex-end'}}>
                   <Space>
                     {!isEditing ? (
                       <Button
@@ -176,7 +179,7 @@ const ModelingPage: React.FC = () => {
                 </div>
               )}
               {activeModel?.type === "native_query" && (
-                <div style={{marginBottom: 16, display: 'flex', justifyContent: 'flex-end'}}>
+                <div style={{marginBottom: spacing.md, display: 'flex', justifyContent: 'flex-end'}}>
                   <Space>
                     {!nativeQueryIsEditing ? (
                       <Button

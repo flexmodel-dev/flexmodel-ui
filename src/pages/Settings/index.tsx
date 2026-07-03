@@ -7,6 +7,7 @@ import { getSettings, saveSettings as reqSaveSettings, } from "@/services/settin
 import { useTranslation } from "react-i18next";
 import type { Settings } from "@/types/settings";
 import { PageContainer } from "@/components/common";
+import { spacing } from "@/theme/designTokens";
 const { Title } = Typography;
 
 type OnChangeHandler = (data: Partial<Settings>) => void;
@@ -71,7 +72,7 @@ const Settings: React.FC = () => {
   return (
     <PageContainer>
       <div className="flex w-full h-full">
-        <div className="w-[200px] h-full settings-menu-wrapper">
+        <div style={{ width: 240, borderRight: `1px solid ${token.colorBorderSecondary}` }}>
           <Menu
             className="h-full"
             mode="inline"
@@ -85,8 +86,8 @@ const Settings: React.FC = () => {
             items={getMenu()}
           />
         </div>
-        <div className="flex-1 px-10 py-2">
-          <div style={{ marginBottom: token.marginLG, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="flex-1" style={{ padding: `${spacing.md}px ${spacing.xl}px` }}>
+          <div style={{ marginBottom: spacing.lg, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Title level={3} style={{ margin: 0 }}>{menuMap[initConfig.selectKey] as string}</Title>
           </div>
           {renderChildren(saveSettings)}
