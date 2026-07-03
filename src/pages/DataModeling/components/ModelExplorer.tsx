@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Button, Drawer, Dropdown, Input, message, Modal, Spin, Tree} from "antd";
 import type {MenuProps, TreeDataNode} from "antd";
-import {CodeOutlined, DatabaseOutlined, FileOutlined, FolderOutlined, FolderOpenOutlined, MoreOutlined, PlusOutlined, SearchOutlined, TagsOutlined} from "@ant-design/icons";
+import {CodeOutlined, TableOutlined, FileOutlined, FolderOutlined, FolderOpenOutlined, MoreOutlined, PlusOutlined, SearchOutlined, TagsOutlined} from "@ant-design/icons";
 import {createModel, dropModel, getModelList, executeFml} from "@/services/model.ts";
 import {useTranslation} from "react-i18next";
 import {useLocale} from "@/store/appStore.ts";
@@ -26,7 +26,7 @@ function getGroupIcon(key: string, expanded: boolean): React.ReactNode {
 
 function getModelIcon(modelType?: string): React.ReactNode {
   switch (modelType) {
-    case 'entity': return <DatabaseOutlined />;
+    case 'entity': return <TableOutlined />;
     case 'enum': return <TagsOutlined />;
     case 'native_query': return <CodeOutlined />;
     default: return <FileOutlined />;
@@ -456,6 +456,9 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
             .model-explorer-tree .ant-tree-title {
               flex: 1;
               min-width: 0;
+            }
+            .model-explorer-tree .ant-tree-switcher {
+              display: none !important;
             }
             .model-explorer-tree .ant-tree-treenode {
               padding: 2px 0; /* spacing.xxs vertical between rows */
