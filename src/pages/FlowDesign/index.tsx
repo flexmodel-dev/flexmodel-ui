@@ -33,6 +33,7 @@ import SequenceFlowNode from '@/pages/FlowDesign/components/nodes/SequenceFlowNo
 import ArrowEdge from '@/pages/FlowDesign/components/edges/ArrowEdge';
 import {FlowElementType} from '@/pages/FlowDesign/types/flow.ts';
 import {generateId} from '@/pages/FlowDesign/utils/flow';
+import {getLayoutedElements} from '@/pages/FlowDesign/utils/autoLayout';
 import {PageContainer} from '@/components/common';
 import {deployFlow, getFlowModule, updateFlow, UpdateFlowRequest} from '@/services/flow';
 import {useProject} from '@/store/appStore';
@@ -217,8 +218,6 @@ const FlowDesign: React.FC = () => {
 
       const parsedNodes: Node[] = [];
       const parsedEdges: CustomEdge[] = [];
-      let positionX = 100;
-      let positionY = 100;
 
       // 分离节点和边
       flowElementList.forEach((element: any) => {
@@ -242,9 +241,9 @@ const FlowDesign: React.FC = () => {
           // 这是节点
           const nodeType = getNodeTypeFromFlowElementType(element.type);
 
-          // 从properties中读取位置信息，如果没有则使用默认布局
-          const nodePositionX = element.properties?.positionX ?? positionX;
-          const nodePositionY = element.properties?.positionY ?? positionY;
+          // 从properties中读取位置信息，缺失时占位为 0，后续按需自动布局
+          const nodePositionX = element.properties?.positionX ?? 0;
+          const nodePositionY = element.properties?.positionY ?? 0;
 
           parsedNodes.push({
             id: element.key,
@@ -257,19 +256,21 @@ const FlowDesign: React.FC = () => {
               }, // 临时空函数，避免类型错误
             },
           });
-
-          // 简单的位置布局（仅在没有保存位置时使用）
-          if (element.properties?.positionX === undefined && element.properties?.positionY === undefined) {
-            positionX += 200;
-            if (positionX > 1000) {
-              positionX = 100;
-              positionY += 150;
-            }
-          }
         }
       });
 
-      setNodes(parsedNodes);
+      // 当存在节点缺少 positionX / positionY 时，使用 dagre 自动布局整张图
+      const needsAutoLayout = parsedNodes.some(
+        (node) =>
+          (node.data?.properties as any)?.positionX === undefined ||
+          (node.data?.properties as any)?.positionY === undefined
+      );
+
+      const finalNodes = needsAutoLayout
+        ? getLayoutedElements(parsedNodes, parsedEdges, 'LR').nodes
+        : parsedNodes;
+
+      setNodes(finalNodes);
       setEdges(parsedEdges);
     } catch (error) {
       console.error('解析flowModel失败:', error);
