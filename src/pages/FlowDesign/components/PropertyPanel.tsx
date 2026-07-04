@@ -23,6 +23,7 @@ import {Edge, Node} from '@xyflow/react';
 import ScriptEditorModal from '../../../components/common/ScriptEditorModal';
 import FieldMappingComponent from '../../../components/common/FieldMappingComponent';
 import {getModelList} from '@/services/model';
+import {getFunctionList, FunctionResponse} from '@/services/function';
 
 import {EntitySchema, EnumSchema, NativeQuerySchema} from '@/types/data-modeling';
 import {useProject} from '@/store/appStore';
@@ -76,6 +77,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   const [selectedModel, setSelectedModel] = React.useState<EntitySchema | null>(null);
   const [scriptEditorVisible, setScriptEditorVisible] = React.useState(false);
   const [sqlEditorVisible, setSqlEditorVisible] = React.useState(false);
+  const [functions, setFunctions] = React.useState<FunctionResponse[]>([]);
 
   const handleScriptChange = (value: string) => {
     form.setFieldValue(['properties', 'script'], value);
@@ -163,6 +165,24 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       }
     };
     fetchModels();
+  }, [projectId]);
+
+  React.useEffect(() => {
+    if (!projectId) {
+      setFunctions([]);
+      return;
+    }
+
+    const fetchFunctions = async () => {
+      try {
+        const res = await getFunctionList(projectId, { size: 1000 });
+        setFunctions(res.list || []);
+      } catch (error) {
+        console.error('获取云函数列表失败:', error);
+        setFunctions([]);
+      }
+    };
+    fetchFunctions();
   }, [projectId]);
 
   React.useEffect(() => {
@@ -511,6 +531,41 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
               name={['properties', 'resultPath']}
             >
               <Input placeholder="例如: records" />
+            </Form.Item>
+          </>
+        );
+
+      case 'cloud_function':
+        return (
+          <>
+            <Form.Item
+              label="云函数"
+              name={['properties', 'functionName']}
+              rules={[{ required: true, message: '请选择云函数' }]}
+            >
+              <Select
+                placeholder="请选择云函数"
+                showSearch
+                optionFilterProp="label"
+                options={functions.map(fn => ({
+                  label: fn.name,
+                  value: fn.name,
+                }))}
+              />
+            </Form.Item>
+            <Form.Item
+              label="输入数据路径"
+              name={['properties', 'inputPath']}
+              tooltip="从流程变量中提取数据作为函数输入，留空则传入全部流程变量"
+            >
+              <Input placeholder="例如: orderData，留空传入全部变量" />
+            </Form.Item>
+            <Form.Item
+              label="结果存放路径"
+              name={['properties', 'resultPath']}
+              tooltip="云函数返回值在流程变量中的存储路径"
+            >
+              <Input placeholder="例如: functionResult" />
             </Form.Item>
           </>
         );

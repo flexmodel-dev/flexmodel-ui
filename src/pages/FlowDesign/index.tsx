@@ -534,6 +534,11 @@ const FlowDesign: React.FC = () => {
           if (!datasourceName || !modelName) {
             currentInvalidNodes.add(node.id);
           }
+        } else if (subType === 'cloud_function') {
+          const functionName = (node.data?.properties as any)?.functionName;
+          if (!functionName) {
+            currentInvalidNodes.add(node.id);
+          }
         }
       }
     }
@@ -647,13 +652,18 @@ const FlowDesign: React.FC = () => {
           if (!datasourceName || !modelName) {
             currentInvalidNodes.add(node.id);
           }
+        } else if (subType === 'cloud_function') {
+          const functionName = (node.data?.properties as any)?.functionName;
+          if (!functionName) {
+            currentInvalidNodes.add(node.id);
+          }
         }
       }
     }
-    
+
     // 更新校验状态
     setInvalidNodeIds(currentInvalidNodes);
-    
+
     // 如果还有校验失败的节点，阻止发布
     if (currentInvalidNodes.size > 0) {
       message.error(`有${currentInvalidNodes.size}个节点配置不完整，请修正后再发布`);
