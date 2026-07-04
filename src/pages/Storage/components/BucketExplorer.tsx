@@ -135,6 +135,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
       <div style={searchRowStyle}>
         <Input
           placeholder={t("search_buckets")}
+          size="small"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           style={{width: '100%'}}
@@ -143,12 +144,13 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
         />
         <Button
           icon={<PlusOutlined/>}
+          size="small"
           onClick={() => setCreateModalVisible(true)}
         />
       </div>
 
       <div style={{flex: 1, minHeight: 0, overflow: 'auto', padding: `0 ${token.paddingXXS}px`}}>
-        <Spin spinning={loading}>
+        <Spin spinning={loading} size="small" style={{ minHeight: 200 }}>
           {filteredBucketList.map((bucket) => {
             const isActive = activeBucket?.name === bucket.name;
             return (

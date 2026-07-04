@@ -139,7 +139,7 @@ const ModelingPage: React.FC = () => {
             max="40%"
             collapsible
           >
-            <div style={{height: '100%', paddingRight: spacing.md}}>
+            <div style={{height: '100%', paddingRight: spacing.xs}}>
               <ModelExplorer
                 editable
                 onSelect={handleItemChange}

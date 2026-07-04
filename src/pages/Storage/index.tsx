@@ -96,7 +96,7 @@ const StorageManagement: React.FC = () => {
       >
         <Splitter style={{height: '100%'}}>
           <Splitter.Panel max="20%" collapsible>
-            <div style={{height: '100%', paddingRight: spacing.md}}>
+            <div style={{height: '100%', paddingRight: spacing.xs}}>
               <BucketExplorer
                 onSelect={handleSelect}
                 setDeleteVisible={setDeleteVisible}

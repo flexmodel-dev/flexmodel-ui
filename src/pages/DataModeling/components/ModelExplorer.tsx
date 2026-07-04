@@ -407,6 +407,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
       <div style={searchRowStyle}>
         <Input
           placeholder={t("search_models")}
+          size="small"
           value={filterText}
           onChange={handleSearchChange}
           style={inputStyle}
@@ -434,6 +435,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
           >
             <Button
               icon={<PlusOutlined/>}
+              size="small"
             />
           </Dropdown>
         )}
