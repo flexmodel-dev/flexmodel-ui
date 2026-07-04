@@ -74,7 +74,7 @@ export interface ServiceTask extends FlowNode {
   type: FlowElementType.SERVICE_TASK;
   properties: {
     name?: string;
-    subType?: 'add-record' | 'update-record' | 'query-record' | 'delete-record' | 'script' | 'sql' | 'cloud_function';
+    subType?: 'add-record' | 'update-record' | 'query-record' | 'delete-record' | 'script' | 'sql' | 'function';
     // 根据 subType 的不同，可以有不同的属性配置
     [key: string]: any;
   };

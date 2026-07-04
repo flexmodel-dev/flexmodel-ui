@@ -535,7 +535,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
           </>
         );
 
-      case 'cloud_function':
+      case 'function':
         return (
           <>
             <Form.Item

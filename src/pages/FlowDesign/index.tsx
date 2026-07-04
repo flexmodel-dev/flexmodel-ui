@@ -279,6 +279,7 @@ const FlowDesign: React.FC = () => {
 
   // 加载流程详情
   const loadFlowDetail = useCallback(async (id: string) => {
+    if (!projectId) return;
     setLoading(true);
     try {
       const detail = await getFlowModule(projectId, id);
@@ -296,13 +297,12 @@ const FlowDesign: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [parseFlowModel]);
+  }, [projectId, parseFlowModel]);
 
   // 初始化模式
   useEffect(() => {
-    if (!hasInitialized.current && routeFlowModuleId) {
+    if (!hasInitialized.current && routeFlowModuleId && projectId) {
       hasInitialized.current = true;
-
       setFlowModuleId(routeFlowModuleId);
       loadFlowDetail(routeFlowModuleId);
     } else if (!hasInitialized.current && !routeFlowModuleId) {
@@ -311,7 +311,7 @@ const FlowDesign: React.FC = () => {
       navigate('/flow');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeFlowModuleId]); // 移除loadFlowDetail依赖，避免循环
+  }, [routeFlowModuleId, projectId]);
 
   // 初始化默认节点（仅在非编辑模式下）
   useEffect(() => {
@@ -494,12 +494,12 @@ const FlowDesign: React.FC = () => {
     // 清理无效的节点ID（那些已经不存在的节点）
     const validNodeIds = new Set(nodes.map(n => n.id));
     const cleanedInvalidNodeIds = new Set(Array.from(invalidNodeIds).filter(id => validNodeIds.has(id)));
-    
+
     // 如果清理后的无效节点ID集合与原来的不同，更新状态
     if (cleanedInvalidNodeIds.size !== invalidNodeIds.size) {
       setInvalidNodeIds(cleanedInvalidNodeIds);
     }
-    
+
     // 检查是否有校验失败的节点
     if (cleanedInvalidNodeIds.size > 0) {
       message.error(`有${cleanedInvalidNodeIds.size}个节点配置不完整`);
@@ -514,7 +514,7 @@ const FlowDesign: React.FC = () => {
         return;
       }
     }
-    
+
     // 重新校验所有节点，确保状态同步
     const currentInvalidNodes = new Set<string>();
     for (const node of nodes) {
@@ -534,7 +534,7 @@ const FlowDesign: React.FC = () => {
           if (!datasourceName || !modelName) {
             currentInvalidNodes.add(node.id);
           }
-        } else if (subType === 'cloud_function') {
+        } else if (subType === 'function') {
           const functionName = (node.data?.properties as any)?.functionName;
           if (!functionName) {
             currentInvalidNodes.add(node.id);
@@ -610,12 +610,12 @@ const FlowDesign: React.FC = () => {
     // 清理无效的节点ID（那些已经不存在的节点）
     const validNodeIds = new Set(nodes.map(n => n.id));
     const cleanedInvalidNodeIds = new Set(Array.from(invalidNodeIds).filter(id => validNodeIds.has(id)));
-    
+
     // 如果清理后的无效节点ID集合与原来的不同，更新状态
     if (cleanedInvalidNodeIds.size !== invalidNodeIds.size) {
       setInvalidNodeIds(cleanedInvalidNodeIds);
     }
-    
+
     // 检查是否有校验失败的节点
     if (cleanedInvalidNodeIds.size > 0) {
       console.log('校验失败的节点ID:', Array.from(cleanedInvalidNodeIds));
@@ -632,7 +632,7 @@ const FlowDesign: React.FC = () => {
         return;
       }
     }
-    
+
     // 重新校验所有节点，确保状态同步
     const currentInvalidNodes = new Set<string>();
     for (const node of nodes) {
@@ -652,7 +652,7 @@ const FlowDesign: React.FC = () => {
           if (!datasourceName || !modelName) {
             currentInvalidNodes.add(node.id);
           }
-        } else if (subType === 'cloud_function') {
+        } else if (subType === 'function') {
           const functionName = (node.data?.properties as any)?.functionName;
           if (!functionName) {
             currentInvalidNodes.add(node.id);

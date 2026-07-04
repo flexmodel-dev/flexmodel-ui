@@ -35,7 +35,7 @@ const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
         return <CodeOutlined {...iconProps} style={{color: '#f4d35e'}}/>;
       case 'sql':
         return <DatabaseOutlined {...iconProps} style={{color: '#254fad'}}/>;
-      case 'cloud_function':
+      case 'function':
         return <CloudOutlined {...iconProps} style={{color: '#722ed1'}}/>;
       default:
         return <SettingOutlined {...iconProps} style={{color: token.colorPrimary}}/>;
@@ -69,8 +69,8 @@ const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
       case 'sql':
         baseName = '执行SQL';
         break;
-      case 'cloud_function':
-        baseName = '调用云函数';
+      case 'function':
+        baseName = '调用函数';
         break;
       default:
         baseName = '自动任务';
