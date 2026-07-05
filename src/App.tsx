@@ -1,5 +1,5 @@
-import {HashRouter, Route, Routes, Navigate} from "react-router-dom";
-import {ConfigProvider, App as AntdApp} from "antd";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {App as AntdApp, ConfigProvider} from "antd";
 import PlatformLayout from "./components/layouts/PlatformLayout";
 import ProjectLayout from "./components/layouts/ProjectLayout";
 import Login from "./pages/Login";
@@ -13,7 +13,7 @@ import Project from "./pages/Project/index.tsx";
 import Settings from "./pages/Settings";
 import ApiKeys from "./pages/ApiKeys";
 import Member from "./pages/Member/index.tsx";
-import {antdTheme as lightTheme, antdDarkTheme as darkTheme} from "./theme/designTokens.ts";
+import {antdDarkTheme as darkTheme, antdTheme as lightTheme} from "./theme/designTokens.ts";
 
 const App = () => {
   const { fetchConfig } = appStore.useConfig();
@@ -65,7 +65,7 @@ const App = () => {
       theme={theme}
     >
       <AntdApp>
-      <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <BrowserRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
         <Routes>
           <Route path="/login" element={<Login />} />
 
@@ -117,7 +117,7 @@ const App = () => {
             </ProtectedRoute>
           } /> */}
         </Routes>
-      </HashRouter>
+        </BrowserRouter>
       </AntdApp>
     </ConfigProvider>
   );

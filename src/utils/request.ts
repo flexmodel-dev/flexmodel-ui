@@ -131,7 +131,7 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
 
       // 如果刷新token返回401，跳转到登录页
       if (refreshError?.status === 401 || refreshError?.response?.status === 401) {
-        window.location.hash = '/login'
+        window.location.href = '/login'
       }
 
       processQueue(refreshError, null)

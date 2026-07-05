@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo, useEffect } from "react";
-import { Layout, Button, Dropdown, Space, Switch, theme as antdTheme, Breadcrumb } from "antd";
-import type { MenuProps } from "antd";
+import React, {useCallback, useEffect, useMemo} from "react";
+import type {MenuProps} from "antd";
+import {Breadcrumb, Button, Dropdown, Layout, Space, Switch, theme as antdTheme} from "antd";
 import enUS from "antd/locale/en_US";
 import zhCN from "antd/locale/zh_CN";
 import dayjs from "dayjs";
-import { useLocale, useTheme, useProject } from "@/store/appStore";
-import { useTranslation } from "react-i18next";
-import { Locale } from "antd/es/locale";
+import {useLocale, useProject, useTheme} from "@/store/appStore";
+import {useTranslation} from "react-i18next";
+import {Locale} from "antd/es/locale";
 import {
   ApiOutlined,
   AppstoreOutlined,
@@ -17,18 +17,17 @@ import {
   MoonOutlined,
   SunOutlined
 } from "@ant-design/icons";
-import { applyDarkMode, setDarkModeToStorage } from "@/utils/darkMode";
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import {applyDarkMode, setDarkModeToStorage} from "@/utils/darkMode";
+import {Link, Outlet, useLocation, useNavigate, useParams} from "react-router-dom";
 import ProjectSidebar from "./ProjectSidebar";
 import Console from "@/components/console/Console.tsx";
 import ResizablePanel from "@/components/common/ResizablePanel";
 import BranchSwitcher from "@/components/common/BranchSwitcher";
-import { Outlet } from "react-router-dom";
-import { getFullRoutePath, shouldHideLayout } from "@/routes";
+import {getFullRoutePath, shouldHideLayout} from "@/routes";
 import UserInfo from "@/components/UserInfo";
 import McpConnectionDrawer from "@/components/common/McpConnectionDrawer";
-import { getProject, getProjects } from "@/services/project";
-import type { Project } from "@/types/project";
+import {getProject, getProjects} from "@/services/project";
+import type {Project} from "@/types/project";
 
 const ProjectLayout: React.FC = () => {
   const { t } = useTranslation();
@@ -122,7 +121,7 @@ const ProjectLayout: React.FC = () => {
   }, [projects, setCurrentProject, navigate]);
 
   const breadcrumbItems = useMemo(() => {
-    const pathname = window.location.hash.replace('#', '');
+    const pathname = location.pathname;
     const items: any[] = [];
 
     items.push({
