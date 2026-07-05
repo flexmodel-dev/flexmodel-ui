@@ -1,18 +1,9 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {
-  Button,
-  Drawer,
-  Input,
-  message,
-  Popconfirm,
-  Space,
-  Table,
-  theme,
-  Tooltip,
-} from "antd";
+import {Button, Drawer, Input, message, Popconfirm, Space, Table, theme, Tooltip,} from "antd";
 import {
   DeleteOutlined,
-  EditOutlined, FunctionOutlined,
+  EditOutlined,
+  FunctionOutlined,
   PlayCircleOutlined,
   PlusOutlined,
   ReloadOutlined,
@@ -23,11 +14,7 @@ import {useNavigate} from "react-router-dom";
 import PageContainer from "@/components/common/PageContainer";
 import FunctionDetail from "./components/FunctionDetail";
 import type {FunctionResponse} from "@/services/function";
-import {
-  deleteFunction,
-  getFunctionList,
-  getFunction,
-} from "@/services/function";
+import {deleteFunction, getFunction, getFunctionList,} from "@/services/function";
 import {useProject} from "@/store/appStore";
 
 const FunctionsPage: React.FC = () => {
@@ -124,7 +111,7 @@ const FunctionsPage: React.FC = () => {
       width: 420,
       render: (_: any, record: FunctionResponse) => (
         <code style={{fontSize: 12, color: token.colorTextSecondary}}>
-          POST /api/runtime/projects/{projectId}/functions/{record.name}
+          POST /api/projects/{projectId}/functions/{record.name}/invoke
         </code>
       ),
     },

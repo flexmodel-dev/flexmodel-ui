@@ -1,22 +1,9 @@
 import React, {useState} from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  message,
-  Space,
-  Spin,
-  Tabs,
-  Tag,
-  theme,
-  Typography,
-} from "antd";
+import {Alert, Button, Card, message, Space, Spin, Tabs, Tag, theme, Typography,} from "antd";
 import {SendOutlined} from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
 import ScriptEditor from "@/components/common/ScriptEditor";
-import type {
-  FunctionInvokeResult,
-} from "@/services/function";
+import type {FunctionInvokeResult,} from "@/services/function";
 import {invokeFunction} from "@/services/function";
 
 const {Text, Paragraph} = Typography;
@@ -83,7 +70,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
       >
         <div style={{marginBottom: 12}}>
           <code style={{fontSize: 12, padding: "4px 8px", background: token.colorFillSecondary, borderRadius: token.borderRadius}}>
-            POST /api/runtime/projects/{projectId}/functions/{functionName}
+            POST /api/projects/{projectId}/functions/{functionName}/invoke
           </code>
         </div>
 

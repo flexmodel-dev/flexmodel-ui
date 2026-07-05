@@ -1,16 +1,6 @@
 import React, {useState} from "react";
-import {
-  Descriptions,
-  Spin,
-  Tag,
-  Tabs,
-  theme,
-} from "antd";
-import {
-  FunctionOutlined,
-  PlayCircleOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
+import {Descriptions, Spin, Tabs, Tag, theme,} from "antd";
+import {FunctionOutlined, InfoCircleOutlined, PlayCircleOutlined,} from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
 import ScriptEditor from "@/components/common/ScriptEditor";
 import FunctionInvokePanel from "./FunctionInvokePanel";
@@ -59,7 +49,7 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
           {fn.createdAt ? new Date(fn.createdAt).toLocaleString() : "-"}
         </Descriptions.Item>
         <Descriptions.Item label={t("function.endpoint")} span={2}>
-          <code style={{fontSize: 12}}>POST /api/runtime/projects/{projectId}/functions/{fn.name}</code>
+          <code style={{fontSize: 12}}>POST /api/projects/{projectId}/functions/{fn.name}/invoke</code>
         </Descriptions.Item>
         <Descriptions.Item label={t("function.updatedAt")}>
           {fn.updatedAt ? new Date(fn.updatedAt).toLocaleString() : "-"}

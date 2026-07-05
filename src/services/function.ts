@@ -88,7 +88,7 @@ export const invokeFunction = async (
   data: FunctionInvokeRequest,
 ): Promise<FunctionInvokeResult> => {
   const response = await api.rawPost(
-    `/runtime/projects/${projectId}/functions/${encodeURIComponent(name)}`,
+    `/projects/${projectId}/functions/${encodeURIComponent(name)}/invoke`,
     data,
   );
 
