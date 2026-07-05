@@ -94,6 +94,7 @@
   "api_key_regenerate_confirm": "确定要重新生成此 API Key 吗？旧 Key 将立即失效。",
   "api_key_delete_confirm": "确定要删除此 API Key 吗？",
   "api_key_warning": "请妥善保存此 Key，它不会再次显示。",
+  "api_key_frontend_warning": "请勿将 API Key 暴露在前端代码或客户端 JavaScript 中。API Key 仅应在后端服务或安全的服务端环境中使用。",
   "copy_key": "复制 Key",
   "copied": "已复制",
   "key_type": "类型",

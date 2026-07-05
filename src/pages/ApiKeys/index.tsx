@@ -1,12 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Button, message, Modal, Popconfirm, Space, Table, Tag, Typography, Input, Form, Switch, Select } from "antd";
-import { CopyOutlined, DeleteOutlined, ReloadOutlined, PlusOutlined } from "@ant-design/icons";
-import { useTranslation } from "react-i18next";
-import { getApiKeys, createApiKey, regenerateApiKey, deleteApiKey } from "@/services/api-key";
-import { getProjects } from "@/services/project";
-import type { ApiKey, CreateApiKeyRequest } from "@/types/api-key";
-import type { Project } from "@/types/project";
-import { PageContainer } from "@/components/common";
+import React, {useCallback, useEffect, useState} from "react";
+import {
+  Alert,
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Popconfirm,
+  Select,
+  Space,
+  Switch,
+  Table,
+  Tag,
+  Typography
+} from "antd";
+import {CopyOutlined, DeleteOutlined, PlusOutlined, ReloadOutlined} from "@ant-design/icons";
+import {useTranslation} from "react-i18next";
+import {createApiKey, deleteApiKey, getApiKeys, regenerateApiKey} from "@/services/api-key";
+import {getProjects} from "@/services/project";
+import type {ApiKey, CreateApiKeyRequest} from "@/types/api-key";
+import type {Project} from "@/types/project";
+import {PageContainer} from "@/components/common";
 
 const { Text } = Typography;
 
@@ -196,6 +210,12 @@ const ApiKeys: React.FC = () => {
         onOk={handleCreate}
         okText={t("create")}
       >
+        <Alert
+          type="warning"
+          showIcon
+          message={t("api_key_frontend_warning")}
+          style={{marginBottom: 16}}
+        />
         <Form form={form} layout="vertical" initialValues={{ readOnly: false }}>
           <Form.Item name="name" label={t("name")} rules={[{ required: true, message: t("name_required") }]}>
             <Input placeholder={t("api_key_name_placeholder")} />

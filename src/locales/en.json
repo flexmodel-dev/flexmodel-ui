@@ -94,6 +94,7 @@
   "api_key_regenerate_confirm": "Are you sure you want to regenerate this API Key? The old key will be invalidated immediately.",
   "api_key_delete_confirm": "Are you sure you want to delete this API Key?",
   "api_key_warning": "Please save this key securely. It will not be shown again.",
+  "api_key_frontend_warning": "Never expose API Keys in frontend code or client-side JavaScript. API Keys should only be used in backend services or secure server-side environments.",
   "copy_key": "Copy Key",
   "copied": "Copied",
   "key_type": "Type",
