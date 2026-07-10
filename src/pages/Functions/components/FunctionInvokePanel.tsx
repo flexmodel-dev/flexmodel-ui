@@ -29,11 +29,11 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
     setResponse(null);
     setError(null);
 
-    let input: any = undefined;
+    let data: any = undefined;
 
     try {
       if (inputStr.trim()) {
-        input = JSON.parse(inputStr);
+        data = JSON.parse(inputStr);
       }
     } catch {
       message.error(t("function.invokeInputJsonError"));
@@ -42,7 +42,8 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
     }
 
     try {
-      const res = await invokeFunction(projectId, functionName, { input });
+      // 请求体直接作为函数的 Request body（不再嵌套在 input 字段中）
+      const res = await invokeFunction(projectId, functionName, data);
       setResponse(res);
     } catch (err: any) {
       setError(err?.message || String(err));

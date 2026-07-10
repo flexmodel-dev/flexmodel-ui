@@ -31,10 +31,6 @@ export interface FunctionDeployRequest {
   timeout?: number;
 }
 
-export interface FunctionInvokeRequest {
-  input?: any;
-}
-
 export interface FunctionInvokeMeta {
   executionTimeMs: number;
   logs?: Array<{ level: string; message: string; data?: any }>;
@@ -82,10 +78,11 @@ export const deleteFunction = (
   return api.delete(`/projects/${projectId}/functions/${encodeURIComponent(name)}`);
 };
 
+// invoke — 请求体直接作为函数的 Request body（不再嵌套在 input 字段中）
 export const invokeFunction = async (
   projectId: string,
   name: string,
-  data: FunctionInvokeRequest,
+  data: any,
 ): Promise<FunctionInvokeResult> => {
   const response = await api.rawPost(
     `/projects/${projectId}/functions/${encodeURIComponent(name)}/invoke`,
