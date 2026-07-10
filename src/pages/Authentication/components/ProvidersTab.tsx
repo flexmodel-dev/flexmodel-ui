@@ -1,14 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Form, Radio, Spin, message } from "antd";
-import { useTranslation } from "react-i18next";
-import { useProject } from "@/store/appStore";
-import {
-  getAuthProviders,
-  createAuthProvider,
-  updateAuthProvider,
-  deleteAuthProvider,
-} from "@/services/auth-provider";
-import type { AuthProviderConfig } from "@/types/auth-provider";
+import React, {useCallback, useEffect, useState} from "react";
+import {Alert, Button, Form, message, Radio, Spin} from "antd";
+import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
+import {createAuthProvider, deleteAuthProvider, getAuthProviders, updateAuthProvider,} from "@/services/auth-provider";
+import type {AuthProviderConfig} from "@/types/auth-provider";
 import OidcForm from "@/pages/Authentication/components/OidcForm";
 import FunctionForm from "@/pages/Authentication/components/FunctionForm";
 
@@ -82,7 +77,7 @@ const ProvidersTab: React.FC = () => {
         name: "default",
         type: authMethod,
         enabled: true,
-        config: values,
+        config: {...values, type: authMethod},
       };
 
       const existing = providers[0];
