@@ -175,7 +175,7 @@
   "visibility_authenticated": "Authenticated",
   "visibility_public": "Public",
   "max_file_size": "Max File Size",
-  "max_file_size_placeholder": "Please enter max file size (bytes)",
+  "max_file_size_placeholder": "Please enter max file size",
   "create_bucket": "Create Bucket",
   "create_bucket_success": "Bucket created successfully",
   "create_bucket_failed": "Failed to create bucket",

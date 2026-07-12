@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useMemo} from "react";
-import {Button, Dropdown, Form, Input, message, Modal, Spin, theme, Typography} from "antd";
+import React, {useEffect, useMemo, useState} from "react";
 import type {MenuProps} from "antd";
+import {Button, Dropdown, Form, Input, message, Modal, Spin, theme, Typography} from "antd";
 import {DatabaseOutlined, DeleteOutlined, MoreOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import type {BucketSchema} from "@/types/storage";
 import {createBucket, getBucketList} from "@/services/storage.ts";
@@ -82,7 +82,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
         name: values.name,
         description: values.description,
         visibility: values.visibility || 'PRIVATE',
-        maxFileSize: values.maxFileSize,
+        maxFileSize: values.maxFileSize ? values.maxFileSize * 1024 * 1024 : undefined,
       };
       const res = await createBucket(projectId, data as any);
       message.success(t('create_bucket_success'));

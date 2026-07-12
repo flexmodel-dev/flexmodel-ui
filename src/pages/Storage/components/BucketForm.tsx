@@ -47,7 +47,7 @@ const BucketForm: React.FC<BucketFormProps> = ({readOnly = false}) => {
           placeholder={t('max_file_size_placeholder')}
           min={1}
           style={{width: '100%'}}
-          addonAfter="bytes"
+          addonAfter="MB"
         />
       </Form.Item>
     </>

@@ -175,7 +175,7 @@
   "visibility_authenticated": "需认证",
   "visibility_public": "公开",
   "max_file_size": "最大文件大小",
-  "max_file_size_placeholder": "请输入最大文件大小（字节）",
+  "max_file_size_placeholder": "请输入最大文件大小",
   "create_bucket": "创建 Bucket",
   "create_bucket_success": "创建 Bucket 成功",
   "create_bucket_failed": "创建 Bucket 失败",
