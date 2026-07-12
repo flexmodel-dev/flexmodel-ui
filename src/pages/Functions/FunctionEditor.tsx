@@ -1,26 +1,13 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {
-  Button,
-  Dropdown,
-  Form,
-  Input,
-  message,
-  Modal,
-  Space,
-  Spin,
-  Tabs,
-  theme,
-  Tooltip,
-  Typography,
-} from "antd";
+import {Button, Dropdown, Form, Input, message, Modal, Space, Spin, Tabs, theme, Tooltip, Typography,} from "antd";
 import {
   ArrowLeftOutlined,
   CheckOutlined,
-  FunctionOutlined,
   DeleteOutlined,
   EditOutlined,
   FileAddOutlined,
   FileTextOutlined,
+  FunctionOutlined,
   MoreOutlined,
   PlayCircleOutlined,
 } from "@ant-design/icons";
@@ -28,22 +15,15 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import ScriptEditor from "@/components/common/ScriptEditor";
 import FunctionInvokePanel from "./components/FunctionInvokePanel";
-import type {
-  FunctionDeployRequest,
-  FunctionResponse,
-  FunctionTemplate,
-} from "@/services/function";
-import {
-  deployFunction,
-  getFunction,
-  getFunctionTemplates,
-} from "@/services/function";
+import type {FunctionDeployRequest, FunctionResponse, FunctionTemplate,} from "@/services/function";
+import {deployFunction, getFunction, getFunctionTemplates,} from "@/services/function";
 
 const {Text, Title} = Typography;
 
-const DEFAULT_INDEX_CODE = `export default async function(input, ctx) {
-  const data = await ctx.flexmodel.data.find("Example");
-  return ctx.json({ hello: "world", total: data.total });
+const DEFAULT_INDEX_CODE = `export default async function(req: Request) {
+  return new Response(JSON.stringify({ message: "Hello, World!" }), {
+    headers: { "content-type": "application/json" }
+  });
 }`;
 
 interface FileEntry {

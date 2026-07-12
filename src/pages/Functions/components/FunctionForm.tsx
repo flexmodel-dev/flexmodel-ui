@@ -1,34 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Select,
-  Tabs,
-  Tag,
-  theme,
-  Typography,
-} from "antd";
-import {
-  FileAddOutlined,
-} from "@ant-design/icons";
+import {Button, Form, Input, InputNumber, message, Modal, Select, Tabs, Tag, theme, Typography,} from "antd";
+import {FileAddOutlined,} from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
 import ScriptEditor from "@/components/common/ScriptEditor";
-import type {
-  FunctionResponse,
-  FunctionDeployRequest,
-  FunctionTemplate,
-} from "@/services/function";
+import type {FunctionDeployRequest, FunctionResponse, FunctionTemplate,} from "@/services/function";
 import {deployFunction, getFunctionTemplates} from "@/services/function";
 
 const {Text} = Typography;
 
-const DEFAULT_INDEX_CODE = `export default async function(input, ctx) {
-  const data = await ctx.flexmodel.data.find("Example");
-  return ctx.json({ hello: "world", total: data.total });
+const DEFAULT_INDEX_CODE = `export default async function(req: Request) {
+  return new Response(JSON.stringify({ message: "Hello, World!" }), {
+    headers: { "content-type": "application/json" }
+  });
 }`;
 
 interface FileEntry {
