@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
   Button,
   DatePicker,
@@ -37,33 +37,72 @@ const JobExecutionLogList: React.FC = () => {
   const [total, setTotal] = useState(0);
   const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [selectedLog, setSelectedLog] = useState<JobExecutionLog | null>(null);
-  const tableContainerRef = useRef<HTMLDivElement | null>(null);
-  const [tableScrollY, setTableScrollY] = useState<number>(0);
+  const tableWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [tableScrollY, setTableScrollY] = useState<number>(300);
 
   useEffect(() => {
     loadLogs();
   }, [currentPage, pageSize]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    const container = tableContainerRef.current;
-    if (!container) return;
+  // 计算表格表体可用高度：用 table 顶部到 wrapper 底部的距离作为 table 的可用
+  // 高度（flex:1 使 table 填满到 wrapper 底部），再减去表头、分页等占位。
+  const updateTableHeight = useCallback(() => {
+    const wrapper = tableWrapperRef.current;
+    if (!wrapper) return;
 
-    const updateHeight = () => {
-      // 直接使用容器可用高度，作为 Table 的滚动高度
-      setTableScrollY(container.clientHeight - 80);
-    };
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const table = wrapper.querySelector<HTMLElement>('.ant-table');
+    if (!table) {
+      return;
+    }
 
-    updateHeight();
+    const tableRect = table.getBoundingClientRect();
+    // table 顶部到 wrapper 底部的高度（已自动包含上方搜索表单及其 margin）
+    const tableAvailable = wrapperRect.bottom - tableRect.top;
 
-    const ro = new ResizeObserver(() => updateHeight());
-    ro.observe(container);
+    // 表头高度：滚动模式下为 .ant-table-header，否则取 .ant-table-thead
+    const header =
+      wrapper.querySelector<HTMLElement>('.ant-table-header') ||
+      wrapper.querySelector<HTMLElement>('.ant-table-thead');
+    const headerHeight = header ? header.getBoundingClientRect().height : 39;
 
-    window.addEventListener('resize', updateHeight);
+    // 分页高度（含上下 margin，否则 .ant-table-pagination 的外边距会漏算导致表体过高、
+    // 分页器被外层 overflow:hidden 裁掉底边）
+    const pagination = wrapper.querySelector<HTMLElement>('.ant-table-pagination');
+    let paginationHeight = 0;
+    if (pagination) {
+      const pr = pagination.getBoundingClientRect();
+      const cs = getComputedStyle(pagination);
+      paginationHeight =
+        pr.height +
+        parseFloat(cs.marginTop || '0') +
+        parseFloat(cs.marginBottom || '0');
+    }
+
+    // 表格内部边距/边框等冗余间距
+    const extraSpacing = 8;
+
+    const available = tableAvailable - headerHeight - paginationHeight - extraSpacing;
+    setTableScrollY(Math.max(available, 150));
+  }, []);
+
+  useLayoutEffect(() => {
+    updateTableHeight();
+    const ro = new ResizeObserver(updateTableHeight);
+    if (tableWrapperRef.current) {
+      ro.observe(tableWrapperRef.current);
+    }
+    window.addEventListener('resize', updateTableHeight);
     return () => {
       ro.disconnect();
-      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('resize', updateTableHeight);
     };
-  }, []);
+  }, [updateTableHeight]);
+
+  // 数据加载完成后、表头/分页高度可能变化，重新计算
+  useEffect(() => {
+    updateTableHeight();
+  }, [logs, total, loading, updateTableHeight]);
 
   const loadLogs = async (params?: JobExecutionLogParams) => {
     setLoading(true);
@@ -226,13 +265,22 @@ const JobExecutionLogList: React.FC = () => {
       ]}
       loading={loading}
     >
-      <div style={{marginBottom: 16}}>
-        <Form
-          form={form}
-          layout="inline"
-          onFinish={handleSearch}
-          style={{marginBottom: 16}}
-        >
+      <div
+        ref={tableWrapperRef}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          overflow: 'hidden',
+        }}
+      >
+        <div className="job-log-search-form" style={{marginBottom: 16, flexShrink: 0}}>
+          <Form
+            form={form}
+            layout="inline"
+            onFinish={handleSearch}
+            style={{marginBottom: 16}}
+          >
           <Form.Item name="timeRange" label="时间范围">
             <RangePicker
               showTime
@@ -273,12 +321,14 @@ const JobExecutionLogList: React.FC = () => {
       </div>
 
       <Table
+        className="job-log-table"
         columns={columns}
         dataSource={logs}
         loading={loading}
         rowKey="id"
         size="small"
-        scroll={{y: tableScrollY || undefined}}
+        scroll={{y: tableScrollY}}
+        style={{flex: 1, minHeight: 0}}
         pagination={{
           current: currentPage,
           pageSize: pageSize,
@@ -298,6 +348,7 @@ const JobExecutionLogList: React.FC = () => {
           }
         }}
       />
+      </div>
 
       <Modal
         title="任务执行日志详情"
