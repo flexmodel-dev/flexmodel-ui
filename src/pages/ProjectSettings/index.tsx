@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Menu, message, theme, Typography, Divider } from 'antd';
-import { useTranslation } from 'react-i18next';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { getProject, patchProject } from '@/services/project';
-import { useProject } from '@/store/appStore';
-import { PageContainer } from '@/components/common';
+import React, {useEffect, useState} from 'react';
+import {Button, Divider, Form, Input, Menu, message, theme, Typography} from 'antd';
+import {useTranslation} from 'react-i18next';
+import {useParams, useSearchParams} from 'react-router-dom';
+import {getProject, patchProject} from '@/services/project';
+import {useProject} from '@/store/appStore';
+import {PageContainer} from '@/components/common';
 import ProvidersTab from '@/pages/Authentication/components/ProvidersTab';
-import { spacing } from '@/theme/designTokens';
+import {spacing} from '@/theme/designTokens';
 
 const { Title, Text } = Typography;
 
@@ -126,9 +126,17 @@ const ProjectSettings: React.FC = () => {
   };
 
   return (
-    <PageContainer loading={loading}>
-      <div className="flex w-full h-full">
-        <div style={{ width: 240, borderRight: `1px solid ${token.colorBorderSecondary}` }}>
+    <PageContainer
+      loading={loading}
+      bodyStyle={{overflow: 'hidden', padding: 0}}
+    >
+      <div className="flex w-full h-full" style={{overflow: 'hidden'}}>
+        <div style={{
+          width: 240,
+          borderRight: `1px solid ${token.colorBorderSecondary}`,
+          flexShrink: 0,
+          overflow: 'hidden'
+        }}>
           <Menu
             className="h-full"
             mode="inline"
@@ -137,7 +145,7 @@ const ProjectSettings: React.FC = () => {
             items={menuItems}
           />
         </div>
-        <div className="flex-1" style={{ padding: `${spacing.md}px ${spacing.xl}px` }}>
+        <div className="flex-1" style={{overflow: 'auto', padding: `${spacing.md}px ${spacing.xl}px`}}>
           <div style={{ marginBottom: spacing.lg }}>
             <Title level={3} style={{ margin: 0 }}>{menuMap[selectKey]}</Title>
           </div>

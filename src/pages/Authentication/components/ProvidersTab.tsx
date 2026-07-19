@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {Alert, Button, Form, message, Radio, Spin} from "antd";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {Alert, Button, Checkbox, Divider, Form, message, Radio, Spin} from "antd";
 import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
 import {createAuthProvider, deleteAuthProvider, getAuthProviders, updateAuthProvider,} from "@/services/auth-provider";
@@ -8,12 +8,13 @@ import {getModelList} from "@/services/model";
 import type {EntitySchema, NativeQuerySchema} from "@/types/data-modeling";
 import OidcForm from "@/pages/Authentication/components/OidcForm";
 import FunctionForm from "@/pages/Authentication/components/FunctionForm";
-import {allPerms, compressPermissions, expandPermissions,} from "@/pages/Authentication/permissionScope";
+import {allPerms, compressPermissions, expandPermissions, PERM_GROUPS,} from "@/pages/Authentication/permissionScope";
+import PermissionPicker, {type UiGroup} from "@/pages/Authentication/components/PermissionPicker";
 
 type AuthMethod = "none" | "oidc" | "function";
 
-// OIDC 表单字段（含权限范围 UI 状态字段），切换认证方式时一并重置。
-const OIDC_FIELDS = ["issuer", "clientId", "clientSecret", "permissionScope", "permissionScopeAll"];
+// 认证类型专属表单字段（切换认证方式时重置）；权限范围字段为 OIDC / Function 共享，不在其中。
+const TYPE_SPECIFIC_FIELDS = ["issuer", "clientId", "clientSecret", "functionName"];
 
 const ProvidersTab: React.FC = () => {
   const { t } = useTranslation();
@@ -60,20 +61,15 @@ const ProvidersTab: React.FC = () => {
       if (active) {
         setAuthMethod(active.type);
         const cfg = (active.config || {}) as Record<string, any>;
-        if (active.type === "oidc") {
-          // 权限范围回填：根据 permissionScope 展开为 UI 勾选状态。
-          // 只有配置了 ["*"] 才算"全部范围"；不空不*则不勾全部，展开后回填细粒度。
-          const stored = Array.isArray(cfg.permissionScope) ? cfg.permissionScope : [];
-          const isFull = stored.includes("*");
-          const individuals = isFull ? allPerms(models) : expandPermissions(stored, models);
-          form.setFieldsValue({
-            ...cfg,
-            permissionScopeAll: isFull,
-            permissionScope: individuals,
-          });
-        } else {
-          form.setFieldsValue(cfg);
-        }
+        // OIDC / Function 共用的权限范围回填：根据 permissionScope 展开为 UI 勾选状态。
+        const stored = Array.isArray(cfg.permissionScope) ? cfg.permissionScope : [];
+        const isFull = stored.includes("*");
+        const individuals = isFull ? allPerms(models) : expandPermissions(stored, models);
+        form.setFieldsValue({
+          ...cfg,
+          permissionScopeAll: isFull,
+          permissionScope: individuals,
+        });
       } else {
         setAuthMethod("none");
         form.resetFields();
@@ -99,21 +95,17 @@ const ProvidersTab: React.FC = () => {
   }, [projectId]);
 
   const handleMethodChange = (method: AuthMethod) => {
-    form.resetFields([...OIDC_FIELDS, "functionName"]);
+    form.resetFields(TYPE_SPECIFIC_FIELDS);
     setAuthMethod(method);
     // 切换到已有提供商时回填其配置（避免切换后空白）
     if (method !== "none") {
       const existing = providers.find((p) => p.type === method);
       if (existing) {
         const cfg = (existing.config || {}) as Record<string, any>;
-        if (method === "oidc") {
-          const stored = Array.isArray(cfg.permissionScope) ? cfg.permissionScope : [];
-          const isFull = stored.includes("*");
-          const individuals = isFull ? allPerms(modelNames) : expandPermissions(stored, modelNames);
-          form.setFieldsValue({...cfg, permissionScopeAll: isFull, permissionScope: individuals});
-        } else {
-          form.setFieldsValue(cfg);
-        }
+        const stored = Array.isArray(cfg.permissionScope) ? cfg.permissionScope : [];
+        const isFull = stored.includes("*");
+        const individuals = isFull ? allPerms(modelNames) : expandPermissions(stored, modelNames);
+        form.setFieldsValue({...cfg, permissionScopeAll: isFull, permissionScope: individuals});
       }
     }
   };
@@ -148,18 +140,17 @@ const ProvidersTab: React.FC = () => {
       //   其余 → 原始细粒度串。
       // 不再使用 UI-only 的 permissionScopeAll 字段，仅作为 UI 开关在保存时翻译。
       const config: Record<string, any> = {...values, type: authMethod};
-      if (authMethod === "oidc") {
-        const all = values.permissionScopeAll !== false;
-        if (all) {
-          config.permissionScope = ["*"];
-        } else {
-          config.permissionScope = compressPermissions(
-            Array.isArray(values.permissionScope) ? values.permissionScope : [],
-            modelNames,
-          );
-        }
-        delete config.permissionScopeAll;
+      // OIDC / Function 共用的权限范围压缩逻辑
+      const all = values.permissionScopeAll !== false;
+      if (all) {
+        config.permissionScope = ["*"];
+      } else {
+        config.permissionScope = compressPermissions(
+          Array.isArray(values.permissionScope) ? values.permissionScope : [],
+          modelNames,
+        );
       }
+      delete config.permissionScopeAll;
 
       const payload: AuthProviderConfig = {
         name: "default",
@@ -213,8 +204,20 @@ const ProvidersTab: React.FC = () => {
           />
         )}
 
-        {authMethod === "oidc" && <OidcForm models={modelNames} loadingModels={loadingModels}/>}
+        {authMethod === "oidc" && <OidcForm/>}
         {authMethod === "function" && <FunctionForm />}
+
+        {authMethod !== "none" && (
+          <>
+            <Divider/>
+            <div style={{marginBottom: 16}}>
+              <ScopeSection
+                models={modelNames}
+                loadingModels={loadingModels}
+              />
+            </div>
+          </>
+        )}
 
         <Form.Item>
           <Button type="primary" onClick={handleSave} loading={saving}>
@@ -223,6 +226,62 @@ const ProvidersTab: React.FC = () => {
         </Form.Item>
       </Form>
     </Spin>
+  );
+};
+
+// ── 权限范围区域（OIDC / Function 共用） ──
+
+interface ScopeSectionProps {
+  models: string[];
+  loadingModels?: boolean;
+}
+
+const ScopeSection: React.FC<ScopeSectionProps> = ({models, loadingModels}) => {
+  const {t} = useTranslation();
+  const permissionScopeAll = Form.useWatch?.("permissionScopeAll") ?? true;
+
+  const groups = useMemo<UiGroup[]>(
+    () =>
+      PERM_GROUPS.map((g) => ({
+        ...g,
+        label: t(`perm_group_${g.key}`),
+      })),
+    [t],
+  );
+
+  const opLabel = (perm: string) => {
+    const op = perm.split(":").pop();
+    const map: Record<string, string> = {
+      view: t("perm_op_view"),
+      create: t("perm_op_create"),
+      update: t("perm_op_update"),
+      delete: t("perm_op_delete"),
+      execute: t("perm_op_execute"),
+    };
+    return (op && map[op]) || op || perm;
+  };
+
+  return (
+    <>
+      <Form.Item
+        label={t("permission_scope")}
+        tooltip={t("permission_scope_hint") || undefined}
+      >
+        <Form.Item name="permissionScopeAll" valuePropName="checked" initialValue={true} noStyle>
+          <Checkbox>{t("permission_scope_all")}</Checkbox>
+        </Form.Item>
+      </Form.Item>
+
+      {!permissionScopeAll && (
+        <Form.Item
+          label={t("permission_scope")}
+          name="permissionScope"
+          rules={[{required: true, message: t("permission_scope_required")}]}
+        >
+          <PermissionPicker groups={groups} models={models} opLabel={opLabel} t={t} loadingModels={loadingModels}/>
+        </Form.Item>
+      )}
+    </>
   );
 };
 
