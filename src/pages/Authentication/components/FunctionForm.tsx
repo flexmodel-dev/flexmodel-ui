@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Form, Select } from "antd";
-import { useTranslation } from "react-i18next";
-import { useProject } from "@/store/appStore";
-import { getFunctionList } from "@/services/function";
-import type { FunctionResponse } from "@/services/function";
+import React, {useCallback, useEffect, useState} from "react";
+import {Form, Select} from "antd";
+import {useTranslation} from "react-i18next";
+import {useProject} from "@/store/appStore";
+import type {FunctionResponse} from "@/services/function";
+import {getFunctionList} from "@/services/function";
 
 const FunctionForm: React.FC = () => {
   const { t } = useTranslation();
