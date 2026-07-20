@@ -17,7 +17,7 @@ export interface PermissionPickerProps {
 }
 
 /**
- * 权限勾选控件：作为 Form.Item name="permissionScope" 的自定义受控控件。
+ * 权限勾选控件：作为 Form.Item name="permissions" 的自定义受控控件。
  *
  * 控件始终在细粒度（individuals）层面操作：value 即 UI 已勾选的具体权限串。
  * 压缩为通配串（["*"] / ["data:*"] / ["data:Classes:*"]）由 ProvidersTab 保存时处理。

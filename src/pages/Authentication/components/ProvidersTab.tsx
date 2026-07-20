@@ -61,14 +61,14 @@ const ProvidersTab: React.FC = () => {
       if (active) {
         setAuthMethod(active.type);
         const cfg = (active.config || {}) as Record<string, any>;
-        // OIDC / Function 共用的权限范围回填：根据 permissionScope 展开为 UI 勾选状态。
-        const stored = Array.isArray(cfg.permissionScope) ? cfg.permissionScope : [];
+        // OIDC / Function 共用的权限范围回填：根据后台配置展开为 UI 勾选状态。
+        const stored = Array.isArray(cfg.permissions) ? cfg.permissions : [];
         const isFull = stored.includes("*");
         const individuals = isFull ? allPerms(models) : expandPermissions(stored, models);
         form.setFieldsValue({
           ...cfg,
-          permissionScopeAll: isFull,
-          permissionScope: individuals,
+          scopeAll: isFull,
+          permissions: individuals,
         });
       } else {
         setAuthMethod("none");
@@ -102,10 +102,10 @@ const ProvidersTab: React.FC = () => {
       const existing = providers.find((p) => p.type === method);
       if (existing) {
         const cfg = (existing.config || {}) as Record<string, any>;
-        const stored = Array.isArray(cfg.permissionScope) ? cfg.permissionScope : [];
+        const stored = Array.isArray(cfg.permissions) ? cfg.permissions : [];
         const isFull = stored.includes("*");
         const individuals = isFull ? allPerms(modelNames) : expandPermissions(stored, modelNames);
-        form.setFieldsValue({...cfg, permissionScopeAll: isFull, permissionScope: individuals});
+        form.setFieldsValue({...cfg, scopeAll: isFull, permissions: individuals});
       }
     }
   };
@@ -134,23 +134,23 @@ const ProvidersTab: React.FC = () => {
       }
 
       // 构造保存到后台的 config：
-      // permissionScope 采用通配压缩格式——
+      // permissions 采用通配压缩格式——
       //   全部范围 → ["*"]；
       //   整组全选 → `${prefix}:*`；整模型全选 → `${prefix}:${model}:*`；
       //   其余 → 原始细粒度串。
-      // 不再使用 UI-only 的 permissionScopeAll 字段，仅作为 UI 开关在保存时翻译。
+      // scopeAll 为 UI-only 的开关字段，仅作为"全部范围"的 UI 状态，保存时翻译后删除。
       const config: Record<string, any> = {...values, type: authMethod};
       // OIDC / Function 共用的权限范围压缩逻辑
-      const all = values.permissionScopeAll !== false;
+      const all = values.scopeAll !== false;
       if (all) {
-        config.permissionScope = ["*"];
+        config.permissions = ["*"];
       } else {
-        config.permissionScope = compressPermissions(
-          Array.isArray(values.permissionScope) ? values.permissionScope : [],
+        config.permissions = compressPermissions(
+          Array.isArray(values.permissions) ? values.permissions : [],
           modelNames,
         );
       }
-      delete config.permissionScopeAll;
+      delete config.scopeAll;
 
       const payload: AuthProviderConfig = {
         name: "default",
@@ -238,7 +238,7 @@ interface ScopeSectionProps {
 
 const ScopeSection: React.FC<ScopeSectionProps> = ({models, loadingModels}) => {
   const {t} = useTranslation();
-  const permissionScopeAll = Form.useWatch?.("permissionScopeAll") ?? true;
+  const scopeAll = Form.useWatch?.("scopeAll") ?? true;
 
   const groups = useMemo<UiGroup[]>(
     () =>
@@ -267,15 +267,15 @@ const ScopeSection: React.FC<ScopeSectionProps> = ({models, loadingModels}) => {
         label={t("permission_scope")}
         tooltip={t("permission_scope_hint") || undefined}
       >
-        <Form.Item name="permissionScopeAll" valuePropName="checked" initialValue={true} noStyle>
+        <Form.Item name="scopeAll" valuePropName="checked" initialValue={true} noStyle>
           <Checkbox>{t("permission_scope_all")}</Checkbox>
         </Form.Item>
       </Form.Item>
 
-      {!permissionScopeAll && (
+      {!scopeAll && (
         <Form.Item
           label={t("permission_scope")}
-          name="permissionScope"
+          name="permissions"
           rules={[{required: true, message: t("permission_scope_required")}]}
         >
           <PermissionPicker groups={groups} models={models} opLabel={opLabel} t={t} loadingModels={loadingModels}/>
