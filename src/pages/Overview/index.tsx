@@ -7,6 +7,7 @@ import {getApiLogStat} from "@/services/api-log";
 import {ApiLogStatSchema} from "@/types/api-log";
 import {FmMetricsResponse, getFmMetrics} from "@/services/metrics";
 import {useProject} from "@/store/appStore";
+import ProjectInfoPanel from "@/pages/Overview/components/ProjectInfoPanel.tsx";
 
 
 const StatisticsPage: React.FC = () => {
@@ -74,6 +75,8 @@ const StatisticsPage: React.FC = () => {
     >
       {/* 统计卡片组件 */}
       <StatisticsCards stats={stats} />
+      {/* 项目信息面板 */}
+      <ProjectInfoPanel/>
       {/* 趋势分析组件 */}
       <TrendAnalysis
         apiStat={apiStat}
