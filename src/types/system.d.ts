@@ -9,4 +9,6 @@ export interface SystemProfile {
   storageProvider: StorageProviderInfo;
   projectBaseDomain: string;
   edgeUrlTemplate: string;
+  routingMode: string;
+  pagesUrlTemplate: string;
 }

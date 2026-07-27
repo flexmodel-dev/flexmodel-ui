@@ -71,8 +71,8 @@ const Settings: React.FC = () => {
 
   return (
     <PageContainer>
-      <div className="flex w-full h-full">
-        <div style={{ width: 240, borderRight: `1px solid ${token.colorBorderSecondary}` }}>
+      <div className="flex w-full h-full" style={{overflow: 'hidden'}}>
+        <div style={{width: 240, borderRight: `1px solid ${token.colorBorderSecondary}`, flexShrink: 0}}>
           <Menu
             className="h-full"
             mode="inline"
@@ -86,11 +86,28 @@ const Settings: React.FC = () => {
             items={getMenu()}
           />
         </div>
-        <div className="flex-1" style={{ padding: `${spacing.md}px ${spacing.xl}px` }}>
-          <div style={{ marginBottom: spacing.lg, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Title level={3} style={{ margin: 0 }}>{menuMap[initConfig.selectKey] as string}</Title>
+        <div className="flex-1" style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0}}>
+          {/* 固定标题 */}
+          <div style={{
+            padding: `${spacing.md}px ${spacing.xl}px`,
+            paddingBottom: 0,
+            flexShrink: 0,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+            <Title level={3}
+                   style={{margin: 0, marginBottom: spacing.md}}>{menuMap[initConfig.selectKey] as string}</Title>
           </div>
-          {renderChildren(saveSettings)}
+          {/* 可滚动内容 */}
+          <div style={{
+            flex: 1,
+            overflow: 'auto',
+            padding: `0 ${spacing.xl}px ${spacing.md}px`,
+            minHeight: 0,
+          }}>
+            {renderChildren(saveSettings)}
+          </div>
         </div>
       </div>
     </PageContainer>

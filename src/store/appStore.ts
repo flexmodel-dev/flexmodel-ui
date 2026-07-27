@@ -82,7 +82,9 @@ export const useAppStore = create<AppState>()(
                 ...profile.settings,
                 apiRootPath: profile.apiRootPath,
                 projectBaseDomain: profile.projectBaseDomain,
-                edgeUrlTemplate: profile.edgeUrlTemplate
+                edgeUrlTemplate: profile.edgeUrlTemplate,
+                routingMode: profile.routingMode,
+                pagesUrlTemplate: profile.pagesUrlTemplate
               }, isLoading: false
             });
           } catch (error) {

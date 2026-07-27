@@ -6,11 +6,12 @@ import {getProject, patchProject} from '@/services/project';
 import {useProject} from '@/store/appStore';
 import {PageContainer} from '@/components/common';
 import ProvidersTab from '@/pages/Authentication/components/ProvidersTab';
+import PagesTab from '@/pages/Pages';
 import {spacing} from '@/theme/designTokens';
 
 const { Title, Text } = Typography;
 
-type ProjectSettingsTabKey = 'base' | 'auth';
+type ProjectSettingsTabKey = 'base' | 'auth' | 'pages';
 
 const ProjectSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -27,6 +28,7 @@ const ProjectSettings: React.FC = () => {
   const menuMap: Record<ProjectSettingsTabKey, string> = {
     base: t('settings_basic_settings'),
     auth: t('authentication'),
+    pages: t('pages.title'),
   };
 
   const menuItems = (Object.keys(menuMap) as ProjectSettingsTabKey[]).map((key) => ({
@@ -120,6 +122,8 @@ const ProjectSettings: React.FC = () => {
         );
       case 'auth':
         return <ProvidersTab />;
+      case 'pages':
+        return projectId ? <PagesTab projectId={projectId}/> : null;
       default:
         return null;
     }
@@ -145,11 +149,24 @@ const ProjectSettings: React.FC = () => {
             items={menuItems}
           />
         </div>
-        <div className="flex-1" style={{overflow: 'auto', padding: `${spacing.md}px ${spacing.xl}px`}}>
-          <div style={{ marginBottom: spacing.lg }}>
-            <Title level={3} style={{ margin: 0 }}>{menuMap[selectKey]}</Title>
+        <div className="flex-1" style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0}}>
+          {/* 固定标题 */}
+          <div style={{
+            padding: `${spacing.md}px ${spacing.xl}px`,
+            paddingBottom: 0,
+            flexShrink: 0,
+          }}>
+            <Title level={3} style={{margin: 0, marginBottom: spacing.md}}>{menuMap[selectKey]}</Title>
           </div>
-          {renderContent()}
+          {/* 可滚动内容 */}
+          <div style={{
+            flex: 1,
+            overflow: 'auto',
+            padding: `0 ${spacing.xl}px ${spacing.md}px`,
+            minHeight: 0,
+          }}>
+            {renderContent()}
+          </div>
         </div>
       </div>
     </PageContainer>
