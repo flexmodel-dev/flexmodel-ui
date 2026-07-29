@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Badge, Button, Card, Col, DatePicker, Row, Space, theme} from "antd";
 import ReactECharts from "echarts-for-react";
+import echarts from '@/utils/echarts';
 import dayjs, {Dayjs} from "dayjs";
 import {useTranslation} from "react-i18next";
 import type {ApiStat, RankingData} from '@/types/overview.d.ts';
@@ -232,7 +233,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
         >
           <div style={{ display: "flex", gap: 16, height: 420 }}>
             <div style={{ flex: "2 1 0", minWidth: 0 }}>
-              <ReactECharts option={chartConfig} style={{ height: "100%" }} />
+              <ReactECharts echarts={echarts} option={chartConfig} style={{ height: "100%" }} />
             </div>
             <div style={{ flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column" }}>
               <div style={{ fontSize: "16px", fontWeight: "500", marginBottom: "16px", color: token.colorText }}>

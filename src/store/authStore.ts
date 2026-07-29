@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import {devtools, persist} from 'zustand/middleware';
+import {useShallow} from 'zustand/react/shallow';
 import * as authService from '@/services/auth';
 import type {AuthStore, UserInfo} from '@/types/auth';
 
@@ -122,7 +123,7 @@ export const useAuthStore = create<AuthStore>()(
 );
 
 // 导出选择器hooks
-export const useAuth = () => useAuthStore((state) => ({
+export const useAuth = () => useAuthStore(useShallow((state) => ({
   isAuthenticated: state.isAuthenticated,
   user: state.user,
   token: state.token,
@@ -135,4 +136,4 @@ export const useAuth = () => useAuthStore((state) => ({
   setUser: state.setUser,
   setToken: state.setToken,
   clearError: state.clearError,
-}));
+})));
