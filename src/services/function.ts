@@ -42,6 +42,11 @@ export interface FunctionInvokeResult {
   meta?: FunctionInvokeMeta;
 }
 
+export interface InvokeTokenResponse {
+  invokeToken: string;
+  runtimeUrl: string;
+}
+
 export interface PageDTO<T> {
   list: T[];
   total: number;
@@ -78,8 +83,71 @@ export const deleteFunction = (
   return api.delete(`/projects/${projectId}/functions/${encodeURIComponent(name)}`);
 };
 
-// invoke — 请求体直接作为函数的 Request body（不再嵌套在 input 字段中）
+// ---- Invoke Token (Edge Function) ----
+
+/**
+ * Get an invoke-token for edge function direct invocation.
+ * Returns invokeToken + runtimeUrl for direct Deno Runtime call.
+ */
+export const getInvokeToken = (
+  projectId: string,
+  name: string,
+): Promise<InvokeTokenResponse> => {
+  return api.post(`/projects/${projectId}/functions/${encodeURIComponent(name)}/invoke-token`);
+};
+
+// ---- Invoke (Edge Function — direct Deno call) ----
+
+/**
+ * Invoke a function via edge route (direct Deno Runtime call).
+ * 1. Get invoke-token from Java server
+ * 2. Call Deno Runtime directly with the token
+ */
 export const invokeFunction = async (
+  projectId: string,
+  name: string,
+  data: any,
+): Promise<FunctionInvokeResult> => {
+  // 1. Get invoke-token from Java server
+  const {invokeToken, runtimeUrl} = await getInvokeToken(projectId, name);
+
+  // 2. Call Deno Runtime directly
+  const response = await fetch(runtimeUrl, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${invokeToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  // 3. Parse response
+  let meta: FunctionInvokeMeta | undefined;
+  const metaStr = response.headers.get('x-function-meta');
+  if (metaStr) {
+    try {
+      meta = JSON.parse(metaStr);
+    } catch { /* ignore */
+    }
+  }
+
+  let responseData: any;
+  try {
+    responseData = await response.json();
+  } catch {
+    responseData = await response.text();
+  }
+
+  return {status: response.status, data: responseData, meta};
+};
+
+// ---- Invoke (Legacy — via Java server, kept as fallback) ----
+
+/**
+ * Invoke a function via Java server (legacy path).
+ * Use invokeFunction() for edge function direct invocation instead.
+ */
+export const invokeFunctionViaServer = async (
   projectId: string,
   name: string,
   data: any,

@@ -17,16 +17,17 @@ import {
   Tooltip,
   Typography
 } from 'antd';
-const { TextArea } = Input;
 import {CodeOutlined} from '@ant-design/icons';
 import {Edge, Node} from '@xyflow/react';
 import ScriptEditorModal from '../../../components/common/ScriptEditorModal';
 import FieldMappingComponent from '../../../components/common/FieldMappingComponent';
 import {getModelList} from '@/services/model';
-import {getFunctionList, FunctionResponse} from '@/services/function';
+import {FunctionResponse, getFunctionList} from '@/services/function';
 
 import {EntitySchema, EnumSchema, NativeQuerySchema} from '@/types/data-modeling';
 import {useProject} from '@/store/appStore';
+
+const { TextArea } = Input;
 
 const { Option } = Select;
 
@@ -178,7 +179,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
         const res = await getFunctionList(projectId, { size: 1000 });
         setFunctions(res.list || []);
       } catch (error) {
-        console.error('获取云函数列表失败:', error);
+        console.error('获取边缘函数列表失败:', error);
         setFunctions([]);
       }
     };
@@ -539,12 +540,12 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
         return (
           <>
             <Form.Item
-              label="云函数"
+              label="边缘函数"
               name={['properties', 'functionName']}
-              rules={[{ required: true, message: '请选择云函数' }]}
+              rules={[{required: true, message: '请选择边缘函数'}]}
             >
               <Select
-                placeholder="请选择云函数"
+                placeholder="请选择边缘函数"
                 showSearch
                 optionFilterProp="label"
                 options={functions.map(fn => ({
@@ -563,7 +564,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             <Form.Item
               label="结果存放路径"
               name={['properties', 'resultPath']}
-              tooltip="云函数返回值在流程变量中的存储路径"
+              tooltip="边缘函数返回值在流程变量中的存储路径"
             >
               <Input placeholder="例如: functionResult" />
             </Form.Item>

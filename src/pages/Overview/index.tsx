@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
-import type { ApiStat, RankingData } from '@/types/overview.d.ts';
+import React, {useEffect, useState} from "react";
+import dayjs, {Dayjs} from "dayjs";
+import type {ApiStat, RankingData} from '@/types/overview.d.ts';
 import TrendAnalysis from '@/pages/Overview/components/metrics/TrendAnalysis';
 import StatisticsCards from '@/pages/Overview/components/StatisticsCards';
-import { getApiLogStat } from "@/services/api-log";
-import { ApiLogStatSchema } from "@/types/api-log";
-import { FmMetricsResponse, getFmMetrics } from "@/services/metrics";
-import { useProject } from "@/store/appStore";
+import {getApiLogStat} from "@/services/api-log";
+import {ApiLogStatSchema} from "@/types/api-log";
+import {FmMetricsResponse, getFmMetrics} from "@/services/metrics";
+import {useProject} from "@/store/appStore";
+import ProjectInfoPanel from "@/pages/Overview/components/ProjectInfoPanel.tsx";
 
 
 const StatisticsPage: React.FC = () => {
@@ -74,7 +75,8 @@ const StatisticsPage: React.FC = () => {
     >
       {/* 统计卡片组件 */}
       <StatisticsCards stats={stats} />
-
+      {/* 项目信息面板 */}
+      <ProjectInfoPanel/>
       {/* 趋势分析组件 */}
       <TrendAnalysis
         apiStat={apiStat}

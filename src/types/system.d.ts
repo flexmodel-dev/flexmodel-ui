@@ -7,4 +7,8 @@ export interface SystemProfile {
   settings: Record<string, any>;
   apiRootPath: string;
   storageProvider: StorageProviderInfo;
+  projectBaseDomain: string;
+  edgeUrlTemplate: string;
+  routingMode: string;
+  pagesUrlTemplate: string;
 }

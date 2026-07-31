@@ -35,7 +35,6 @@ export const PERM_GROUPS: PermGroup[] = [
   {key: "data", perModel: true, ops: ["view", "create", "update", "delete"]},
   {key: "flow", perModel: false, ops: ["view", "execute"]},
   {key: "scheduling", perModel: false, ops: ["view", "execute"]},
-  {key: "function", perModel: false, ops: ["view", "execute"]},
   {key: "storage", perModel: false, ops: ["view", "create", "update", "delete"]},
 ];
 

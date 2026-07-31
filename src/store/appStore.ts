@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import {devtools, persist} from 'zustand/middleware';
+import {useShallow} from 'zustand/react/shallow';
 import {getGlobalProfile} from '../services/global';
 import {getDarkModeFromStorage, setDarkModeToStorage} from '../utils/darkMode';
 import type {Project} from '../types/project';
@@ -77,7 +78,16 @@ export const useAppStore = create<AppState>()(
           set({isLoading: true, error: null});
           try {
             const profile = await getGlobalProfile();
-            set({config: {...profile.settings, apiRootPath: profile.apiRootPath}, isLoading: false});
+            set({
+              config: {
+                ...profile.settings,
+                apiRootPath: profile.apiRootPath,
+                projectBaseDomain: profile.projectBaseDomain,
+                edgeUrlTemplate: profile.edgeUrlTemplate,
+                routingMode: profile.routingMode,
+                pagesUrlTemplate: profile.pagesUrlTemplate
+              }, isLoading: false
+            });
           } catch (error) {
             set({
               error: error instanceof Error ? error.message : '获取配置失败',
@@ -148,34 +158,34 @@ export const useAppStore = create<AppState>()(
 );
 
 // 导出选择器hooks
-export const useConfig = () => useAppStore((state) => ({
+export const useConfig = () => useAppStore(useShallow((state) => ({
   config: state.config,
   isLoading: state.isLoading,
   error: state.error,
   setConfig: state.setConfig,
   fetchConfig: state.fetchConfig,
-}));
+})));
 
-export const useTheme = () => useAppStore((state) => ({
+export const useTheme = () => useAppStore(useShallow((state) => ({
   isDark: state.isDark,
   setDarkMode: state.setDarkMode,
   toggleDarkMode: state.toggleDarkMode,
-}));
+})));
 
-export const useLocale = () => useAppStore((state) => ({
+export const useLocale = () => useAppStore(useShallow((state) => ({
   locale: state.locale,
   currentLang: state.currentLang,
   setLocale: state.setLocale,
   toggleLanguage: state.toggleLanguage,
-}));
+})));
 
-export const useSidebar = () => useAppStore((state) => ({
+export const useSidebar = () => useAppStore(useShallow((state) => ({
   isSidebarCollapsed: state.isSidebarCollapsed,
   setSidebarCollapsed: state.setSidebarCollapsed,
   toggleSidebar: state.toggleSidebar,
-}));
+})));
 
-export const useProject = () => useAppStore((state) => ({
+export const useProject = () => useAppStore(useShallow((state) => ({
   currentProject: state.currentProject,
   setCurrentProject: state.setCurrentProject,
-}));
+})));

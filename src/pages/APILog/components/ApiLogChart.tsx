@@ -1,5 +1,6 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
+import echarts from '@/utils/echarts';
 
 interface ApiLogChartProps {
   chartData: {
@@ -109,6 +110,7 @@ const ApiLogChart: React.FC<ApiLogChartProps> = ({
   return (
     <div style={{ height, width }}>
       <ReactECharts
+        echarts={echarts}
         option={getChartOption()}
         style={{ height: '100%', width: '100%' }}
       />

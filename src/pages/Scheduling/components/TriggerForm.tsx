@@ -6,7 +6,7 @@ import {INTERVAL_UNITS, MUTATION_TYPES, TRIGGER_TIMINGS, TriggerFormType} from '
 import {TriggerDTO} from '@/services/trigger';
 import {getModelList} from '@/services/model';
 import {FlowModule, getFlowList} from '@/services/flow';
-import {getFunctionList, FunctionResponse} from '@/services/function';
+import {FunctionResponse, getFunctionList} from '@/services/function';
 import {EntitySchema, EnumSchema, NativeQuerySchema} from '@/types/data-modeling';
 import {useProject} from '@/store/appStore';
 
@@ -58,7 +58,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
         const fnList = await getFunctionList(projectId, { size: 1000 });
         setFunctions(fnList.list);
       } catch (error) {
-        console.error('获取云函数列表失败:', error);
+        console.error('获取边缘函数列表失败:', error);
       }
     };
     fetchFunctions();
