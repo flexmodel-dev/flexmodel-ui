@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Button, Drawer, Dropdown, Input, message, Modal, Spin, Tree} from "antd";
+import {Button, Drawer, Dropdown, Empty, Input, message, Modal, Spin, Tree} from "antd";
 import type {MenuProps, TreeDataNode} from "antd";
 import {CodeOutlined, TableOutlined, FileOutlined, FolderOutlined, FolderOpenOutlined, MoreOutlined, PlusOutlined, SearchOutlined, TagsOutlined} from "@ant-design/icons";
 import {createModel, dropModel, getModelList, executeFml} from "@/services/model.ts";
@@ -467,18 +467,22 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
             }
           `}</style>
           <Spin spinning={modelLoading} size="small" style={{ minHeight: 200 }}>
-            <Tree
-              className="model-explorer-tree"
-              treeData={treeData}
-              selectedKeys={selectedKeys}
-              expandedKeys={expandedKeys}
-              onSelect={handleTreeSelect}
-              onExpand={handleTreeExpand}
-              showIcon
-              titleRender={titleRender}
-              blockNode
-              style={{ background: 'transparent' }}
-            />
+            {treeData.length === 0 && !modelLoading ? (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{margin: '100px 0'}}/>
+            ) : (
+              <Tree
+                className="model-explorer-tree"
+                treeData={treeData}
+                selectedKeys={selectedKeys}
+                expandedKeys={expandedKeys}
+                onSelect={handleTreeSelect}
+                onExpand={handleTreeExpand}
+                showIcon
+                titleRender={titleRender}
+                blockNode
+                style={{background: 'transparent'}}
+              />
+            )}
           </Spin>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, {useRef, useState, useCallback} from "react";
-import {Button, message, Space, Splitter} from "antd";
+import {Button, Empty, message, Space, Splitter} from "antd";
 import PageContainer from "@/components/common/PageContainer";
 import ModelExplorer from "@/pages/DataModeling/components/ModelExplorer.tsx";
 import EntityView from "@/pages/DataModeling/components/EntityView";
@@ -107,7 +107,9 @@ const ModelingPage: React.FC = () => {
       case activeModel?.type?.endsWith("_group"):
         return <ERDiagram data={activeModel?.children}/>;
       default:
-        return <div>Please select a model to operate.</div>;
+        return <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%'}}>
+          <Empty/>
+        </div>;
     }
   };
 

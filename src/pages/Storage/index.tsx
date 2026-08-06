@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Col, Form, message, Modal, Row, Space, Splitter, Tabs, Typography, theme, Tag} from "antd";
+import {Button, Col, Empty, Form, message, Modal, Row, Space, Splitter, Tabs, Typography, theme, Tag} from "antd";
 import {useTranslation} from "react-i18next";
 import PageContainer from "@/components/common/PageContainer";
 import type {BucketSchema, StorageProviderInfo} from "@/types/storage";
@@ -140,7 +140,7 @@ const StorageManagement: React.FC = () => {
                   )}
                 </Space>
               </div>
-              {activeBucket && (
+              {activeBucket ? (
                 <Row>
                   <Col span={24}>
                     {isEditing ? (
@@ -168,6 +168,10 @@ const StorageManagement: React.FC = () => {
                     )}
                   </Col>
                 </Row>
+              ) : (
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%'}}>
+                  <Empty/>
+                </div>
               )}
             </div>
           </Splitter.Panel>
