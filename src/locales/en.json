@@ -231,6 +231,7 @@
   "load_files_failed": "Failed to load file list",
   "copy_link": "Copy Link",
   "copy_link_success": "Link copied to clipboard",
+  "copy_link_not_public": "Link copied, but this bucket is not public. Direct browser access will be denied. Set the bucket visibility to Public to allow anonymous access.",
   "copy_link_failed": "Failed to copy link",
   "delete_dialog_text": "Are you sure you want to delete {{name}}?",
   "connection_name": "Connection name",

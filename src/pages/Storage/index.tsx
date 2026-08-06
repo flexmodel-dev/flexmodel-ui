@@ -155,7 +155,8 @@ const StorageManagement: React.FC = () => {
                           {
                             key: 'browser',
                             label: t('file_browser'),
-                            children: <FileBrowser bucketName={activeBucket.name} projectId={projectId}/>,
+                            children: <FileBrowser bucketName={activeBucket.name} projectId={projectId}
+                                                   visibility={activeBucket.visibility}/>,
                           },
                           {
                             key: 'config',

@@ -231,6 +231,7 @@
   "load_files_failed": "加载文件列表失败",
   "copy_link": "复制链接",
   "copy_link_success": "链接已复制到剪贴板",
+  "copy_link_not_public": "链接已复制，但该 Bucket 非公开，浏览器直接访问会被拒绝。如需公开访问，请将 Bucket 可见性设为「公开」。",
   "copy_link_failed": "复制链接失败",
   "delete_dialog_text": "确定要删除 {{name}}?",
   "connection_name": "连接名称",

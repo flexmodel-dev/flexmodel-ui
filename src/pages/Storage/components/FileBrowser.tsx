@@ -10,7 +10,7 @@ import {
   ReloadOutlined, LinkOutlined,
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
-import type {FileItem} from '@/types/storage';
+import type {BucketVisibility, FileItem} from '@/types/storage';
 import {useTranslation} from 'react-i18next';
 import {
   listObjects,
@@ -23,9 +23,10 @@ import {
 interface FileBrowserProps {
   bucketName: string;
   projectId: string;
+  visibility: BucketVisibility;
 }
 
-const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
+const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId, visibility}) => {
   const {t} = useTranslation();
   const {token} = theme.useToken();
   const [currentPath, setCurrentPath] = useState<string>('/');
@@ -115,11 +116,15 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId}) => {
   };
 
   const handleCopyLink = async (file: FileItem) => {
-    const objectPath = file.path.startsWith('/') ? file.path.substring(1) : file.path;
+    const objectPath = (file.path.startsWith('/') ? file.path.substring(1) : file.path).replace(/\\/g, '/');
     const url = `${window.location.origin}/api/projects/${projectId}/buckets/${bucketName}/objects/${objectPath}`;
     try {
       await navigator.clipboard.writeText(url);
-      message.success(t('copy_link_success'));
+      if (visibility === 'PUBLIC') {
+        message.success(t('copy_link_success'));
+      } else {
+        message.warning(t('copy_link_not_public'));
+      }
     } catch {
       message.error(t('copy_link_failed'));
     }
