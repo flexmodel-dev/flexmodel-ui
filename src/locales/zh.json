@@ -972,7 +972,9 @@
     "storage": "个存储",
     "updateFailed": "项目更新失败",
     "defaultProjectNotEditable": "默认项目不支持修改",
-    "databaseName": "数据库名"
+    "databaseName": "数据库名",
+    "showSystemModels": "展示系统模型",
+    "showSystemModelsTip": "开启后，查询模型时将返回系统模型（以 f_ 开头的内置模型），默认关闭"
   },
   "common": {
     "confirm": "确定",

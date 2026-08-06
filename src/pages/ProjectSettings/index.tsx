@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Divider, Form, Input, Menu, message, theme, Typography} from 'antd';
+import {Button, Divider, Form, Input, Menu, message, Switch, theme, Typography} from 'antd';
 import {useTranslation} from 'react-i18next';
 import {useParams, useSearchParams} from 'react-router-dom';
 import {getProject, patchProject} from '@/services/project';
@@ -21,6 +21,7 @@ const ProjectSettings: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showSystemModels, setShowSystemModels] = useState(false);
   const [searchParams] = useSearchParams();
   const defaultTab = (searchParams.get('tab') as ProjectSettingsTabKey) || 'base';
   const [selectKey, setSelectKey] = useState<ProjectSettingsTabKey>(defaultTab);
@@ -45,6 +46,7 @@ const ProjectSettings: React.FC = () => {
           name: project.name,
           description: project.description || '',
         });
+        setShowSystemModels(Boolean(project.metadata?.showSystemModels));
       })
       .finally(() => setLoading(false));
   }, [projectId, form]);
@@ -57,6 +59,7 @@ const ProjectSettings: React.FC = () => {
       const updatedProject = await patchProject(projectId, {
         name: values.name,
         description: values.description,
+        metadata: {showSystemModels},
       });
       // 更新全局 store 中的项目信息，使头部名称同步刷新
       setCurrentProject(updatedProject);
@@ -96,6 +99,20 @@ const ProjectSettings: React.FC = () => {
               >
                 <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')} />
               </Form.Item>
+
+            <Divider/>
+
+            <Form.Item
+              label={t('project.showSystemModels')}
+              tooltip={t('project.showSystemModelsTip')}
+              style={{maxWidth: 800}}
+            >
+              <Switch
+                checked={showSystemModels}
+                disabled={isDefaultProject}
+                onChange={(checked) => setShowSystemModels(checked)}
+              />
+            </Form.Item>
 
               {!isDefaultProject && (
                 <Form.Item>

@@ -15,6 +15,10 @@ export interface Project {
   updatedBy?: string;
   ownerId?: string;
   branches?: Branch[];
+  metadata?: {
+    showSystemModels?: boolean;
+    [key: string]: any;
+  };
   stats?: {
     apiCount: number;
     modelCount: number;
@@ -39,4 +43,8 @@ export interface ProjectCreateRequest {
 export interface ProjectUpdateRequest {
   name?: string;
   description?: string;
+  metadata?: {
+    showSystemModels?: boolean;
+    [key: string]: any;
+  };
 }

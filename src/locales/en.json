@@ -603,7 +603,9 @@
     "storage": "Storages",
     "updateFailed": "Failed to update project",
     "defaultProjectNotEditable": "The default project cannot be modified",
-    "databaseName": "Database Name"
+    "databaseName": "Database Name",
+    "showSystemModels": "Show system models",
+    "showSystemModelsTip": "When enabled, querying models will also return system models (built-in models prefixed with f_). Disabled by default."
   },
   "common": {
     "confirm": "Confirm",
