@@ -29,7 +29,7 @@ const ProjectInfoPanel: React.FC = () => {
     projectId,
   );
   const functionsUrl = resolveUrl(
-    config.edgeUrlTemplate || '/functions/{{projectId}}/{{name}}',
+    config.edgeUrlTemplate || '/open/{{projectId}}/functions/{{name}}',
     projectId,
   );
 
