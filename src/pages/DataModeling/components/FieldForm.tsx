@@ -112,8 +112,8 @@ export const FieldInitialValues: any = {
     nullable: true,
     identity: false,
   },
-  RELATION: {
-    type: 'Relation',
+  MODEL_REF: {
+    type: 'ModelRef',
     multiple: true,
     localField: null,
     foreignField: null,
@@ -151,7 +151,7 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
     validateFields: form.validateFields,
   }));
   const [modelList, setModelList] = useState<any[]>([]);
-  const [RelationModel, setRelationModel] = useState<any>();
+  const [ModelRefModel, setModelRefModel] = useState<any>();
   const [tmpType, setTmpType] = useState<string>("");
 
   const reqModelList = React.useCallback(async () => {
@@ -190,8 +190,8 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
       });
       let tmpTypeValue = currentValue.tmpType;
       if (!tmpTypeValue) {
-        if (currentValue.type === 'Relation' && currentValue.from) {
-          tmpTypeValue = `Relation:${currentValue.from}`;
+        if (currentValue.type === 'ModelRef' && currentValue.from) {
+          tmpTypeValue = `ModelRef:${currentValue.from}`;
         } else if (currentValue.type === 'Enum' && currentValue.from) {
           tmpTypeValue = `Enum:${currentValue.from}`;
         } else {
@@ -206,23 +206,23 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
   }, [currentValue, form, initialValues, reqModelList]);
 
   useEffect(() => {
-    if (tmpType?.startsWith("Relation:")) {
-      const relatedModelName = tmpType.replace("Relation:", "");
+    if (tmpType?.startsWith("ModelRef:")) {
+      const relatedModelName = tmpType.replace("ModelRef:", "");
       const relatedModel = modelList.find((m) => m.name === relatedModelName);
-      setRelationModel(relatedModel);
+      setModelRefModel(relatedModel);
     } else {
-      setRelationModel(null);
+      setModelRefModel(null);
     }
   }, [modelList, tmpType]);
 
   const handleTypeChange = (value: string) => {
     setTmpType(value);
     console.log("----");
-    if (value.startsWith("Relation")) {
+    if (value.startsWith("ModelRef")) {
       form.setFieldsValue({
-        ...FieldInitialValues["RELATION"],
-        type: "Relation",
-        from: value.replace("Relation:", ""),
+        ...FieldInitialValues["MODEL_REF"],
+        type: "ModelRef",
+        from: value.replace("ModelRef:", ""),
         multiple: false,
         defaultValue: { type: "fixed", value: null },
       });
@@ -333,7 +333,7 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
               .map((item) => (
                 <Select.Option
                   key={item.name}
-                  value={`Relation:${item.name}`}
+                  value={`ModelRef:${item.name}`}
                 >
                   {item.name}
                 </Select.Option>
@@ -370,7 +370,7 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
         </>
       )}
 
-      {form.getFieldValue("tmpType")?.startsWith("Relation") && (
+      {form.getFieldValue("tmpType")?.startsWith("ModelRef") && (
         <>
           <Form.Item
             label={t("local_field")}
@@ -391,7 +391,7 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
             rules={[{ required: true }]}
           >
             <Select>
-              {RelationModel?.fields?.map((field: any) => (
+              {ModelRefModel?.fields?.map((field: any) => (
                 <Select.Option key={field.name} value={field.name}>
                   {field.name}
                 </Select.Option>

@@ -82,8 +82,8 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
 
     let tmpTypeValue = field.tmpType;
     if (!tmpTypeValue) {
-      if (field.type === 'Relation' && field.from) {
-        tmpTypeValue = `Relation:${field.from}`;
+      if (field.type === 'ModelRef' && field.from) {
+        tmpTypeValue = `ModelRef:${field.from}`;
       } else if (field.type === 'Enum' && field.from) {
         tmpTypeValue = `Enum:${field.from}`;
       } else {
@@ -171,7 +171,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
         return <CalendarOutlined style={{ color: '#d9a441', marginRight: 4 }} />;
       case 'JSON':
         return <FileTextOutlined style={{ color: '#aa2d00', marginRight: 4 }} />;
-      case 'Relation':
+      case 'ModelRef':
         return <LinkOutlined style={{ color: '#254fad', marginRight: 4 }} />;
       case 'EnumRef':
         return <TagsOutlined style={{ color: '#aa2d00', marginRight: 4 }} />;
@@ -204,7 +204,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
       dataIndex: "type",
       key: "type",
       render: (type: string, f: Field) => {
-        if (type === "Relation") {
+        if (type === "ModelRef") {
           return (
             <Tooltip
               title={
