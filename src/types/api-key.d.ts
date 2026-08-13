@@ -5,7 +5,6 @@ export interface ApiKey {
   id: string;
   name: string;
   keyPrefix: string;
-  scope: 'admin' | 'open';
   projectIds?: string;
   readOnly: boolean;
   expiresAt: string | null;
@@ -20,7 +19,6 @@ export interface ApiKey {
  */
 export interface CreateApiKeyRequest {
   name: string;
-  scope?: string;
   projectIds?: string;
   readOnly?: boolean;
 }

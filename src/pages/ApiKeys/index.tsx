@@ -65,7 +65,6 @@ const ApiKeys: React.FC = () => {
       const values = await form.validateFields();
       const req: CreateApiKeyRequest = {
         name: values.name,
-        scope: values.scope || "open",
         projectIds: (values.projectIds as string[] | undefined)?.join(",") || "",
         readOnly: values.readOnly ?? false,
       };
@@ -107,29 +106,11 @@ const ApiKeys: React.FC = () => {
     });
   };
 
-  const getScopeTag = (scope: string) => {
-    const colorMap: Record<string, string> = {
-      admin: "red",
-      open: "blue",
-    };
-    const labelMap: Record<string, string> = {
-      admin: t("scope_admin"),
-      open: t("scope_open"),
-    };
-    return <Tag color={colorMap[scope] || "default"}>{labelMap[scope] || scope}</Tag>;
-  };
-
   const columns = [
     {
       title: t("name"),
       dataIndex: "name",
       key: "name",
-    },
-    {
-      title: t("scope"),
-      dataIndex: "scope",
-      key: "scope",
-      render: (scope: string) => getScopeTag(scope),
     },
     {
       title: t("key_prefix"),
@@ -217,17 +198,9 @@ const ApiKeys: React.FC = () => {
           message={t("api_key_frontend_warning")}
           style={{marginBottom: 16}}
         />
-        <Form form={form} layout="vertical" initialValues={{readOnly: false, scope: "open"}}>
+        <Form form={form} layout="vertical" initialValues={{readOnly: false}}>
           <Form.Item name="name" label={t("name")} rules={[{ required: true, message: t("name_required") }]}>
             <Input placeholder={t("api_key_name_placeholder")} />
-          </Form.Item>
-          <Form.Item name="scope" label={t("scope")}>
-            <Select
-              options={[
-                {label: t("scope_open"), value: "open"},
-                {label: t("scope_admin"), value: "admin"},
-              ]}
-            />
           </Form.Item>
           <Form.Item name="projectIds" label={t("project_ids")}>
             <Select
