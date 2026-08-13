@@ -28,10 +28,6 @@ const ProjectInfoPanel: React.FC = () => {
     config.pagesUrlTemplate || '/pages/{{projectId}}',
     projectId,
   );
-  const functionsUrl = resolveUrl(
-    config.edgeUrlTemplate || '/functions/{{projectId}}/{{name}}',
-    projectId,
-  );
 
   return (
     <Card
@@ -56,14 +52,6 @@ const ProjectInfoPanel: React.FC = () => {
           <Text style={{fontSize: 14, color: 'var(--ant-color-text-secondary)', whiteSpace: 'nowrap'}}>Pages 站点</Text>
           {projectId ? (
             <Text copyable={{text: pagesUrl}}>{pagesUrl}</Text>
-          ) : (
-            <Text type="secondary" style={{fontSize: 13}}>请先选择项目</Text>
-          )}
-        </div>
-        <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
-          <Text style={{fontSize: 14, color: 'var(--ant-color-text-secondary)', whiteSpace: 'nowrap'}}>函数入口</Text>
-          {projectId ? (
-            <Text copyable={{text: functionsUrl}}>{functionsUrl}</Text>
           ) : (
             <Text type="secondary" style={{fontSize: 13}}>请先选择项目</Text>
           )}

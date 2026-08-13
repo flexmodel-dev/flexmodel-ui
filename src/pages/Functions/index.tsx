@@ -172,6 +172,17 @@ const FunctionsPage: React.FC = () => {
         title={t("function.title")}
         extra={
           <Space>
+            <Input
+              placeholder={t("function.searchByName")}
+              prefix={<SearchOutlined/>}
+              value={searchName}
+              onChange={(e) => {
+                setSearchName(e.target.value);
+                setPage(1);
+              }}
+              style={{width: 220}}
+              allowClear
+            />
             <Button icon={<ReloadOutlined/>} onClick={loadList}>
               {t("refresh")}
             </Button>
@@ -182,17 +193,6 @@ const FunctionsPage: React.FC = () => {
         }
         loading={loading}
       >
-        <Space style={{marginBottom: 16}} wrap>
-          <Input
-            placeholder={t("function.searchByName")}
-            prefix={<SearchOutlined/>}
-            value={searchName}
-            onChange={(e) => { setSearchName(e.target.value); setPage(1); }}
-            style={{width: 220}}
-            allowClear
-          />
-        </Space>
-
         <Table
           columns={columns}
           dataSource={functions}

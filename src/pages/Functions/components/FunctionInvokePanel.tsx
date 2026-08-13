@@ -3,8 +3,8 @@ import {Alert, Button, Card, message, Space, Spin, Tabs, Tag, theme, Typography,
 import {SendOutlined} from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
 import ScriptEditor from "@/components/common/ScriptEditor";
-import type {FunctionInvokeResult,} from "@/services/function";
-import {invokeFunctionViaServer} from "@/services/function";
+import type {FunctionInvokeResult} from "@/services/function";
+import {invokeFunction} from "@/services/function";
 
 const {Text, Paragraph} = Typography;
 
@@ -43,7 +43,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
 
     try {
       // 请求体直接作为函数的 Request body（不再嵌套在 input 字段中）
-      const res = await invokeFunctionViaServer(projectId, functionName, data);
+      const res = await invokeFunction(projectId, functionName, data);
       setResponse(res);
     } catch (err: any) {
       setError(err?.message || String(err));

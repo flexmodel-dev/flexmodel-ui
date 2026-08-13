@@ -65,7 +65,6 @@ const ApiKeys: React.FC = () => {
       const values = await form.validateFields();
       const req: CreateApiKeyRequest = {
         name: values.name,
-        keyType: "custom",
         projectIds: (values.projectIds as string[] | undefined)?.join(",") || "",
         readOnly: values.readOnly ?? false,
       };
@@ -107,26 +106,11 @@ const ApiKeys: React.FC = () => {
     });
   };
 
-  const getKeyTypeTag = (keyType: string) => {
-    const colorMap: Record<string, string> = {
-      anon: "blue",
-      service: "red",
-      custom: "default",
-    };
-    return <Tag color={colorMap[keyType] || "default"}>{t(`key_type_${keyType}`)}</Tag>;
-  };
-
   const columns = [
     {
       title: t("name"),
       dataIndex: "name",
       key: "name",
-    },
-    {
-      title: t("key_type"),
-      dataIndex: "keyType",
-      key: "keyType",
-      render: (keyType: string) => getKeyTypeTag(keyType),
     },
     {
       title: t("key_prefix"),
@@ -169,16 +153,14 @@ const ApiKeys: React.FC = () => {
               {t("regenerate")}
             </Button>
           </Popconfirm>
-          {record.keyType === "custom" && (
-            <Popconfirm
-              title={t("api_key_delete_confirm")}
-              onConfirm={() => handleDelete(record.id)}
-            >
-              <Button size="small" danger icon={<DeleteOutlined />}>
-                {t("delete")}
-              </Button>
-            </Popconfirm>
-          )}
+          <Popconfirm
+            title={t("api_key_delete_confirm")}
+            onConfirm={() => handleDelete(record.id)}
+          >
+            <Button size="small" danger icon={<DeleteOutlined/>}>
+              {t("delete")}
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -216,7 +198,7 @@ const ApiKeys: React.FC = () => {
           message={t("api_key_frontend_warning")}
           style={{marginBottom: 16}}
         />
-        <Form form={form} layout="vertical" initialValues={{ readOnly: false }}>
+        <Form form={form} layout="vertical" initialValues={{readOnly: false}}>
           <Form.Item name="name" label={t("name")} rules={[{ required: true, message: t("name_required") }]}>
             <Input placeholder={t("api_key_name_placeholder")} />
           </Form.Item>

@@ -10,7 +10,7 @@ import EnumForm from "@/pages/DataModeling/components/EnumForm";
 import type {Enum} from "@/types/data-modeling.d.ts";
 import ERDiagram from "@/pages/DataModeling/components/ERDiagramView";
 import {useProject} from "@/store/appStore";
-import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
+import {AppstoreOutlined, ReloadOutlined, UnorderedListOutlined} from "@ant-design/icons";
 import ERView from "@/pages/DataView/components/ERView.tsx";
 import {spacing} from "@/theme/designTokens";
 
@@ -49,6 +49,10 @@ const ModelingPage: React.FC = () => {
 
   const handleToggleNativeQueryEdit = useCallback(() => {
     setNativeQueryIsEditing(prev => !prev);
+  }, []);
+
+  const handleRefresh = useCallback(() => {
+    setSelectModelVersion(v => v + 1);
   }, []);
 
   const handleCancelNativeQueryEdit = useCallback(() => {
@@ -118,6 +122,10 @@ const ModelingPage: React.FC = () => {
       title={t('data_modeling')}
       extra={[
         <Space>
+          <Button
+            icon={<ReloadOutlined/>}
+            onClick={handleRefresh}
+          />
           <Button
             type={viewMode === 'list' ? 'default' : 'text'}
             icon={<UnorderedListOutlined/>}

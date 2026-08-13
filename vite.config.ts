@@ -180,7 +180,7 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     proxy: {
-      "/api": {
+      "/api/": {
         target: "http://localhost:8080",
         ws: true,
         changeOrigin: true,
@@ -191,7 +191,7 @@ export default defineConfig({
         changeOrigin: true,
       },
       // Pages fallback → Java server (when local files not found)
-      "/pages": {
+      "/pages/": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },

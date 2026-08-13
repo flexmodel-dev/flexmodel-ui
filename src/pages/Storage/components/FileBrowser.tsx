@@ -36,6 +36,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId, visibil
   const [createFolderVisible, setCreateFolderVisible] = useState<boolean>(false);
   const [folderName, setFolderName] = useState<string>('');
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [uploadFileList, setUploadFileList] = useState<any[]>([]);
 
   const loadFiles = useCallback(async () => {
     setLoading(true);
@@ -66,6 +67,10 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId, visibil
 
   const handleUpload = () => {
     setUploadVisible(true);
+  };
+  const handleUploadClose = () => {
+    setUploadVisible(false);
+    setUploadFileList([]);
   };
 
   const handleCreateFolder = () => {
@@ -285,9 +290,9 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId, visibil
       <Modal
         title={t('upload_file')}
         open={uploadVisible}
-        onCancel={() => setUploadVisible(false)}
+        onCancel={handleUploadClose}
         footer={[
-          <Button key="close" onClick={() => setUploadVisible(false)}>
+          <Button key="close" onClick={handleUploadClose}>
             {t('close')}
           </Button>,
         ]}
@@ -295,6 +300,8 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId, visibil
         <Upload.Dragger
           multiple
           showUploadList={true}
+          fileList={uploadFileList}
+          onChange={({fileList}) => setUploadFileList(fileList)}
           customRequest={async ({file, onSuccess, onError}) => {
             try {
               const fileObj = file as File;
