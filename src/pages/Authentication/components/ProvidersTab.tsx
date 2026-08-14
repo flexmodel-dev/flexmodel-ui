@@ -38,7 +38,7 @@ const ProvidersTab: React.FC = () => {
       setLoadingModels(true);
       const list = await getModelList(projectId);
       const names = list
-        .filter((m) => (m as EntitySchema).type === "entity" || (m as NativeQuerySchema).type === "native_query")
+        .filter((m) => (m as EntitySchema).type === "Entity" || (m as NativeQuerySchema).type === "NativeQuery")
         .map((m) => m.name)
         .filter((n): n is string => !!n);
       setModelNames(names);

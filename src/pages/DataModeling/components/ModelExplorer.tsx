@@ -26,9 +26,12 @@ function getGroupIcon(key: string, expanded: boolean): React.ReactNode {
 
 function getModelIcon(modelType?: string): React.ReactNode {
   switch (modelType) {
-    case 'entity': return <TableOutlined />;
-    case 'enum': return <TagsOutlined />;
-    case 'native_query': return <CodeOutlined />;
+    case 'Entity':
+      return <TableOutlined/>;
+    case 'Enum':
+      return <TagsOutlined/>;
+    case 'NativeQuery':
+      return <CodeOutlined/>;
     default: return <FileOutlined />;
   }
 }
@@ -255,7 +258,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
       const {type, name, ...rest} = item;
       if (!acc[type]) {
         switch (type) {
-          case "entity":
+          case "Entity":
             acc[type] = {
               type: "__entity_group",
               key: "__entity_group",
@@ -264,7 +267,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
               isLeaf: false,
             };
             break;
-          case "enum":
+          case "Enum":
             acc[type] = {
               type: "__enum_group",
               key: "__enum_group",
@@ -273,7 +276,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
               isLeaf: false,
             };
             break;
-          case "native_query":
+          case "NativeQuery":
             acc[type] = {
               type: "__native_query_group",
               key: "__native_query_group",
@@ -298,7 +301,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
       return acc;
     }, {});
 
-    const order = ["entity", "enum", "native_query"];
+    const order = ["Entity", "Enum", "NativeQuery"];
     return order.map((type) => groups[type]).filter(Boolean);
   };
 

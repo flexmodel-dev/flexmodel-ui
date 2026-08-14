@@ -68,9 +68,9 @@ const ModelingPage: React.FC = () => {
   const renderModelView = () => {
     console.log("active:", activeModel);
     switch (true) {
-      case activeModel?.type === "entity":
+      case activeModel?.type === "Entity":
         return <EntityView model={activeModel}/>;
-      case activeModel?.type === "enum":
+      case activeModel?.type === "Enum":
         return (
           <EnumForm
             ref={enumFormRef}
@@ -89,7 +89,7 @@ const ModelingPage: React.FC = () => {
             }}
           />
         );
-      case activeModel?.type === "native_query":
+      case activeModel?.type === "NativeQuery":
         return (
           <NativeQueryForm
             ref={nativeQueryFormRef}
@@ -188,7 +188,7 @@ const ModelingPage: React.FC = () => {
                   </Space>
                 </div>
               )}
-              {activeModel?.type === "native_query" && (
+              {activeModel?.type === "NativeQuery" && (
                 <div style={{marginBottom: spacing.md, display: 'flex', justifyContent: 'flex-end'}}>
                   <Space>
                     {!nativeQueryIsEditing ? (

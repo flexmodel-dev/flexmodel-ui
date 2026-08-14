@@ -115,7 +115,7 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
       const values = await nativeQueryForm.validateFields();
       const queryData = {
         ...values,
-        type: 'native_query',
+        type: 'NativeQuery',
       };
       onConfirm(queryData);
     } catch (error) {
@@ -126,13 +126,13 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
 
   const handleSubmit = async () => {
     switch (activeTab) {
-      case 'entity':
+      case 'Entity':
         await handleEntitySubmit();
         break;
-      case 'enum':
+      case 'Enum':
         await handleEnumSubmit();
         break;
-      case 'nativeQuery':
+      case 'NativeQuery':
         await handleNativeQuerySubmit();
         break;
       default:
@@ -176,8 +176,8 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
       key: 'nativeQuery',
       label: t('new_native_query'),
       children: (
-        <NativeQueryForm 
-          form={nativeQueryForm} 
+        <NativeQueryForm
+          form={nativeQueryForm}
           mode="create"
         />
       ),
