@@ -46,7 +46,7 @@ const EnumForm = React.forwardRef<any, EnumFormProps>(({
       if (onConfirm) {
         onConfirm({
           name: form.getFieldValue("name"),
-          type: "enum",
+          type: "Enum",
           elements: form.getFieldValue("elements"),
           comment: form.getFieldValue("comment"),
         });

@@ -56,7 +56,7 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
   };
 
   useEffect(() => {
-    const newNodes = (data || []).filter(e => e.type === 'entity').map((entity, idx) => {
+    const newNodes = (data || []).filter(e => e.type === 'Entity').map((entity, idx) => {
       const x = 80 + (idx % 5) * 320;
       const y = 80 + Math.floor(idx / 5) * 300;
       const width = 200;
@@ -99,7 +99,7 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
 
     const edgeMap = new Map<string, any>();
     (data || []).forEach((entity) => {
-      if (entity.type === 'entity') {
+      if (entity.type === 'Entity') {
         (entity.fields || []).forEach((field: Field) => {
           if (field.type === 'Relation' && field.from && field.from !== entity.name) {
             const sourceId = String(field.from);

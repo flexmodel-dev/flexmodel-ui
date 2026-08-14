@@ -160,7 +160,7 @@ const ModelingPage: React.FC = () => {
           <Splitter.Panel>
             <div
               style={{height: '100%', display: 'flex', flexDirection: 'column', paddingLeft: spacing.lg, minHeight: 0}}>
-              {activeModel?.type === "enum" && (
+              {activeModel?.type === "Enum" && (
                 <div style={{marginBottom: spacing.md, display: 'flex', justifyContent: 'flex-end'}}>
                   <Space>
                     {!isEditing ? (

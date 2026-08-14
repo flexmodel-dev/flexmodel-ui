@@ -73,7 +73,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
     const fetchModels = async () => {
       try {
         const modelList = await getModelList(projectId);
-        const entityModels = modelList.filter(model => model.type === 'entity');
+        const entityModels = modelList.filter(model => model.type === 'Entity');
         setModels(entityModels);
       } catch (error) {
         console.error('获取模型列表失败:', error);

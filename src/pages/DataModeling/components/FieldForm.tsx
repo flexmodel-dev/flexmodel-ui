@@ -157,7 +157,7 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
   const reqModelList = React.useCallback(async () => {
     const data = await getModelList(projectId);
     console.log('ModelList data:', data);
-    console.log('Enum models:', data.filter(item => item.type === "enum"));
+    console.log('Enum models:', data.filter(item => item.type === "Enum"));
     setModelList(data);
   }, [projectId]);
 
@@ -329,7 +329,7 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
           </Select.OptGroup>
           <Select.OptGroup label={t("select_group_relation")}>
             {modelList
-              .filter((item) => item.type === "entity")
+              .filter((item) => item.type === "Entity")
               .map((item) => (
                 <Select.Option
                   key={item.name}
@@ -341,7 +341,7 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
           </Select.OptGroup>
           <Select.OptGroup label={t("select_group_enumeration")}>
             {(() => {
-              const enumModels = modelList.filter((item) => item.type === "enum");
+              const enumModels = modelList.filter((item) => item.type === "Enum");
               console.log('Enum models found:', enumModels.length, enumModels);
               return enumModels.map((item) => (
                 <Select.Option key={item.name} value={`Enum:${item.name}`}>
