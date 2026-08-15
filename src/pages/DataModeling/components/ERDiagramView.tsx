@@ -101,7 +101,7 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
     (data || []).forEach((entity) => {
       if (entity.type === 'Entity') {
         (entity.fields || []).forEach((field: Field) => {
-          if (field.type === 'Relation' && field.from && field.from !== entity.name) {
+          if (field.type === 'ModelRef' && field.from && field.from !== entity.name) {
             const sourceId = String(field.from);
             const targetId = String(entity.name);
             const key = [sourceId, targetId].sort().join('::');
