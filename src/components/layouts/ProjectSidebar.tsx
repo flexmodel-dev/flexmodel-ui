@@ -14,7 +14,7 @@ const ProjectSidebar: React.FC = () => {
   const location = useLocation();
   const { isSidebarCollapsed, toggleSidebar } = useSidebar();
   const {config} = useConfig();
-  const version = config.version || 'v0.0.1';
+  const version = config.version || '';
   const { projectId } = useParams<{ projectId: string }>();
   const [openKeys, setOpenKeys] = useState<string[]>(() => {
     const pathname = location.pathname.replace(/\/$/, '');

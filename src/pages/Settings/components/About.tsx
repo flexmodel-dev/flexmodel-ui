@@ -10,7 +10,7 @@ const About: React.FC = () => {
   const { t } = useTranslation();
   const { token } = theme.useToken();
   const {config} = useConfig();
-  const version = config.version || 'v0.0.1';
+  const version = config.version || '';
   return (
     <div style={{
       width: '100%',
