@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {theme} from "antd";
 import {Entity, Field} from '@/types/data-modeling';
 import {
@@ -30,10 +30,15 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node<any>>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge<any>>([]);
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
 
   const nodeTypes = {
     erNode: ({data}: { data: { entity: Entity } }) => (
-      <div style={{position: 'relative'}}>
+      <div
+        style={{position: 'relative'}}
+        onMouseEnter={() => setHoveredNodeId(String(data.entity.name))}
+        onMouseLeave={() => setHoveredNodeId(null)}
+      >
         <Handle id="top" type="source" position={Position.Top}
                 style={{opacity: 0, width: 0, height: 0, border: 'none'}}/>
         <Handle id="right" type="source" position={Position.Right}
@@ -151,6 +156,45 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
     };
   }, [resizeGraph]);
 
+  // 邻接关系：节点 -> 关联节点集合
+  const adjacency = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    edges.forEach(e => {
+      const s = String(e.source);
+      const t = String(e.target);
+      if (!map.has(s)) map.set(s, new Set());
+      if (!map.has(t)) map.set(t, new Set());
+      map.get(s)!.add(t);
+      map.get(t)!.add(s);
+    });
+    return map;
+  }, [edges]);
+
+  // 根据悬浮状态派生展示用的连线（仅连线颜色变化）
+  const displayEdges = useMemo(() => {
+    if (!hoveredNodeId) return edges;
+    const ease = 'cubic-bezier(0.4, 0, 0.2, 1)';
+    const dur = '0.28s';
+    return edges.map(e => {
+      const connected = e.source === hoveredNodeId || e.target === hoveredNodeId;
+      return {
+        ...e,
+        style: {
+          ...e.style,
+          stroke: connected ? token.colorTextSecondary : token.colorFillSecondary,
+          strokeWidth: 1.5,
+          opacity: connected ? 1 : 0.4,
+          transition: `stroke ${dur} ${ease}, stroke-width ${dur} ${ease}, opacity ${dur} ${ease}`,
+        },
+        labelStyle: {
+          fill: connected ? token.colorText : token.colorTextTertiary,
+          opacity: connected ? 1 : 0.4,
+          transition: `fill ${dur} ${ease}, opacity ${dur} ${ease}`,
+        } as any,
+      };
+    });
+  }, [edges, hoveredNodeId, token]);
+
   return (
     <>
       <style
@@ -165,7 +209,7 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
       <div ref={containerRef} style={{width: '100%', height: '100%', overflow: 'hidden'}}>
         <ReactFlow
           nodes={nodes}
-          edges={edges}
+          edges={displayEdges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
@@ -178,7 +222,10 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
           defaultEdgeOptions={{
             type: 'smoothstep',
             markerEnd: {type: MarkerType.ArrowClosed},
-            style: {strokeWidth: 2, stroke: token.colorPrimary},
+            style: {strokeWidth: 1.5, stroke: token.colorBorderSecondary},
+            labelShowBg: true,
+            labelBgStyle: {fill: token.colorBgContainer, fillOpacity: 0.9} as any,
+            labelStyle: {fill: token.colorTextSecondary, fontWeight: 400} as any,
           }}
           proOptions={{ hideAttribution: true }}
         >
