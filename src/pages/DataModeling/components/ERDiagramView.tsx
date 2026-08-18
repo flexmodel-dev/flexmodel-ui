@@ -32,7 +32,7 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge<any>>([]);
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
 
-  const nodeTypes = {
+  const nodeTypes = useMemo(() => ({
     erNode: ({data}: { data: { entity: Entity; dim?: boolean } }) => (
       <div
         style={{position: 'relative'}}
@@ -58,7 +58,7 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
         <ERNodeView entity={data.entity} dim={data.dim}/>
       </div>
     ),
-  };
+  }), []);
 
   useEffect(() => {
     const newNodes = (data || []).filter(e => e.type === 'Entity').map((entity, idx) => {
