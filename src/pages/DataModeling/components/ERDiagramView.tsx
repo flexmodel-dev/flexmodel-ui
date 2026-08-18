@@ -64,22 +64,19 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
     const newNodes = (data || []).filter(e => e.type === 'Entity').map((entity, idx) => {
       const x = 80 + (idx % 5) * 320;
       const y = 80 + Math.floor(idx / 5) * 300;
-      const width = 200;
-      const height = 60 + (entity.fields?.length || 0) * 22;
       return {
         id: String(entity.name),
         position: {x, y},
         data: {entity},
         type: 'erNode',
-        style: {width, height},
-        width,
-        height,
         draggable: true,
       } as Node<any>;
     });
 
     const nodeCenter = (n: any) => {
-      return {cx: n.position.x + (n.width || 200) / 2, cy: n.position.y + (n.height || 60) / 2};
+      const w = n.width ?? n.measured?.width ?? 220;
+      const h = n.height ?? n.measured?.height ?? 80;
+      return {cx: n.position.x + w / 2, cy: n.position.y + h / 2};
     };
 
     const opposite = (side: string) => ({
