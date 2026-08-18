@@ -20,7 +20,7 @@ const ERView: React.FC = () => {
       setLoading(true);
       try {
         const modelList = await getModelList(projectId);
-        const entityModels = modelList.filter(model => model.type === "entity") as Entity[];
+        const entityModels = modelList.filter(model => model.type === "Entity") as Entity[];
         setModels(entityModels);
       } catch (error) {
         console.error(t("get_model_list_failed"), error);

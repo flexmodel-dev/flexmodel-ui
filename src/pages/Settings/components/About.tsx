@@ -2,12 +2,15 @@ import React from 'react';
 import {Button, Divider, Space, Typography, theme} from 'antd';
 import {BookOutlined, GithubOutlined, GlobalOutlined} from '@ant-design/icons';
 import {useTranslation} from "react-i18next";
+import {useConfig} from "@/store/appStore";
 
 const { Title, Paragraph, Text } = Typography;
 
 const About: React.FC = () => {
   const { t } = useTranslation();
   const { token } = theme.useToken();
+  const {config} = useConfig();
+  const version = config.version || '';
   return (
     <div style={{
       width: '100%',
@@ -49,12 +52,22 @@ const About: React.FC = () => {
             </Paragraph>
           </div>
 
+        {/* 版本信息 */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: token.marginLG,
+        }}>
+          <Text type="secondary" style={{fontSize: token.fontSize}}>
+            {version}
+          </Text>
+        </div>
+
           <Divider style={{ margin: '20px 0' }} />
 
 
           {/* 链接和文档 */}
           <div style={{ textAlign: 'center' }}>
-            <Title level={4} style={{ marginBottom: '20px' }}>
+            <Title level={4} style={{marginBottom: '16px'}}>
               了解更多
             </Title>
             <Space size="middle" wrap>

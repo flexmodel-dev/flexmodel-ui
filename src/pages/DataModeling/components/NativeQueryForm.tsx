@@ -22,7 +22,7 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
   const { token } = theme.useToken();
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
-  
+
   const [internalForm] = Form.useForm();
   const form = externalForm || internalForm;
   const [paramsForm] = Form.useForm();
@@ -87,7 +87,7 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
       message.error(t("project_required"));
       return;
     }
-    
+
     message.info(t("native_query_execute_not_supported"));
   };
 
@@ -97,7 +97,7 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
       const formData = {
         name: form.getFieldValue("name"),
         statement: form.getFieldValue("statement"),
-        type: "native_query" as const,
+        type: "NativeQuery" as const,
       };
       if (onConfirm) {
         onConfirm(formData);
@@ -125,16 +125,16 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
   return (
     <>
       <Form form={form} initialValues={model} layout="vertical" style={formStyle} variant={mode === "view" ? "borderless" : "outlined"}>
-        <Form.Item 
-          name="name" 
-          label={t("name")} 
+        <Form.Item
+          name="name"
+          label={t("name")}
           rules={mode !== 'view' ? [{ required: true }] : []}
         >
           <Input readOnly={mode === 'view' || (!!model && mode === 'edit')} size="small" />
         </Form.Item>
-        <Form.Item 
-          name="statement" 
-          label={t("statement")} 
+        <Form.Item
+          name="statement"
+          label={t("statement")}
           rules={mode !== 'view' ? [{ required: true }] : []}
         >
           <TextArea rows={4} readOnly={mode === 'view'} size="small" />

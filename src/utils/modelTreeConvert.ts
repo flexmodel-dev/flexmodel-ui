@@ -18,9 +18,9 @@ export interface AntdTreeNode {
   isLeaf?: boolean;
   children?: AntdTreeNode[];
   icon?: React.ReactNode;
-  /** Original model data (for entity/enum/native_query file nodes) */
+  /** Original model data (for Entity/Enum/NativeQuery file nodes) */
   _data?: any;
-  /** Model type: 'entity' | 'enum' | 'native_query' */
+  /** Model type: 'Entity' | 'Enum' | 'NativeQuery' */
   _modelType?: string;
   /** Original path from TreeItem */
   _path?: string;
@@ -30,11 +30,11 @@ export interface AntdTreeNode {
  * Convert grouped model tree data to antd Tree DataNode array.
  *
  * Input: ModelTree[] from groupByType()
- *   [{ key: '__entity_group', name: '实体', children: [{ name: 'User', data: {...}, type: 'entity' }] }]
+ *   [{ key: '__entity_group', name: '实体', children: [{ name: 'User', data: {...}, type: 'Entity' }] }]
  *
  * Output: AntdTreeNode[]
  *   [{ key: '__entity_group', title: '实体', isLeaf: false,
- *      children: [{ key: '__entity_group/User', title: 'User', isLeaf: true, _data: {...}, _modelType: 'entity' }]
+ *      children: [{ key: '__entity_group/User', title: 'User', isLeaf: true, _data: {...}, _modelType: 'Entity' }]
  *   }]
  */
 export function convertModelTreeToAntdData(list: ModelTree[]): AntdTreeNode[] {

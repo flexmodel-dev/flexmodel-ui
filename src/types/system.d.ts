@@ -11,4 +11,5 @@ export interface SystemProfile {
   edgeUrlTemplate: string;
   routingMode: string;
   pagesUrlTemplate: string;
+  version: string;
 }

@@ -31,7 +31,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
   const [fontSize, setFontSize] = useState(12);
-  const [displayLimit, setDisplayLimit] = useState<number>(100); // 默认显示100条
+  const [displayLimit, setDisplayLimit] = useState<number>(100); // 默认显示100�?
 
   // 使用WebSocket Hook
   const {
@@ -44,35 +44,35 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
     logsEndRef,
     setAutoScrollEnabled
   } = useConsoleLogs({
-    maxLogs: 1000, // 减少到1000条以提高性能
+    maxLogs: 1000, // 减少�?000条以提高性能
     autoScroll: true,
     projectId,
   });
 
-  // 始终置底开关：选中后不管是否滚动，始终保持在底部
+  // 始终置底开关：选中后不管是否滚动，始终保持在底�?
   const [stayAtBottom, setStayAtBottom] = useState(false);
 
-  // 选中“始终置底”时，确保自动滚动始终开启
+  // 选中“始终置底”时，确保自动滚动始终开�?
   useEffect(() => {
     if (stayAtBottom) {
       setAutoScrollEnabled(true);
     }
   }, [stayAtBottom, setAutoScrollEnabled]);
 
-  // 根据滚动位置更新自动滚动开关
+  // 根据滚动位置更新自动滚动开�?
   const handleContentScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     if (stayAtBottom) {
-      // 强制保持在底部
+      // 强制保持在底�?
       setAutoScrollEnabled(true);
       if (logsEndRef.current) {
-        // 使用同步滚动，避免视觉抖动
+        // 使用同步滚动，避免视觉抖�?
         logsEndRef.current.scrollIntoView({ behavior: 'auto' });
       }
       return;
     }
 
     const target = e.currentTarget;
-    const threshold = 16; // 离底部阈值
+    const threshold = 16; // 离底部阈�?
     const distanceToBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
     const isNearBottom = distanceToBottom <= threshold;
     setAutoScrollEnabled(isNearBottom);
@@ -92,7 +92,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
     }
   }, [isConnected, reconnect, t]);
 
-  // 手动滚动到底部
+  // 手动滚动到底�?
   const scrollToBottom = useCallback(() => {
     if (logsEndRef.current) {
       logsEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -108,7 +108,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
     return () => clearTimeout(timer);
   }, [searchKeyword]);
 
-  // 过滤日志 - 只按关键词过滤
+  // 过滤日志 - 只按关键词过�?
   const filteredLogs = useMemo(() => {
     if (!debouncedSearchKeyword) {
       if (displayLimit === -1 || logs.length <= displayLimit) return logs;
@@ -116,7 +116,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
     }
 
     const keyword = debouncedSearchKeyword.toLowerCase();
-    let result = logs.filter(log =>
+    const result = logs.filter(log =>
       log.message.toLowerCase().includes(keyword)
     );
 
@@ -129,17 +129,17 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
   useEffect(() => {
     if (import.meta.env.DEV) {
       console.log('Console组件 - 当前日志数量:', logs.length);
-      console.log('Console组件 - 连接状态:', isConnected);
-      console.log('Console组件 - 过滤后日志数量:', filteredLogs.length);
+      console.log('Console组件 - 连接状�?', isConnected);
+      console.log('Console组件 - 过滤后日志数�?', filteredLogs.length);
 
       // 性能警告
       if (logs.length > 400) {
-        console.warn(`Console日志数量较多 (${logs.length}条)，可能影响性能`);
+        console.warn(`Console日志数量较多 (${logs.length}�?，可能影响性能`);
       }
     }
   }, [logs, isConnected, filteredLogs]);
 
-  // 当过滤条件或显示限制变化时，滚动到底部
+  // 当过滤条件或显示限制变化时，滚动到底�?
   useEffect(() => {
     if (filteredLogs.length > 0 && logsEndRef.current) {
       // 使用setTimeout确保DOM更新后再滚动
@@ -151,7 +151,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
     }
   }, [filteredLogs.length, displayLimit, debouncedSearchKeyword, logsEndRef]);
 
-  // 打开时滚动到底部（交由父组件控制可见性，这里仅在有日志时尝试）
+  // 打开时滚动到底部（交由父组件控制可见性，这里仅在有日志时尝试�?
   useEffect(() => {
     if (filteredLogs.length > 0) {
       setTimeout(() => {
@@ -169,7 +169,7 @@ const Console: React.FC<ConsoleProps> = ({ onToggle, projectId }) => {
       borderTop: `1px solid ${token.colorBorder}`,
       background: token.colorBgContainer
     }}>
-      {/* 控制栏 */}
+      {/* 控制�?*/}
       <div style={{
         padding: '8px 16px',
         borderBottom: `1px solid ${token.colorBorder}`,

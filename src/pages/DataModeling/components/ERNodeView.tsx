@@ -1,58 +1,68 @@
 import React, {useEffect, useState} from 'react';
+import {theme} from 'antd';
 import {Entity} from '@/types/data-modeling';
 import {KeyOutlined} from '@ant-design/icons';
 
 interface ERNodeViewProps {
   entity: Entity;
+  dim?: boolean;
 }
 
-const ERNodeView: React.FC<ERNodeViewProps> = ({ entity }) => {
+const ERNodeView: React.FC<ERNodeViewProps> = ({entity, dim = false}) => {
+  const {token} = theme.useToken();
   const [expanded, setExpanded] = useState(false);
-  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
   useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDark(document.documentElement.classList.contains('dark'));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
+    // 保持组件在 ConfigProvider 主题切换后刷新（token 由 antd 自动派生）
   }, []);
   const fields = entity.fields || [];
   const showFields = expanded ? fields : fields.slice(0, 5);
   const hasMore = fields.length > 5;
 
+  // 配色对齐 DESIGN.md token，经由 antd theme token 语义化（随明暗主题自动适配）
+  // canvas -> colorBgContainer / surface-soft -> colorFillQuaternary / hairline -> colorBorderSecondary
+  // ink -> colorText / body -> colorTextSecondary / info -> colorInfo
+  const ease = 'cubic-bezier(0.4, 0, 0.2, 1)';
+  const dur = '0.28s';
+  const bg = token.colorBgContainer;
+  const headerBg = token.colorFillQuaternary;
+  const border = token.colorBorderSecondary;
+  const ink = token.colorText;
+  const body = token.colorTextSecondary;
+  const accent = token.colorInfo;
+
   return (
     <div
       style={{
-        background: isDark ? '#2c323c' : '#ffffff',
-        border: `1px solid ${isDark ? '#4a5260' : '#dddddd'}`,
-        borderRadius: 10,
+        background: bg,
+        border: `1px solid ${border}`,
+        borderRadius: token.borderRadiusLG,
         minWidth: 220,
         minHeight: 40,
-        boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.35)' : '0 2px 8px rgba(0, 0, 0, 0.1)',
+        boxShadow: token.boxShadowSecondary,
         padding: '0px 16px 8px 16px',
-        fontSize: 14,
-        color: isDark ? '#f5f6f8' : '#181d26',
+        fontSize: token.fontSize,
+        color: ink,
         position: 'relative',
-        transition: 'box-shadow 0.3s',
+        transition: `box-shadow ${dur} ${ease}, background-color ${dur} ${ease}, opacity ${dur} ${ease}`,
         cursor: 'pointer',
+        opacity: dim ? 0.4 : 1,
       }}
-      onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)')}
-      onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)')}
     >
       <div
         style={{
-          fontWeight: 500,
-          color: isDark ? '#f5f6f8' : '#181d26',
+          fontWeight: token.fontWeightStrong ?? 500,
+          color: ink,
           marginBottom: 10,
-          fontSize: 16,
+          fontSize: token.fontSizeLG,
           letterSpacing: 0,
-          background: isDark ? '#232830' : '#f8fafc',
+          background: headerBg,
           padding: '8px 0',
-          borderBottom: `1px solid ${isDark ? '#4a5260' : '#dddddd'}`,
+          borderBottom: `1px solid ${border}`,
           marginLeft: '-16px',
           marginRight: '-16px',
           paddingLeft: '16px',
           paddingRight: '16px',
+          transition: `background-color ${dur} ${ease}`,
         }}
       >
         {entity.name}
@@ -66,21 +76,21 @@ const ERNodeView: React.FC<ERNodeViewProps> = ({ entity }) => {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '4px 0',
-              fontSize: 14,
-              color: isDark ? '#9499a6' : '#41454d',
-              borderBottom: idx !== showFields.length - 1 ? `1px solid ${isDark ? '#4a5260' : '#dddddd'}` : 'none',
+              fontSize: token.fontSize,
+              color: body,
+              borderBottom: idx !== showFields.length - 1 ? `1px solid ${border}` : 'none',
             }}
           >
             <span style={{
-              color: isDark ? '#6badff' : '#254fad',
-              fontWeight: 500,
+              color: accent,
+              fontWeight: token.fontWeightStrong ?? 500,
               display: 'flex',
               alignItems: 'center'
             }}>
-              {f.identity && <KeyOutlined style={{ marginRight: 4, fontSize: 12 }} />}
+              {f.identity && <KeyOutlined style={{marginRight: 4, fontSize: 12}}/>}
               {f.name}
             </span>
-            <span style={{ color: isDark ? '#bcc0cc' : '#9297a0', fontWeight: 400 }}>{f.concreteType || f.type}</span>
+            <span style={{color: token.colorTextTertiary, fontWeight: 400}}>{f.concreteType || f.type}</span>
           </div>
         ))}
       </div>
@@ -100,15 +110,16 @@ const ERNodeView: React.FC<ERNodeViewProps> = ({ entity }) => {
           <span
             style={{
               display: 'inline-block',
-              fontSize: 16,
-              color: isDark ? '#6badff' : '#254fad',
+              fontSize: token.fontSizeLG,
+              color: accent,
               transform: expanded ? 'rotate(180deg)' : 'none',
               transition: 'transform 0.3s',
               lineHeight: 1,
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" style={{ verticalAlign: 'middle' }}>
-              <polyline points="6 10 12 16 18 10" fill="none" stroke={isDark ? '#6badff' : '#254fad'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="16" height="16" viewBox="0 0 24 24" style={{verticalAlign: 'middle'}}>
+              <polyline points="6 10 12 16 18 10" fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round"/>
             </svg>
           </span>
         </div>

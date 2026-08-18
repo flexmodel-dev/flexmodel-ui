@@ -20,18 +20,18 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
   onCancel,
 }, ref) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('entity');
+  const [activeTab, setActiveTab] = useState('Entity');
 
   React.useImperativeHandle(ref, () => ({
     submit: handleSubmit,
     reset: handleCancel,
     getFieldsValue: () => {
       switch (activeTab) {
-        case 'entity':
+        case 'Entity':
           return entityForm.getFieldsValue();
-        case 'enum':
+        case 'Enum':
           return enumForm.getFieldsValue();
-        case 'nativeQuery':
+        case 'NativeQuery':
           return nativeQueryForm.getFieldsValue();
         default:
           return {};
@@ -39,24 +39,24 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
     },
     setFieldsValue: (values: any) => {
       switch (activeTab) {
-        case 'entity':
+        case 'Entity':
           entityForm.setFieldsValue(values);
           break;
-        case 'enum':
+        case 'Enum':
           enumForm.setFieldsValue(values);
           break;
-        case 'nativeQuery':
+        case 'NativeQuery':
           nativeQueryForm.setFieldsValue(values);
           break;
       }
     },
     validateFields: async () => {
       switch (activeTab) {
-        case 'entity':
+        case 'Entity':
           return await entityForm.validateFields();
-        case 'enum':
+        case 'Enum':
           return await enumForm.validateFields();
-        case 'nativeQuery':
+        case 'NativeQuery':
           return await nativeQueryForm.validateFields();
         default:
           return {};
@@ -67,7 +67,7 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
   const [entityForm] = Form.useForm();
   const [entityModel, setEntityModel] = useState<Entity>({
     name: '',
-    type: 'entity',
+    type: 'Entity',
     fields: [],
     indexes: [],
   });
@@ -85,7 +85,7 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
       const values = await entityForm.validateFields();
       const entityData = {
         ...values,
-        type: 'entity',
+        type: 'Entity',
         fields: entityModel.fields,
         indexes: entityModel.indexes,
       };
@@ -101,7 +101,7 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
       const values = await enumForm.validateFields();
       const enumData = {
         ...values,
-        type: 'enum',
+        type: 'Enum',
       };
       onConfirm(enumData);
     } catch (error) {
@@ -115,7 +115,7 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
       const values = await nativeQueryForm.validateFields();
       const queryData = {
         ...values,
-        type: 'native_query',
+        type: 'NativeQuery',
       };
       onConfirm(queryData);
     } catch (error) {
@@ -126,13 +126,13 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
 
   const handleSubmit = async () => {
     switch (activeTab) {
-      case 'entity':
+      case 'Entity':
         await handleEntitySubmit();
         break;
-      case 'enum':
+      case 'Enum':
         await handleEnumSubmit();
         break;
-      case 'nativeQuery':
+      case 'NativeQuery':
         await handleNativeQuerySubmit();
         break;
       default:
@@ -146,7 +146,7 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
     nativeQueryForm.resetFields();
     setEntityModel({
       name: '',
-      type: 'entity',
+      type: 'Entity',
       fields: [],
       indexes: [],
     });
@@ -155,7 +155,7 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
 
   const items = [
     {
-      key: 'entity',
+      key: 'Entity',
       label: t('new_entity'),
       children: (
         <EntityForm
@@ -166,18 +166,18 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
       ),
     },
     {
-      key: 'enum',
+      key: 'Enum',
       label: t('new_enum'),
       children: (
         <EnumForm form={enumForm} />
       ),
     },
     {
-      key: 'nativeQuery',
+      key: 'NativeQuery',
       label: t('new_native_query'),
       children: (
-        <NativeQueryForm 
-          form={nativeQueryForm} 
+        <NativeQueryForm
+          form={nativeQueryForm}
           mode="create"
         />
       ),

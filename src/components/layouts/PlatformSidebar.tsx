@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { platformRoutes } from "@/routes";
 import { useSidebar } from "@/store/appStore";
+import {useConfig} from "@/store/appStore";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const PlatformSidebar: React.FC = () => {
@@ -12,6 +13,8 @@ const PlatformSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isSidebarCollapsed, toggleSidebar } = useSidebar();
+  const {config} = useConfig();
+  const version = config.version || '';
   const [openKeys, setOpenKeys] = useState<string[]>(() => {
     const pathname = location.pathname.replace(/\/$/, '');
     const initialOpenKeys: string[] = [];
@@ -128,9 +131,15 @@ const PlatformSidebar: React.FC = () => {
         <div style={{
           padding: token.padding,
           display: "flex",
-          justifyContent: isSidebarCollapsed ? "center" : "right",
+          alignItems: "center",
+          justifyContent: isSidebarCollapsed ? "center" : "space-between",
           backgroundColor: token.colorBgContainer
         }}>
+          {!isSidebarCollapsed && (
+            <span style={{fontSize: token.fontSizeSM, color: token.colorTextTertiary}}>
+              {version}
+            </span>
+          )}
           <Space>
             <Button
               type="text"
