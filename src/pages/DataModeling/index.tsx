@@ -1,17 +1,17 @@
 import React, {useRef, useState, useCallback} from "react";
-import {Button, Empty, message, Space, Splitter} from "antd";
+import {Button, Empty, message, Modal, Space, Spin, Splitter} from "antd";
 import PageContainer from "@/components/common/PageContainer";
 import ModelExplorer from "@/pages/DataModeling/components/ModelExplorer.tsx";
 import EntityView from "@/pages/DataModeling/components/EntityView";
 import NativeQueryForm from "@/pages/DataModeling/components/NativeQueryForm";
-import {modifyModel} from "@/services/model.ts";
+import {getModelList, modifyModel} from "@/services/model.ts";
 import {useTranslation} from "react-i18next";
 import EnumForm from "@/pages/DataModeling/components/EnumForm";
 import type {Enum} from "@/types/data-modeling.d.ts";
 import ERDiagram from "@/pages/DataModeling/components/ERDiagramView";
 import {useProject} from "@/store/appStore";
-import {AppstoreOutlined, ReloadOutlined, UnorderedListOutlined} from "@ant-design/icons";
-import ERView from "@/pages/DataView/components/ERView.tsx";
+import {ApartmentOutlined, ReloadOutlined} from "@ant-design/icons";
+import type {Entity} from "@/types/data-modeling";
 import {spacing} from "@/theme/designTokens";
 
 const ModelingPage: React.FC = () => {
@@ -25,13 +25,30 @@ const ModelingPage: React.FC = () => {
   const [nativeQueryIsEditing, setNativeQueryIsEditing] = useState(false);
   const enumFormRef = useRef<any>(null);
   const nativeQueryFormRef = useRef<any>(null);
-  const [viewMode, setViewMode] = useState<'list' | 'er'>('list');
+  const [erModalOpen, setErModalOpen] = useState(false);
+  const [erModels, setErModels] = useState<Entity[]>([]);
+  const [erLoading, setErLoading] = useState(false);
 
   const handleItemChange = (item: any) => {
     setActiveModel(item);
     setIsEditing(false);
     setNativeQueryIsEditing(false);
   };
+
+  const handleOpenErView = useCallback(() => {
+    setErModalOpen(true);
+    setErLoading(true);
+    getModelList(projectId)
+      .then((list) => {
+        setErModels(list.filter((m) => m.type === "Entity") as Entity[]);
+      })
+      .catch((error) => {
+        console.error(error);
+        message.error(t("get_model_list_failed"));
+        setErModels([]);
+      })
+      .finally(() => setErLoading(false));
+  }, [projectId, t]);
 
   const handleToggleEdit = useCallback(() => {
     setIsEditing(prev => !prev);
@@ -127,100 +144,108 @@ const ModelingPage: React.FC = () => {
             onClick={handleRefresh}
           />
           <Button
-            type={viewMode === 'list' ? 'default' : 'text'}
-            icon={<UnorderedListOutlined/>}
-            onClick={() => setViewMode('list')}
-            style={{borderTopRightRadius: 4, borderBottomRightRadius: 4, marginLeft: -1}}
+            icon={<ApartmentOutlined/>}
+            onClick={handleOpenErView}
+            title={t("er_view")}
           />
-          <Button
-            type={viewMode === 'er' ? 'default' : 'text'}
-            icon={<AppstoreOutlined/>}
-            onClick={() => setViewMode('er')}
-            style={{borderTopLeftRadius: 4, borderBottomLeftRadius: 4}}
-          />
-
         </Space>
       ]}
     >
-      {viewMode === 'list' ? (<>
-        <Splitter style={{height: '100%'}}>
-          <Splitter.Panel
-            defaultSize="20%"
-            max="40%"
-            collapsible
-          >
-            <div style={{height: '100%', paddingRight: spacing.xs}}>
-              <ModelExplorer
-                editable
-                onSelect={handleItemChange}
-                version={selectModelVersion}
-              />
-            </div>
-          </Splitter.Panel>
-          <Splitter.Panel>
-            <div
-              style={{height: '100%', display: 'flex', flexDirection: 'column', paddingLeft: spacing.lg, minHeight: 0}}>
-              {activeModel?.type === "Enum" && (
-                <div style={{marginBottom: spacing.md, display: 'flex', justifyContent: 'flex-end'}}>
-                  <Space>
-                    {!isEditing ? (
+      <Splitter style={{height: '100%'}}>
+        <Splitter.Panel
+          defaultSize="20%"
+          max="40%"
+          collapsible
+        >
+          <div style={{height: '100%', paddingRight: spacing.xs}}>
+            <ModelExplorer
+              editable
+              onSelect={handleItemChange}
+              version={selectModelVersion}
+            />
+          </div>
+        </Splitter.Panel>
+        <Splitter.Panel>
+          <div
+            style={{height: '100%', display: 'flex', flexDirection: 'column', paddingLeft: spacing.lg, minHeight: 0}}>
+            {activeModel?.type === "Enum" && (
+              <div style={{marginBottom: spacing.md, display: 'flex', justifyContent: 'flex-end'}}>
+                <Space>
+                  {!isEditing ? (
+                    <Button
+                      type="primary"
+                      onClick={handleToggleEdit}
+                    >
+                      {t('edit')}
+                    </Button>
+                  ) : (
+                    <>
+                      <Button
+                        onClick={handleCancelEdit}
+                      >
+                        {t('cancel')}
+                      </Button>
                       <Button
                         type="primary"
-                        onClick={handleToggleEdit}
+                        onClick={handleSave}
                       >
-                        {t('edit')}
+                        {t('save')}
                       </Button>
-                    ) : (
-                      <>
-                        <Button
-                          onClick={handleCancelEdit}
-                        >
-                          {t('cancel')}
-                        </Button>
-                        <Button
-                          type="primary"
-                          onClick={handleSave}
-                        >
-                          {t('save')}
-                        </Button>
-                      </>
-                    )}
-                  </Space>
-                </div>
-              )}
-              {activeModel?.type === "NativeQuery" && (
-                <div style={{marginBottom: spacing.md, display: 'flex', justifyContent: 'flex-end'}}>
-                  <Space>
-                    {!nativeQueryIsEditing ? (
+                    </>
+                  )}
+                </Space>
+              </div>
+            )}
+            {activeModel?.type === "NativeQuery" && (
+              <div style={{marginBottom: spacing.md, display: 'flex', justifyContent: 'flex-end'}}>
+                <Space>
+                  {!nativeQueryIsEditing ? (
+                    <Button
+                      type="primary"
+                      onClick={handleToggleNativeQueryEdit}
+                    >
+                      {t('edit')}
+                    </Button>
+                  ) : (
+                    <>
+                      <Button
+                        onClick={handleCancelNativeQueryEdit}
+                      >
+                        {t('cancel')}
+                      </Button>
                       <Button
                         type="primary"
-                        onClick={handleToggleNativeQueryEdit}
+                        onClick={handleSaveNativeQuery}
                       >
-                        {t('edit')}
+                        {t('save')}
                       </Button>
-                    ) : (
-                      <>
-                        <Button
-                          onClick={handleCancelNativeQueryEdit}
-                        >
-                          {t('cancel')}
-                        </Button>
-                        <Button
-                          type="primary"
-                          onClick={handleSaveNativeQuery}
-                        >
-                          {t('save')}
-                        </Button>
-                      </>
-                    )}
-                  </Space>
-                </div>
-              )}
-              {renderModelView()}
-            </div>
-          </Splitter.Panel>
-        </Splitter>
-      </>) : (<ERView/>)}
+                    </>
+                  )}
+                </Space>
+              </div>
+            )}
+            {renderModelView()}
+          </div>
+        </Splitter.Panel>
+      </Splitter>
+
+      <Modal
+        title={t("er_view")}
+        open={erModalOpen}
+        onCancel={() => setErModalOpen(false)}
+        footer={null}
+        width="90%"
+        styles={{body: {height: '80vh', padding: 0}}}
+        destroyOnClose
+      >
+        {erLoading ? (
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+            <Spin/>
+          </div>
+        ) : (
+          <ERDiagram data={erModels}/>
+        )}
+      </Modal>
 
     </PageContainer>
   );
