@@ -193,6 +193,20 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
       }
     }
 
+    if (!selectedModel && activeModel) {
+      for (const group of groupData) {
+        if (group.children) {
+          const foundModel = group.children.find(
+            (child: any) => child.name === activeModel.name && child.type === activeModel.type
+          );
+          if (foundModel) {
+            selectedModel = foundModel;
+            break;
+          }
+        }
+      }
+    }
+
     const m = selectedModel || activeModel || groupData[0]?.children[0] || null;
     setActiveModel(m);
     onSelect(m);
