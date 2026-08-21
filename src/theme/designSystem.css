@@ -1,142 +1,132 @@
 /**
- * Flexmodel Design System — CSS Custom Properties
+ * Flexmodel Design System — CSS Custom Properties (Notion Analysis)
  *
- * All design tokens from DESIGN.md (Airtable-design-analysis).
- * Uses Inter Display / Inter as open-source substitute for Haas Groot Disp / Haas Grotesk.
+ * All design tokens from DESIGN.md (Notion Analysis): a warm paper-calm canvas,
+ * near-black Inter type, one confident blue accent, and a decorative sticker
+ * palette. NotionInter is substituted by Inter (single family for all sizes).
  *
  * Token hierarchy:
- *   --flex-color-*     → Color values
- *   --flex-type-*      → Typography (fontFamily, fontSize, fontWeight, lineHeight, letterSpacing)
+ *   --flex-color-*    → Color values
+ *   --flex-font        → Font family (Inter)
+ *   --flex-type-*      → Typography (fontSize, fontWeight, lineHeight, letterSpacing)
  *   --flex-rounded-*   → Border radius
  *   --flex-space-*     → Spacing scale
+ *   --flex-shadow-*    → Elevation (many near-transparent layers, never a hard cast)
  */
 
 :root {
   /* ==========================================================================
      Colors — Brand & Accent
      ========================================================================== */
-  --flex-color-primary: #181d26;
-  --flex-color-primary-active: #0d1218;
-  --flex-color-ink: #181d26;
-  --flex-color-body: #333840;
-  --flex-color-muted: #41454d;
-  --flex-color-hairline: #dddddd;
-  --flex-color-border-strong: #9297a0;
-  --flex-color-canvas: #ffffff;
-  --flex-color-surface-soft: #f8fafc;
-  --flex-color-surface-strong: #e0e2e6;
-  --flex-color-surface-dark: #181d26;
-  --flex-color-surface-dark-elevated: #1d1f25;
-  --flex-color-on-primary: #ffffff;
+  --flex-color-primary: #0075de; /* Notion Blue — single structural accent */
+  --flex-color-primary-active: #005bab; /* Pressed Blue — CTA press state */
+  --flex-color-secondary: #213183; /* Deep Indigo — hero "night" band */
+  --flex-color-on-primary: #ffffff; /* Text on primary buttons / dark surfaces */
   --flex-color-on-dark: #ffffff;
-  --flex-color-link: #1b61c9;
-  --flex-color-link-active: #1a3866;
-  --flex-color-info: #254fad;
-  --flex-color-info-border: #458fff;
-  --flex-color-success: #006400;
-  --flex-color-success-border: #39bf45;
-  --flex-color-pricing-ink: #1d1f25;
 
-  /* Signature card surfaces */
-  --flex-color-signature-coral: #aa2d00;
-  --flex-color-signature-forest: #0a2e0e;
-  --flex-color-signature-cream: #f5e9d4;
-  --flex-color-signature-peach: #fcab79;
-  --flex-color-signature-mint: #a8d8c4;
-  --flex-color-signature-yellow: #f4d35e;
-  --flex-color-signature-mustard: #d9a441;
+  /* --- Surface --- */
+  --flex-color-canvas: #ffffff; /* White — cards, panels, nav, fields */
+  --flex-color-canvas-soft: #f6f5f4; /* Warm Paper — page canvas, footer */
+  --flex-color-surface: #ffffff; /* Alias of canvas for figure/ground */
+  --flex-color-hairline: #e6e6e6; /* 1px borders & dividers */
+
+  /* --- Text (ink hierarchy) --- */
+  --flex-color-ink: #000000; /* Headings & body (rendered ~95% alpha) */
+  --flex-color-ink-secondary: #31302e; /* Secondary body / footer */
+  --flex-color-ink-muted: #615d59; /* Supporting / muted copy */
+  --flex-color-ink-faint: #a39e98; /* Captions, metadata, placeholders */
+
+  /* --- Sticker Palette (DECORATION ONLY) --- */
+  --flex-color-accent-sky: #62aef0;
+  --flex-color-accent-purple: #d6b6f6;
+  --flex-color-accent-purple-deep: #391c57;
+  --flex-color-accent-pink: #ff64c8;
+  --flex-color-accent-orange: #dd5b00;
+  --flex-color-accent-orange-deep: #793400;
+  --flex-color-accent-teal: #2a9d99;
+  --flex-color-accent-green: #1aae39;
+  --flex-color-accent-brown: #523410;
+
+  /* --- Admin-derived semantics (DESIGN.md marketing surfaces omit a status ramp) --- */
+  --flex-color-success: #1aae39; /* = accent-green */
+  --flex-color-warning: #dd5b00; /* = accent-orange */
+  --flex-color-info: #0075de; /* = primary */
+  --flex-color-error: #e5484d; /* calm red */
 
   /* ==========================================================================
-     Typography — Font Families
+     Typography — Font Family
      ========================================================================== */
-  /* Inter Display: substitute for Haas Groot Disp (display sizes) */
-  --flex-font-display: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  /* Inter: substitute for Haas Grotesk (24px and below) */
-  --flex-font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  /* Inter substitutes NotionInter; one family carries 64px display → 12px eyebrow. */
+  --flex-font: 'Inter', -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
 
   /* ==========================================================================
-     Typography — Scales
+     Typography — Scales (size / weight / line-height / letter-spacing)
      ========================================================================== */
-  /* display-xl: 48px / 500 / 1.1 / 0 — Articles page h2 */
-  --flex-type-display-xl-size: 48px;
-  --flex-type-display-xl-weight: 500;
-  --flex-type-display-xl-line: 1.1;
-  --flex-type-display-xl-spacing: 0;
-  /* display-lg: 40px / 400 / 1.2 / 0 — Homepage h1 hero */
-  --flex-type-display-lg-size: 40px;
-  --flex-type-display-lg-weight: 400;
-  --flex-type-display-lg-line: 1.2;
-  --flex-type-display-lg-spacing: 0;
-  /* display-md: 32px / 400 / 1.2 / 0 — Feature-section headlines */
-  --flex-type-display-md-size: 32px;
-  --flex-type-display-md-weight: 400;
-  --flex-type-display-md-line: 1.2;
-  --flex-type-display-md-spacing: 0;
-  /* title-lg: 24px / 400 / 1.35 / 0.12px — Section titles */
-  --flex-type-title-lg-size: 24px;
-  --flex-type-title-lg-weight: 400;
-  --flex-type-title-lg-line: 1.35;
-  --flex-type-title-lg-spacing: 0.12px;
-  /* title-md: 20px / 400 / 1.5 / 0 — Sub-section titles */
-  --flex-type-title-md-size: 20px;
-  --flex-type-title-md-weight: 400;
-  --flex-type-title-md-line: 1.5;
-  --flex-type-title-md-spacing: 0;
-  /* title-sm: 18px / 500 / 1.4 / 0 — Article-card titles */
-  --flex-type-title-sm-size: 18px;
-  --flex-type-title-sm-weight: 500;
-  --flex-type-title-sm-line: 1.4;
-  --flex-type-title-sm-spacing: 0;
-  /* label-md: 16px / 500 / 1.4 / 0 — Demo-card titles, list labels */
-  --flex-type-label-md-size: 16px;
-  --flex-type-label-md-weight: 500;
-  --flex-type-label-md-line: 1.4;
-  --flex-type-label-md-spacing: 0;
-  /* button: 16px / 500 / 1.4 / 0 — CTA button labels */
+  /* display-1: 64px / 700 / 1.0 / −2.125px — Hero headline */
+  --flex-type-display-1-size: 64px;
+  --flex-type-display-1-weight: 700;
+  --flex-type-display-1-line: 1.0;
+  --flex-type-display-1-spacing: -2.125px;
+  /* display-2: 54px / 700 / 1.04 / −1.875px — Large section headlines */
+  --flex-type-display-2-size: 54px;
+  --flex-type-display-2-weight: 700;
+  --flex-type-display-2-line: 1.04;
+  --flex-type-display-2-spacing: -1.875px;
+  /* heading-1: 40px / 700 / 1.1 / −1px — Section headlines */
+  --flex-type-heading-1-size: 40px;
+  --flex-type-heading-1-weight: 700;
+  --flex-type-heading-1-line: 1.1;
+  --flex-type-heading-1-spacing: -1px;
+  /* heading-2: 26px / 700 / 1.23 / −0.625px — Sub-section headings */
+  --flex-type-heading-2-size: 26px;
+  --flex-type-heading-2-weight: 700;
+  --flex-type-heading-2-line: 1.23;
+  --flex-type-heading-2-spacing: -0.625px;
+  /* heading-3: 22px / 700 / 1.27 / −0.25px — Card titles */
+  --flex-type-heading-3-size: 22px;
+  --flex-type-heading-3-weight: 700;
+  --flex-type-heading-3-line: 1.27;
+  --flex-type-heading-3-spacing: -0.25px;
+  /* title: 20px / 600 / 1.4 / −0.125px — Feature titles, callouts */
+  --flex-type-title-size: 20px;
+  --flex-type-title-weight: 600;
+  --flex-type-title-line: 1.4;
+  --flex-type-title-spacing: -0.125px;
+  /* body-md: 16px / 400 / 1.5 / 0 — Default body copy */
+  --flex-type-body-md-size: 16px;
+  --flex-type-body-md-weight: 400;
+  --flex-type-body-md-line: 1.5;
+  --flex-type-body-md-spacing: 0;
+  /* body-sm: 15px / 400 / 1.33 / 0 — Dense body, table rows, nav */
+  --flex-type-body-sm-size: 15px;
+  --flex-type-body-sm-weight: 400;
+  --flex-type-body-sm-line: 1.33;
+  --flex-type-body-sm-spacing: 0;
+  /* button: 16px / 500 / 1.5 / 0 — Button labels */
   --flex-type-button-size: 16px;
   --flex-type-button-weight: 500;
-  --flex-type-button-line: 1.4;
+  --flex-type-button-line: 1.5;
   --flex-type-button-spacing: 0;
-  /* body-md: 14px / 400 / 1.25 / 0 — Body copy, footer, nav */
-  --flex-type-body-md-size: 14px;
-  --flex-type-body-md-weight: 400;
-  --flex-type-body-md-line: 1.25;
-  --flex-type-body-md-spacing: 0;
-  /* caption: 14px / 500 / 1.35 / 0.16px — Captions, meta text */
+  /* caption: 14px / 400 / 1.43 / 0 — Captions, footnotes */
   --flex-type-caption-size: 14px;
-  --flex-type-caption-weight: 500;
-  --flex-type-caption-line: 1.35;
-  --flex-type-caption-spacing: 0.16px;
-  /* legal: 13.12px / 600 / 1.2 / 0 — Cookie/legal CTAs */
-  --flex-type-legal-size: 13.12px;
-  --flex-type-legal-weight: 600;
-  --flex-type-legal-line: 1.2;
-  --flex-type-legal-spacing: 0;
-  /* pricing-display: 44.8px / 475 / 1.1 / 0 — Pricing-page h1 */
-  --flex-type-pricing-display-size: 44.8px;
-  --flex-type-pricing-display-weight: 475;
-  --flex-type-pricing-display-line: 1.1;
-  --flex-type-pricing-display-spacing: 0;
-  /* pricing-section: 28px / 475 / 1.2 / 0 — Pricing section heads */
-  --flex-type-pricing-section-size: 28px;
-  --flex-type-pricing-section-weight: 475;
-  --flex-type-pricing-section-line: 1.2;
-  --flex-type-pricing-section-spacing: 0;
-  /* pricing-card-title: 20px / 475 / 1.3 / 0 — Plan name */
-  --flex-type-pricing-card-title-size: 20px;
-  --flex-type-pricing-card-title-weight: 475;
-  --flex-type-pricing-card-title-line: 1.3;
-  --flex-type-pricing-card-title-spacing: 0;
+  --flex-type-caption-weight: 400;
+  --flex-type-caption-line: 1.43;
+  --flex-type-caption-spacing: 0;
+  /* eyebrow: 12px / 600 / 1.33 / +0.125px — Pill badges, small labels */
+  --flex-type-eyebrow-size: 12px;
+  --flex-type-eyebrow-weight: 600;
+  --flex-type-eyebrow-line: 1.33;
+  --flex-type-eyebrow-spacing: 0.125px;
 
   /* ==========================================================================
      Border Radius
      ========================================================================== */
-  --flex-rounded-xs: 2px;     /* Cookie/legal CTAs */
-  --flex-rounded-sm: 6px;     /* Text inputs, small inline buttons */
-  --flex-rounded-md: 10px;    /* Content cards, article cards, cream callouts */
-  --flex-rounded-lg: 12px;    /* Primary CTAs, signature cards, tabbed feature cards */
-  --flex-rounded-pill: 9999px; /* Pricing-page CTAs (sub-system only) */
-  --flex-rounded-full: 9999px; /* Circular icon buttons, avatars */
+  --flex-rounded-xs: 4px; /* Form fields — tighter than pill CTAs */
+  --flex-rounded-sm: 5px; /* Small inline surfaces */
+  --flex-rounded-md: 8px; /* Utility buttons, nav buttons, pricing columns */
+  --flex-rounded-lg: 12px; /* Feature cards, modals, popovers */
+  --flex-rounded-xl: 16px; /* Large marketing surfaces */
+  --flex-rounded-full: 9999px; /* Pill CTAs, circular icons, badge pills */
 
   /* ==========================================================================
      Spacing
@@ -145,91 +135,131 @@
   --flex-space-xs: 8px;
   --flex-space-sm: 12px;
   --flex-space-md: 16px;
-  --flex-space-lg: 24px;      /* Gutter between cards in 3-up grids */
-  --flex-space-xl: 32px;      /* Tabbed feature cards, pricing tier cards internal padding */
-  --flex-space-xxl: 48px;     /* Signature card internal padding, breathing room */
-  --flex-space-section: 96px; /* Universal vertical rhythm constant between major bands */
+  --flex-space-lg: 24px; /* Card interior padding */
+  --flex-space-xl: 28px;
+  --flex-space-xxl: 32px; /* Footer / hero padding */
 
   /* ==========================================================================
-     Component: button-primary
+     Component: button-primary (pill CTA)
      ========================================================================== */
   --flex-btn-primary-bg: var(--flex-color-primary);
   --flex-btn-primary-color: var(--flex-color-on-primary);
-  --flex-btn-primary-font: var(--flex-font-body);
   --flex-btn-primary-size: var(--flex-type-button-size);
   --flex-btn-primary-weight: var(--flex-type-button-weight);
   --flex-btn-primary-line: var(--flex-type-button-line);
   --flex-btn-primary-spacing: var(--flex-type-button-spacing);
-  --flex-btn-primary-rounded: var(--flex-rounded-lg);
-  --flex-btn-primary-padding: 16px 24px;
+  --flex-btn-primary-rounded: var(--flex-rounded-full);
+  --flex-btn-primary-padding: 8px 20px;
 
   /* ==========================================================================
-     Component: button-secondary
+     Component: button-secondary (pill)
      ========================================================================== */
-  --flex-btn-secondary-bg: var(--flex-color-canvas);
+  --flex-btn-secondary-bg: var(--flex-color-surface);
   --flex-btn-secondary-color: var(--flex-color-ink);
   --flex-btn-secondary-border: 1px solid var(--flex-color-hairline);
-  --flex-btn-secondary-font: var(--flex-font-body);
   --flex-btn-secondary-size: var(--flex-type-button-size);
   --flex-btn-secondary-weight: var(--flex-type-button-weight);
   --flex-btn-secondary-line: var(--flex-type-button-line);
-  --flex-btn-secondary-rounded: var(--flex-rounded-lg);
-  --flex-btn-secondary-padding: 16px 24px;
+  --flex-btn-secondary-rounded: var(--flex-rounded-full);
+  --flex-btn-secondary-padding: 8px 20px;
 
   /* ==========================================================================
-     Component: top-nav
+     Component: button-utility (tight 8px)
+     ========================================================================== */
+  --flex-btn-utility-bg: var(--flex-color-surface);
+  --flex-btn-utility-color: var(--flex-color-ink);
+  --flex-btn-utility-rounded: var(--flex-rounded-md);
+  --flex-btn-utility-padding: 4px 14px;
+
+  /* ==========================================================================
+     Component: badge-pill (eyebrow / category)
+     ========================================================================== */
+  --flex-badge-pill-bg: var(--flex-color-surface);
+  --flex-badge-pill-color: var(--flex-color-primary);
+  --flex-badge-pill-size: var(--flex-type-eyebrow-size);
+  --flex-badge-pill-weight: var(--flex-type-eyebrow-weight);
+  --flex-badge-pill-rounded: var(--flex-rounded-full);
+  --flex-badge-pill-padding: 4px 8px;
+
+  /* ==========================================================================
+     Component: nav-bar
      ========================================================================== */
   --flex-topnav-bg: var(--flex-color-canvas);
   --flex-topnav-color: var(--flex-color-ink);
   --flex-topnav-height: 64px;
-  --flex-topnav-font: var(--flex-font-body);
-  --flex-topnav-size: var(--flex-type-body-md-size);
+  --flex-topnav-size: var(--flex-type-body-sm-size);
 
   /* ==========================================================================
-     Component: text-input
+     Component: text-input (tight 4px corners)
      ========================================================================== */
-  --flex-input-bg: var(--flex-color-canvas);
+  --flex-input-bg: var(--flex-color-surface);
   --flex-input-color: var(--flex-color-ink);
-  --flex-input-border: 1px solid var(--flex-color-hairline);
-  --flex-input-rounded: var(--flex-rounded-sm);
-  --flex-input-padding: 12px 16px;
-  --flex-input-height: 44px;
-  --flex-input-font: var(--flex-font-body);
-  --flex-input-size: var(--flex-type-body-md-size);
+  --flex-input-border: 1px solid rgb(221, 221, 221);
+  --flex-input-rounded: var(--flex-rounded-xs);
+  --flex-input-padding: 6px;
+  --flex-input-size: var(--flex-type-body-sm-size);
 
   /* ==========================================================================
-     Component: cards
+     Component: feature-card
      ========================================================================== */
-  --flex-card-bg: var(--flex-color-canvas);
+  --flex-card-bg: var(--flex-color-surface);
   --flex-card-color: var(--flex-color-ink);
-  --flex-card-rounded: var(--flex-rounded-md);
-  --flex-card-padding: 16px;
+  --flex-card-rounded: var(--flex-rounded-lg);
+  --flex-card-padding: var(--flex-space-lg);
 
   /* ==========================================================================
-     Elevation
+     Component: hero-band (dark "night" hero)
      ========================================================================== */
-  /* Button rest: soft drop with subtle blue-tinted glow at low alpha */
-  --flex-shadow-button: 0 2px 0 rgba(27, 97, 201, 0.02);
-  /* Button focus: outer 2px blue ring at higher alpha */
-  --flex-shadow-button-focus: 0 0 0 2px rgba(69, 143, 255, 0.35);
+  --flex-hero-band-bg: var(--flex-color-secondary);
+  --flex-hero-band-color: var(--flex-color-on-primary);
+  --flex-hero-band-size: var(--flex-type-display-1-size);
+  --flex-hero-band-padding: var(--flex-space-xxl);
+
+  /* ==========================================================================
+     Component: footer
+     ========================================================================== */
+  --flex-footer-bg: var(--flex-color-canvas-soft);
+  --flex-footer-color: var(--flex-color-ink-secondary);
+  --flex-footer-size: var(--flex-type-caption-size);
+  --flex-footer-padding: var(--flex-space-xxl);
+
+  /* ==========================================================================
+     Elevation — Notion: many near-transparent layers, never a hard cast
+     ========================================================================== */
+  /* Level-0: resting hairline glow */
+  --flex-shadow-1: 0 1px 2px rgba(15, 15, 15, 0.04);
+  /* Level-1: cards floating above the canvas */
+  --flex-shadow-2: 0 1px 2px rgba(15, 15, 15, 0.03), 0 2px 4px rgba(15, 15, 15, 0.04), 0 4px 8px rgba(15, 15, 15, 0.03);
+  /* Level-2: floating panels, dropdowns, popovers */
+  --flex-shadow-3: 0 2px 4px rgba(15, 15, 15, 0.04), 0 4px 8px rgba(15, 15, 15, 0.05), 0 12px 24px rgba(15, 15, 15, 0.04);
+  /* Focus ring — primary blue */
+  --flex-shadow-focus: 0 0 0 2px rgba(0, 117, 222, 0.35);
 }
 
 /* ==========================================================================
-   Dark Mode Overrides — Significantly lifted for comfortable viewing
+   Dark Mode Overrides — lifted ~15% for comfortable viewing
    ========================================================================== */
 html.dark {
-  --flex-color-canvas: #232830;
-  --flex-color-surface-soft: #2c323c;
-  --flex-color-surface-strong: #363d48;
-  --flex-color-hairline: #4a5260;
-  --flex-color-border-strong: #787e8c;
-  --flex-color-ink: #f5f6f8;
-  --flex-color-body: #bcc0cc;
-  --flex-color-muted: #9499a6;
-  --flex-color-link: #6badff;
-  --flex-color-link-active: #458fff;
+  --flex-color-primary: #458fff;
+  --flex-color-primary-active: #2b6fcc;
+  --flex-color-secondary: #1a1638;
 
-  --flex-btn-primary-bg: #6badff;
+  --flex-color-canvas: #232830;
+  --flex-color-canvas-soft: #2c323c;
+  --flex-color-surface: #2c323c;
+  --flex-color-hairline: #4a5260;
+
+  --flex-color-ink: #f5f6f8;
+  --flex-color-ink-secondary: #bcc0cc;
+  --flex-color-ink-muted: #9499a6;
+  --flex-color-ink-faint: #787e8c;
+
+  --flex-color-success: #39bf45;
+  --flex-color-warning: #ff9f40;
+  --flex-color-info: #458fff;
+  --flex-color-error: #ff6b6b;
+
+  --flex-btn-primary-bg: #458fff;
   --flex-btn-primary-color: #ffffff;
   --flex-btn-secondary-bg: #2c323c;
   --flex-btn-secondary-color: #f5f6f8;
@@ -245,75 +275,105 @@ html.dark {
   --flex-card-bg: #2c323c;
   --flex-card-color: #f5f6f8;
 
-  --flex-shadow-button: 0 2px 0 rgba(0, 0, 0, 0.25);
-  --flex-shadow-button-focus: 0 0 0 2px rgba(69, 143, 255, 0.4);
+  --flex-hero-band-bg: #1a1638;
+  --flex-hero-band-color: #f5f6f8;
+
+  --flex-footer-bg: #232830;
+  --flex-footer-color: #bcc0cc;
+
+  --flex-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --flex-shadow-2: 0 1px 2px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.22), 0 4px 8px rgba(0, 0, 0, 0.2);
+  --flex-shadow-3: 0 2px 4px rgba(0, 0, 0, 0.22), 0 4px 8px rgba(0, 0, 0, 0.25), 0 12px 24px rgba(0, 0, 0, 0.22);
+  --flex-shadow-focus: 0 0 0 2px rgba(69, 143, 255, 0.4);
 }
 
 /* ==========================================================================
    Utility Classes — Typography
    ========================================================================== */
-.flex-type-display-xl {
-  font-family: var(--flex-font-display);
-  font-size: var(--flex-type-display-xl-size);
-  font-weight: var(--flex-type-display-xl-weight);
-  line-height: var(--flex-type-display-xl-line);
-  letter-spacing: var(--flex-type-display-xl-spacing);
+.flex-type-display-1 {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-display-1-size);
+  font-weight: var(--flex-type-display-1-weight);
+  line-height: var(--flex-type-display-1-line);
+  letter-spacing: var(--flex-type-display-1-spacing);
 }
-.flex-type-display-lg {
-  font-family: var(--flex-font-display);
-  font-size: var(--flex-type-display-lg-size);
-  font-weight: var(--flex-type-display-lg-weight);
-  line-height: var(--flex-type-display-lg-line);
-  letter-spacing: var(--flex-type-display-lg-spacing);
+
+.flex-type-display-2 {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-display-2-size);
+  font-weight: var(--flex-type-display-2-weight);
+  line-height: var(--flex-type-display-2-line);
+  letter-spacing: var(--flex-type-display-2-spacing);
 }
-.flex-type-display-md {
-  font-family: var(--flex-font-display);
-  font-size: var(--flex-type-display-md-size);
-  font-weight: var(--flex-type-display-md-weight);
-  line-height: var(--flex-type-display-md-line);
-  letter-spacing: var(--flex-type-display-md-spacing);
+
+.flex-type-heading-1 {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-heading-1-size);
+  font-weight: var(--flex-type-heading-1-weight);
+  line-height: var(--flex-type-heading-1-line);
+  letter-spacing: var(--flex-type-heading-1-spacing);
 }
-.flex-type-title-lg {
-  font-family: var(--flex-font-body);
-  font-size: var(--flex-type-title-lg-size);
-  font-weight: var(--flex-type-title-lg-weight);
-  line-height: var(--flex-type-title-lg-line);
-  letter-spacing: var(--flex-type-title-lg-spacing);
+
+.flex-type-heading-2 {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-heading-2-size);
+  font-weight: var(--flex-type-heading-2-weight);
+  line-height: var(--flex-type-heading-2-line);
+  letter-spacing: var(--flex-type-heading-2-spacing);
 }
-.flex-type-title-md {
-  font-family: var(--flex-font-display);
-  font-size: var(--flex-type-title-md-size);
-  font-weight: var(--flex-type-title-md-weight);
-  line-height: var(--flex-type-title-md-line);
-  letter-spacing: var(--flex-type-title-md-spacing);
+
+.flex-type-heading-3 {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-heading-3-size);
+  font-weight: var(--flex-type-heading-3-weight);
+  line-height: var(--flex-type-heading-3-line);
+  letter-spacing: var(--flex-type-heading-3-spacing);
 }
-.flex-type-title-sm {
-  font-family: var(--flex-font-body);
-  font-size: var(--flex-type-title-sm-size);
-  font-weight: var(--flex-type-title-sm-weight);
-  line-height: var(--flex-type-title-sm-line);
-  letter-spacing: var(--flex-type-title-sm-spacing);
-}
-.flex-type-label-md {
-  font-family: var(--flex-font-body);
-  font-size: var(--flex-type-label-md-size);
-  font-weight: var(--flex-type-label-md-weight);
-  line-height: var(--flex-type-label-md-line);
-  letter-spacing: var(--flex-type-label-md-spacing);
+
+.flex-type-title {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-title-size);
+  font-weight: var(--flex-type-title-weight);
+  line-height: var(--flex-type-title-line);
+  letter-spacing: var(--flex-type-title-spacing);
 }
 .flex-type-body-md {
-  font-family: var(--flex-font-body);
+  font-family: var(--flex-font);
   font-size: var(--flex-type-body-md-size);
   font-weight: var(--flex-type-body-md-weight);
   line-height: var(--flex-type-body-md-line);
   letter-spacing: var(--flex-type-body-md-spacing);
 }
+
+.flex-type-body-sm {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-body-sm-size);
+  font-weight: var(--flex-type-body-sm-weight);
+  line-height: var(--flex-type-body-sm-line);
+  letter-spacing: var(--flex-type-body-sm-spacing);
+}
+
+.flex-type-button {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-button-size);
+  font-weight: var(--flex-type-button-weight);
+  line-height: var(--flex-type-button-line);
+  letter-spacing: var(--flex-type-button-spacing);
+}
 .flex-type-caption {
-  font-family: var(--flex-font-body);
+  font-family: var(--flex-font);
   font-size: var(--flex-type-caption-size);
   font-weight: var(--flex-type-caption-weight);
   line-height: var(--flex-type-caption-line);
   letter-spacing: var(--flex-type-caption-spacing);
+}
+
+.flex-type-eyebrow {
+  font-family: var(--flex-font);
+  font-size: var(--flex-type-eyebrow-size);
+  font-weight: var(--flex-type-eyebrow-weight);
+  line-height: var(--flex-type-eyebrow-line);
+  letter-spacing: var(--flex-type-eyebrow-spacing);
 }
 
 /* ==========================================================================
@@ -323,5 +383,8 @@ html.dark {
 .flex-rounded-sm { border-radius: var(--flex-rounded-sm); }
 .flex-rounded-md { border-radius: var(--flex-rounded-md); }
 .flex-rounded-lg { border-radius: var(--flex-rounded-lg); }
-.flex-rounded-pill { border-radius: var(--flex-rounded-pill); }
+
+.flex-rounded-xl {
+  border-radius: var(--flex-rounded-xl);
+}
 .flex-rounded-full { border-radius: var(--flex-rounded-full); }
