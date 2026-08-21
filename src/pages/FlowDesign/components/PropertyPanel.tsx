@@ -261,7 +261,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                   value={nodeProperties?.script || ""}
                   placeholder="双击或者点击按钮输入脚本内容"
                   onDoubleClick={() => setScriptEditorVisible(true)}
-                  style={{borderRadius: '6px', border: '1px solid #dddddd'}}
+                  style={{borderRadius: token.borderRadius, border: `1px solid ${token.colorBorder}`}}
                 />
                 <Tooltip title="打开脚本编辑器">
                   <Button
@@ -288,7 +288,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                   value={nodeProperties?.script || ""}
                   placeholder="双击或者点击按钮输入SQL"
                   onDoubleClick={() => setSqlEditorVisible(true)}
-                  style={{borderRadius: '6px', border: '1px solid #dddddd'}}
+                  style={{borderRadius: token.borderRadius, border: `1px solid ${token.colorBorder}`}}
                 />
                 <Tooltip title="打开SQL编辑器">
                   <Button

@@ -481,16 +481,19 @@ export const antdMapTokens = {
   colorSuccessText: colors.success,
   colorSuccessTextActive: '#128a2b',
 
-  // --- Warning Derivations (accent-orange) ---
-  colorWarningBg: '#fff3ea',
-  colorWarningBgHover: '#ffe2d1',
-  colorWarningBorder: colors.warning,
-  colorWarningBorderHover: '#c44d00',
-  colorWarningHover: '#c44d00',
-  colorWarningActive: '#aa4200',
-  colorWarningTextHover: '#c44d00',
-  colorWarningText: colors.warning,
-  colorWarningTextActive: '#aa4200',
+  // --- Warning Derivations (orange ramp) ---
+  // Light-mode seed override: the sticker accent-orange (#dd5b00) is too dark to
+  // read as "warning"; use a brighter mid-orange so Alerts/Tags/icons read clearly.
+  colorWarning: '#fa8c16',
+  colorWarningBg: '#fff7e6',
+  colorWarningBgHover: '#ffe7ba',
+  colorWarningBorder: '#ffd591',
+  colorWarningBorderHover: '#ffd591',
+  colorWarningHover: '#ffa940',
+  colorWarningActive: '#d46b08',
+  colorWarningTextHover: '#ffa940',
+  colorWarningText: '#fa8c16',
+  colorWarningTextActive: '#d46b08',
 
   // --- Error Derivations (calm red) ---
   colorErrorBg: '#fdecec',

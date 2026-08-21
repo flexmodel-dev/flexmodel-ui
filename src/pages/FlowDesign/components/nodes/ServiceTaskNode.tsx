@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import {Button, theme} from 'antd';
 import {getNodeBorderColor, getNodeBoxShadow} from '../../utils/nodeStyles';
+import {colors} from '@/theme/designTokens';
 
 const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -32,11 +33,11 @@ const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
       case 'delete_record':
         return <MinusOutlined {...iconProps} style={{color: token.colorError}}/>;
       case 'script':
-        return <CodeOutlined {...iconProps} style={{color: '#f4d35e'}}/>;
+        return <CodeOutlined {...iconProps} style={{color: colors.warning}}/>;
       case 'sql':
-        return <DatabaseOutlined {...iconProps} style={{color: '#254fad'}}/>;
+        return <DatabaseOutlined {...iconProps} style={{color: colors.secondary}}/>;
       case 'function':
-        return <CloudOutlined {...iconProps} style={{color: '#722ed1'}}/>;
+        return <CloudOutlined {...iconProps} style={{color: colors['accent-purple-deep']}}/>;
       default:
         return <SettingOutlined {...iconProps} style={{color: token.colorPrimary}}/>;
     }

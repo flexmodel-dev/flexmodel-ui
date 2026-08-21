@@ -207,7 +207,7 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
 
     return (
       <div style={{height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0}}>
-        <div style={{ marginBottom: 16, flexShrink: 0 }}>
+        <div style={{marginBottom: 0, flexShrink: 0}}>
 
           {searchExpanded && (
             <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>

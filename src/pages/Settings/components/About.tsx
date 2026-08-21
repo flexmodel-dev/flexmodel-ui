@@ -28,7 +28,7 @@ const About: React.FC = () => {
               display: 'inline-block',
               padding: token.paddingLG,
               borderRadius: '16px',
-              background: 'linear-gradient(135deg, #254fad 0%, #41454d 100%)',
+              background: `linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorTextSecondary} 100%)`,
               marginBottom: token.marginLG
             }}>
               <img

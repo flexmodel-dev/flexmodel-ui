@@ -236,7 +236,7 @@ const ApiKeys: React.FC = () => {
           </Text>
           <div style={{
             padding: 12,
-            background: "#f8fafc",
+            background: "var(--ant-color-bg-layout)",
             borderRadius: 6,
             wordBreak: "break-all",
             fontFamily: "monospace",
