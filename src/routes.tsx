@@ -16,7 +16,6 @@ import {
   ContainerOutlined,
   DatabaseOutlined,
   DeploymentUnitOutlined,
-  FileTextOutlined,
   LineChartOutlined,
   NodeIndexOutlined,
   PlayCircleOutlined,
@@ -29,7 +28,6 @@ import {
   KeyOutlined, FunctionOutlined,
 } from "@ant-design/icons";
 import GraphQLAPI from "@/pages/GraphQLAPI";
-import OpenAPI from "@/pages/OpenAPI";
 import Flow from "@/pages/Flow";
 import FlowList from "@/pages/Flow/components/FlowList.tsx";
 import FlowDesign from "@/pages/FlowDesign/index.tsx";
@@ -100,12 +98,6 @@ export const projectRoutes: RouteConfig[] = [
         element: <GraphQLAPI />,
         icon: DeploymentUnitOutlined,
         translationKey: "graphql_api",
-      },
-      {
-        path: "/project/:projectId/api/open-api",
-        element: <OpenAPI />,
-        icon: FileTextOutlined,
-        translationKey: "open_api",
       },
       {
         path: "/project/:projectId/api/log",
