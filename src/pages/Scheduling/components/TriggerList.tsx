@@ -130,7 +130,7 @@ const TriggerList: React.FC<TriggerListProps> = ({model, eventOnly = false}) => 
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'SCHEDULED':
+      case 'SCHEDULE':
         return 'blue';
       case 'EVENT':
         return 'green';
@@ -141,7 +141,7 @@ const TriggerList: React.FC<TriggerListProps> = ({model, eventOnly = false}) => 
 
   const getTypeText = (type: string) => {
     switch (type) {
-      case 'SCHEDULED':
+      case 'SCHEDULE':
         return t('trigger.type_scheduled');
       case 'EVENT':
         return t('trigger.type_event');

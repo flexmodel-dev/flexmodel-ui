@@ -99,7 +99,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
 
       form.setFieldsValue(formValues);
 
-      if (trigger.type === 'SCHEDULED') {
+      if (trigger.type === 'SCHEDULE') {
         const triggerFormType = trigger.config?.type || 'interval';
         setTriggerFormType(triggerFormType);
         form.setFieldValue('triggerForm', triggerFormType);
@@ -119,7 +119,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
   }, [trigger, mode, form, eventOnly, model]);
 
   const handleSubmit = async (values: any) => {
-    if (values.type === 'SCHEDULED' && values.triggerForm) {
+    if (values.type === 'SCHEDULE' && values.triggerForm) {
       values.config = {
         ...values.config,
         type: values.triggerForm
@@ -187,7 +187,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
             placeholder={t('trigger.select_type')}
             disabled={mode === 'view'}
           >
-            <Option value="SCHEDULED">{t('trigger.type_scheduled')}</Option>
+            <Option value="SCHEDULE">{t('trigger.type_scheduled')}</Option>
             <Option value="EVENT">{t('trigger.type_event')}</Option>
           </Select>
         )}
@@ -196,7 +196,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
       <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}>
         {({ getFieldValue }) => {
           const triggerType = getFieldValue('type');
-          if (triggerType === 'SCHEDULED') {
+          if (triggerType === 'SCHEDULE') {
             return (
               <>
                 <Form.Item

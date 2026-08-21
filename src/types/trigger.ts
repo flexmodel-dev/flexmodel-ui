@@ -39,7 +39,7 @@ export interface Trigger {
   id: string;
   name: string;
   description?: string;
-  type: 'scheduled' | 'event';
+  type: 'schedule' | 'event';
   status: 'active' | 'inactive';
   flowId: string;
   flowName: string;
