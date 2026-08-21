@@ -16,7 +16,7 @@ const UserTaskNode: React.FC<NodeProps> = ({ data, selected, id }) => {
         minHeight: 64,
         background: selected ? token.colorPrimaryBg : token.colorBgContainer,
         border: `2px solid ${getNodeBorderColor(hasError, selected, token.colorError, token.colorPrimary, token.colorBorder)}`,
-        borderRadius: 10,
+        borderRadius: 'var(--ant-border-radius-lg)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -89,7 +89,7 @@ const UserTaskNode: React.FC<NodeProps> = ({ data, selected, id }) => {
       />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <UserOutlined style={{ fontSize: '16px', color: token.colorPrimary }} />
+        <UserOutlined style={{fontSize: 'var(--ant-font-size-lg)', color: token.colorPrimary}}/>
         <div style={{ fontSize: '13px', color: token.colorText, fontWeight: 500 }}>
           {String((data.properties as any)?.name || data.name || '提交节点')}
         </div>

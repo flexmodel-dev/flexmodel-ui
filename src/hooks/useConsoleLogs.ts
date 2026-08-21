@@ -15,7 +15,7 @@ interface UseConsoleLogsReturn {
   clearLogs: () => void;
   reconnect: () => void;
   error: string | null;
-  logsEndRef: React.RefObject<HTMLDivElement>;
+  logsEndRef: React.RefObject<HTMLDivElement | null>;
   setAutoScrollEnabled: (enabled: boolean) => void;
 }
 
@@ -68,8 +68,6 @@ export const useConsoleLogs = (options: UseConsoleLogsOptions = {}): UseConsoleL
 
   useEffect(() => {
     if (!projectId) {
-      setIsConnected(false);
-      setConnectionState('closed');
       return;
     }
 
@@ -96,6 +94,8 @@ export const useConsoleLogs = (options: UseConsoleLogsOptions = {}): UseConsoleL
     return () => {
       clearInterval(statusCheck);
       channel.unsubscribe();
+      setIsConnected(false);
+      setConnectionState('closed');
     };
   }, [projectId, maxLogs]);
 

@@ -37,6 +37,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
   const [createForm] = Form.useForm();
 
   const getBucketListHandler = async () => {
+    await Promise.resolve();
     try {
       setLoading(true);
       const list = await getBucketList(projectId);

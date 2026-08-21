@@ -37,6 +37,7 @@ const FunctionsPage: React.FC = () => {
   const [detailLoading, setDetailLoading] = useState(false);
 
   const loadList = useCallback(async () => {
+    await Promise.resolve();
     if (!projectId) return;
     setLoading(true);
     try {

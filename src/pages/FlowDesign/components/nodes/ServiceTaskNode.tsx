@@ -22,7 +22,7 @@ const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
 
   // 根据 subType 获取图标和颜色
   const getSubTypeIcon = (subType?: string) => {
-    const iconProps = {fontSize: '16px'};
+    const iconProps = {fontSize: 'var(--ant-font-size-lg)'};
     switch (subType) {
       case 'insert_record':
         return <PlusOutlined {...iconProps} style={{color: token.colorSuccess}}/>;
@@ -86,7 +86,7 @@ const ServiceTaskNode: React.FC<NodeProps> = ({data, selected, id}) => {
         minHeight: 64,
         background: selected ? token.colorPrimaryBg : token.colorBgContainer,
         border: `2px solid ${getNodeBorderColor(hasError, selected, token.colorError, token.colorPrimary, token.colorBorder)}`,
-        borderRadius: 10,
+        borderRadius: 'var(--ant-border-radius-lg)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

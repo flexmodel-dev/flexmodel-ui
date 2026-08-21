@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Button, Input, message, Modal, Popconfirm, Space, Table, Tag} from 'antd';
 import {DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined} from '@ant-design/icons';
 import {createIndex, dropIndex, modifyIndex} from '@/services/model.ts';
@@ -17,7 +17,7 @@ const IndexList: React.FC<IndexListProps> = ({model}) => {
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
   const [indexList, setIndexList] = useState<Index[]>([]);
-  const [filteredIndexList, setFilteredIndexList] = useState<Index[]>([]);
+
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [changeDialogVisible, setChangeDialogVisible] = useState<boolean>(false);
   const [selectedIndexKey, setSelectedIndexKey] = useState<number>(-1);
@@ -27,6 +27,7 @@ const IndexList: React.FC<IndexListProps> = ({model}) => {
   const { containerRef, scrollY } = useTableScrollHeight();
 
   const fetchIndexes = useCallback(async () => {
+    await Promise.resolve();
     setIndexList(model?.indexes || []);
   }, [model?.indexes]);
 
@@ -39,10 +40,7 @@ const IndexList: React.FC<IndexListProps> = ({model}) => {
     );
   }, []);
 
-  useEffect(() => {
-    const filtered = filterIndexes(indexList, searchKeyword);
-    setFilteredIndexList(filtered);
-  }, [indexList, searchKeyword, filterIndexes]);
+  const filteredIndexList = useMemo(() => filterIndexes(indexList, searchKeyword), [indexList, searchKeyword, filterIndexes]);
 
   useEffect(() => {
     fetchIndexes();

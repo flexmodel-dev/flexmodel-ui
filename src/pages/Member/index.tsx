@@ -32,6 +32,7 @@ const Member: React.FC = () => {
   const activeTab = searchParams.get('tab') || 'users';
 
   const fetchUsers = useCallback(async () => {
+    await Promise.resolve();
     setLoading(true);
     try {
       const data = await getUsers();
@@ -45,6 +46,7 @@ const Member: React.FC = () => {
   }, [t]);
 
   const fetchRoles = useCallback(async () => {
+    await Promise.resolve();
     setRoleLoading(true);
     try {
       const data = await getRoles();
@@ -57,7 +59,16 @@ const Member: React.FC = () => {
     }
   }, [t]);
 
+  const transformResourceToTree = (resources: ResourceNode[]): any[] => {
+    return resources.map(resource => ({
+      label: resource.name,
+      value: resource.id,
+      children: resource.children ? transformResourceToTree(resource.children) : undefined
+    }));
+  };
+
   const fetchResources = useCallback(async () => {
+    await Promise.resolve();
     try {
       const data = await getResourceTree();
       const treeData = transformResourceToTree(data);
@@ -67,14 +78,6 @@ const Member: React.FC = () => {
       message.error(t("resource.fetch_failed"));
     }
   }, [t]);
-
-  const transformResourceToTree = (resources: ResourceNode[]): any[] => {
-    return resources.map(resource => ({
-      label: resource.name,
-      value: resource.id,
-      children: resource.children ? transformResourceToTree(resource.children) : undefined
-    }));
-  };
 
   useEffect(() => {
     fetchUsers();

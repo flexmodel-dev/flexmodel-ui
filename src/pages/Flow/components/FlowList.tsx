@@ -34,6 +34,7 @@ const FlowList: React.FC = () => {
   const [form] = Form.useForm();
 
   const fetchFlowList = useCallback(async () => {
+    await Promise.resolve();
     setLoading(true);
     try {
       const response = await getFlowList(projectId, {page: 1, size: 100});

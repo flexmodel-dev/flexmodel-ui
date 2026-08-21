@@ -39,6 +39,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({bucketName, projectId, visibil
   const [uploadFileList, setUploadFileList] = useState<any[]>([]);
 
   const loadFiles = useCallback(async () => {
+    await Promise.resolve();
     setLoading(true);
     try {
       const files = await listObjects(projectId, bucketName, currentPath === '/' ? undefined : currentPath);

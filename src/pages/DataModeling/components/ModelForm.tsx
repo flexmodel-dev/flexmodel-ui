@@ -13,56 +13,15 @@ interface ModelFormProps {
   onCancel: () => void;
 }
 
-const ModelForm = React.forwardRef<any, ModelFormProps>(({
+const ModelForm = ({
   mode: _mode,
   currentValue: _currentValue,
   onConfirm,
   onCancel,
-}, ref) => {
+                     ref,
+                   }: ModelFormProps & { ref?: React.Ref<any> }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('Entity');
-
-  React.useImperativeHandle(ref, () => ({
-    submit: handleSubmit,
-    reset: handleCancel,
-    getFieldsValue: () => {
-      switch (activeTab) {
-        case 'Entity':
-          return entityForm.getFieldsValue();
-        case 'Enum':
-          return enumForm.getFieldsValue();
-        case 'NativeQuery':
-          return nativeQueryForm.getFieldsValue();
-        default:
-          return {};
-      }
-    },
-    setFieldsValue: (values: any) => {
-      switch (activeTab) {
-        case 'Entity':
-          entityForm.setFieldsValue(values);
-          break;
-        case 'Enum':
-          enumForm.setFieldsValue(values);
-          break;
-        case 'NativeQuery':
-          nativeQueryForm.setFieldsValue(values);
-          break;
-      }
-    },
-    validateFields: async () => {
-      switch (activeTab) {
-        case 'Entity':
-          return await entityForm.validateFields();
-        case 'Enum':
-          return await enumForm.validateFields();
-        case 'NativeQuery':
-          return await nativeQueryForm.validateFields();
-        default:
-          return {};
-      }
-    },
-  }));
 
   const [entityForm] = Form.useForm();
   const [entityModel, setEntityModel] = useState<Entity>({
@@ -184,6 +143,48 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
     },
   ];
 
+  React.useImperativeHandle(ref, () => ({
+    submit: handleSubmit,
+    reset: handleCancel,
+    getFieldsValue: () => {
+      switch (activeTab) {
+        case 'Entity':
+          return entityForm.getFieldsValue();
+        case 'Enum':
+          return enumForm.getFieldsValue();
+        case 'NativeQuery':
+          return nativeQueryForm.getFieldsValue();
+        default:
+          return {};
+      }
+    },
+    setFieldsValue: (values: any) => {
+      switch (activeTab) {
+        case 'Entity':
+          entityForm.setFieldsValue(values);
+          break;
+        case 'Enum':
+          enumForm.setFieldsValue(values);
+          break;
+        case 'NativeQuery':
+          nativeQueryForm.setFieldsValue(values);
+          break;
+      }
+    },
+    validateFields: async () => {
+      switch (activeTab) {
+        case 'Entity':
+          return await entityForm.validateFields();
+        case 'Enum':
+          return await enumForm.validateFields();
+        case 'NativeQuery':
+          return await nativeQueryForm.validateFields();
+        default:
+          return {};
+      }
+    },
+  }));
+
   return (
     <Tabs
       activeKey={activeTab}
@@ -191,6 +192,6 @@ const ModelForm = React.forwardRef<any, ModelFormProps>(({
       items={items}
     />
   );
-});
+};
 
 export default ModelForm;

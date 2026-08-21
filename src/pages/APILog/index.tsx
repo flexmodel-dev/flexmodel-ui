@@ -30,6 +30,7 @@ const LogViewer: React.FC = () => {
 
 
   const getApiLogsHandler = async () => {
+    await Promise.resolve();
     if (!projectId) return;
     const filter = form.getFieldsValue();
     const res = await getApiLogs(projectId, getFilterQuery(filter));
@@ -37,6 +38,7 @@ const LogViewer: React.FC = () => {
   };
 
   const getApiLogStatHandler = async () => {
+    await Promise.resolve();
     if (!projectId) return;
     const filter = form.getFieldsValue();
     const statList: any[] = (await getApiLogStat(projectId, getFilterQuery(filter)))?.apiStatList || [];

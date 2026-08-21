@@ -21,7 +21,7 @@ const ExclusiveGatewayNode: React.FC<NodeProps> = ({ id, data, selected }) => {
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        borderRadius: 8,
+        borderRadius: 'var(--ant-border-radius)',
         boxShadow: getNodeBoxShadow(hasError, selected),
       }}
       onMouseEnter={() => setIsHovered(true)}
@@ -133,7 +133,7 @@ const ExclusiveGatewayNode: React.FC<NodeProps> = ({ id, data, selected }) => {
           bottom: -25,
           left: '50%',
           transform: 'translateX(-50%)',
-          fontSize: '12px',
+          fontSize: 'var(--ant-font-size-sm)',
           color: token.colorTextSecondary,
           whiteSpace: 'nowrap',
           maxWidth: 100,

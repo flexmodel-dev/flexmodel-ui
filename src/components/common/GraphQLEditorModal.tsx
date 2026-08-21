@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Modal, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import GraphQL from "@/pages/GraphQLAPI/components/GraphQL";
@@ -18,7 +18,7 @@ const GraphQLEditorModal: React.FC<GraphQLEditorProps> = ({
     onClose,
 }) => {
     const { t } = useTranslation();
-    let tmpValue = value || { query: "" };
+  const [tmpValue, setTmpValue] = useState(value || {query: ""});
 
     const modalTitle = t("apis.graphql.modal_title", {
         defaultValue: "GraphQL编辑器",
@@ -50,7 +50,7 @@ const GraphQLEditorModal: React.FC<GraphQLEditorProps> = ({
                 <GraphQL
                     data={value}
                     onChange={(data: GraphQLData) =>{
-                        tmpValue = data;
+                      setTmpValue(data);
                     }}
                 />
             </div>

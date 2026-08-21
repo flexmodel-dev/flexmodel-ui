@@ -11,12 +11,13 @@ interface FmlModelFormProps {
   onCancel: () => void;
 }
 
-const FmlModelForm = React.forwardRef<any, FmlModelFormProps>(({
+const FmlModelForm = ({
   mode: _mode,
   currentValue: _currentValue,
   onConfirm,
   onCancel,
-}, ref) => {
+                        ref,
+                      }: FmlModelFormProps & { ref?: React.Ref<any> }) => {
   const { t } = useTranslation();
   const { token } = theme.useToken();
 
@@ -36,23 +37,6 @@ enum ExampleEnum {
 }`);
   };
 
-  React.useImperativeHandle(ref, () => ({
-    submit: handleSubmit,
-    reset: resetForm,
-    cancel: handleCancel,
-    getFieldsValue: () => ({ fmlCode }),
-    setFieldsValue: (values: any) => {
-      if (values.fmlCode) {
-        setFmlCode(values.fmlCode);
-      }
-    },
-    validateFields: async () => {
-      if (!fmlCode.trim()) {
-        throw new Error(t('enter_fml_code'));
-      }
-      return { fmlCode };
-    },
-  }));
   const [fmlCode, setFmlCode] = useState(`// ${t('fml_syntax_example')}
 model example_model {
   id : Long @id @default(autoIncrement()),
@@ -87,6 +71,24 @@ enum ExampleEnum {
     onCancel();
   };
 
+  React.useImperativeHandle(ref, () => ({
+    submit: handleSubmit,
+    reset: resetForm,
+    cancel: handleCancel,
+    getFieldsValue: () => ({fmlCode}),
+    setFieldsValue: (values: any) => {
+      if (values.fmlCode) {
+        setFmlCode(values.fmlCode);
+      }
+    },
+    validateFields: async () => {
+      if (!fmlCode.trim()) {
+        throw new Error(t('enter_fml_code'));
+      }
+      return {fmlCode};
+    },
+  }));
+
   return (
     <div style={{ height: '600px', border: `1px solid ${token.colorBorder}`, borderRadius: token.borderRadius }}>
       <FmlEditor
@@ -97,6 +99,6 @@ enum ExampleEnum {
       />
     </div>
   );
-});
+};
 
 export default FmlModelForm;

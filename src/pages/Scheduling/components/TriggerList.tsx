@@ -33,11 +33,8 @@ const TriggerList: React.FC<TriggerListProps> = ({model, eventOnly = false}) => 
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    loadTriggers();
-  }, [currentPage, pageSize, eventOnly, model]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const loadTriggers = async () => {
+    await Promise.resolve();
     setLoading(true);
     try {
       const {getTriggerPage} = await import('@/services/trigger');
@@ -59,6 +56,10 @@ const TriggerList: React.FC<TriggerListProps> = ({model, eventOnly = false}) => 
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadTriggers();
+  }, [currentPage, pageSize, eventOnly, model]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCreate = () => {
     setEditingTrigger(null);

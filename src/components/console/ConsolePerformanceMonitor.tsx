@@ -73,7 +73,7 @@ const ConsolePerformanceMonitor: React.FC<ConsolePerformanceMonitorProps> = Reac
   return (
     <Tooltip title={getTooltipContent()} placement="top">
       <span style={{
-        fontSize: '12px',
+        fontSize: 'var(--ant-font-size-sm)',
         color: getPerformanceColor(),
         display: 'inline-flex',
         alignItems: 'center',
@@ -84,7 +84,7 @@ const ConsolePerformanceMonitor: React.FC<ConsolePerformanceMonitorProps> = Reac
           status={isConnected ? 'success' : 'error'}
           size="small"
         />
-        <InfoCircleOutlined style={{ fontSize: '12px' }} />
+        <InfoCircleOutlined style={{fontSize: 'var(--ant-font-size-sm)'}}/>
         <span>{getPerformanceText()}</span>
       </span>
     </Tooltip>

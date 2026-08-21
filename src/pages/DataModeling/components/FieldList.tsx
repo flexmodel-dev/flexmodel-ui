@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Button, Input, message, Modal, Popconfirm, Space, Table, Tooltip,} from "antd";
 import {colors} from "@/theme/designTokens";
 import {
@@ -32,7 +32,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
   const [fieldList, setFieldList] = useState<Field[]>([]);
-  const [filteredFieldList, setFilteredFieldList] = useState<Field[]>([]);
+
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [changeDialogVisible, setChangeDialogVisible] =
     useState<boolean>(false);
@@ -45,6 +45,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
   const { containerRef, scrollY } = useTableScrollHeight();
 
   const fetchFields = useCallback(async () => {
+    await Promise.resolve();
     setFieldList(model?.fields);
   }, [model?.fields]);
 
@@ -57,10 +58,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
     );
   }, []);
 
-  useEffect(() => {
-    const filtered = filterFields(fieldList, searchKeyword);
-    setFilteredFieldList(filtered);
-  }, [fieldList, searchKeyword, filterFields]);
+  const filteredFieldList = useMemo(() => filterFields(fieldList, searchKeyword), [fieldList, searchKeyword, filterFields]);
 
   useEffect(() => {
     fetchFields();

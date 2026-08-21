@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {
   Card,
   Row,
@@ -43,7 +43,6 @@ const Project: React.FC = () => {
   const { token } = theme.useToken();
   const navigate = useNavigate();
   const { setCurrentProject } = useProject();
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -53,16 +52,12 @@ const Project: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'card' | 'list'>('card'); // 'card' or 'list'
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
   const fetchProjects = async () => {
+    await Promise.resolve();
     setLoading(true);
     try {
       const projects = await getProjects({ include: 'stats' });
       setProjects(projects);
-      setFilteredProjects(projects);
     } catch (error) {
       console.error('Failed to fetch projects:', error);
     } finally {
@@ -71,16 +66,18 @@ const Project: React.FC = () => {
   };
 
   useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const filteredProjects = useMemo(() => {
     if (searchKeyword) {
-      const filtered = projects.filter(project =>
+      return projects.filter(project =>
         project.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
         (project.description?.toLowerCase().includes(searchKeyword.toLowerCase()) ?? false)
       );
-      setFilteredProjects(filtered);
-    } else {
-      setFilteredProjects(projects);
     }
-  }, [searchKeyword]);
+    return projects;
+  }, [projects, searchKeyword]);
 
   const handleCreateProject = () => {
     setIsCreateModalVisible(true);
@@ -200,7 +197,10 @@ const Project: React.FC = () => {
               render: (text, record) => (
                 <div>
                   <div style={{ fontWeight: '500' }}>{text}</div>
-                  <div style={{ color: token.colorTextSecondary, fontSize: '12px' }}>{record.description}</div>
+                  <div style={{
+                    color: token.colorTextSecondary,
+                    fontSize: 'var(--ant-font-size-sm)'
+                  }}>{record.description}</div>
                 </div>
               )
             },
@@ -366,10 +366,10 @@ const Project: React.FC = () => {
                   </Space>
 
                   <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text type="secondary" style={{ fontSize: '12px' }}>
+                    <Text type="secondary" style={{fontSize: 'var(--ant-font-size-sm)'}}>
                       {t('project.owner')}: {project.ownerId}
                     </Text>
-                    <Text type="secondary" style={{ fontSize: '12px' }}>
+                    <Text type="secondary" style={{fontSize: 'var(--ant-font-size-sm)'}}>
                       {t('project.createdAt')}: {new Date(project.createdAt).toLocaleDateString('zh-CN')}
                     </Text>
                   </div>

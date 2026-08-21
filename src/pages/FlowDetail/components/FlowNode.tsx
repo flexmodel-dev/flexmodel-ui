@@ -141,7 +141,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
-          borderRadius: 8,
+          borderRadius: 'var(--ant-border-radius)',
           boxShadow: isSelected
             ? '0 4px 12px rgba(27, 97, 201, 0.25)'
             : '0 2px 8px rgba(0, 0, 0, 0.08)',
@@ -181,12 +181,12 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
           minHeight: 60,
           background: bgColor,
           border: `2px solid ${isSelected ? token.colorPrimary : borderColor}`,
-          borderRadius: 8,
+          borderRadius: 'var(--ant-border-radius)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '8px 12px',
+          padding: 'var(--ant-padding-xs) var(--ant-padding-sm)',
           position: 'relative',
           boxShadow: isSelected
             ? '0 4px 12px rgba(27, 97, 201, 0.25)'
@@ -196,7 +196,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
         <Handle type="target" position={Position.Left} id="left" style={{ visibility: 'hidden' }} />
         <Handle type="source" position={Position.Right} id="right" style={{ visibility: 'hidden' }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <LinkOutlined style={{ fontSize: '14px', color: textColor }} />
+          <LinkOutlined style={{fontSize: 'var(--ant-font-size)', color: textColor}}/>
           <span style={{ fontSize: '13px', color: textColor, fontWeight: 500 }}>
             {displayName}
           </span>
@@ -211,9 +211,9 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
   // 渲染任务节点（用户任务、服务任务等）
   const taskIcon =
     type === FlowElementType.USER_TASK ? (
-      <UserOutlined style={{ fontSize: '16px', color: textColor }} />
+      <UserOutlined style={{fontSize: 'var(--ant-font-size-lg)', color: textColor}}/>
     ) : (
-      <SettingOutlined style={{ fontSize: '16px', color: textColor }} />
+      <SettingOutlined style={{fontSize: 'var(--ant-font-size-lg)', color: textColor}}/>
     );
 
   return (
@@ -223,7 +223,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({ data }) => {
         minHeight: 64,
         background: bgColor,
         border: `2px solid ${isSelected ? token.colorPrimary : borderColor}`,
-        borderRadius: 10,
+        borderRadius: 'var(--ant-border-radius-lg)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

@@ -8,7 +8,7 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { token } = theme.useToken();
   const hasError = (data as any)?.hasError || false;
-  
+
   return (
     <div
       style={{
@@ -20,7 +20,7 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '12px',
+        fontSize: 'var(--ant-font-size-sm)',
         color: token.colorTextSecondary,
         position: 'relative',
         boxShadow: getNodeBoxShadow(hasError, selected, token.boxShadow),
@@ -40,7 +40,7 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
       />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <LinkOutlined style={{ fontSize: '14px' }} />
+        <LinkOutlined style={{fontSize: 'var(--ant-font-size)'}}/>
         <span style={{ fontWeight: 500 }}>{(data?.properties as any)?.name || data?.label as string || '子流程'}</span>
       </div>
 

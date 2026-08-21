@@ -146,6 +146,7 @@ const FlowDesign: React.FC = () => {
   }, [setEdges]);
 
   // 在线路上插入一个节点（替换当前边为两条边）
+  const handleInsertNodeRef = useRef<typeof handleInsertNode | null>(null);
   const handleInsertNode = useCallback((edgeId: string, nodeType: string) => {
     setEdges((currentEdges) => {
       const edge = currentEdges.find((e) => e.id === edgeId);
@@ -180,7 +181,7 @@ const FlowDesign: React.FC = () => {
           conditionsequenceflow: '',
           defaultConditions: 'false',
           onDelete: handleEdgeDelete,
-          onInsert: (id: string, t: string) => handleInsertNode(id, t)
+          onInsert: (id: string, t: string) => handleInsertNodeRef.current?.(id, t)
         },
       };
       const secondEdge: CustomEdge = {
@@ -194,7 +195,7 @@ const FlowDesign: React.FC = () => {
           conditionsequenceflow: '',
           defaultConditions: 'false',
           onDelete: handleEdgeDelete,
-          onInsert: (id: string, t: string) => handleInsertNode(id, t)
+          onInsert: (id: string, t: string) => handleInsertNodeRef.current?.(id, t)
         },
       };
 
@@ -205,6 +206,9 @@ const FlowDesign: React.FC = () => {
       return [...currentEdges.filter((e) => e.id !== edgeId), firstEdge, secondEdge];
     });
   }, [nodes, handleEdgeDelete, handleNodeDelete, setEdges, setNodes]);
+  useEffect(() => {
+    handleInsertNodeRef.current = handleInsertNode;
+  });
 
   // 解析flowModel数据并转换为ReactFlow格式
   const parseFlowModel = useCallback((flowModelStr: string) => {

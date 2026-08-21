@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle} from 'react';
+import React, {useImperativeHandle} from 'react';
 import {
   Button,
   Card,
@@ -58,7 +58,7 @@ export interface PropertyPanelRef {
   validateCurrentNode: () => Promise<boolean>;
 }
 
-const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
+const PropertyPanel = ({
   selectedNode,
   selectedEdge,
   visible,
@@ -67,7 +67,8 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
   onEdgePropertyChange,
   nodes,
   onValidationChange,
-}, ref) => {
+                         ref,
+                       }: PropertyPanelProps & { ref?: React.Ref<PropertyPanelRef> }) => {
   const { currentProject } = useProject();
   const { token } = theme.useToken();
   const projectId = currentProject?.id || '';
@@ -90,23 +91,14 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     handleFormChange({ properties: { script: value } }, form.getFieldsValue());
   };
 
-  useImperativeHandle(ref, () => ({
-    validateCurrentNode: async () => {
-      if (!selectedNode) {
-        return true;
-      }
 
-      try {
-        await form.validateFields();
-        onValidationChange(selectedNode.id, true);
-        return true;
-      } catch (error) {
-        console.log('节点校验失败:', selectedNode.id, error);
-        onValidationChange(selectedNode.id, false);
-        return false;
-      }
-    }
-  }), [selectedNode, form, onValidationChange]);
+  const convertArrayToFieldMapping = (arrayData: any[]) => {
+    if (!arrayData || !Array.isArray(arrayData)) return [];
+    return arrayData.map(item => ({
+      field: item.field || '',
+      value: String(item.value || '')
+    }));
+  };
 
   React.useEffect(() => {
     if (selectedNode) {
@@ -151,7 +143,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
 
   React.useEffect(() => {
     if (!projectId) {
-      setModels([]);
       return;
     }
 
@@ -166,11 +157,13 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       }
     };
     fetchModels();
+    return () => {
+      setModels([]);
+    };
   }, [projectId]);
 
   React.useEffect(() => {
     if (!projectId) {
-      setFunctions([]);
       return;
     }
 
@@ -184,6 +177,9 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       }
     };
     fetchFunctions();
+    return () => {
+      setFunctions([]);
+    };
   }, [projectId]);
 
   React.useEffect(() => {
@@ -206,15 +202,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     if (!fieldMappings || fieldMappings.length === 0) return [];
     return fieldMappings.filter(mapping => mapping.field && mapping.value !== undefined);
   };
-
-  const convertArrayToFieldMapping = (arrayData: any[]) => {
-    if (!arrayData || !Array.isArray(arrayData)) return [];
-    return arrayData.map(item => ({
-      field: item.field || '',
-      value: String(item.value || '')
-    }));
-  };
-
   const handleFormChange = (_changedValues: any, allValues: any) => {
     if (selectedNode) {
       const processedProperties = { ...(allValues.properties || {}) };
@@ -622,13 +609,19 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
             <Form.Item label="源节点" name="sourceNode">
               <Input
                 disabled
-                suffix={<span style={{ color: token.colorTextSecondary, fontSize: '12px' }}>({getNodeName(selectedEdge.source)})</span>}
+                suffix={<span style={{
+                  color: token.colorTextSecondary,
+                  fontSize: 'var(--ant-font-size-sm)'
+                }}>({getNodeName(selectedEdge.source)})</span>}
               />
             </Form.Item>
             <Form.Item label="目标节点" name="targetNode">
               <Input
                 disabled
-                suffix={<span style={{ color: token.colorTextSecondary, fontSize: '12px' }}>({getNodeName(selectedEdge.target)})</span>}
+                suffix={<span style={{
+                  color: token.colorTextSecondary,
+                  fontSize: 'var(--ant-font-size-sm)'
+                }}>({getNodeName(selectedEdge.target)})</span>}
               />
             </Form.Item>
           </Form>
@@ -667,7 +660,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                     <Radio value="false">否</Radio>
                   </Radio.Group>
                 </Form.Item>
-                <div style={{ fontSize: '12px', color: token.colorText, marginTop: '8px' }}>
+                <div style={{fontSize: 'var(--ant-font-size-sm)', color: token.colorText, marginTop: '8px'}}>
                   <p><strong>条件表达式说明：</strong></p>
                   <ul style={{ paddingLeft: '20px', marginTop: '4px' }}>
                     <li>使用 ${'{'}expression{'}'} 格式编写条件</li>
@@ -680,7 +673,7 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
               </>
             )}
             {!isGateway && (
-              <div style={{ color: token.colorTextSecondary, padding: '16px', textAlign: 'center' }}>
+              <div style={{color: token.colorTextSecondary, padding: 'var(--ant-padding)', textAlign: 'center'}}>
                 普通连线无需设置条件
               </div>
             )}
@@ -764,6 +757,24 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
     );
   };
 
+  useImperativeHandle(ref, () => ({
+    validateCurrentNode: async () => {
+      if (!selectedNode) {
+        return true;
+      }
+
+      try {
+        await form.validateFields();
+        onValidationChange(selectedNode.id, true);
+        return true;
+      } catch (error) {
+        console.log('节点校验失败:', selectedNode.id, error);
+        onValidationChange(selectedNode.id, false);
+        return false;
+      }
+    }
+  }), [selectedNode, form, onValidationChange]);
+
   return (
     <Drawer
       title={selectedEdge ? '连线属性' : form.getFieldValue('name')}
@@ -817,6 +828,6 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
       />
     </Drawer>
   );
-});
+};
 
 export default PropertyPanel;

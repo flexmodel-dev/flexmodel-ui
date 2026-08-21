@@ -35,6 +35,7 @@ const ApiKeys: React.FC = () => {
   const [form] = Form.useForm();
 
   const fetchKeys = useCallback(async () => {
+    await Promise.resolve();
     try {
       setLoading(true);
       const data = await getApiKeys();
@@ -47,6 +48,7 @@ const ApiKeys: React.FC = () => {
   }, [t]);
 
   const fetchProjects = useCallback(async () => {
+    await Promise.resolve();
     try {
       const data = await getProjects({});
       setProjects(data);
@@ -231,13 +233,13 @@ const ApiKeys: React.FC = () => {
         ]}
       >
         <div>
-          <Text type="warning" style={{ display: "block", marginBottom: 12 }}>
+          <Text type="warning" style={{display: "block", marginBottom: "var(--ant-margin-sm)"}}>
             {t("api_key_warning")}
           </Text>
           <div style={{
-            padding: 12,
+            padding: "var(--ant-padding-sm)",
             background: "var(--ant-color-bg-layout)",
-            borderRadius: 6,
+            borderRadius: "var(--ant-border-radius)",
             wordBreak: "break-all",
             fontFamily: "monospace",
             fontSize: 13,

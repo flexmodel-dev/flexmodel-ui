@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Input, Select, theme} from 'antd';
 import {useTranslation} from 'react-i18next';
 import FieldInput from './FieldInput';
@@ -21,34 +21,16 @@ const DefaultValueInput: React.FC<DefaultValueInputProps> = ({
   const { token } = theme.useToken();
   // const field = fieldFn(); // 暂时未使用，但保留以备将来扩展
 
-  const [defaultValueType, setDefaultValueType] = useState<'fixed' | 'generated'>('fixed');
-  const [fixedValue, setFixedValue] = useState<any>(null);
-  const [generatedName, setGeneratedName] = useState<string>('');
+  const defaultValueType: 'fixed' | 'generated' = value?.type === 'generated' ? 'generated' : 'fixed';
+  const fixedValue = value?.type === 'fixed' ? value.value : null;
+  const generatedName = value?.type === 'generated' ? (value.name || '') : '';
 
   const inputStyle = {
     fontSize: token.fontSizeSM,
   };
 
-  // 初始化值
-  useEffect(() => {
-    if (value) {
-      if (value.type === 'fixed') {
-        setDefaultValueType('fixed');
-        setFixedValue(value.value);
-      } else if (value.type === 'generated') {
-        setDefaultValueType('generated');
-        setGeneratedName(value.name || '');
-      }
-    } else {
-      setDefaultValueType('fixed');
-      setFixedValue(null);
-      setGeneratedName('');
-    }
-  }, [value]);
-
   // 处理类型变化
   const handleTypeChange = (type: 'fixed' | 'generated') => {
-    setDefaultValueType(type);
     if (type === 'fixed') {
       onChange({ type: 'fixed', value: null });
     } else {
@@ -58,14 +40,12 @@ const DefaultValueInput: React.FC<DefaultValueInputProps> = ({
 
   // 处理固定值变化
   const handleFixedValueChange = (val: any) => {
-    setFixedValue(val);
     onChange({ type: 'fixed', value: val });
   };
 
   // 处理生成值名称变化
   const handleGeneratedNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
-    setGeneratedName(name);
     onChange({ type: 'generated', name });
   };
 

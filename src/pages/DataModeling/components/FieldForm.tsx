@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Form, Input, Select, Switch} from "antd";
 import {getModelList} from "@/services/model.ts";
 import {useTranslation} from "react-i18next";
@@ -131,30 +131,24 @@ export const FieldInitialValues: any = {
   },
 };
 
-const FieldForm = React.forwardRef<any, FieldFormProps>(({
+const FieldForm = ({
   mode,
   model,
   currentValue,
   onConfirm,
   onCancel,
-}, ref) => {
+                     ref,
+                   }: FieldFormProps & { ref?: React.Ref<any> }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
 
-  React.useImperativeHandle(ref, () => ({
-    submit: handleConfirm,
-    reset: handleCancel,
-    getFieldsValue: form.getFieldsValue,
-    setFieldsValue: form.setFieldsValue,
-    validateFields: form.validateFields,
-  }));
   const [modelList, setModelList] = useState<any[]>([]);
-  const [ModelRefModel, setModelRefModel] = useState<any>();
   const [tmpType, setTmpType] = useState<string>("");
 
   const reqModelList = React.useCallback(async () => {
+    await Promise.resolve();
     const data = await getModelList(projectId);
     console.log('ModelList data:', data);
     console.log('Enum models:', data.filter(item => item.type === "Enum"));
@@ -205,14 +199,12 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
     }
   }, [currentValue, form, initialValues, reqModelList]);
 
-  useEffect(() => {
+  const modelRefModel = useMemo(() => {
     if (tmpType?.startsWith("ModelRef:")) {
       const relatedModelName = tmpType.replace("ModelRef:", "");
-      const relatedModel = modelList.find((m) => m.name === relatedModelName);
-      setModelRefModel(relatedModel);
-    } else {
-      setModelRefModel(null);
+      return modelList.find((m) => m.name === relatedModelName);
     }
+    return null;
   }, [modelList, tmpType]);
 
   const handleTypeChange = (value: string) => {
@@ -292,6 +284,14 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
       console.log("Field set as identity:", allValues.name);
     }
   };
+
+  React.useImperativeHandle(ref, () => ({
+    submit: handleConfirm,
+    reset: handleCancel,
+    getFieldsValue: form.getFieldsValue,
+    setFieldsValue: form.setFieldsValue,
+    validateFields: form.validateFields,
+  }));
 
   return (
     <Form
@@ -391,8 +391,8 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
             rules={[{ required: true }]}
           >
             <Select>
-              {ModelRefModel?.fields?.map((field: any) => (
-                <Select.Option key={field.name} value={field.name}>
+              {modelRefModel?.fields?.map((field: any) => (
+                  <Select.Option key={field.name} value={field.name}>
                   {field.name}
                 </Select.Option>
               ))}
@@ -461,6 +461,6 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
       </Form.Item>
     </Form>
   );
-});
+};
 
 export default FieldForm;

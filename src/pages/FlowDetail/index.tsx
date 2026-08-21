@@ -53,6 +53,7 @@ const FlowDetail: React.FC = () => {
   const { mergeElementInstances } = useElementInstanceMerger({ setNodes });
 
   const loadData = useCallback(async () => {
+    await Promise.resolve();
     if (!flowInstanceId) return;
     setLoading(true);
     try {

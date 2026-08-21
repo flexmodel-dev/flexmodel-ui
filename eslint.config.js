@@ -19,6 +19,8 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // React Hooks v7 引入此规则，对 effect 中的数据获取/表单同步等合法模式误报较多，降级为警告
+      'react-hooks/set-state-in-effect': 'warn',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

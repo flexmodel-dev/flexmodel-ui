@@ -87,7 +87,7 @@ const NodePanel: React.FC<NodePanelProps> = ({onHide}) => {
     <Card
       title="节点选择面板"
       style={{height: '100%', display: 'flex', flexDirection: 'column'}}
-      styles={{body: {flex: 1, overflowY: 'auto', padding: '12px'}}}
+      styles={{body: {flex: 1, overflowY: 'auto', padding: 'var(--ant-padding-sm)'}}}
       extra={
         <Button
           type="text"
@@ -120,7 +120,7 @@ const NodePanel: React.FC<NodePanelProps> = ({onHide}) => {
                   >
                     <Space>
                       {getIcon(node.icon)}
-                      <Text style={{fontSize: '12px'}}>{node.label}</Text>
+                      <Text style={{fontSize: 'var(--ant-font-size-sm)'}}>{node.label}</Text>
                     </Space>
                   </Card>
                 </Col>

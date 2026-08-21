@@ -409,7 +409,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
 
   const inputStyle = {
     width: '100%',
-    borderRadius: '6px', // rounded.sm
+    borderRadius: 'var(--ant-border-radius-sm)',
   };
 
   const containerStyle = {

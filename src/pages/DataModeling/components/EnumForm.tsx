@@ -12,25 +12,17 @@ interface EnumFormProps {
   onConfirm?: (model: Enum) => void;
 }
 
-const EnumForm = React.forwardRef<any, EnumFormProps>(({
+const EnumForm = ({
   form: externalForm,
   mode = 'create',
-  datasource: _datasource, // eslint-disable-line @typescript-eslint/no-unused-vars
+                    datasource: _datasource,
   model,
-  onConfirm
-}, ref) => {
+                    onConfirm,
+                    ref,
+                  }: EnumFormProps & { ref?: React.Ref<any> }) => {
   const { t } = useTranslation();
   const [internalForm] = Form.useForm();
   const form = externalForm || internalForm;
-
-  // 暴露提交方法给父组件
-  React.useImperativeHandle(ref, () => ({
-    submit: handleSave,
-    reset: () => form.resetFields(),
-    getFieldsValue: form.getFieldsValue,
-    setFieldsValue: form.setFieldsValue,
-    validateFields: form.validateFields,
-  }));
 
   // 初始化表单值
   useEffect(() => {
@@ -55,6 +47,15 @@ const EnumForm = React.forwardRef<any, EnumFormProps>(({
       console.error("Validation failed", error);
     }
   };
+
+  // 暴露提交方法给父组件
+  React.useImperativeHandle(ref, () => ({
+    submit: handleSave,
+    reset: () => form.resetFields(),
+    getFieldsValue: form.getFieldsValue,
+    setFieldsValue: form.setFieldsValue,
+    validateFields: form.validateFields,
+  }));
 
   return (
     <Form form={form} layout="vertical" variant={mode === "view" ? "borderless" : "outlined"}>
@@ -131,6 +132,6 @@ const EnumForm = React.forwardRef<any, EnumFormProps>(({
       </Form.List>
     </Form>
   );
-});
+};
 
 export default EnumForm;
