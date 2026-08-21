@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Layout, Button, Dropdown, Space, Switch, theme as antdTheme } from "antd";
 import type { MenuProps } from "antd";
-import enUS from "antd/locale/en_US";
-import zhCN from "antd/locale/zh_CN";
+import enUS from "antd/es/locale/en_US";
+import zhCN from "antd/es/locale/zh_CN";
 import dayjs from "dayjs";
 import { useLocale, useTheme } from "@/store/appStore";
 import { useTranslation } from "react-i18next";
