@@ -765,9 +765,10 @@ const lightComponentTokens = {
   },
   Pagination: {
     itemActiveBg: colors.primary,
+    itemActiveColor: colors['on-primary'],
     itemActiveColorDisabled: colors.hairline,
     colorPrimary: colors.primary,
-    colorPrimaryHover: '#0066c9',
+    colorPrimaryHover: colors['on-primary'],
   },
   Slider: {
     trackBg: colors.primary,

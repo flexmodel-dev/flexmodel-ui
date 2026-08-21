@@ -21,7 +21,7 @@ const ApiLogChart: React.FC<ApiLogChartProps> = ({
   const getChartOption = () => ({
     tooltip: {
       trigger: "axis",
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      backgroundColor: token.colorBgElevated,
       borderColor: token.colorBorder,
       borderWidth: 1,
       textStyle: {
