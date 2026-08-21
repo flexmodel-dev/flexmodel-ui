@@ -430,7 +430,10 @@ export const antdMapTokens = {
   colorBgContainer: colors.canvas,
   colorBgElevated: colors.canvas,
   colorBgLayout: colors['canvas-soft'],
-  colorBgSpotlight: colors.canvas,
+  // Tooltip / popover spotlight — antd inverts this surface (dark bg + white text)
+  // regardless of light/dark mode. Must NOT be white, or text becomes invisible.
+  colorBgSpotlight: 'rgba(0, 0, 0, 0.85)',
+  colorTextLightSolid: '#ffffff',
   colorBgMask: 'rgba(0,0,0,0.45)',
 
   // --- Fill Colors (warm neutrals) ---
