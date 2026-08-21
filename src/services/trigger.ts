@@ -1,7 +1,7 @@
 import {api} from "@/utils/request";
 
 // 根据OpenAPI规范定义的触发器类型
-export type TriggerType = "EVENT" | "SCHEDULED";
+export type TriggerType = "EVENT" | "SCHEDULE";
 
 export interface Trigger {
   id?: string;
