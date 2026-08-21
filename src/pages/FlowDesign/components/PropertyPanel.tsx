@@ -268,7 +268,13 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                     type="text"
                     icon={<CodeOutlined/>}
                     onClick={() => setScriptEditorVisible(true)}
-                    style={{position: 'absolute', top: 8, right: 8, padding: '4px 12px', borderRadius: '4px'}}
+                    style={{
+                      position: 'absolute',
+                      top: token.paddingXS,
+                      right: token.paddingXS,
+                      padding: `${token.paddingXXS}px ${token.paddingSM}px`,
+                      borderRadius: token.borderRadiusXS
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -295,7 +301,13 @@ const PropertyPanel = forwardRef<PropertyPanelRef, PropertyPanelProps>(({
                     type="text"
                     icon={<CodeOutlined/>}
                     onClick={() => setSqlEditorVisible(true)}
-                    style={{position: 'absolute', top: 8, right: 8, padding: '4px 12px', borderRadius: '4px'}}
+                    style={{
+                      position: 'absolute',
+                      top: token.paddingXS,
+                      right: token.paddingXS,
+                      padding: `${token.paddingXXS}px ${token.paddingSM}px`,
+                      borderRadius: token.borderRadiusXS
+                    }}
                   />
                 </Tooltip>
               </div>

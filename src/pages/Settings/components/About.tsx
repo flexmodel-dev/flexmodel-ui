@@ -27,7 +27,7 @@ const About: React.FC = () => {
             <div style={{
               display: 'inline-block',
               padding: token.paddingLG,
-              borderRadius: '16px',
+              borderRadius: token.borderRadiusLG,
               background: `linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorTextSecondary} 100%)`,
               marginBottom: token.marginLG
             }}>
@@ -40,13 +40,13 @@ const About: React.FC = () => {
                 alt="Flexmodel Logo"
               />
             </div>
-            <Title level={2} style={{ margin: '12px 0 6px 0', fontWeight: 600 }}>
+          <Title level={2} style={{margin: `${token.marginSM}px ${token.marginXS}px`, fontWeight: 600}}>
               Flexmodel
             </Title>
             <Paragraph style={{
-              fontSize: '15px',
+              fontSize: token.fontSize,
               color: 'var(--ant-color-text-secondary)',
-              margin: '0 0 20px 0'
+              margin: `0 0 ${token.marginLG}px 0`
             }}>
               {t('app_description')}
             </Paragraph>
@@ -62,7 +62,7 @@ const About: React.FC = () => {
           </Text>
         </div>
 
-          <Divider style={{ margin: '20px 0' }} />
+        <Divider style={{margin: `${token.marginLG}px 0`}}/>
 
 
           {/* 链接和文档 */}
@@ -77,7 +77,7 @@ const About: React.FC = () => {
                 size="middle"
                 href="https://github.com/flexmodel-dev"
                 target="_blank"
-                style={{ borderRadius: '6px' }}
+                style={{borderRadius: token.borderRadius}}
               >
                 GitHub
               </Button>
@@ -86,7 +86,7 @@ const About: React.FC = () => {
                 size="middle"
                 href="https://flexmodel.dev/docs"
                 target="_blank"
-                style={{ borderRadius: '6px' }}
+                style={{borderRadius: token.borderRadius}}
               >
                 文档
               </Button>

@@ -212,6 +212,8 @@
   "upload_file": "上传文件",
   "upload_drag_text": "点击或拖拽文件到此区域上传",
   "upload_hint": "支持单个或批量上传，严禁上传公司数据或其他敏感信息",
+  "upload_success": "上传成功: {{name}}",
+  "upload_failed": "上传失败: {{name}}",
   "download": "下载",
   "download_file": "正在下载文件: {{name}}",
   "delete_confirm": "确认删除",

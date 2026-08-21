@@ -57,12 +57,13 @@ const StatCard: React.FC<{
   color: string;
   children: React.ReactNode;
 }> = ({title, icon, color, children}) => {
+  const {token} = theme.useToken();
   return (
     <Card
       hoverable
       styles={{
         body: {
-          padding: '20px',
+          padding: token.paddingLG,
           overflow: 'hidden',
         }
       }}
@@ -83,7 +84,7 @@ const StatCard: React.FC<{
         <div style={{
           width: '48px',
           height: '48px',
-          borderRadius: '12px',
+          borderRadius: token.borderRadiusLG,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -107,7 +108,7 @@ const StatCard: React.FC<{
         }}>
           {/* 标题 */}
           <div style={{
-            fontSize: '16px',
+            fontSize: token.fontSizeLG,
             color: 'var(--ant-color-text-secondary)',
             fontWeight: 500,
             lineHeight: 1.3,

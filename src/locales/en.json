@@ -212,6 +212,8 @@
   "upload_file": "Upload File",
   "upload_drag_text": "Click or drag files to this area to upload",
   "upload_hint": "Support single or batch upload. Do not upload company data or other sensitive information",
+  "upload_success": "Upload success: {{name}}",
+  "upload_failed": "Upload failed: {{name}}",
   "download": "Download",
   "download_file": "Downloading file: {{name}}",
   "delete_confirm": "Confirm Delete",
