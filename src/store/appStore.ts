@@ -4,8 +4,8 @@ import {useShallow} from 'zustand/react/shallow';
 import {getGlobalProfile} from '../services/global';
 import {getDarkModeFromStorage, setDarkModeToStorage} from '../utils/darkMode';
 import type {Project} from '../types/project';
-import zhCN from 'antd/locale/zh_CN';
-import enUS from 'antd/locale/en_US';
+import zhCN from 'antd/es/locale/zh_CN';
+import enUS from 'antd/es/locale/en_US';
 import dayjs from 'dayjs';
 
 // 类型定义
@@ -65,8 +65,8 @@ export const useAppStore = create<AppState>()(
         isLoading: false,
         error: null,
         isDark: getDarkModeFromStorage(),
-        locale: localStorage.getItem('i18nextLng') === 'zh' ? zhCN : enUS,
-        currentLang: (localStorage.getItem('i18nextLng') as 'zh' | 'en') || 'zh',
+        locale: (localStorage.getItem('i18nextLng') || 'zh').startsWith('zh') ? zhCN : enUS,
+        currentLang: (localStorage.getItem('i18nextLng') || 'zh').startsWith('zh') ? 'zh' : 'en',
         isSidebarCollapsed: false,
         currentProject: null,
 

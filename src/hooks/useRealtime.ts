@@ -35,7 +35,9 @@ export function useRealtime(
   const [isConnected, setIsConnected] = useState(false);
   const [channelState, setChannelState] = useState<RealtimeChannel | null>(null);
   const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+  useEffect(() => {
+    callbackRef.current = callback;
+  });
 
   // channel 可能为数组，序列化为字符串用于 useEffect 依赖比较
   const channelKey = Array.isArray(channel) ? channel.join(',') : channel;

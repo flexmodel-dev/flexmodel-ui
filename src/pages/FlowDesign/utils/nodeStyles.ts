@@ -20,10 +20,10 @@ export const getNodeBorderColor = (
 export const getNodeBoxShadow = (
   hasError: boolean,
   selected: boolean,
-  defaultShadow: string = '0 2px 8px rgba(0, 0, 0, 0.08)'
+  defaultShadow: string = '0 2px 8px rgba(15, 15, 15, 0.08)'
 ): string => {
-  if (hasError) return '0 4px 12px rgba(170, 45, 0, 0.25)';
-  if (selected) return '0 4px 12px rgba(27, 97, 201, 0.25)';
+  // Notion Analysis: error #e5484d, primary #0075de
+  if (hasError) return '0 4px 12px rgba(229, 72, 77, 0.25)';
+  if (selected) return '0 4px 12px rgba(0, 117, 222, 0.25)';
   return defaultShadow;
 };
-

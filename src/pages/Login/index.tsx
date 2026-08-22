@@ -6,8 +6,8 @@ import {useTranslation} from 'react-i18next';
 import {useAuth} from '@/store/authStore';
 import {useLocale, useTheme} from '@/store/appStore';
 import {useLocation, useNavigate} from 'react-router-dom';
-import enUS from 'antd/locale/en_US';
-import zhCN from 'antd/locale/zh_CN';
+import enUS from 'antd/es/locale/en_US';
+import zhCN from 'antd/es/locale/zh_CN';
 import dayjs from 'dayjs';
 import {applyDarkMode, setDarkModeToStorage} from '@/utils/darkMode';
 

@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Form, Input, Select, Switch} from "antd";
 import {getModelList} from "@/services/model.ts";
 import {useTranslation} from "react-i18next";
 import DefaultValueInput from "./DefaultValueInput";
 import {Field} from "@/types/data-modeling";
 import {useProject} from "@/store/appStore";
+import {BasicFieldTypes, FieldInitialValues} from "./fieldFormConstants";
 
 
 interface FieldFormProps {
@@ -15,143 +16,20 @@ interface FieldFormProps {
   onCancel: () => void;
 }
 
-export const BasicFieldTypes = [
-  {
-    name: 'String',
-    label: 'String',
-  },
-  {
-    name: 'Int',
-    label: 'Int',
-  },
-  {
-    name: 'Long',
-    label: 'Long',
-  },
-  {
-    name: 'Float',
-    label: 'Float',
-  },
-  {
-    name: 'Boolean',
-    label: 'Boolean',
-  },
-  {
-    name: 'DateTime',
-    label: 'DateTime',
-  },
-  {
-    name: 'Date',
-    label: 'Date',
-  },
-  {
-    name: 'Time',
-    label: 'Time',
-  },
-  {
-    name: 'JSON',
-    label: 'JSON',
-  },
-];
-
-export const FieldInitialValues: any = {
-  STRING: {
-    type: 'String',
-    length: 255,
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  INT: {
-    type: 'Int',
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  LONG: {
-    type: 'Long',
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  DECIMAL: {
-    type: 'Decimal',
-    precision: 20,
-    scale: 2,
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  BOOLEAN: {
-    type: 'Boolean',
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  DATE: {
-    type: 'Date',
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  TIME: {
-    type: 'Time',
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  DATETIME: {
-    type: 'DateTime',
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  JSON: {
-    type: 'JSON',
-    unique: false,
-    nullable: true,
-    identity: false,
-  },
-  MODEL_REF: {
-    type: 'ModelRef',
-    multiple: true,
-    localField: null,
-    foreignField: null,
-    unique: false,
-    nullable: true,
-    cascadeDelete: false,
-    identity: false,
-  },
-  ENUM: {
-    type: 'Enum',
-    unique: false,
-    nullable: true,
-    multiple: false,
-    identity: false,
-  },
-};
-
-const FieldForm = React.forwardRef<any, FieldFormProps>(({
+const FieldForm = ({
   mode,
   model,
   currentValue,
   onConfirm,
   onCancel,
-}, ref) => {
+                     ref,
+                   }: FieldFormProps & { ref?: React.Ref<any> }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
 
-  React.useImperativeHandle(ref, () => ({
-    submit: handleConfirm,
-    reset: handleCancel,
-    getFieldsValue: form.getFieldsValue,
-    setFieldsValue: form.setFieldsValue,
-    validateFields: form.validateFields,
-  }));
   const [modelList, setModelList] = useState<any[]>([]);
-  const [ModelRefModel, setModelRefModel] = useState<any>();
   const [tmpType, setTmpType] = useState<string>("");
 
   const reqModelList = React.useCallback(async () => {
@@ -205,14 +83,12 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
     }
   }, [currentValue, form, initialValues, reqModelList]);
 
-  useEffect(() => {
+  const modelRefModel = useMemo(() => {
     if (tmpType?.startsWith("ModelRef:")) {
       const relatedModelName = tmpType.replace("ModelRef:", "");
-      const relatedModel = modelList.find((m) => m.name === relatedModelName);
-      setModelRefModel(relatedModel);
-    } else {
-      setModelRefModel(null);
+      return modelList.find((m) => m.name === relatedModelName);
     }
+    return null;
   }, [modelList, tmpType]);
 
   const handleTypeChange = (value: string) => {
@@ -292,6 +168,14 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
       console.log("Field set as identity:", allValues.name);
     }
   };
+
+  React.useImperativeHandle(ref, () => ({
+    submit: handleConfirm,
+    reset: handleCancel,
+    getFieldsValue: form.getFieldsValue,
+    setFieldsValue: form.setFieldsValue,
+    validateFields: form.validateFields,
+  }));
 
   return (
     <Form
@@ -391,8 +275,8 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
             rules={[{ required: true }]}
           >
             <Select>
-              {ModelRefModel?.fields?.map((field: any) => (
-                <Select.Option key={field.name} value={field.name}>
+              {modelRefModel?.fields?.map((field: any) => (
+                  <Select.Option key={field.name} value={field.name}>
                   {field.name}
                 </Select.Option>
               ))}
@@ -461,6 +345,6 @@ const FieldForm = React.forwardRef<any, FieldFormProps>(({
       </Form.Item>
     </Form>
   );
-});
+};
 
 export default FieldForm;

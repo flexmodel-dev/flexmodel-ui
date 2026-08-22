@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Card, Col, Collapse, Row, Space, Typography} from 'antd';
+import {colors} from '@/theme/designTokens';
 import {
   CloseCircleOutlined,
   CloudOutlined,
@@ -37,21 +38,21 @@ const NodePanel: React.FC<NodePanelProps> = ({onHide}) => {
   // 获取图标组件
   const getIcon = (iconType: string) => {
     const iconMap: Record<string, React.ReactNode> = {
-      'start-event': <PlayCircleOutlined style={{color: '#39bf45'}}/>,
-      'end-event': <StopOutlined style={{color: '#aa2d00'}}/>,
-      'user-task': <UserOutlined style={{color: '#458fff'}}/>,
-      'gateway-exclusive': <CloseCircleOutlined style={{color: '#aa2d00'}}/>,
-      'gateway-parallel': <PlusCircleOutlined style={{color: '#aa2d00'}}/>,
-      'gateway-inclusive': <MinusCircleOutlined style={{color: '#aa2d00'}}/>,
-      'submit': <FileAddOutlined style={{color: '#41454d'}}/>,
-      'add-record': <PlusOutlined style={{color: '#458fff'}}/>,
-      'update-record': <EditOutlined style={{color: '#458fff'}}/>,
-      'query-record': <SearchOutlined style={{color: '#458fff'}}/>,
-      'delete-record': <MinusOutlined style={{color: '#458fff'}}/>,
-      'js-script': <CodeOutlined style={{color: '#f4d35e'}}/>,
-      'sql': <DatabaseOutlined style={{color: '#254fad'}}/>,
-      'cloud-function': <CloudOutlined style={{color: '#722ed1'}}/>,
-      'call-service': <LinkOutlined style={{color: '#41454d'}}/>,
+      'start-event': <PlayCircleOutlined style={{color: colors.success}}/>,
+      'end-event': <StopOutlined style={{color: colors['accent-orange']}}/>,
+      'user-task': <UserOutlined style={{color: colors.info}}/>,
+      'gateway-exclusive': <CloseCircleOutlined style={{color: colors['accent-orange']}}/>,
+      'gateway-parallel': <PlusCircleOutlined style={{color: colors['accent-orange']}}/>,
+      'gateway-inclusive': <MinusCircleOutlined style={{color: colors['accent-orange']}}/>,
+      'submit': <FileAddOutlined style={{color: colors['ink-muted']}}/>,
+      'add-record': <PlusOutlined style={{color: colors.info}}/>,
+      'update-record': <EditOutlined style={{color: colors.info}}/>,
+      'query-record': <SearchOutlined style={{color: colors.info}}/>,
+      'delete-record': <MinusOutlined style={{color: colors.info}}/>,
+      'js-script': <CodeOutlined style={{color: colors.warning}}/>,
+      'sql': <DatabaseOutlined style={{color: colors.secondary}}/>,
+      'cloud-function': <CloudOutlined style={{color: colors['accent-purple-deep']}}/>,
+      'call-service': <LinkOutlined style={{color: colors['ink-muted']}}/>,
     };
     return iconMap[iconType] || <UserOutlined/>;
   };
@@ -86,7 +87,7 @@ const NodePanel: React.FC<NodePanelProps> = ({onHide}) => {
     <Card
       title="节点选择面板"
       style={{height: '100%', display: 'flex', flexDirection: 'column'}}
-      styles={{body: {flex: 1, overflowY: 'auto', padding: '12px'}}}
+      styles={{body: {flex: 1, overflowY: 'auto', padding: 'var(--ant-padding-sm)'}}}
       extra={
         <Button
           type="text"
@@ -119,7 +120,7 @@ const NodePanel: React.FC<NodePanelProps> = ({onHide}) => {
                   >
                     <Space>
                       {getIcon(node.icon)}
-                      <Text style={{fontSize: '12px'}}>{node.label}</Text>
+                      <Text style={{fontSize: 'var(--ant-font-size-sm)'}}>{node.label}</Text>
                     </Space>
                   </Card>
                 </Col>

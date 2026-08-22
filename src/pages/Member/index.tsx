@@ -14,6 +14,14 @@ import RoleList from "./components/RoleList";
 import UserModal from "./components/UserModal";
 import RoleModal from "./components/RoleModal";
 
+const transformResourceToTree = (resources: ResourceNode[]): any[] => {
+  return resources.map(resource => ({
+    label: resource.name,
+    value: resource.id,
+    children: resource.children ? transformResourceToTree(resource.children) : undefined
+  }));
+};
+
 const Member: React.FC = () => {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -67,14 +75,6 @@ const Member: React.FC = () => {
       message.error(t("resource.fetch_failed"));
     }
   }, [t]);
-
-  const transformResourceToTree = (resources: ResourceNode[]): any[] => {
-    return resources.map(resource => ({
-      label: resource.name,
-      value: resource.id,
-      children: resource.children ? transformResourceToTree(resource.children) : undefined
-    }));
-  };
 
   useEffect(() => {
     fetchUsers();

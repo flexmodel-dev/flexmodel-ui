@@ -231,13 +231,13 @@ const ApiKeys: React.FC = () => {
         ]}
       >
         <div>
-          <Text type="warning" style={{ display: "block", marginBottom: 12 }}>
+          <Text type="warning" style={{display: "block", marginBottom: "var(--ant-margin-sm)"}}>
             {t("api_key_warning")}
           </Text>
           <div style={{
-            padding: 12,
-            background: "#f8fafc",
-            borderRadius: 6,
+            padding: "var(--ant-padding-sm)",
+            background: "var(--ant-color-bg-layout)",
+            borderRadius: "var(--ant-border-radius)",
             wordBreak: "break-all",
             fontFamily: "monospace",
             fontSize: 13,

@@ -365,7 +365,7 @@ const FmlEditor: React.FC<FmlEditorProps> = ({
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {showDocLink && (
         <div style={{
-          padding: '8px 12px',
+          padding: 'var(--ant-padding-xs) var(--ant-padding-sm)',
           backgroundColor: token.colorFillAlter,
           borderBottom: `1px solid ${token.colorBorderSecondary}`,
           display: 'flex',
@@ -373,7 +373,7 @@ const FmlEditor: React.FC<FmlEditorProps> = ({
           alignItems: 'center'
         }}>
           <span style={{
-            fontSize: '12px',
+            fontSize: 'var(--ant-font-size-sm)',
             color: token.colorTextSecondary
           }}>
             {t('fml_editor')}
@@ -383,7 +383,7 @@ const FmlEditor: React.FC<FmlEditorProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              fontSize: '12px',
+              fontSize: 'var(--ant-font-size-sm)',
               color: token.colorPrimary,
               textDecoration: 'none',
               display: 'flex',
@@ -418,7 +418,7 @@ const FmlEditor: React.FC<FmlEditorProps> = ({
               enabled: true
             },
             hover: {
-              enabled: true
+              enabled: "on"
             },
             folding: true,
             foldingStrategy: 'indentation',

@@ -90,7 +90,7 @@ const SequenceFlowNode: React.FC<NodeProps> = ({ data, selected }) => {
             color: token.colorTextSecondary,
             background: token.colorBgContainer,
             padding: '2px 4px',
-            borderRadius: 4,
+            borderRadius: 'var(--ant-border-radius-xs)',
             border: `1px solid ${token.colorBorder}`,
             whiteSpace: 'nowrap',
             maxWidth: 120,

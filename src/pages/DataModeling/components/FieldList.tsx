@@ -1,5 +1,6 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Button, Input, message, Modal, Popconfirm, Space, Table, Tooltip,} from "antd";
+import {colors} from "@/theme/designTokens";
 import {
   CalendarOutlined,
   CheckCircleOutlined,
@@ -16,7 +17,8 @@ import {
   TagsOutlined
 } from "@ant-design/icons";
 import {createField, dropField, modifyField} from "@/services/model.ts";
-import FieldForm, {FieldInitialValues} from "./FieldForm.tsx";
+import FieldForm from "./FieldForm.tsx";
+import {FieldInitialValues} from "./fieldFormConstants";
 import {Entity, Field, TypedFieldSchema} from "@/types/data-modeling";
 import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
@@ -31,7 +33,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
   const {currentProject} = useProject();
   const projectId = currentProject?.id || '';
   const [fieldList, setFieldList] = useState<Field[]>([]);
-  const [filteredFieldList, setFilteredFieldList] = useState<Field[]>([]);
+
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [changeDialogVisible, setChangeDialogVisible] =
     useState<boolean>(false);
@@ -51,15 +53,12 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
     if (!keyword.trim()) {
       return fields;
     }
-    return fields.filter(field => 
+    return fields.filter(field =>
       field.name.toLowerCase().includes(keyword.toLowerCase())
     );
   }, []);
 
-  useEffect(() => {
-    const filtered = filterFields(fieldList, searchKeyword);
-    setFilteredFieldList(filtered);
-  }, [fieldList, searchKeyword, filterFields]);
+  const filteredFieldList = useMemo(() => filterFields(fieldList, searchKeyword), [fieldList, searchKeyword, filterFields]);
 
   useEffect(() => {
     fetchFields();
@@ -155,26 +154,26 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
   const getFieldTypeIcon = (type: string) => {
     switch (type) {
       case 'String':
-        return <FontSizeOutlined style={{ color: '#458fff', marginRight: 4 }} />;
+        return <FontSizeOutlined style={{color: colors.info, marginRight: 4}}/>;
       case 'Int':
       case 'Long':
       case 'Float':
       case 'Decimal':
-        return <NumberOutlined style={{ color: '#39bf45', marginRight: 4 }} />;
+        return <NumberOutlined style={{color: colors.success, marginRight: 4}}/>;
       case 'Boolean':
-        return <CheckCircleOutlined style={{ color: '#41454d', marginRight: 4 }} />;
+        return <CheckCircleOutlined style={{color: colors['ink-muted'], marginRight: 4}}/>;
       case 'Date':
-        return <CalendarOutlined style={{ color: '#a8d8c4', marginRight: 4 }} />;
+        return <CalendarOutlined style={{color: colors['accent-teal'], marginRight: 4}}/>;
       case 'Time':
-        return <ClockCircleOutlined style={{ color: '#aa2d00', marginRight: 4 }} />;
+        return <ClockCircleOutlined style={{color: colors['accent-orange'], marginRight: 4}}/>;
       case 'DateTime':
-        return <CalendarOutlined style={{ color: '#d9a441', marginRight: 4 }} />;
+        return <CalendarOutlined style={{color: colors.warning, marginRight: 4}}/>;
       case 'JSON':
-        return <FileTextOutlined style={{ color: '#aa2d00', marginRight: 4 }} />;
+        return <FileTextOutlined style={{color: colors['accent-orange'], marginRight: 4}}/>;
       case 'ModelRef':
-        return <LinkOutlined style={{ color: '#254fad', marginRight: 4 }} />;
+        return <LinkOutlined style={{color: colors.secondary, marginRight: 4}}/>;
       case 'EnumRef':
-        return <TagsOutlined style={{ color: '#aa2d00', marginRight: 4 }} />;
+        return <TagsOutlined style={{color: colors['accent-orange'], marginRight: 4}}/>;
       default:
         return null;
     }
@@ -189,7 +188,7 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
         <span>
           {record.identity ? (
             <KeyOutlined
-              style={{ color: '#d9a441', marginRight: 4 }}
+              style={{color: colors.warning, marginRight: 4}}
               title={t("identity_field")}
             />
           ) : (

@@ -8,7 +8,7 @@ import {useEffect, useMemo} from "react";
 import * as appStore from "./store/appStore.ts";
 import {useAuth} from "./store/authStore.ts";
 import {initializeDarkMode} from "./utils/darkMode.ts";
-import {RenderProjectRoutes} from "./routes";
+import {RenderProjectRoutes} from "./routeRenderers";
 import Project from "./pages/Project/index.tsx";
 import Settings from "./pages/Settings";
 import ApiKeys from "./pages/ApiKeys";
@@ -65,7 +65,7 @@ const App = () => {
       theme={theme}
     >
       <AntdApp>
-        <BrowserRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
+        <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
 

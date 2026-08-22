@@ -43,7 +43,7 @@ const StatisticsPage: React.FC = () => {
       if (data) setStats(data);
     };
     loadStats();
-  }, []);
+  }, [projectId]);
 
   useEffect(() => {
     if (!projectId) return;
@@ -89,4 +89,3 @@ const StatisticsPage: React.FC = () => {
 };
 
 export default StatisticsPage;
-

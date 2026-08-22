@@ -66,7 +66,6 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
 
   useEffect(() => {
     if (eventOnly && model) {
-      setModels([model]);
       return;
     }
 
@@ -81,6 +80,9 @@ const TriggerForm: React.FC<TriggerFormProps> = ({
       }
     };
     fetchModels();
+    return () => {
+      if (!eventOnly || !model) setModels([]);
+    };
   }, [eventOnly, model, projectId]);
 
   useEffect(() => {

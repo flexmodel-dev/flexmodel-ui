@@ -13,23 +13,16 @@ interface IndexFormProps {
   onCancel: () => void;
 }
 
-const IndexForm = React.forwardRef<any, IndexFormProps>(({
+const IndexForm = ({
   mode: _mode,
   model,
   currentValue,
   onConfirm,
   onCancel,
-}, ref) => {
+                     ref,
+                   }: IndexFormProps & { ref?: React.Ref<any> }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  
-  React.useImperativeHandle(ref, () => ({
-    submit: handleConfirm,
-    reset: handleCancel,
-    getFieldsValue: form.getFieldsValue,
-    setFieldsValue: form.setFieldsValue,
-    validateFields: form.validateFields,
-  }));
 
   useEffect(() => {
     if (currentValue && Object.keys(currentValue).length > 0) {
@@ -56,6 +49,14 @@ const IndexForm = React.forwardRef<any, IndexFormProps>(({
     form.resetFields();
     onCancel();
   };
+
+  React.useImperativeHandle(ref, () => ({
+    submit: handleConfirm,
+    reset: handleCancel,
+    getFieldsValue: form.getFieldsValue,
+    setFieldsValue: form.setFieldsValue,
+    validateFields: form.validateFields,
+  }));
 
   return (
     <Form form={form} layout="vertical">
@@ -145,6 +146,6 @@ const IndexForm = React.forwardRef<any, IndexFormProps>(({
         </Form.List>
     </Form>
   );
-});
+};
 
 export default IndexForm;

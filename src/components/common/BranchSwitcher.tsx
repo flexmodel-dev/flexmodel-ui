@@ -62,7 +62,7 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
   const currentBranch = currentProject?.parentProjectId
     ? projectId.slice(currentProject.parentProjectId.length + 1)
     : "main";
-  const branches = currentProject?.branches ?? [];
+  const branches = useMemo(() => currentProject?.branches ?? [], [currentProject?.branches]);
 
   const refreshProject = useCallback(async () => {
     try {

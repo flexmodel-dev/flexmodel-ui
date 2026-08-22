@@ -67,7 +67,7 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
   // ---- Code Tab ----
   const codeTab = (
     <div>
-      <div style={{marginBottom: 8, display: "flex", gap: 4, flexWrap: "wrap"}}>
+      <div style={{marginBottom: 'var(--ant-margin-xs)', display: "flex", gap: 4, flexWrap: "wrap"}}>
         {fileList.map((filename) => (
           <Tag
             key={filename}

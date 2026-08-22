@@ -8,22 +8,22 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { token } = theme.useToken();
   const hasError = (data as any)?.hasError || false;
-  
+
   return (
     <div
       style={{
         width: 120,
         height: 60,
-        background: selected ? '#f8fafc' : '#f8fafc',
-        border: `2px solid ${getNodeBorderColor(hasError, selected, token.colorError, '#181d26', '#41454d')}`,
-        borderRadius: '10px',
+        background: token.colorBgContainer,
+        border: `2px solid ${getNodeBorderColor(hasError, selected, token.colorError, token.colorPrimary, token.colorBorder)}`,
+        borderRadius: token.borderRadiusLG,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '12px',
-        color: '#41454d',
+        fontSize: 'var(--ant-font-size-sm)',
+        color: token.colorTextSecondary,
         position: 'relative',
-        boxShadow: getNodeBoxShadow(hasError, selected, '0 2px 8px rgba(0, 0, 0, 0.1)'),
+        boxShadow: getNodeBoxShadow(hasError, selected, token.boxShadow),
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -33,14 +33,14 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
         position={Position.Left}
         id="left"
         style={{
-          background: '#41454d',
+          background: token.colorBorder,
           width: 8,
           height: 8,
         }}
       />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <LinkOutlined style={{ fontSize: '14px' }} />
+        <LinkOutlined style={{fontSize: 'var(--ant-font-size)'}}/>
         <span style={{ fontWeight: 500 }}>{(data?.properties as any)?.name || data?.label as string || '子流程'}</span>
       </div>
 
@@ -49,7 +49,7 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
         position={Position.Right}
         id="right"
         style={{
-          background: '#41454d',
+          background: token.colorBorder,
           width: 8,
           height: 8,
         }}
@@ -82,7 +82,7 @@ const CallActivityNode: React.FC<NodeProps> = ({ data, selected, id }) => {
             borderRadius: '50%',
             color: token.colorError,
             zIndex: 1000,
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            boxShadow: token.boxShadowTertiary,
           }}
         />
       ) : null}

@@ -37,7 +37,7 @@ const LogItem: React.FC<LogItemProps> = React.memo(({ log, token }) => {
       transform: 'translateY(-50%)',
       cursor: 'pointer',
       color: token.colorTextQuaternary,
-      fontSize: '12px',
+      fontSize: token.fontSizeSM,
       padding: '2px 4px',
       background: token.colorBgElevated,
       borderRadius: '2px',

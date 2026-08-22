@@ -27,6 +27,8 @@ i18n
     resources,
     fallbackLng: currentLocale, // 默认当前的语言环境
     lng: currentLocale,
+    supportedLngs: ['zh', 'en'],
+    load: 'languageOnly', // 将 zh-CN 归约为 zh，确保 localStorage 存储的是 'zh' 而非 'zh-CN'
     debug: true,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
@@ -34,6 +36,6 @@ i18n
   });
 
 // 设置 dayjs 语言
-dayjs.locale(currentLocale);
+dayjs.locale(currentLocale === 'zh' ? 'zh-cn' : 'en');
 
 export default i18n;

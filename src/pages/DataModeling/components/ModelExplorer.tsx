@@ -253,19 +253,8 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
 
   useEffect(() => {
     reqModelList();
-  }, []);
-
-  useEffect(() => {
-    if (locale) {
-      reqModelList();
-    }
-  }, [locale]);
-
-  useEffect(() => {
-    if (version) {
-      reqModelList();
-    }
-  }, [version]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, version]);
 
   const groupByType = (data: any): any[] => {
     const groups = data.reduce((acc: any, item: any) => {
@@ -409,7 +398,7 @@ const ModelExplorer: React.FC<ModelBrowserProps> = ({
 
   const inputStyle = {
     width: '100%',
-    borderRadius: '6px', // rounded.sm
+    borderRadius: 'var(--ant-border-radius-sm)',
   };
 
   const containerStyle = {

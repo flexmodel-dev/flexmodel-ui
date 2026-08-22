@@ -153,13 +153,7 @@ export default defineConfig({
     }
   },
   plugins: [
-    react({
-      babel: {
-        parserOpts: {
-          plugins: ["classProperties", "classPrivateProperties", "classPrivateMethods"],
-        },
-      },
-    }),
+    react(),
     svgr({ svgrOptions: { icon: true } }),
     pagesDevPlugin(),
   ],
@@ -171,8 +165,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'monaco-editor': ['monaco-editor'],
+        manualChunks: (id) => {
+          if (id.includes('node_modules/monaco-editor')) {
+            return 'monaco-editor';
+          }
         },
       },
     },

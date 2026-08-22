@@ -101,7 +101,7 @@ const ERNodeView: React.FC<ERNodeViewProps> = ({entity, dim = false}) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: 8,
+            marginTop: 'var(--ant-margin-xs)',
             cursor: 'pointer',
             userSelect: 'none',
           }}

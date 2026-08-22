@@ -40,10 +40,6 @@ const JobExecutionLogList: React.FC = () => {
   const tableWrapperRef = useRef<HTMLDivElement | null>(null);
   const [tableScrollY, setTableScrollY] = useState<number>(300);
 
-  useEffect(() => {
-    loadLogs();
-  }, [currentPage, pageSize]); // eslint-disable-line react-hooks/exhaustive-deps
-
   // 计算表格表体可用高度：用 table 顶部到 wrapper 底部的距离作为 table 的可用
   // 高度（flex:1 使 table 填满到 wrapper 底部），再减去表头、分页等占位。
   const updateTableHeight = useCallback(() => {
@@ -123,6 +119,10 @@ const JobExecutionLogList: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadLogs();
+  }, [currentPage, pageSize]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (values: any) => {
     const params: JobExecutionLogParams = {};

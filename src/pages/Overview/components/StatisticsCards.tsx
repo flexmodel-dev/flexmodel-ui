@@ -57,12 +57,13 @@ const StatCard: React.FC<{
   color: string;
   children: React.ReactNode;
 }> = ({title, icon, color, children}) => {
+  const {token} = theme.useToken();
   return (
     <Card
       hoverable
       styles={{
         body: {
-          padding: '20px',
+          padding: token.paddingLG,
           overflow: 'hidden',
         }
       }}
@@ -83,7 +84,7 @@ const StatCard: React.FC<{
         <div style={{
           width: '48px',
           height: '48px',
-          borderRadius: '12px',
+          borderRadius: token.borderRadiusLG,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -107,7 +108,7 @@ const StatCard: React.FC<{
         }}>
           {/* 标题 */}
           <div style={{
-            fontSize: '16px',
+            fontSize: token.fontSizeLG,
             color: 'var(--ant-color-text-secondary)',
             fontWeight: 500,
             lineHeight: 1.3,
@@ -143,7 +144,7 @@ const ModelingCard: React.FC<{ stats: Statistics; color: string }> = ({stats, co
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("model_count")}
             </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
+            <div style={{fontSize: 'var(--ant-font-size-lg)', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.modelCount}
             </div>
           </div>
@@ -151,7 +152,7 @@ const ModelingCard: React.FC<{ stats: Statistics; color: string }> = ({stats, co
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("branch.branches")}
             </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
+            <div style={{fontSize: 'var(--ant-font-size-lg)', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.branchCount}
             </div>
           </div>
@@ -177,7 +178,7 @@ const ApiRequestCard: React.FC<{ stats: Statistics; color: string }> = ({stats, 
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("request_count")}
             </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
+            <div style={{fontSize: 'var(--ant-font-size-lg)', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.requestCount}
             </div>
           </div>
@@ -203,7 +204,7 @@ const FlowOrchestrationCard: React.FC<{ stats: Statistics; color: string }> = ({
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("flow_count")}
             </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
+            <div style={{fontSize: 'var(--ant-font-size-lg)', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.flowDefCount}
             </div>
           </div>
@@ -211,7 +212,7 @@ const FlowOrchestrationCard: React.FC<{ stats: Statistics; color: string }> = ({
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("exec_count")}
             </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-success)'}}>
+            <div style={{fontSize: 'var(--ant-font-size-lg)', fontWeight: 600, color: 'var(--ant-color-success)'}}>
               {stats.flowExecCount}
             </div>
           </div>
@@ -237,7 +238,7 @@ const TaskSchedulingCard: React.FC<{ stats: Statistics; color: string }> = ({sta
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("trigger_count")}
             </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-text)'}}>
+            <div style={{fontSize: 'var(--ant-font-size-lg)', fontWeight: 600, color: 'var(--ant-color-text)'}}>
               {stats.triggerTotalCount}
             </div>
           </div>
@@ -245,7 +246,7 @@ const TaskSchedulingCard: React.FC<{ stats: Statistics; color: string }> = ({sta
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("exec_success")}
             </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-success)'}}>
+            <div style={{fontSize: 'var(--ant-font-size-lg)', fontWeight: 600, color: 'var(--ant-color-success)'}}>
               {stats.jobSuccessCount}
             </div>
           </div>
@@ -253,7 +254,7 @@ const TaskSchedulingCard: React.FC<{ stats: Statistics; color: string }> = ({sta
             <div style={{fontSize: '10px', color: 'var(--ant-color-text-secondary)', marginBottom: '1px'}}>
               {t("exec_failure")}
             </div>
-            <div style={{fontSize: '16px', fontWeight: 600, color: 'var(--ant-color-error)'}}>
+            <div style={{fontSize: 'var(--ant-font-size-lg)', fontWeight: 600, color: 'var(--ant-color-error)'}}>
               {stats.jobFailureCount}
             </div>
           </div>
@@ -315,13 +316,13 @@ const StatisticsCards: React.FC<StatisticsCardsProps> = ({stats}) => {
         <Col xs={24} sm={12} lg={6}>
           <FlowOrchestrationCard
             stats={stats}
-            color="#458fff"
+            color={token.colorWarning}
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <TaskSchedulingCard
             stats={stats}
-            color="#aa2d00"
+            color={token.colorError}
           />
         </Col>
 

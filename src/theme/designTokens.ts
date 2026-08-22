@@ -1,77 +1,85 @@
 /**
- * Flexmodel Design Tokens
+ * Flexmodel Design Tokens — Notion Analysis
  *
- * All design values derived from DESIGN.md (Airtable-design-analysis).
- * This is the single source of truth for all visual properties.
+ * Single source of truth for all visual properties, derived from DESIGN.md
+ * (Notion Analysis): a warm paper-calm canvas, near-black Inter type, one
+ * confident blue accent, and a decorative-only sticker palette.
  *
- * Token reference syntax:
- * - {colors.*}    → Color values
- * - {typography.*} → Font stacks, sizes, weights, line heights
- * - {rounded.*}   → Border radius values
- * - {spacing.*}   → Spacing scale
+ * Token reference syntax (mirrors DESIGN.md):
+ * - {colors.*}     → Color values
+ * - {typography.*} → Font stacks, sizes, weights, line heights, letter spacing
+ * - {rounded.*}    → Border radius values
+ * - {spacing.*}    → Spacing scale
  * - {components.*} → Component-level presets
+ *
+ * The entire system is set in a single family — NotionInter (substituted by
+ * Inter) — so every typography token shares one fontFamily.
  */
+
+// NotionInter is a proprietary tuning of Inter — substitute Inter directly.
+// DESIGN.md: "fallback stack of Inter, -apple-system, system-ui, 'Segoe UI', Helvetica, Arial".
+const notionInter =
+  "'Inter', -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif";
 
 // ============================================================================
 // Colors
 // ============================================================================
 export const colors = {
-  /** Primary brand color — near-black CTA background, h1/h2 display type */
-  primary: '#181d26',
-  /** Primary active/press state */
-  'primary-active': '#0d1218',
-  /** Strongest text — same hex as primary (same role at type layer) */
-  ink: '#181d26',
-  /** Default running-text color */
-  body: '#333840',
-  /** Footer links, breadcrumbs, captions */
-  muted: '#41454d',
-  /** 1px border tone for inputs, table dividers, secondary-button outlines */
-  hairline: '#dddddd',
-  /** 1px outline on disabled secondary buttons */
-  'border-strong': '#9297a0',
-  /** Default page surface */
-  canvas: '#ffffff',
-  /** Tabbed feature cards, featured pricing tier */
-  'surface-soft': '#f8fafc',
-  /** Light gray CTA banner */
-  'surface-strong': '#e0e2e6',
-  /** Dark navy CTA cards */
-  'surface-dark': '#181d26',
-  /** Articles-page hero base */
-  'surface-dark-elevated': '#1d1f25',
-  /** Signature full-bleed coral card */
-  'signature-coral': '#aa2d00',
-  /** Signature full-bleed forest card */
-  'signature-forest': '#0a2e0e',
-  /** Cream callout band */
-  'signature-cream': '#f5e9d4',
-  /** Demo-grid warm pastel surface */
-  'signature-peach': '#fcab79',
-  /** Demo-grid cool pastel surface */
-  'signature-mint': '#a8d8c4',
-  /** Demo-grid accent surface */
-  'signature-yellow': '#f4d35e',
-  /** Demo-grid accent surface */
-  'signature-mustard': '#d9a441',
-  /** Text on primary buttons and dark surfaces */
+  // --- Brand & Accent ---
+  /** Notion Blue — the single structural accent: primary CTA, inline links, active/focus signal. */
+  primary: '#0075de',
+  /** Pressed Blue — darker press state of the primary CTA. */
+  'primary-active': '#005bab',
+  /** Deep Indigo — the dark hero "night" band background (full-bleed inverted sections). */
+  secondary: '#213183',
+  /** Text on primary buttons and dark surfaces. */
   'on-primary': '#ffffff',
-  /** Text on dark surfaces */
+  /** Text on dark surfaces. */
   'on-dark': '#ffffff',
-  /** Inline body links and anchor text */
-  link: '#1b61c9',
-  /** Link active/press state */
-  'link-active': '#1a3866',
-  /** Info badges, focused-input outline */
-  info: '#254fad',
-  /** Info border */
-  'info-border': '#458fff',
-  /** Confirmation states */
-  success: '#006400',
-  /** Success border */
-  'success-border': '#39bf45',
-  /** Pricing-page ink — slightly different from editorial ink */
-  'pricing-ink': '#1d1f25',
+
+  // --- Surface ---
+  /** White — card and panel surfaces, nav bar, form fields. */
+  canvas: '#ffffff',
+  /** Warm Paper — signature page canvas and footer band (warm off-white). */
+  'canvas-soft': '#f6f5f4',
+  /** White — alias of canvas for card/field figure/ground separation. */
+  surface: '#ffffff',
+  /** 1px card borders and dividers (black-at-10%-on-white, kept solid for reuse). */
+  hairline: '#e6e6e6',
+
+  // --- Text ---
+  /** Ink — primary headings and body text (DESIGN.md renders at ~95% alpha for a soft true-black). */
+  ink: '#000000',
+  /** Warm Charcoal — secondary body copy and footer text. */
+  'ink-secondary': '#31302e',
+  /** Stone — supporting / muted copy. */
+  'ink-muted': '#615d59',
+  /** Ash — captions, metadata, placeholder text. */
+  'ink-faint': '#a39e98',
+
+  // --- Sticker Palette (DECORATION ONLY — never paints a CTA or structural fill) ---
+  'accent-sky': '#62aef0',
+  'accent-purple': '#d6b6f6',
+  'accent-purple-deep': '#391c57',
+  'accent-pink': '#ff64c8',
+  'accent-orange': '#dd5b00',
+  'accent-orange-deep': '#793400',
+  'accent-teal': '#2a9d99',
+  'accent-green': '#1aae39',
+  'accent-brown': '#523410',
+
+  // --- Admin-derived semantics ---
+  // DESIGN.md's marketing surfaces omit a dedicated error/success ramp (status is
+  // carried by the sticker palette). The admin console requires explicit semantic
+  // colors, so these are derived from the sticker palette / standard calm tones.
+  /** Success — affirmative states (derived from accent-green). */
+  success: '#1aae39',
+  /** Warning — caution states (derived from accent-orange). */
+  warning: '#dd5b00',
+  /** Info — informational states (mirrors the primary blue). */
+  info: '#0075de',
+  /** Error — destructive states (calm red; not a Notion sticker colour). */
+  error: '#e5484d',
 } as const;
 
 export type ColorToken = keyof typeof colors;
@@ -80,103 +88,93 @@ export type ColorToken = keyof typeof colors;
 // Typography
 // ============================================================================
 export const typography = {
-  'display-xl': {
-    fontFamily: 'Inter Display, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 48,
-    fontWeight: 500,
-    lineHeight: 1.1,
-    letterSpacing: 0,
+  // display-1: 64px / 700 / 1.0 / −2.125px — Hero headline
+  'display-1': {
+    fontFamily: notionInter,
+    fontSize: 64,
+    fontWeight: 700,
+    lineHeight: 1.0,
+    letterSpacing: -2.125,
   },
-  'display-lg': {
-    fontFamily: 'Inter Display, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  // display-2: 54px / 700 / 1.04 / −1.875px — Large section headlines
+  'display-2': {
+    fontFamily: notionInter,
+    fontSize: 54,
+    fontWeight: 700,
+    lineHeight: 1.04,
+    letterSpacing: -1.875,
+  },
+  // heading-1: 40px / 700 / 1.1 / −1px — Section headlines
+  'heading-1': {
+    fontFamily: notionInter,
     fontSize: 40,
-    fontWeight: 400,
-    lineHeight: 1.2,
-    letterSpacing: 0,
+    fontWeight: 700,
+    lineHeight: 1.1,
+    letterSpacing: -1,
   },
-  'display-md': {
-    fontFamily: 'Inter Display, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 32,
-    fontWeight: 400,
-    lineHeight: 1.2,
-    letterSpacing: 0,
+  // heading-2: 26px / 700 / 1.23 / −0.625px — Sub-section headings
+  'heading-2': {
+    fontFamily: notionInter,
+    fontSize: 26,
+    fontWeight: 700,
+    lineHeight: 1.23,
+    letterSpacing: -0.625,
   },
-  'title-lg': {
-    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 24,
-    fontWeight: 400,
-    lineHeight: 1.35,
-    letterSpacing: 0.12,
+  // heading-3: 22px / 700 / 1.27 / −0.25px — Card titles
+  'heading-3': {
+    fontFamily: notionInter,
+    fontSize: 22,
+    fontWeight: 700,
+    lineHeight: 1.27,
+    letterSpacing: -0.25,
   },
-  'title-md': {
-    fontFamily: 'Inter Display, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  // title: 20px / 600 / 1.4 / −0.125px — Feature titles, callouts
+  title: {
+    fontFamily: notionInter,
     fontSize: 20,
+    fontWeight: 600,
+    lineHeight: 1.4,
+    letterSpacing: -0.125,
+  },
+  // body-md: 16px / 400 / 1.5 / 0 — Default body copy
+  'body-md': {
+    fontFamily: notionInter,
+    fontSize: 16,
     fontWeight: 400,
     lineHeight: 1.5,
     letterSpacing: 0,
   },
-  'title-sm': {
-    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 18,
-    fontWeight: 500,
-    lineHeight: 1.4,
+  // body-sm: 15px / 400 / 1.33 / 0 — Dense body, table rows, nav
+  'body-sm': {
+    fontFamily: notionInter,
+    fontSize: 15,
+    fontWeight: 400,
+    lineHeight: 1.33,
     letterSpacing: 0,
   },
-  'label-md': {
-    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 16,
-    fontWeight: 500,
-    lineHeight: 1.4,
-    letterSpacing: 0,
-  },
+  // button: 16px / 500 / 1.5 / 0 — Button labels
   button: {
-    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    fontFamily: notionInter,
     fontSize: 16,
     fontWeight: 500,
-    lineHeight: 1.4,
+    lineHeight: 1.5,
     letterSpacing: 0,
   },
-  'body-md': {
-    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  // caption: 14px / 400 / 1.43 / 0 — Captions, footnotes
+  caption: {
+    fontFamily: notionInter,
     fontSize: 14,
     fontWeight: 400,
-    lineHeight: 1.25,
+    lineHeight: 1.43,
     letterSpacing: 0,
   },
-  caption: {
-    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 14,
-    fontWeight: 500,
-    lineHeight: 1.35,
-    letterSpacing: 0.16,
-  },
-  legal: {
-    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 13.12,
+  // eyebrow: 12px / 600 / 1.33 / +0.125px — Pill badges, small labels
+  eyebrow: {
+    fontFamily: notionInter,
+    fontSize: 12,
     fontWeight: 600,
-    lineHeight: 1.2,
-    letterSpacing: 0,
-  },
-  'pricing-display': {
-    fontFamily: 'Inter Display, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 44.8,
-    fontWeight: 475,
-    lineHeight: 1.1,
-    letterSpacing: 0,
-  },
-  'pricing-section': {
-    fontFamily: 'Inter Display, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 28,
-    fontWeight: 475,
-    lineHeight: 1.2,
-    letterSpacing: 0,
-  },
-  'pricing-card-title': {
-    fontFamily: 'Inter Display, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 20,
-    fontWeight: 475,
-    lineHeight: 1.3,
-    letterSpacing: 0,
+    lineHeight: 1.33,
+    letterSpacing: 0.125,
   },
 } as const;
 
@@ -186,17 +184,17 @@ export type TypographyToken = keyof typeof typography;
 // Border Radius
 // ============================================================================
 export const rounded = {
-  /** Cookie-consent and legal CTA buttons — system-required surfaces */
-  xs: 2,
-  /** Text inputs, small inline buttons */
-  sm: 6,
-  /** Secondary content cards, article cards, cream callouts */
-  md: 10,
-  /** Primary CTA buttons, signature surface cards, tabbed feature cards */
+  /** Form fields — deliberately tighter than the pill CTAs. */
+  xs: 4,
+  /** Small inline surfaces. */
+  sm: 5,
+  /** Utility buttons, nav buttons, pricing columns. */
+  md: 8,
+  /** Feature cards, modals, popovers. */
   lg: 12,
-  /** Pricing-page CTA buttons (sub-system only) */
-  pill: 9999,
-  /** Circular icon buttons, avatar surfaces */
+  /** Large marketing surfaces. */
+  xl: 16,
+  /** Fully pill CTAs, circular icon buttons, badge pills. */
   full: 9999,
 } as const;
 
@@ -206,199 +204,188 @@ export type RoundedToken = keyof typeof rounded;
 // Spacing
 // ============================================================================
 export const spacing = {
-  /** 4px — minimum spacing unit */
+  /** 4px — minimum spacing unit. */
   xxs: 4,
-  /** 8px */
+  /** 8px. */
   xs: 8,
-  /** 12px */
+  /** 12px. */
   sm: 12,
-  /** 16px */
+  /** 16px. */
   md: 16,
-  /** 24px — gutter between cards in 3-up grids */
+  /** 24px — card interior padding. */
   lg: 24,
-  /** 32px — tabbed feature cards, pricing tier cards internal padding */
-  xl: 32,
-  /** 48px — signature card internal padding, breathing room */
-  xxl: 48,
-  /** 96px — universal vertical rhythm constant between major bands */
-  section: 96,
+  /** 28px. */
+  xl: 28,
+  /** 32px — footer / hero padding. */
+  xxl: 32,
 } as const;
 
 export type SpacingToken = keyof typeof spacing;
 
 // ============================================================================
-// Components
+// Components — DESIGN.md component presets
 // ============================================================================
 export const components = {
+  // --- Navigation ---
+  'nav-bar': {
+    backgroundColor: colors.canvas,
+    textColor: colors.ink,
+    typography: typography['body-sm'],
+    padding: spacing.md,
+  },
+
+  // --- Buttons ---
   'button-primary': {
     backgroundColor: colors.primary,
     textColor: colors['on-primary'],
     typography: typography.button,
-    rounded: rounded.lg,
-    padding: '16px 24px',
+    rounded: rounded.full,
+    padding: '8px 20px',
   },
-  'button-primary-active': {
+  'button-primary-pressed': {
     backgroundColor: colors['primary-active'],
     textColor: colors['on-primary'],
-    rounded: rounded.lg,
+    rounded: rounded.full,
   },
   'button-secondary': {
-    backgroundColor: colors.canvas,
+    backgroundColor: colors.surface,
     textColor: colors.ink,
     typography: typography.button,
-    rounded: rounded.lg,
-    padding: '16px 24px',
+    rounded: rounded.full,
+    padding: '8px 20px',
   },
-  'button-secondary-on-dark': {
-    backgroundColor: colors.canvas,
+  'button-utility': {
+    backgroundColor: colors.surface,
     textColor: colors.ink,
     typography: typography.button,
-    rounded: rounded.lg,
-    padding: '16px 24px',
-  },
-  'button-legal': {
-    backgroundColor: colors.link,
-    textColor: colors['on-primary'],
-    typography: typography.legal,
-    rounded: rounded.xs,
-    padding: '12px 10px',
+    rounded: rounded.md,
+    padding: '4px 14px',
   },
   'button-icon-circular': {
-    backgroundColor: colors.canvas,
-    textColor: colors.ink,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    textColor: colors['on-primary'],
     rounded: rounded.full,
-    size: 40,
   },
-  'button-pricing-pill': {
-    backgroundColor: colors.canvas,
-    textColor: colors['pricing-ink'],
-    typography: typography.button,
-    rounded: rounded.pill,
-    padding: '12px 24px',
+
+  // --- Badges ---
+  'badge-pill': {
+    backgroundColor: colors.surface,
+    textColor: colors.primary,
+    typography: typography.eyebrow,
+    rounded: rounded.full,
+    padding: '4px 8px',
   },
-  'text-link': {
-    backgroundColor: 'transparent',
-    textColor: colors.link,
-    typography: typography['body-md'],
-  },
-  'top-nav': {
-    backgroundColor: colors.canvas,
+
+  // --- Cards ---
+  'feature-card': {
+    backgroundColor: colors.surface,
     textColor: colors.ink,
     typography: typography['body-md'],
-    height: 64,
+    rounded: rounded.lg,
+    padding: spacing.lg,
   },
-  'hero-band': {
-    backgroundColor: colors.canvas,
+  'feature-card-elevated': {
+    backgroundColor: colors.surface,
     textColor: colors.ink,
-    typography: typography['display-lg'],
-    padding: 96,
-  },
-  'signature-coral-card': {
-    backgroundColor: colors['signature-coral'],
-    textColor: colors['on-primary'],
-    typography: typography['display-md'],
     rounded: rounded.lg,
-    padding: 48,
+    padding: spacing.lg,
   },
-  'signature-forest-card': {
-    backgroundColor: colors['signature-forest'],
-    textColor: colors['on-primary'],
-    typography: typography['display-md'],
-    rounded: rounded.lg,
-    padding: 48,
-  },
-  'hero-card-dark': {
-    backgroundColor: colors['surface-dark'],
-    textColor: colors['on-dark'],
-    typography: typography['display-md'],
-    rounded: rounded.lg,
-    padding: 48,
-  },
-  'feature-card-tabbed': {
-    backgroundColor: colors['surface-soft'],
+  'pricing-plan-card': {
+    backgroundColor: colors.surface,
     textColor: colors.ink,
-    typography: typography['title-lg'],
-    rounded: rounded.lg,
-    padding: 32,
-  },
-  'cream-callout-card': {
-    backgroundColor: colors['signature-cream'],
-    textColor: colors.ink,
-    typography: typography['title-lg'],
+    typography: typography['body-sm'],
     rounded: rounded.md,
-    padding: 24,
+    padding: spacing.lg,
   },
-  'demo-grid-card': {
-    backgroundColor: colors.canvas,
+  'pricing-plan-card-featured': {
+    backgroundColor: colors['canvas-soft'],
     textColor: colors.ink,
-    typography: typography['label-md'],
     rounded: rounded.md,
-    padding: 16,
+    padding: spacing.lg,
   },
-  'logo-strip': {
-    backgroundColor: colors.canvas,
-    textColor: colors.muted,
-    typography: typography['body-md'],
-    padding: 32,
-  },
-  'article-card': {
-    backgroundColor: colors.canvas,
-    textColor: colors.ink,
-    typography: typography['title-sm'],
-    rounded: rounded.md,
-    padding: 16,
-  },
-  'topic-filter-rail': {
-    backgroundColor: colors.canvas,
-    textColor: colors.body,
-    typography: typography['body-md'],
-    width: 240,
-  },
+
+  // --- Inputs & Forms ---
   'text-input': {
-    backgroundColor: colors.canvas,
+    backgroundColor: colors.surface,
     textColor: colors.ink,
-    typography: typography['body-md'],
-    rounded: rounded.sm,
-    padding: '12px 16px',
-    height: 44,
+    typography: typography['body-sm'],
+    rounded: rounded.xs,
+    padding: 6,
   },
-  'text-input-focus': {
-    backgroundColor: colors.canvas,
-    textColor: colors.ink,
-    rounded: rounded.sm,
-  },
-  'pricing-tier-card': {
-    backgroundColor: colors.canvas,
-    textColor: colors['pricing-ink'],
-    typography: typography['pricing-card-title'],
-    rounded: rounded.md,
-    padding: 32,
-  },
-  'pricing-tier-card-featured': {
-    backgroundColor: colors['surface-soft'],
-    textColor: colors['pricing-ink'],
-    typography: typography['pricing-card-title'],
-    rounded: rounded.md,
-    padding: 32,
-  },
-  'pricing-comparison-row': {
-    backgroundColor: colors.canvas,
-    textColor: colors.body,
-    typography: typography['body-md'],
-    padding: 12,
-  },
-  'cta-band-light': {
-    backgroundColor: colors['surface-strong'],
-    textColor: colors.ink,
-    typography: typography['display-md'],
-    rounded: rounded.lg,
-    padding: 48,
+
+  // --- Signature Components ---
+  'hero-band': {
+    backgroundColor: colors.secondary,
+    textColor: colors['on-primary'],
+    typography: typography['display-1'],
+    padding: spacing.xxl,
   },
   footer: {
+    backgroundColor: colors['canvas-soft'],
+    textColor: colors['ink-secondary'],
+    typography: typography.caption,
+    padding: spacing.xxl,
+  },
+
+  // --- Examples (illustrative) — kit-mirror demonstration surfaces ---
+  'ex-pricing-tier': {
+    backgroundColor: colors['canvas-soft'],
+    textColor: colors.ink,
+    borderColor: colors.hairline,
+    rounded: rounded.xl,
+    padding: spacing.lg,
+  },
+  'ex-pricing-tier-featured': {
+    backgroundColor: colors.ink,
+    textColor: colors['on-primary'],
+    rounded: rounded.xl,
+    padding: spacing.lg,
+  },
+  'ex-product-selector': {
+    backgroundColor: colors.surface,
+    rounded: rounded.xl,
+    padding: spacing.lg,
+  },
+  'ex-cart-drawer': {
+    backgroundColor: colors.surface,
+    rounded: rounded.xl,
+    padding: spacing.lg,
+    'item-divider': colors.hairline,
+  },
+  'ex-app-shell-row': {
     backgroundColor: colors.canvas,
-    textColor: colors.body,
-    typography: typography['body-md'],
-    padding: 64,
+    activeIndicator: colors.primary,
+    rounded: rounded.sm,
+    padding: `${spacing.sm}px ${spacing.md}px`,
+  },
+  'ex-data-table-cell': {
+    headerBackground: colors['canvas-soft'],
+    headerTypography: typography.eyebrow,
+    bodyTypography: typography['body-sm'],
+    cellPadding: `${spacing.sm}px ${spacing.md}px`,
+    rowBorder: colors.hairline,
+  },
+  'ex-auth-form-card': {
+    backgroundColor: colors.surface,
+    rounded: rounded.xl,
+    padding: spacing.lg,
+  },
+  'ex-modal-card': {
+    backgroundColor: colors.surface,
+    rounded: rounded.xl,
+    padding: spacing.lg,
+  },
+  'ex-empty-state-card': {
+    backgroundColor: colors['canvas-soft'],
+    rounded: rounded.xl,
+    padding: spacing.xxl,
+    captionTypography: typography['body-md'],
+  },
+  'ex-toast': {
+    backgroundColor: colors.surface,
+    rounded: rounded.xl,
+    padding: `${spacing.sm}px ${spacing.md}px`,
+    typography: typography['body-sm'],
   },
 } as const;
 
@@ -408,112 +395,124 @@ export type ComponentToken = keyof typeof components;
 // Ant Design v6 Token Mapping
 // ============================================================================
 
-/** Ant Design seed tokens derived from DESIGN.md */
+/** Ant Design seed tokens derived from DESIGN.md (Notion Analysis). */
 export const antdSeedTokens = {
-  // Primary — near-black, per DESIGN.md: "primary is #181d26, NOT link-blue"
+  // Primary — Notion Blue, the single structural accent.
   colorPrimary: colors.primary,
-  // Semantic colors
+  // Semantic colors (admin-derived; DESIGN.md marketing surfaces omit a status ramp).
   colorSuccess: colors.success,
   colorInfo: colors.info,
-  colorWarning: '#d9a441', // derived from signature-mustard (closest warning tone)
-  colorError: colors['signature-coral'],
-  // Text base — strongest text is ink
+  colorWarning: colors.warning,
+  colorError: colors.error,
+  // Text base — near-black ink.
   colorTextBase: colors.ink,
-  // Background base — white canvas
+  // Background base — white canvas.
   colorBgBase: colors.canvas,
-  // Base font size — body-md is 14px
-  fontSize: 14,
-  // Base border radius — DESIGN.md sm (6px) for inputs
-  borderRadius: 6,
-  // Font family — Inter as Haas substitute
-  fontFamily: typography['body-md'].fontFamily,
+  // Base font size — caption (14px) keeps admin console density; the full
+  // DESIGN.md type scale (16/15/14/12) is exposed via the typography tokens.
+  fontSize: typography.caption.fontSize,
+  // Base border radius — utility-button tight (8px).
+  borderRadius: rounded.md,
+  // Font family — Inter (NotionInter substitute).
+  fontFamily: notionInter,
 } as const;
 
-/** Ant Design light-mode color map tokens */
+/** Ant Design light-mode color map tokens. */
 export const antdMapTokens = {
-  // --- Text Colors ---
-  colorText: colors.body,
-  colorTextSecondary: colors.muted,
-  colorTextTertiary: colors.muted,
-  colorTextQuaternary: colors['border-strong'],
+  // --- Text Colors (ink hierarchy) ---
+  colorText: colors.ink,
+  colorTextSecondary: colors['ink-secondary'],
+  colorTextTertiary: colors['ink-muted'],
+  colorTextQuaternary: colors['ink-faint'],
 
   // --- Background Colors ---
+  // Cards / fields / panels stay pure white; the page canvas is warm canvas-soft.
   colorBgContainer: colors.canvas,
   colorBgElevated: colors.canvas,
-  colorBgLayout: colors.canvas,
-  colorBgSpotlight: colors['surface-dark'],
+  colorBgLayout: colors['canvas-soft'],
+  // Tooltip / popover spotlight — antd inverts this surface (dark bg + white text)
+  // regardless of light/dark mode. Must NOT be white, or text becomes invisible.
+  colorBgSpotlight: 'rgba(0, 0, 0, 0.85)',
+  colorTextLightSolid: '#ffffff',
   colorBgMask: 'rgba(0,0,0,0.45)',
 
-
+  // --- Fill Colors (warm neutrals) ---
+  colorFill: 'rgba(0,0,0,0.06)',
+  colorFillSecondary: 'rgba(0,0,0,0.04)',
+  colorFillTertiary: 'rgba(0,0,0,0.03)',
+  colorFillQuaternary: 'rgba(0,0,0,0.02)',
 
   // --- Border Colors ---
   colorBorder: colors.hairline,
   colorBorderSecondary: colors.hairline,
 
-  // --- Link ---
-  colorLink: colors.link,
-  colorLinkHover: colors.link,
-  colorLinkActive: colors['link-active'],
+  // --- Link (inline links use the primary blue) ---
+  colorLink: colors.primary,
+  colorLinkHover: '#0066c9',
+  colorLinkActive: colors['primary-active'],
 
-  // --- Primary Derivations ---
-  colorPrimaryBg: '#e6f4ff',
-  colorPrimaryBgHover: '#bae0ff',
+  // --- Primary Derivations (blue ramp) ---
+  colorPrimaryBg: '#e8f3fc',
+  colorPrimaryBgHover: '#d4ecfa',
   colorPrimaryBorder: colors.primary,
-  colorPrimaryBorderHover: colors.primary,
-  colorPrimaryHover: colors.body,
+  colorPrimaryBorderHover: '#0066c9',
+  colorPrimaryHover: '#0066c9',
   colorPrimaryActive: colors['primary-active'],
-  colorPrimaryTextHover: colors.body,
+  colorPrimaryTextHover: '#0066c9',
   colorPrimaryText: colors.primary,
   colorPrimaryTextActive: colors['primary-active'],
 
-  // --- Info Derivations ---
-  colorInfoBg: '#e6f4ff',
-  colorInfoBgHover: '#bae0ff',
-  colorInfoBorder: colors['info-border'],
-  colorInfoBorderHover: colors['info-border'],
-  colorInfoHover: colors.info,
-  colorInfoActive: colors.info,
-  colorInfoTextHover: colors.info,
+  // --- Info Derivations (mirrors the primary blue) ---
+  colorInfoBg: '#e8f3fc',
+  colorInfoBgHover: '#d4ecfa',
+  colorInfoBorder: colors.info,
+  colorInfoBorderHover: '#0066c9',
+  colorInfoHover: '#0066c9',
+  colorInfoActive: colors['primary-active'],
+  colorInfoTextHover: '#0066c9',
   colorInfoText: colors.info,
-  colorInfoTextActive: colors.info,
+  colorInfoTextActive: colors['primary-active'],
 
-  // --- Success Derivations ---
-  colorSuccessBg: '#f6ffed',
-  colorSuccessBgHover: '#d9f7be',
-  colorSuccessBorder: colors['success-border'],
-  colorSuccessBorderHover: colors['success-border'],
-  colorSuccessHover: colors.success,
-  colorSuccessActive: colors.success,
-  colorSuccessTextHover: colors.success,
+  // --- Success Derivations (accent-green) ---
+  colorSuccessBg: '#e8f8ec',
+  colorSuccessBgHover: '#d0f0d8',
+  colorSuccessBorder: colors.success,
+  colorSuccessBorderHover: '#159c31',
+  colorSuccessHover: '#159c31',
+  colorSuccessActive: '#128a2b',
+  colorSuccessTextHover: '#159c31',
   colorSuccessText: colors.success,
-  colorSuccessTextActive: colors.success,
+  colorSuccessTextActive: '#128a2b',
 
-  // --- Warning Derivations ---
-  colorWarningBg: '#fffbe6',
-  colorWarningBgHover: '#fff1b8',
-  colorWarningBorder: '#faad14',
-  colorWarningBorderHover: '#faad14',
-  colorWarningHover: '#d48806',
-  colorWarningActive: '#ad6800',
-  colorWarningTextHover: '#d48806',
-  colorWarningText: '#ad6800',
-  colorWarningTextActive: '#ad6800',
+  // --- Warning Derivations (orange ramp) ---
+  // Light-mode seed override: the sticker accent-orange (#dd5b00) is too dark to
+  // read as "warning"; use a brighter mid-orange so Alerts/Tags/icons read clearly.
+  colorWarning: '#fa8c16',
+  colorWarningBg: '#fff7e6',
+  colorWarningBgHover: '#ffe7ba',
+  colorWarningBorder: '#ffd591',
+  colorWarningBorderHover: '#ffd591',
+  colorWarningHover: '#ffa940',
+  colorWarningActive: '#d46b08',
+  colorWarningTextHover: '#ffa940',
+  colorWarningText: '#fa8c16',
+  colorWarningTextActive: '#d46b08',
 
-  // --- Error Derivations ---
-  colorErrorBg: '#fff2f0',
-  colorErrorBgHover: '#ffccc7',
-  colorErrorBorder: colors['signature-coral'],
-  colorErrorBorderHover: colors['signature-coral'],
-  colorErrorHover: '#cf1322',
-  colorErrorActive: '#a8071a',
-  colorErrorTextHover: '#cf1322',
-  colorErrorText: colors['signature-coral'],
-  colorErrorTextActive: '#a8071a',
+  // --- Error Derivations (calm red) ---
+  colorErrorBg: '#fdecec',
+  colorErrorBgHover: '#fbd5d6',
+  colorErrorBorder: colors.error,
+  colorErrorBorderHover: '#ce363b',
+  colorErrorHover: '#ce363b',
+  colorErrorActive: '#b62a2e',
+  colorErrorTextHover: '#ce363b',
+  colorErrorText: colors.error,
+  colorErrorTextActive: '#b62a2e',
 } as const;
 
 /**
  * Shared non-color tokens — identical across light and dark modes.
- * Ensures spacing, sizing, typography, and border radius are unified.
+ * Ensures spacing, sizing, typography, border radius, and elevation are unified.
  */
 export const sharedTokens = {
   // --- Border Radius ---
@@ -524,33 +523,33 @@ export const sharedTokens = {
   borderRadiusOuter: rounded.lg,
 
   // --- Control ---
-  controlHeight: 44, // matches text-input height
-  controlHeightSM: 32,
-  controlHeightLG: 48,
+  controlHeight: 36, // Notion-compact controls (~text-input height)
+  controlHeightSM: 28,
+  controlHeightLG: 44,
   controlHeightXS: 24,
 
   // --- Line Height ---
   lineHeight: typography['body-md'].lineHeight,
-  lineHeightSM: 1.2,
-  lineHeightLG: 1.4,
-  lineHeightHeading1: typography['display-lg'].lineHeight,
-  lineHeightHeading2: typography['display-md'].lineHeight,
-  lineHeightHeading3: typography['title-lg'].lineHeight,
-  lineHeightHeading4: typography['title-md'].lineHeight,
-  lineHeightHeading5: typography['title-sm'].lineHeight,
+  lineHeightSM: typography['body-sm'].lineHeight,
+  lineHeightLG: typography['body-md'].lineHeight,
+  lineHeightHeading1: typography['heading-1'].lineHeight,
+  lineHeightHeading2: typography['heading-2'].lineHeight,
+  lineHeightHeading3: typography['heading-3'].lineHeight,
+  lineHeightHeading4: typography.title.lineHeight,
+  lineHeightHeading5: typography['body-md'].lineHeight,
 
   // --- Font Sizes ---
-  fontSizeSM: 12,
-  fontSizeLG: typography['label-md'].fontSize,
-  fontSizeXL: typography['title-sm'].fontSize,
-  fontSizeHeading1: typography['display-lg'].fontSize,
-  fontSizeHeading2: typography['display-md'].fontSize,
-  fontSizeHeading3: typography['title-lg'].fontSize,
-  fontSizeHeading4: typography['title-md'].fontSize,
-  fontSizeHeading5: typography['title-sm'].fontSize,
+  fontSizeSM: typography.eyebrow.fontSize,
+  fontSizeLG: typography['body-md'].fontSize,
+  fontSizeXL: typography.title.fontSize,
+  fontSizeHeading1: typography['heading-1'].fontSize,
+  fontSizeHeading2: typography['heading-2'].fontSize,
+  fontSizeHeading3: typography['heading-3'].fontSize,
+  fontSizeHeading4: typography.title.fontSize,
+  fontSizeHeading5: typography['body-md'].fontSize,
 
-  // --- Font Weight ---
-  fontWeightStrong: 500,
+  // --- Font Weight (Notion: 700 belongs to headlines) ---
+  fontWeightStrong: 700,
 
   // --- Padding ---
   paddingXXS: spacing.xxs,
@@ -576,17 +575,32 @@ export const sharedTokens = {
   marginLG: spacing.lg,
   marginXL: spacing.xl,
   marginXXL: spacing.xxl,
+
+  // --- Elevation (Notion: many near-transparent layers, never a hard cast) ---
+  // Level-0: resting hairline glow.
+  boxShadowTertiary: '0 1px 2px rgba(15, 15, 15, 0.04)',
+  // Level-1: cards that float above the canvas (feature-card-elevated).
+  boxShadow:
+    '0 1px 2px rgba(15, 15, 15, 0.03), 0 2px 4px rgba(15, 15, 15, 0.04), 0 4px 8px rgba(15, 15, 15, 0.03)',
+  // Level-2: floating panels, dropdowns, popovers.
+  boxShadowSecondary:
+    '0 2px 4px rgba(15, 15, 15, 0.04), 0 4px 8px rgba(15, 15, 15, 0.05), 0 12px 24px rgba(15, 15, 15, 0.04)',
+
+  // --- Control hover/active fills ---
+  controlItemBgHover: colors['canvas-soft'],
+  controlItemBgActive: colors['canvas-soft'],
+  controlItemBgActiveHover: colors['canvas-soft'],
 } as const;
 
-/** Merge shared (sizing) + mode-specific (color) component tokens */
+/** Merge shared (sizing) + mode-specific (color) component tokens. */
 function mergeComponentTokens(
   shared: Record<string, Record<string, unknown>>,
-  colors: Record<string, Record<string, unknown>>,
+  modeColors: Record<string, Record<string, unknown>>,
 ): Record<string, Record<string, unknown>> {
-  const allKeys = new Set([...Object.keys(shared), ...Object.keys(colors)]);
+  const allKeys = new Set([...Object.keys(shared), ...Object.keys(modeColors)]);
   const result: Record<string, Record<string, unknown>> = {};
   for (const key of allKeys) {
-    result[key] = { ...shared[key], ...colors[key] };
+    result[key] = {...shared[key], ...modeColors[key]};
   }
   return result;
 }
@@ -597,27 +611,32 @@ function mergeComponentTokens(
  */
 const sharedComponentTokens = {
   Button: {
-    borderRadius: rounded.lg,
+    // Utility-button tight radius (8px) for the admin console; marketing pill
+    // CTAs live in the `components` presets, not in antd Button.
+    borderRadius: rounded.md,
     borderRadiusSM: rounded.sm,
-    borderRadiusLG: rounded.lg,
-    controlHeight: 44,
-    controlHeightSM: 32,
-    controlHeightLG: 48,
+    borderRadiusLG: rounded.md,
+    controlHeight: 36,
+    controlHeightSM: 28,
+    controlHeightLG: 44,
     paddingInline: spacing.lg,
     paddingInlineSM: spacing.md,
     paddingInlineLG: spacing.xl,
     fontWeight: typography.button.fontWeight,
-    primaryShadow: '0 2px 0 rgba(27,97,201,0.02)',
+    primaryShadow: 'none',
+    defaultShadow: 'none',
+    dangerShadow: 'none',
   },
   Input: {
-    borderRadius: rounded.sm,
-    borderRadiusLG: rounded.md,
+    // Form fields stay tight at rounded.xs (4px) per DESIGN.md.
+    borderRadius: rounded.xs,
+    borderRadiusLG: rounded.sm,
     borderRadiusSM: rounded.xs,
-    controlHeight: 44,
+    controlHeight: 36,
   },
   Card: {
     borderRadiusLG: rounded.lg,
-    paddingLG: spacing.xl,
+    paddingLG: spacing.lg,
   },
   Layout: {
     headerHeight: 64,
@@ -645,23 +664,23 @@ const sharedComponentTokens = {
     borderRadiusLG: rounded.lg,
   },
   Select: {
-    borderRadius: rounded.sm,
-    borderRadiusLG: rounded.md,
+    borderRadius: rounded.xs,
+    borderRadiusLG: rounded.sm,
     borderRadiusSM: rounded.xs,
-    controlHeight: 44,
+    controlHeight: 36,
   },
   DatePicker: {
-    borderRadius: rounded.sm,
-    borderRadiusLG: rounded.md,
+    borderRadius: rounded.xs,
+    borderRadiusLG: rounded.sm,
     borderRadiusSM: rounded.xs,
-    controlHeight: 44,
+    controlHeight: 36,
   },
   Segmented: {
     borderRadius: rounded.sm,
   },
   Steps: {
-    iconFontSize: typography['label-md'].fontSize,
-    titleLineHeight: typography['body-md'].lineHeight,
+    iconFontSize: typography.eyebrow.fontSize,
+    titleLineHeight: typography['body-sm'].lineHeight,
   },
   Collapse: {
     headerPadding: `${spacing.sm}px ${spacing.md}px`,
@@ -678,7 +697,7 @@ const sharedComponentTokens = {
   },
 } as const;
 
-/** Light-mode component color tokens */
+/** Light-mode component color tokens. */
 const lightComponentTokens = {
   Button: {
     primaryColor: colors['on-primary'],
@@ -687,8 +706,9 @@ const lightComponentTokens = {
     defaultBorderColor: colors.hairline,
   },
   Input: {
-    activeBorderColor: colors['info-border'],
-    hoverBorderColor: colors.ink,
+    // Focus signal is the primary blue (DESIGN.md: active/focus signal = primary).
+    activeBorderColor: colors.primary,
+    hoverBorderColor: colors['ink-secondary'],
     colorBgContainer: colors.canvas,
     colorText: colors.ink,
   },
@@ -697,58 +717,62 @@ const lightComponentTokens = {
   },
   Layout: {
     headerBg: colors.canvas,
-    bodyBg: colors.canvas,
+    bodyBg: colors['canvas-soft'],
     siderBg: colors.canvas,
     triggerBg: colors.canvas,
   },
   Menu: {
     itemBg: colors.canvas,
     subMenuItemBg: colors.canvas,
-    itemColor: colors.body,
-    itemSelectedBg: colors['surface-strong'],
+    itemColor: colors['ink-muted'],
+    // Active/selected items use the primary blue tint (focus/active signal).
+    itemSelectedBg: '#e8f3fc',
     itemSelectedColor: colors.primary,
-    itemHoverBg: colors['surface-soft'],
+    itemHoverBg: colors['canvas-soft'],
     itemHoverColor: colors.ink,
-    itemActiveBg: colors['surface-strong'],
+    itemActiveBg: '#e8f3fc',
     horizontalItemSelectedColor: colors.primary,
     subMenuItemSelectedColor: colors.ink,
   },
   Table: {
-    headerBg: colors.canvas,
-    headerColor: colors.ink,
-    rowHoverBg: colors['surface-soft'],
+    headerBg: colors['canvas-soft'],
+    headerColor: colors['ink-secondary'],
+    rowHoverBg: colors['canvas-soft'],
     borderColor: colors.hairline,
     headerSplitColor: colors.hairline,
   },
   Tabs: {
-    inkBarColor: colors.ink,
+    // Active tab indicator is the primary blue.
+    inkBarColor: colors.primary,
     itemSelectedColor: colors.ink,
-    itemHoverColor: colors.ink,
-    itemColor: colors.body,
+    itemHoverColor: colors['ink-secondary'],
+    itemColor: colors['ink-muted'],
   },
   Segmented: {
-    itemSelectedBg: colors.ink,
-    itemSelectedColor: colors['on-primary'],
-    trackBg: colors['surface-strong'],
+    // White pill on a warm-paper track.
+    itemSelectedBg: colors.canvas,
+    itemSelectedColor: colors.ink,
+    trackBg: colors['canvas-soft'],
   },
   Switch: {
     handleBg: colors.canvas,
   },
   Breadcrumb: {
-    itemColor: colors.muted,
-    linkColor: colors.body,
-    separatorColor: colors.muted,
+    itemColor: colors['ink-faint'],
+    linkColor: colors['ink-muted'],
+    separatorColor: colors['ink-faint'],
     lastItemColor: colors.ink,
   },
   Pagination: {
     itemActiveBg: colors.primary,
-    itemActiveColorDisabled: colors['on-primary'],
-    colorPrimary: colors['on-primary'],
+    itemActiveColor: colors['on-primary'],
+    itemActiveColorDisabled: colors.hairline,
+    colorPrimary: colors.primary,
     colorPrimaryHover: colors['on-primary'],
   },
   Slider: {
     trackBg: colors.primary,
-    trackHoverBg: colors.primary,
+    trackHoverBg: '#0066c9',
     handleColor: colors.primary,
     handleActiveColor: colors.primary,
     dotActiveBorderColor: colors.primary,
@@ -757,16 +781,16 @@ const lightComponentTokens = {
     defaultColor: colors.primary,
   },
   Tree: {
-    nodeHoverBg: colors['surface-soft'],
-    nodeSelectedBg: colors['surface-soft'],
+    nodeHoverBg: colors['canvas-soft'],
+    nodeSelectedBg: '#e8f3fc',
   },
   Collapse: {
-    headerBg: colors['surface-soft'],
+    headerBg: colors.canvas,
     contentBg: colors.canvas,
   },
 } as const;
 
-/** Full light-mode Ant Design theme configuration */
+/** Full light-mode Ant Design theme configuration. */
 export const antdTheme = {
   token: {
     ...antdSeedTokens,
@@ -779,12 +803,16 @@ export const antdTheme = {
 // ============================================================================
 // Dark Mode Token Mapping
 // ============================================================================
+// DESIGN.md is a light-mode marketing analysis; dark mode is an admin-console
+// adaptation. Colors are lifted ~15% for comfortable viewing, with the Notion
+// blue brightened so it stays legible on dark surfaces.
 
-/** Ant Design dark mode map tokens */
+/** Ant Design dark mode map tokens. */
 export const antdDarkMapTokens = {
-  // --- Seed overrides (dark) — original near-black primary is invisible on dark bg ---
+  // --- Seed overrides (dark) — brighten the Notion blue for dark bg ---
   colorPrimary: '#458fff',
   colorError: '#ff6b6b',
+  colorWarning: '#ff9f40',
 
   // --- Text Colors (dark) — significantly brighter for readability ---
   colorText: '#f5f6f8',
@@ -797,12 +825,21 @@ export const antdDarkMapTokens = {
   colorBgElevated: '#363d48',
   colorBgLayout: '#232830',
   colorBgSpotlight: '#232830',
+  colorBgMask: 'rgba(0,0,0,0.6)',
 
   // --- Fill Colors (dark) ---
   colorFill: 'rgba(255,255,255,0.12)',
   colorFillSecondary: 'rgba(255,255,255,0.09)',
   colorFillTertiary: 'rgba(255,255,255,0.06)',
   colorFillQuaternary: 'rgba(255,255,255,0.04)',
+
+  // --- Control hover/active fills (dark) — sharedTokens sets these to the
+  // light canvas-soft for both themes; restore dark-appropriate translucent
+  // overlays so components relying on these tokens (e.g. Splitter collapse
+  // bar / dragger) don't render as a white block in dark mode. ---
+  controlItemBgHover: 'rgba(255,255,255,0.06)',
+  controlItemBgActive: 'rgba(69,143,255,0.15)',
+  controlItemBgActiveHover: 'rgba(69,143,255,0.25)',
 
   // --- Border Colors (dark) — clearly visible ---
   colorBorder: '#4a5260',
@@ -825,29 +862,51 @@ export const antdDarkMapTokens = {
   colorPrimaryTextActive: '#2b6fcc',
 
   // --- Info Derivations (dark) ---
-  colorInfoBg: 'rgba(37,79,173,0.20)',
-  colorInfoBgHover: 'rgba(37,79,173,0.30)',
-  colorInfoBorder: colors['info-border'],
+  colorInfoBg: 'rgba(69,143,255,0.20)',
+  colorInfoBgHover: 'rgba(69,143,255,0.30)',
+  colorInfoBorder: '#458fff',
   colorInfoBorderHover: '#6badff',
   colorInfoHover: '#6badff',
   colorInfoActive: '#8dc3ff',
   colorInfoTextHover: '#6badff',
-  colorInfoText: colors['info-border'],
+  colorInfoText: '#458fff',
   colorInfoTextActive: '#8dc3ff',
 
   // --- Success Derivations (dark) ---
-  colorSuccessBg: 'rgba(0,100,0,0.20)',
-  colorSuccessBgHover: 'rgba(0,100,0,0.30)',
-  colorSuccessBorder: colors['success-border'],
+  colorSuccessBg: 'rgba(26,174,57,0.20)',
+  colorSuccessBgHover: 'rgba(26,174,57,0.30)',
+  colorSuccessBorder: '#39bf45',
   colorSuccessBorderHover: '#5bd465',
   colorSuccessHover: '#5bd465',
   colorSuccessActive: '#7de885',
   colorSuccessTextHover: '#5bd465',
-  colorSuccessText: colors['success-border'],
+  colorSuccessText: '#39bf45',
   colorSuccessTextActive: '#7de885',
+
+  // --- Warning Derivations (dark) ---
+  colorWarningBg: 'rgba(255,159,64,0.20)',
+  colorWarningBgHover: 'rgba(255,159,64,0.30)',
+  colorWarningBorder: '#ff9f40',
+  colorWarningBorderHover: '#ffb266',
+  colorWarningHover: '#ffb266',
+  colorWarningActive: '#ffc58a',
+  colorWarningTextHover: '#ffb266',
+  colorWarningText: '#ff9f40',
+  colorWarningTextActive: '#ffc58a',
+
+  // --- Error Derivations (dark) ---
+  colorErrorBg: 'rgba(229,72,77,0.20)',
+  colorErrorBgHover: 'rgba(229,72,77,0.30)',
+  colorErrorBorder: '#ff6b6b',
+  colorErrorBorderHover: '#ff8585',
+  colorErrorHover: '#ff8585',
+  colorErrorActive: '#ff9d9d',
+  colorErrorTextHover: '#ff8585',
+  colorErrorText: '#ff6b6b',
+  colorErrorTextActive: '#ff9d9d',
 } as const;
 
-/** Dark-mode component color tokens */
+/** Dark-mode component color tokens. */
 const darkComponentTokens = {
   Button: {
     defaultBg: '#2c323c',
@@ -861,7 +920,7 @@ const darkComponentTokens = {
   Input: {
     colorBgContainer: '#2c323c',
     colorText: '#f5f6f8',
-    activeBorderColor: colors['info-border'],
+    activeBorderColor: '#458fff',
     hoverBorderColor: '#bcc0cc',
   },
   Card: {
@@ -877,11 +936,11 @@ const darkComponentTokens = {
     itemBg: '#2c323c',
     subMenuItemBg: '#2c323c',
     itemColor: '#bcc0cc',
-    itemSelectedBg: '#363d48',
+    itemSelectedBg: 'rgba(69,143,255,0.20)',
     itemSelectedColor: '#f5f6f8',
     itemHoverBg: '#363d48',
     itemHoverColor: '#f5f6f8',
-    itemActiveBg: '#363d48',
+    itemActiveBg: 'rgba(69,143,255,0.20)',
     horizontalItemSelectedColor: '#f5f6f8',
     subMenuItemSelectedColor: '#f5f6f8',
   },
@@ -915,8 +974,8 @@ const darkComponentTokens = {
   Pagination: {
     itemActiveBg: '#f5f6f8',
     itemActiveColorDisabled: '#232830',
-    colorPrimary: '#232830',
-    colorPrimaryHover: '#232830',
+    colorPrimary: '#458fff',
+    colorPrimaryHover: '#6ba3ff',
   },
   Slider: {
     trackBg: '#f5f6f8',
@@ -930,7 +989,7 @@ const darkComponentTokens = {
   },
   Tree: {
     nodeHoverBg: 'rgba(255,255,255,0.06)',
-    nodeSelectedBg: 'rgba(255,255,255,0.10)',
+    nodeSelectedBg: 'rgba(69,143,255,0.20)',
   },
   Collapse: {
     headerBg: '#2c323c',
@@ -938,7 +997,7 @@ const darkComponentTokens = {
   },
 } as const;
 
-/** Full dark mode theme configuration */
+/** Full dark mode theme configuration. */
 export const antdDarkTheme = {
   token: {
     ...antdSeedTokens,

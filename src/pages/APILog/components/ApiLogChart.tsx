@@ -1,4 +1,5 @@
 import React from "react";
+import {theme} from "antd";
 import ReactECharts from "echarts-for-react";
 import echarts from '@/utils/echarts';
 
@@ -11,19 +12,20 @@ interface ApiLogChartProps {
   width?: string | number;
 }
 
-const ApiLogChart: React.FC<ApiLogChartProps> = ({ 
-  chartData, 
-  height = '200px', 
-  width = '100%' 
+const ApiLogChart: React.FC<ApiLogChartProps> = ({
+                                                   chartData,
+                                                   height = '200px',
+                                                   width = '100%'
 }) => {
+  const {token} = theme.useToken();
   const getChartOption = () => ({
     tooltip: {
       trigger: "axis",
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      borderColor: '#dddddd',
+      backgroundColor: token.colorBgElevated,
+      borderColor: token.colorBorder,
       borderWidth: 1,
       textStyle: {
-        color: '#181d26'
+        color: token.colorText
       }
     },
     grid: {
@@ -68,10 +70,10 @@ const ApiLogChart: React.FC<ApiLogChartProps> = ({
         smooth: true,
         lineStyle: {
           width: 3,
-          color: '#458fff'
+          color: token.colorPrimary
         },
         itemStyle: {
-          color: '#458fff',
+          color: token.colorPrimary,
           borderWidth: 2,
           borderColor: '#fff'
         },
@@ -85,22 +87,22 @@ const ApiLogChart: React.FC<ApiLogChartProps> = ({
             colorStops: [
               {
                 offset: 0,
-                color: 'rgba(27, 97, 201, 0.3)'
+                color: 'rgba(0, 117, 222, 0.3)'
               },
               {
                 offset: 1,
-                color: 'rgba(27, 97, 201, 0.05)'
+                color: 'rgba(0, 117, 222, 0.05)'
               }
             ]
           }
         },
         emphasis: {
           itemStyle: {
-            color: '#458fff',
+            color: token.colorPrimary,
             borderWidth: 3,
             borderColor: '#fff',
             shadowBlur: 10,
-            shadowColor: 'rgba(27, 97, 201, 0.5)'
+            shadowColor: 'rgba(0, 117, 222, 0.5)'
           }
         }
       },

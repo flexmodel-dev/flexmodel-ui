@@ -27,7 +27,7 @@ const GraphiQLInitializer: React.FC<{
   const variableEditor = useGraphiQL(state => state.variableEditor);
   const headerEditor = useGraphiQL(state => state.headerEditor);
   const initializedRef = useRef(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const ignoreChangeRef = useRef(false);
 
   // 初始化编辑器内容（只执行一次）

@@ -85,7 +85,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
           onChange={(v) => setInputStr(v || "{}")}
         />
 
-        <div style={{marginTop: 12, textAlign: "right"}}>
+        <div style={{marginTop: 'var(--ant-margin-sm)', textAlign: "right"}}>
           <Button
             type="primary"
             icon={<SendOutlined/>}
@@ -163,7 +163,7 @@ const FunctionInvokePanel: React.FC<FunctionInvokePanelProps> = ({
                                 overflow: "auto",
                                 background: token.colorFillSecondary,
                                 borderRadius: token.borderRadius,
-                                padding: 12,
+                                padding: 'var(--ant-padding-sm)',
                                 fontFamily: "monospace",
                                 fontSize: 12,
                               }}

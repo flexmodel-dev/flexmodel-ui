@@ -5,7 +5,7 @@ interface UseFullscreenReturn {
   toggle: () => void;
   enter: () => void;
   exit: () => void;
-  ref: React.RefObject<HTMLDivElement>;
+  ref: React.RefObject<HTMLDivElement | null>;
 }
 
 export const useFullscreen = (backgroundColor?: string): UseFullscreenReturn => {

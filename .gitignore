@@ -26,6 +26,11 @@ dist-ssr
 target
 tsconfig.app.tsbuildinfo
 tsconfig.node.tsbuildinfo
+
+# Playwright
+/playwright-report/
+/playwright/.cache/
+/test-results/
 .history
 target
 tsconfig.app.tsbuildinfo

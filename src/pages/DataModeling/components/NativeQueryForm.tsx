@@ -12,12 +12,13 @@ interface NativeQueryFormProps {
   onConfirm?: (model: NativeQueryModel) => void;
 }
 
-const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
+const NativeQueryForm = ({
   form: externalForm,
   mode = 'create',
   model,
-  onConfirm
-}, ref) => {
+                           onConfirm,
+                           ref,
+                         }: NativeQueryFormProps & { ref?: React.Ref<any> }) => {
   const { t } = useTranslation();
   const { token } = theme.useToken();
   const { currentProject } = useProject();
@@ -35,16 +36,13 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
   const [paramsDialogVisible, setParamsDialogVisible] = useState(false);
   const [params, setParams] = useState<string[]>([]);
 
-  React.useImperativeHandle(ref, () => ({
-    submit: handleSave,
-    reset: () => {
-      form.resetFields();
-      resetExecutionState();
-    },
-    getFieldsValue: form.getFieldsValue,
-    setFieldsValue: form.setFieldsValue,
-    validateFields: form.validateFields,
-  }));
+  const resetExecutionState = async () => {
+    setColumns([]);
+    setExecResult({
+      result: [],
+      time: 0,
+    });
+  };
 
   useEffect(() => {
     if (model) {
@@ -52,14 +50,6 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
       resetExecutionState();
     }
   }, [model, form]);
-
-  const resetExecutionState = () => {
-    setColumns([]);
-    setExecResult({
-      result: [],
-      time: 0,
-    });
-  };
 
   const extractParameters = (text: string): string[] => {
     return [...new Set([...text.matchAll(/\${(.*?)}/g)].map((match) => match[1]))];
@@ -121,6 +111,17 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
   const tableStyle = {
     marginTop: token.marginSM,
   };
+
+  React.useImperativeHandle(ref, () => ({
+    submit: handleSave,
+    reset: () => {
+      form.resetFields();
+      resetExecutionState();
+    },
+    getFieldsValue: form.getFieldsValue,
+    setFieldsValue: form.setFieldsValue,
+    validateFields: form.validateFields,
+  }));
 
   return (
     <>
@@ -202,6 +203,6 @@ const NativeQueryForm = React.forwardRef<any, NativeQueryFormProps>(({
       </Modal>
     </>
   );
-});
+};
 
 export default NativeQueryForm;
