@@ -89,7 +89,6 @@ async function handleRoute(route: Route) {
   const matchGet = (re: RegExp) => method === "GET" && re.test(path);
   const matchPost = (re: RegExp) => method === "POST" && re.test(path);
   const matchDelete = (re: RegExp) => method === "DELETE" && re.test(path);
-  const matchPut = (re: RegExp) => method === "PUT" && re.test(path);
   const matchPatch = (re: RegExp) => method === "PATCH" && re.test(path);
 
   // ---- 全局 / 认证 ----

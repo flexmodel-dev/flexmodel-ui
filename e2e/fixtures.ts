@@ -15,11 +15,13 @@ export const test = base.extend<{ mockPage: Page; authedPage: Page }>({
   mockPage: async ({page}, use) => {
     await injectAuthState(page);
     await setupApiMocks(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture API, not React's use hook
     await use(page);
   },
   authedPage: async ({page}, use) => {
     await injectAuthState(page);
     await setupApiMocks(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture API, not React's use hook
     await use(page);
   },
 });
