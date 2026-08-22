@@ -30,6 +30,7 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tsconfig/node18": "^18.2.2",
     "@types/dagre": "^0.7.52",
     "@types/node": "^20.19.0",
