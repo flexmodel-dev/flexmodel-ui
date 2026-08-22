@@ -6,7 +6,7 @@ test.describe("项目 - 边缘函数", () => {
   test("函数列表：展示函数与创建按钮", async ({mockPage: page}) => {
     await page.goto(FUNCTIONS);
     await expect(page.getByRole("heading", {name: "边缘函数"})).toBeVisible();
-    await expect(page.getByText("hello")).toBeVisible();
+    await expect(page.getByText("hello").first()).toBeVisible();
     await expect(page.getByRole("button", {name: "创建函数"})).toBeVisible();
     await expect(page.getByPlaceholder("搜索函数名称")).toBeVisible();
   });

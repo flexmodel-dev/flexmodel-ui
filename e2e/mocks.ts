@@ -70,7 +70,13 @@ export async function injectAuthState(page: Page) {
  * 注册所有 /api 接口的 mock 路由。需要在 page 导航前调用。
  */
 export async function setupApiMocks(page: Page) {
-  await page.route("**/api/**", (route) => handleRoute(route));
+  // 仅拦截 pathname 以 /api/ 开头的请求（真正的后端接口调用）。
+  // 使用函数谓词而非 glob "**/api/**"，避免误拦截 SPA 路由
+  // （如 /project/demo/api/log 虽含 /api/ 但不是后端接口）。
+  await page.route(
+    (url) => url.pathname.startsWith("/api/"),
+    (route) => handleRoute(route),
+  );
 }
 
 async function handleRoute(route: Route) {
@@ -197,8 +203,10 @@ async function handleRoute(route: Route) {
   // ---- 存储桶 ----
   if (matchGet(/^\/projects\/[^/]+\/buckets$/)) return route.fulfill(ok(buckets()));
 
-  // ---- 兜底：未匹配的接口返回空对象，避免测试因网络报错失败 ----
-  return route.fulfill(ok({}));
+  if (matchGet(/^\/projects\/[^/]+\/buckets\/[^/]+\/objects/)) return route.fulfill(ok([]));
+
+  // ---- 兜底：返回空数组，避免 Table 组件因非数组数据崩溃 ----
+  return route.fulfill(ok([]));
 }
 
 // ---- mock 数据构造函数 ----

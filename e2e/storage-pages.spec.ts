@@ -7,7 +7,7 @@ test.describe("项目 - 存储", () => {
   test("存储页：展示标题与存储桶列表", async ({mockPage: page}) => {
     await page.goto(STORAGE);
     await expect(page.getByRole("heading", {name: "存储"})).toBeVisible();
-    await expect(page.getByText("images")).toBeVisible();
+    await expect(page.getByText("images").first()).toBeVisible();
   });
 
   test("存储页：展示存储提供商标签", async ({mockPage: page}) => {
@@ -19,9 +19,9 @@ test.describe("项目 - 存储", () => {
 test.describe("项目 - 项目设置与页面", () => {
   test("项目设置：展示设置菜单", async ({mockPage: page}) => {
     await page.goto(PROJECT_SETTINGS);
-    await expect(page.getByText("基础设置")).toBeVisible();
-    await expect(page.getByText("身份认证")).toBeVisible();
-    await expect(page.getByText("页面")).toBeVisible();
+    await expect(page.getByText("基础设置").first()).toBeVisible();
+    await expect(page.getByText("身份认证").first()).toBeVisible();
+    await expect(page.getByText("页面").first()).toBeVisible();
   });
 
   test("项目设置 - 基础设置：展示项目名称表单", async ({mockPage: page}) => {
@@ -31,7 +31,6 @@ test.describe("项目 - 项目设置与页面", () => {
 
   test("项目设置 - 页面 Tab：展示站点信息", async ({mockPage: page}) => {
     await page.goto(PROJECT_SETTINGS);
-    // 切换到"页面"菜单
     await page.getByText("页面", {exact: true}).click();
     await expect(page.getByText("站点地址")).toBeVisible();
     await expect(page.getByText("当前部署")).toBeVisible();
