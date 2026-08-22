@@ -833,6 +833,14 @@ export const antdDarkMapTokens = {
   colorFillTertiary: 'rgba(255,255,255,0.06)',
   colorFillQuaternary: 'rgba(255,255,255,0.04)',
 
+  // --- Control hover/active fills (dark) — sharedTokens sets these to the
+  // light canvas-soft for both themes; restore dark-appropriate translucent
+  // overlays so components relying on these tokens (e.g. Splitter collapse
+  // bar / dragger) don't render as a white block in dark mode. ---
+  controlItemBgHover: 'rgba(255,255,255,0.06)',
+  controlItemBgActive: 'rgba(69,143,255,0.15)',
+  controlItemBgActiveHover: 'rgba(69,143,255,0.25)',
+
   // --- Border Colors (dark) — clearly visible ---
   colorBorder: '#4a5260',
   colorBorderSecondary: '#3c434e',
