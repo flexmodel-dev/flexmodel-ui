@@ -31,7 +31,6 @@ const RecordList: React.FC<RecordListProps> = ({ model }) => {
   const idField = model?.fields?.find((f: Field) => f.identity === true);
 
   const fetchRecords = useCallback(async () => {
-    await Promise.resolve();
     setLoading(true);
     try {
       const apiQuery = {

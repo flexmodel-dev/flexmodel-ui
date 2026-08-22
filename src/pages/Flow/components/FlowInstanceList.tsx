@@ -40,7 +40,6 @@ const FlowInstanceList: React.FC = () => {
 
   // 获取流程实例列表
   const fetchFlowInstanceList = useCallback(async () => {
-    await Promise.resolve();
     setLoading(true);
     try {
       const response = await getFlowInstanceList(projectId, searchParams);

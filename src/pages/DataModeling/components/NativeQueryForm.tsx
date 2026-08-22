@@ -37,7 +37,6 @@ const NativeQueryForm = ({
   const [params, setParams] = useState<string[]>([]);
 
   const resetExecutionState = async () => {
-    await Promise.resolve();
     setColumns([]);
     setExecResult({
       result: [],

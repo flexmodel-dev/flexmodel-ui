@@ -8,7 +8,7 @@ import {useEffect, useMemo} from "react";
 import * as appStore from "./store/appStore.ts";
 import {useAuth} from "./store/authStore.ts";
 import {initializeDarkMode} from "./utils/darkMode.ts";
-import {RenderProjectRoutes} from "./routes";
+import {RenderProjectRoutes} from "./routeRenderers";
 import Project from "./pages/Project/index.tsx";
 import Settings from "./pages/Settings";
 import ApiKeys from "./pages/ApiKeys";

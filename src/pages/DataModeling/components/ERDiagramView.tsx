@@ -138,7 +138,7 @@ const ERDiagram: React.FC<ERDiagramProps> = ({data}) => {
     setNodes(newNodes);
     setEdges(Array.from(edgeMap.values()));
     setTimeout(() => fitView(), 100);
-  }, [data, fitView, setNodes, setEdges]);
+  }, [data, fitView, setNodes, setEdges, token.colorBorderSecondary]);
 
   const resizeGraph = useCallback(() => {
     if (!containerRef.current) return;

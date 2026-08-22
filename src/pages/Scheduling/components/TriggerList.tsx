@@ -34,7 +34,6 @@ const TriggerList: React.FC<TriggerListProps> = ({model, eventOnly = false}) => 
   const [total, setTotal] = useState(0);
 
   const loadTriggers = async () => {
-    await Promise.resolve();
     setLoading(true);
     try {
       const {getTriggerPage} = await import('@/services/trigger');

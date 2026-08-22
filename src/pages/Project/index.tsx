@@ -53,7 +53,6 @@ const Project: React.FC = () => {
   const [viewMode, setViewMode] = useState<'card' | 'list'>('card'); // 'card' or 'list'
 
   const fetchProjects = async () => {
-    await Promise.resolve();
     setLoading(true);
     try {
       const projects = await getProjects({ include: 'stats' });

@@ -35,7 +35,6 @@ const ApiKeys: React.FC = () => {
   const [form] = Form.useForm();
 
   const fetchKeys = useCallback(async () => {
-    await Promise.resolve();
     try {
       setLoading(true);
       const data = await getApiKeys();
@@ -48,7 +47,6 @@ const ApiKeys: React.FC = () => {
   }, [t]);
 
   const fetchProjects = useCallback(async () => {
-    await Promise.resolve();
     try {
       const data = await getProjects({});
       setProjects(data);

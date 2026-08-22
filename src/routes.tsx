@@ -1,4 +1,3 @@
-import {useRoutes} from "react-router-dom";
 import Settings from "./pages/Settings";
 import Overview from "./pages/Overview";
 import DataView from "./pages/DataView";
@@ -308,7 +307,3 @@ export const platformRouterRoutes = platformRoutes.map(({ path, element }) => ({
   path,
   element,
 }));
-
-export const RenderRoutes = () => useRoutes(routerRoutes);
-export const RenderPlatformRoutes = () => useRoutes(platformRouterRoutes);
-export const RenderProjectRoutes = () => useRoutes(projectRouterRoutes);

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import type {MenuProps} from "antd";
 import {Button, Dropdown, Empty, Form, Input, message, Modal, Spin, theme, Typography} from "antd";
 import {DatabaseOutlined, DeleteOutlined, MoreOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
@@ -36,8 +36,7 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
   const [createLoading, setCreateLoading] = useState(false);
   const [createForm] = Form.useForm();
 
-  const getBucketListHandler = async () => {
-    await Promise.resolve();
+  const getBucketListHandler = useCallback(async () => {
     try {
       setLoading(true);
       const list = await getBucketList(projectId);
@@ -59,11 +58,11 @@ const BucketExplorer: React.FC<BucketExplorerProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId, selectedBucket, onSelect]);
 
   useEffect(() => {
     getBucketListHandler();
-  }, [refreshKey]);
+  }, [refreshKey, getBucketListHandler]);
 
   useEffect(() => {
     if (selectedBucket && bucketList.length > 0) {

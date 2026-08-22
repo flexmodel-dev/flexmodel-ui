@@ -27,7 +27,6 @@ const IndexList: React.FC<IndexListProps> = ({model}) => {
   const { containerRef, scrollY } = useTableScrollHeight();
 
   const fetchIndexes = useCallback(async () => {
-    await Promise.resolve();
     setIndexList(model?.indexes || []);
   }, [model?.indexes]);
 

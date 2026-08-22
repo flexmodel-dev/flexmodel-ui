@@ -14,7 +14,6 @@ const FunctionForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchFunctions = useCallback(async () => {
-    await Promise.resolve();
     if (!projectId) return;
     try {
       setLoading(true);

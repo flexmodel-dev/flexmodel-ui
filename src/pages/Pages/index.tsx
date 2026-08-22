@@ -31,7 +31,6 @@ const PagesTab: React.FC<PagesTabProps> = ({projectId}) => {
   const refreshIframe = () => setIframeKey(k => k + 1);
 
   const loadPageSite = useCallback(async () => {
-    await Promise.resolve();
     if (!projectId) return;
     setLoading(true);
     try {

@@ -603,7 +603,7 @@ const FlowDesign: React.FC = () => {
     } else {
       message.error('流程ID不存在，无法保存');
     }
-  }, [nodes, edges, flowModuleId, flowName, flowKey, flowRemark, invalidNodeIds, selectedNode]);
+  }, [nodes, edges, flowModuleId, flowName, flowKey, flowRemark, invalidNodeIds, selectedNode, projectId]);
 
   // 发布流程
   const handleDeploy = useCallback(async () => {
@@ -716,7 +716,7 @@ const FlowDesign: React.FC = () => {
       console.error('发布流程失败:', e);
       message.error('发布失败');
     }
-  }, [edges, flowKey, flowModuleId, flowName, flowRemark, nodes, invalidNodeIds, selectedNode]);
+  }, [edges, flowKey, flowModuleId, flowName, flowRemark, nodes, invalidNodeIds, selectedNode, projectId]);
 
   // moved above
 

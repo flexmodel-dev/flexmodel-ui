@@ -101,7 +101,6 @@ const JobExecutionLogList: React.FC = () => {
   }, [logs, total, loading, updateTableHeight]);
 
   const loadLogs = async (params?: JobExecutionLogParams) => {
-    await Promise.resolve();
     setLoading(true);
     try {
       const queryParams = {

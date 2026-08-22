@@ -17,7 +17,8 @@ import {
   TagsOutlined
 } from "@ant-design/icons";
 import {createField, dropField, modifyField} from "@/services/model.ts";
-import FieldForm, {FieldInitialValues} from "./FieldForm.tsx";
+import FieldForm from "./FieldForm.tsx";
+import {FieldInitialValues} from "./fieldFormConstants";
 import {Entity, Field, TypedFieldSchema} from "@/types/data-modeling";
 import {useTranslation} from "react-i18next";
 import {useProject} from "@/store/appStore";
@@ -45,7 +46,6 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
   const { containerRef, scrollY } = useTableScrollHeight();
 
   const fetchFields = useCallback(async () => {
-    await Promise.resolve();
     setFieldList(model?.fields);
   }, [model?.fields]);
 

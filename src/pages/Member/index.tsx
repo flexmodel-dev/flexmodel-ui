@@ -14,6 +14,14 @@ import RoleList from "./components/RoleList";
 import UserModal from "./components/UserModal";
 import RoleModal from "./components/RoleModal";
 
+const transformResourceToTree = (resources: ResourceNode[]): any[] => {
+  return resources.map(resource => ({
+    label: resource.name,
+    value: resource.id,
+    children: resource.children ? transformResourceToTree(resource.children) : undefined
+  }));
+};
+
 const Member: React.FC = () => {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,7 +40,6 @@ const Member: React.FC = () => {
   const activeTab = searchParams.get('tab') || 'users';
 
   const fetchUsers = useCallback(async () => {
-    await Promise.resolve();
     setLoading(true);
     try {
       const data = await getUsers();
@@ -46,7 +53,6 @@ const Member: React.FC = () => {
   }, [t]);
 
   const fetchRoles = useCallback(async () => {
-    await Promise.resolve();
     setRoleLoading(true);
     try {
       const data = await getRoles();
@@ -59,16 +65,7 @@ const Member: React.FC = () => {
     }
   }, [t]);
 
-  const transformResourceToTree = (resources: ResourceNode[]): any[] => {
-    return resources.map(resource => ({
-      label: resource.name,
-      value: resource.id,
-      children: resource.children ? transformResourceToTree(resource.children) : undefined
-    }));
-  };
-
   const fetchResources = useCallback(async () => {
-    await Promise.resolve();
     try {
       const data = await getResourceTree();
       const treeData = transformResourceToTree(data);

@@ -62,7 +62,7 @@ const ProjectLayout: React.FC = () => {
       setIsProjectInitialized(true);
     };
     initializeProject();
-  }, [projectId]);
+  }, [projectId, currentProject?.id, setCurrentProject]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -177,7 +177,7 @@ const ProjectLayout: React.FC = () => {
     });
 
     return items;
-  }, [currentProject, projects, projectId, t, token.marginXS, handleProjectChange, branchMenuItems]);
+  }, [currentProject, projects, projectId, t, token.marginXS, handleProjectChange, branchMenuItems, location.pathname]);
 
   // hideLayout 路由（如流程设计、流程实例详情）只渲染内容区，不显示 Header/Sidebar
   if (shouldHideLayout(location.pathname)) {
