@@ -1,7 +1,7 @@
 import {test, expect} from "./fixtures";
 
 const TRIGGER = "/project/demo/scheduling/trigger";
-const JOB_LOG = "/project/demo/scheduling/job-execution-log";
+const JOB_LOG = "/project/demo/scheduling/job-execution-logs";
 
 test.describe("项目 - 任务调度", () => {
   test("触发器列表：展示触发器与创建按钮", async ({mockPage: page}) => {
