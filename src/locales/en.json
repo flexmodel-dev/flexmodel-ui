@@ -395,6 +395,7 @@
   "record": "Record",
   "unique": "Unique",
   "nullable": "Nullable",
+  "text": "Unlimited text",
   "comment": "Comment",
   "table_selection_delete_text": "Are you sure to delete this?",
   "new_field": "New Field",

@@ -51,6 +51,7 @@ export interface Field extends Record<string, any> {
   from?: string;
   tmpType?: string;
   identity?: boolean;
+  text?: boolean;
 }
 
 /**

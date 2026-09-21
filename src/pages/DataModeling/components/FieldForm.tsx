@@ -49,6 +49,7 @@ const FieldForm = ({
     comment: "",
     defaultValue: { type: "fixed", value: null },
     length: 255,
+    text: false,
     precision: 20,
     scale: 2,
     multiple: false,
@@ -100,6 +101,7 @@ const FieldForm = ({
         type: "ModelRef",
         from: value.replace("ModelRef:", ""),
         multiple: false,
+        text: false,
         defaultValue: { type: "fixed", value: null },
       });
     } else if (value.startsWith("Enum")) {
@@ -107,6 +109,7 @@ const FieldForm = ({
         ...FieldInitialValues["ENUM"],
         type: "EnumRef",
         from: value.replace("Enum:", ""),
+        text: false,
         defaultValue: { type: "fixed", value: null },
       })
     } else {
@@ -114,6 +117,7 @@ const FieldForm = ({
         ...FieldInitialValues[value.toUpperCase()],
         type: value,
         multiple: false,
+        text: false,
         defaultValue: { type: "fixed", value: null },
       });
     }
@@ -238,9 +242,14 @@ const FieldForm = ({
       </Form.Item>
 
       {form.getFieldValue("tmpType") === "String" && (
-        <Form.Item label={t("length")} name="length">
-          <Input type="number" />
-        </Form.Item>
+        <>
+          <Form.Item label={t("length")} name="length">
+            <Input type="number"/>
+          </Form.Item>
+          <Form.Item label={t("text")} name="text" valuePropName="checked">
+            <Switch/>
+          </Form.Item>
+        </>
       )}
 
       {form.getFieldValue("tmpType") === "Decimal" && (

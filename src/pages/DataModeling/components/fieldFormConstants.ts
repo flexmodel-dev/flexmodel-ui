@@ -41,6 +41,7 @@ export const FieldInitialValues: any = {
   STRING: {
     type: 'String',
     length: 255,
+    text: false,
     unique: false,
     nullable: true,
     identity: false,

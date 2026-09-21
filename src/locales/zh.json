@@ -395,6 +395,7 @@
   "record": "记录",
   "unique": "唯一值",
   "nullable": "可为空",
+  "text": "无限文本",
   "comment": "注释",
   "table_selection_delete_text": "确定删除此项?",
   "new_field": "新建字段",
