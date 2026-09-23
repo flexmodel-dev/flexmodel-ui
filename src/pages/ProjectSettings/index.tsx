@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+﻿import React, {useEffect, useState} from 'react';
 import {Button, Divider, Form, Input, Menu, message, Switch, theme, Typography} from 'antd';
 import {useTranslation} from 'react-i18next';
 import {useParams, useSearchParams} from 'react-router-dom';
@@ -7,17 +7,18 @@ import {useProject} from '@/store/appStore';
 import {PageContainer} from '@/components/common';
 import ProvidersTab from '@/pages/Authentication/components/ProvidersTab';
 import PagesTab from '@/pages/Pages';
+import LogSettingsTab from '@/pages/ProjectSettings/components/LogSettingsTab';
 import {spacing} from '@/theme/designTokens';
 
-const { Title, Text } = Typography;
+const {Title, Text} = Typography;
 
-type ProjectSettingsTabKey = 'base' | 'auth' | 'pages';
+type ProjectSettingsTabKey = 'base' | 'auth' | 'logs' | 'pages';
 
 const ProjectSettings: React.FC = () => {
-  const { t } = useTranslation();
-  const { projectId } = useParams<{ projectId: string }>();
-  const { currentProject, setCurrentProject } = useProject();
-  const { token } = theme.useToken();
+  const {t} = useTranslation();
+  const {projectId} = useParams<{ projectId: string }>();
+  const {currentProject, setCurrentProject} = useProject();
+  const {token} = theme.useToken();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -29,6 +30,7 @@ const ProjectSettings: React.FC = () => {
   const menuMap: Record<ProjectSettingsTabKey, string> = {
     base: t('settings_basic_settings'),
     auth: t('authentication'),
+    logs: t('project_log_settings'),
     pages: t('pages.title'),
   };
 
@@ -78,27 +80,27 @@ const ProjectSettings: React.FC = () => {
       case 'base':
         return (
           <Form
-              form={form}
-              layout="vertical"
-              disabled={isDefaultProject}
-              style={{ maxWidth: 800 }}
+            form={form}
+            layout="vertical"
+            disabled={isDefaultProject}
+            style={{maxWidth: 800}}
+          >
+            <Form.Item
+              label={t('project.name')}
+              name="name"
+              rules={[
+                {required: true, message: t('project.nameRequired')},
+              ]}
             >
-              <Form.Item
-                label={t('project.name')}
-                name="name"
-                rules={[
-                  { required: true, message: t('project.nameRequired') },
-                ]}
-              >
-                <Input placeholder={t('project.namePlaceholder')} />
-              </Form.Item>
+              <Input placeholder={t('project.namePlaceholder')}/>
+            </Form.Item>
 
-              <Form.Item
-                label={t('project.description')}
-                name="description"
-              >
-                <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')} />
-              </Form.Item>
+            <Form.Item
+              label={t('project.description')}
+              name="description"
+            >
+              <Input.TextArea rows={4} placeholder={t('project.descriptionPlaceholder')}/>
+            </Form.Item>
 
             <Divider/>
 
@@ -114,31 +116,33 @@ const ProjectSettings: React.FC = () => {
               />
             </Form.Item>
 
-              {!isDefaultProject && (
-                <Form.Item>
-                  <Button type="primary" loading={saving} onClick={handleSave}>
-                    {t('save')}
-                  </Button>
-                </Form.Item>
-              )}
+            {!isDefaultProject && (
+              <Form.Item>
+                <Button type="primary" loading={saving} onClick={handleSave}>
+                  {t('save')}
+                </Button>
+              </Form.Item>
+            )}
 
-              {isDefaultProject && (
-                <Text type="secondary">{t('project.defaultProjectNotEditable')}</Text>
-              )}
-               <Divider />
-               <div style={{ color: token.colorTextSecondary, fontSize: token.fontSizeSM, maxWidth: 600 }}>
+            {isDefaultProject && (
+              <Text type="secondary">{t('project.defaultProjectNotEditable')}</Text>
+            )}
+            <Divider/>
+            <div style={{color: token.colorTextSecondary, fontSize: token.fontSizeSM, maxWidth: 600}}>
               <div><Text type="secondary">{t('project.projectId')}: </Text><Text code>{projectId}</Text></div>
               {currentProject?.databaseName && (
-                <div style={{ marginTop: token.marginXS }}>
+                <div style={{marginTop: token.marginXS}}>
                   <Text type="secondary">{t('project.databaseName')}: </Text>
                   <Text code>{currentProject.databaseName}</Text>
                 </div>
               )}
             </div>
-            </Form>
+          </Form>
         );
       case 'auth':
-        return <ProvidersTab />;
+        return <ProvidersTab/>;
+      case 'logs':
+        return projectId ? <LogSettingsTab projectId={projectId} disabled={isDefaultProject}/> : null;
       case 'pages':
         return projectId ? <PagesTab projectId={projectId}/> : null;
       default:
@@ -162,7 +166,7 @@ const ProjectSettings: React.FC = () => {
             className="h-full"
             mode="inline"
             selectedKeys={[selectKey]}
-            onClick={({ key }) => setSelectKey(key as ProjectSettingsTabKey)}
+            onClick={({key}) => setSelectKey(key as ProjectSettingsTabKey)}
             items={menuItems}
           />
         </div>

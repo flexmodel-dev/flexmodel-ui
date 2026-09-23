@@ -1,9 +1,18 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import PageContainer from '@/components/common/PageContainer.tsx';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Button, message, Space, theme} from 'antd';
-import {ArrowLeftOutlined} from '@ant-design/icons';
-import {FlowModuleDetail, getElementInstances, getFlowInstance, getFlowModule, NodeInstance,} from '@/services/flow.ts';
+import {Button, message, Popconfirm, Space, theme} from 'antd';
+import {ArrowLeftOutlined, StopOutlined} from '@ant-design/icons';
+import {
+  FlowModuleDetail,
+  FlowInstanceStatus,
+  getElementInstances,
+  getFlowInstance,
+  getFlowModule,
+  FlowInstance,
+  NodeInstance,
+  terminateFlowInstance,
+} from '@/services/flow.ts';
 import {
   Background,
   Edge,
@@ -16,6 +25,8 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import FlowNode from './components/FlowNode';
+import NodeDetailDrawer from './components/NodeDetailDrawer';
+import NodeSummaryToolbar from './components/NodeSummaryToolbar';
 import {useFlowParser} from './hooks/useFlowParser';
 import {useElementInstanceMerger} from './hooks/useElementInstanceMerger';
 import {useProject} from "@/store/appStore";
@@ -37,26 +48,40 @@ const FlowDetail: React.FC = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [, setReactFlowInstance] = useState<ReactFlowInstance<Node, Edge> | null>(null);
   const [elementInstances, setElementInstances] = useState<NodeInstance[] | null>(null);
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [flowInstance, setFlowInstance] = useState<FlowInstance | null>(null);
 
-  useEffect(() => {
-    if (selectedNode) {
-      const { nodeInstanceId } = selectedNode.data;
-      if (nodeInstanceId) {
-        message.info(`节点实例ID: ${nodeInstanceId}`);
-      }
+  // 节点详情通过 NodeDetailDrawer 展示，点击节点时打开
+  const selectedNode = selectedNodeId ? nodes.find(n => n.id === selectedNodeId) ?? null : null;
+
+  const [terminating, setTerminating] = useState(false);
+
+  // 终止流程实例
+  const handleTerminate = async () => {
+    if (!flowInstanceId) return;
+    setTerminating(true);
+    try {
+      await terminateFlowInstance(projectId, flowInstanceId);
+      message.success('流程实例终止成功');
+      loadData();
+    } catch (error) {
+      console.error('终止流程实例失败:', error);
+      message.error('终止流程实例失败');
+    } finally {
+      setTerminating(false);
     }
-  }, [selectedNode]);
+  };
 
-  // 使用提取的 hooks
+  // 浣跨敤鎻愬彇鐨?hooks
   const { parseFlowModel } = useFlowParser({ setNodes, setEdges });
-  const { mergeElementInstances } = useElementInstanceMerger({ setNodes });
+  const {mergeElementInstances} = useElementInstanceMerger({setNodes, setEdges});
 
   const loadData = useCallback(async () => {
-    if (!flowInstanceId) return;
+    if (!flowInstanceId || !projectId) return;
     setLoading(true);
     try {
       const instance = await getFlowInstance(projectId, flowInstanceId);
+      setFlowInstance(instance);
       const moduleDetail: FlowModuleDetail = await getFlowModule(projectId, instance.flowModuleId, instance.flowDeployId);
       setTitle(moduleDetail.flowName + ` (${instance.flowInstanceId})`);
       if (moduleDetail?.flowModel) {
@@ -65,8 +90,8 @@ const FlowDetail: React.FC = () => {
       const instances = await getElementInstances(projectId, flowInstanceId);
       setElementInstances(instances || []);
     } catch (e) {
-      console.error('加载流程实例详情失败', e);
-      message.error('加载流程实例详情失败');
+      console.error('鍔犺浇娴佺▼瀹炰緥璇︽儏澶辫触', e);
+      message.error('鍔犺浇娴佺▼瀹炰緥璇︽儏澶辫触');
     } finally {
       setLoading(false);
     }
@@ -76,7 +101,7 @@ const FlowDetail: React.FC = () => {
     loadData();
   }, [loadData]);
 
-  // 在定义图渲染完成后再叠加状态，避免竞态
+  // 鍦ㄥ畾涔夊浘娓叉煋瀹屾垚鍚庡啀鍙犲姞鐘舵€侊紝閬垮厤绔炴€?
   useEffect(() => {
     if (elementInstances && nodes.length > 0) {
       mergeElementInstances(elementInstances);
@@ -95,7 +120,21 @@ const FlowDetail: React.FC = () => {
           {title}
         </Space>
       }
+      extra={
+        flowInstance?.status === FlowInstanceStatus.RUNNING ? (
+          <Popconfirm
+            title="确定要终止这个流程实例吗？"
+            onConfirm={handleTerminate}
+            okText="确定终止"
+            cancelText="取消"
+            okButtonProps={{danger: true}}
+          >
+            <Button danger icon={<StopOutlined/>} loading={terminating}>终止流程</Button>
+          </Popconfirm>
+        ) : undefined
+      }
     >
+      <NodeSummaryToolbar node={selectedNode} flowInstance={flowInstance}/>
       <ReactFlowProvider>
       <ReactFlow
               nodes={nodes}
@@ -103,13 +142,13 @@ const FlowDetail: React.FC = () => {
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               onPaneClick={() => {
-                setSelectedNode(null);
-                // 同步清除节点的选中态
+                setSelectedNodeId(null);
+                // 鍚屾娓呴櫎鑺傜偣鐨勯€変腑鎬?
                 setNodes((prev) => prev.map((n) => ({ ...n, data: { ...n.data, __selected: false } })) as any);
               }}
               onNodeClick={(_, node) => {
-                setSelectedNode(node);
-                // 同步更新节点的选中态（仅单选）
+                setSelectedNodeId(node.id);
+                // 鍚屾鏇存柊鑺傜偣鐨勯€変腑鎬侊紙浠呭崟閫夛級
                 setNodes((prev) => prev.map((n) => ({ ...n, data: { ...n.data, __selected: n.id === node.id } })) as any);
               }}
               onConnect={() => {
@@ -129,6 +168,14 @@ const FlowDetail: React.FC = () => {
               <Background/>
             </ReactFlow>
       </ReactFlowProvider>
+      <NodeDetailDrawer
+        node={selectedNode}
+        projectId={projectId}
+        flowInstanceId={flowInstanceId || ''}
+        flowStatus={flowInstance?.status}
+        onClose={() => setSelectedNodeId(null)}
+        onCommitted={loadData}
+      />
     </PageContainer>
   );
 };

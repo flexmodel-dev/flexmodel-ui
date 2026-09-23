@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import {Descriptions, Spin, Tabs, Tag, theme,} from "antd";
-import {FunctionOutlined, InfoCircleOutlined, PlayCircleOutlined,} from "@ant-design/icons";
+import {FunctionOutlined, FileTextOutlined, InfoCircleOutlined, PlayCircleOutlined,} from "@ant-design/icons";
 import {useTranslation} from "react-i18next";
 import ScriptEditor from "@/components/common/ScriptEditor";
 import FunctionInvokePanel from "./FunctionInvokePanel";
+import FunctionLogPanel from "./FunctionLogPanel";
 import type {FunctionResponse} from "@/services/function";
 
 interface FunctionDetailProps {
@@ -93,6 +94,11 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
     <FunctionInvokePanel projectId={projectId} functionName={fn.name}/>
   );
 
+  // ---- Logs Tab ----
+  const logsTab = (
+    <FunctionLogPanel projectId={projectId} functionName={fn.name}/>
+  );
+
   const tabItems = [
     {
       key: "overview",
@@ -108,6 +114,11 @@ const FunctionDetail: React.FC<FunctionDetailProps> = ({
       key: "test",
       label: <span><PlayCircleOutlined/> {t("function.tabTest")}</span>,
       children: testTab,
+    },
+    {
+      key: "logs",
+      label: <span><FileTextOutlined/> {t("function.logTitle")}</span>,
+      children: logsTab,
     },
   ];
 

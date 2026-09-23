@@ -25,6 +25,7 @@ import {
   AppstoreOutlined,
   DashboardOutlined,
   KeyOutlined, FunctionOutlined,
+  AuditOutlined,
 } from "@ant-design/icons";
 import GraphQLAPI from "@/pages/GraphQLAPI";
 import Flow from "@/pages/Flow";
@@ -40,6 +41,7 @@ import ApiKeys from "./pages/ApiKeys";
 import Functions from "./pages/Functions";
 import FunctionEditor from "./pages/Functions/FunctionEditor";
 import ProjectSettings from "./pages/ProjectSettings";
+import AuditLogList from "@/pages/AuditLog/components/AuditLogList.tsx";
 
 export interface RouteConfig {
   path: string;
@@ -55,25 +57,25 @@ export interface RouteConfig {
 export const platformRoutes: RouteConfig[] = [
   {
     path: "/project",
-    element: <Project />,
-    icon:  AppstoreOutlined,
+    element: <Project/>,
+    icon: AppstoreOutlined,
     translationKey: "platform.project",
   },
   {
     path: "/member",
-    element: <Member />,
+    element: <Member/>,
     icon: UserOutlined,
     translationKey: "platform.member",
   },
   {
     path: "/api-keys",
-    element: <ApiKeys />,
+    element: <ApiKeys/>,
     icon: KeyOutlined,
     translationKey: "platform.api_keys",
   },
   {
     path: "/settings",
-    element: <Settings />,
+    element: <Settings/>,
     icon: SettingOutlined,
     translationKey: "platform.settings",
   },
@@ -82,40 +84,40 @@ export const platformRoutes: RouteConfig[] = [
 export const projectRoutes: RouteConfig[] = [
   {
     path: "/project/:projectId/",
-    element: <Overview />,
+    element: <Overview/>,
     icon: DashboardOutlined,
     translationKey: "overview",
   },
   {
     path: "/project/:projectId/api",
-    element: <ApiView />,
+    element: <ApiView/>,
     icon: ApiOutlined,
     translationKey: "api",
     children: [
       {
         path: "/project/:projectId/api/graphql",
-        element: <GraphQLAPI />,
+        element: <GraphQLAPI/>,
         icon: DeploymentUnitOutlined,
         translationKey: "graphql_api",
       },
       {
-        path: "/project/:projectId/api/log",
-        element: <APILog />,
+        path: "/project/:projectId/api/logs",
+        element: <APILog/>,
         icon: LineChartOutlined,
-        translationKey: "api_log",
+        translationKey: "log.api_logs",
       },
     ],
   },
   {
     path: "/project/:projectId/data",
-    element: <DataView />,
+    element: <DataView/>,
     icon: CloudServerOutlined,
     translationKey: "data",
     defaultChild: "modeling",
     children: [
       {
         path: "/project/:projectId/data/modeling",
-        element: <DataModeling />,
+        element: <DataModeling/>,
         icon: ContainerOutlined,
         translationKey: "data_modeling",
       },
@@ -123,19 +125,19 @@ export const projectRoutes: RouteConfig[] = [
   },
   {
     path: "/project/:projectId/flow",
-    element: <Flow />,
+    element: <Flow/>,
     icon: NodeIndexOutlined,
     translationKey: "flow",
     children: [
       {
         path: "/project/:projectId/flow/definition",
-        element: <FlowList />,
+        element: <FlowList/>,
         icon: BranchesOutlined,
         translationKey: "flow_definition",
       },
       {
         path: "/project/:projectId/flow/instance",
-        element: <FlowInstanceList />,
+        element: <FlowInstanceList/>,
         icon: PlayCircleOutlined,
         translationKey: "flow_instance",
       },
@@ -143,7 +145,7 @@ export const projectRoutes: RouteConfig[] = [
   },
   {
     path: "/project/:projectId/flow/instance/:flowInstanceId",
-    element: <FlowDetail />,
+    element: <FlowDetail/>,
     icon: PlayCircleOutlined,
     translationKey: "flow_instance_detail",
     hideInMenu: true,
@@ -151,7 +153,7 @@ export const projectRoutes: RouteConfig[] = [
   },
   {
     path: "/project/:projectId/flow/design/:flowModuleId",
-    element: <FlowDesign />,
+    element: <FlowDesign/>,
     icon: DatabaseOutlined,
     translationKey: "flow_design",
     hideInMenu: true,
@@ -159,33 +161,33 @@ export const projectRoutes: RouteConfig[] = [
   },
   {
     path: "/project/:projectId/scheduling",
-    element: <Scheduling />,
+    element: <Scheduling/>,
     icon: ThunderboltOutlined,
     translationKey: "scheduling",
     children: [
       {
         path: "/project/:projectId/scheduling/trigger",
-        element: <TriggerList />,
+        element: <TriggerList/>,
         icon: ThunderboltOutlined,
         translationKey: "trigger.title",
       },
       {
-        path: "/project/:projectId/scheduling/job-execution-log",
-        element: <JobExecutionLogList />,
+        path: "/project/:projectId/scheduling/job-execution-logs",
+        element: <JobExecutionLogList/>,
         icon: PlayCircleOutlined,
-        translationKey: "job_execution_log",
+        translationKey: "log.job_execution_log",
       },
     ]
   },
   {
     path: "/project/:projectId/functions",
-    element: <Functions />,
+    element: <Functions/>,
     icon: FunctionOutlined,
     translationKey: "function.title",
   },
   {
     path: "/project/:projectId/functions/editor",
-    element: <FunctionEditor />,
+    element: <FunctionEditor/>,
     icon: CodeOutlined,
     translationKey: "function.editor",
     hideInMenu: true,
@@ -193,7 +195,7 @@ export const projectRoutes: RouteConfig[] = [
   },
   {
     path: "/project/:projectId/functions/editor/:name",
-    element: <FunctionEditor />,
+    element: <FunctionEditor/>,
     icon: CodeOutlined,
     translationKey: "function.editor",
     hideInMenu: true,
@@ -201,13 +203,19 @@ export const projectRoutes: RouteConfig[] = [
   },
   {
     path: "/project/:projectId/storage",
-    element: <Storage />,
+    element: <Storage/>,
     icon: CloudUploadOutlined,
     translationKey: "storage",
   },
   {
+    path: "/project/:projectId/audit-logs",
+    element: <AuditLogList/>,
+    icon: AuditOutlined,
+    translationKey: "log.audit_logs",
+  },
+  {
     path: "/project/:projectId/settings",
-    element: <ProjectSettings />,
+    element: <ProjectSettings/>,
     icon: SettingOutlined,
     translationKey: "project.settings",
   },
@@ -280,10 +288,10 @@ export const getAllRoutePaths = (routeList: RouteConfig[] = routes): string[] =>
   return paths;
 };
 
-export const routerRoutes = routes.map(({ path, element, children }) => {
-  const route: any = { path, element };
+export const routerRoutes = routes.map(({path, element, children}) => {
+  const route: any = {path, element};
   if (children) {
-    route.children = children.map(({ path: childPath, element: childElement }) => ({
+    route.children = children.map(({path: childPath, element: childElement}) => ({
       path: childPath,
       element: childElement,
     }));
@@ -291,11 +299,11 @@ export const routerRoutes = routes.map(({ path, element, children }) => {
   return route;
 });
 
-export const projectRouterRoutes = routes.map(({ path, element, children }) => {
+export const projectRouterRoutes = routes.map(({path, element, children}) => {
   const relativePath = path.replace('/project/:projectId', '');
-  const route: any = { path: relativePath || '/', element };
+  const route: any = {path: relativePath || '/', element};
   if (children) {
-    route.children = children.map(({ path: childPath, element: childElement }) => ({
+    route.children = children.map(({path: childPath, element: childElement}) => ({
       path: childPath.replace('/project/:projectId', ''),
       element: childElement,
     }));
@@ -303,7 +311,7 @@ export const projectRouterRoutes = routes.map(({ path, element, children }) => {
   return route;
 });
 
-export const platformRouterRoutes = platformRoutes.map(({ path, element }) => ({
+export const platformRouterRoutes = platformRoutes.map(({path, element}) => ({
   path,
   element,
 }));

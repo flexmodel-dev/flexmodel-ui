@@ -17,6 +17,7 @@ export interface JobExecutionLog {
   errorStackTrace?: any;
   inputData?: any;
   outputData?: any;
+  traceId?: string;
 }
 
 // 分页结果接口

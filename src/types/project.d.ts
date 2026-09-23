@@ -1,7 +1,7 @@
-/**
+﻿/**
  * 项目接口
  */
-import type { Branch } from "./branch";
+import type {Branch} from "./branch";
 
 export interface Project {
   id: string;
@@ -17,6 +17,10 @@ export interface Project {
   branches?: Branch[];
   metadata?: {
     showSystemModels?: boolean;
+    logSettings?: {
+      logRetentionDays?: number;
+      auditResources?: string[];
+    };
     [key: string]: any;
   };
   stats?: {

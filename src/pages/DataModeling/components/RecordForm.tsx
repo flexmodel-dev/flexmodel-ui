@@ -76,6 +76,9 @@ const RecordForm: React.FC<RecordFormProps> = ({
 
     switch (field.type) {
       case 'String':
+        if (field.text) {
+          return <Input.TextArea {...inputProps} size="small" rows={3}/>;
+        }
         return <Input {...inputProps} size="small" />;
       case 'Text':
       case 'JSON':

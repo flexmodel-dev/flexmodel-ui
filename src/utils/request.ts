@@ -8,6 +8,7 @@ type ApiError = {
   code: number
   message: string
   status?: number
+  traceId?: string
 }
 
 // 基础请求参数类型
@@ -57,6 +58,16 @@ const processQueue = (error: any, token: string | null = null) => {
 }
 
 /**
+ * 在错误消息末尾追加 traceId，方便用户在可观测性页面追踪链路。
+ */
+const appendTraceId = (apiError: ApiError): ApiError => {
+  if (apiError.traceId) {
+    apiError.message = `${apiError.message} (traceId: ${apiError.traceId})`
+  }
+  return apiError
+}
+
+/**
  * 统一错误处理
  */
 const handleApiError = async (error: AxiosError): Promise<any> => {
@@ -82,7 +93,8 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
   const apiError: ApiError = {
     code,
     message,
-    status
+    status,
+    traceId: response.headers?.['x-trace-id'] as string | undefined,
   }
 
   // 处理401未授权错误，尝试刷新token
@@ -146,9 +158,9 @@ const handleApiError = async (error: AxiosError): Promise<any> => {
       return Promise.reject(apiError)
     }
     // 其他4xx错误也应该reject
-    return Promise.reject(apiError)
+    return Promise.reject(appendTraceId(apiError))
   } else if (status >= 500) {
-    return Promise.reject(apiError)
+    return Promise.reject(appendTraceId(apiError))
   }
   return Promise.resolve(response)
 }

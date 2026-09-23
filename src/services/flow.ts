@@ -239,6 +239,7 @@ export interface ElementInstance {
   subFlowInstanceIdList?: string[];
   subElementInstanceList?: ElementInstance[];
   instanceDataId?: string;
+  type?: number;
 }
 
 export interface InstanceDataResult {

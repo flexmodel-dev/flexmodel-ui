@@ -46,13 +46,13 @@ const PageContainer: React.FC<PageContainerProps> = ({
             paddingBottom: 0,
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             flexShrink: 0,
             ...headerStyle,
           }}
         >
           {title && (
-            <Typography.Title level={3}>
+            <Typography.Title level={3} style={{margin: 0, paddingTop: 2}}>
               {typeof title === 'string' ? title : title}
             </Typography.Title>
           )}

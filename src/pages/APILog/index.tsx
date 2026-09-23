@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Col, DatePicker, Descriptions, Drawer, Form, Input, Row, Select, Space, Table, Tag, theme,} from "antd";
+import {Button, DatePicker, Descriptions, Drawer, Form, Input, Select, Space, Table, Tag, theme,} from "antd";
 import PageContainer from "@/components/common/PageContainer";
 import {DownOutlined, SearchOutlined, SettingOutlined, UpOutlined,} from "@ant-design/icons";
 import {getApiLogs, getApiLogStat} from "@/services/api-log.ts";
@@ -16,7 +16,7 @@ const LogViewer: React.FC = () => {
   const { t } = useTranslation();
   const { currentProject } = useProject();
   const projectId = currentProject?.id || '';
-  
+
   const [tableData, setTableData] = useState<{ list: ApiLog[]; total: number }>({ list: [], total: 0 });
   const [log, setLog] = useState<ApiLog | null>(null);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
@@ -151,6 +151,18 @@ const LogViewer: React.FC = () => {
       width: 140,
     },
     {
+      title: t("trace_id"),
+      dataIndex: "traceId",
+      width: 140,
+      ellipsis: true,
+      render: (traceId: string) =>
+        traceId ? (
+          <span onClick={(e) => e.stopPropagation()}>
+            {traceId.slice(0, 8)}…
+          </span>
+        ) : null,
+    },
+    {
       title: t("is_success"),
       dataIndex: "isSuccess",
       width: 80,
@@ -166,79 +178,50 @@ const LogViewer: React.FC = () => {
   ];
 
   return (
-    <PageContainer>
+    <PageContainer
+      title={t('log.api_logs', 'API 日志')}
+      extra={
+        <Form form={form} layout="inline" style={{flexDirection: 'column', alignItems: 'flex-end'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+            <Form.Item name="keyword" label={t("search_keywords")} style={{marginBottom: 0}}>
+              <Input placeholder={t("search_keywords")} style={{width: 200}}/>
+            </Form.Item>
+            <Form.Item style={{marginBottom: 0}}>
+              <Space>
+                <Button type="primary" icon={<SearchOutlined/>} onClick={searchLog}>
+                  {t("search")}
+                </Button>
+                <Button onClick={resetLog}>{t("reset")}</Button>
+                <Button icon={<SettingOutlined/>} onClick={() => setSettingsDialogVisible(true)}/>
+                <Button type="link" onClick={() => setExpand(!expand)}>
+                  {t('more_filters', '更多筛选')}
+                  {expand ? <UpOutlined/> : <DownOutlined/>}
+                </Button>
+              </Space>
+            </Form.Item>
+          </div>
+          {expand && (
+            <div style={{display: 'flex', alignItems: 'center', gap: 8, marginTop: 8}}>
+              <Form.Item name="isSuccess" label={t("is_success")} style={{marginBottom: 0}}>
+                <Select allowClear style={{width: 120}}>
+                  <Select.Option value={true}>{t("success")}</Select.Option>
+                  <Select.Option value={false}>{t("fail")}</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item name="dateRange" label={t("date_range")} style={{marginBottom: 0}}>
+                <RangePicker showTime format="YYYY-MM-DD HH:mm:ss"/>
+              </Form.Item>
+            </div>
+          )}
+        </Form>
+      }
+    >
       <div style={{
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         padding: token.padding
       }}>
-        {/* 搜索表单区域 */}
-        <div style={{
-          marginBottom: '16px',
-          flexShrink: 0
-        }}>
-          <Form form={form}>
-            {expand && (
-              <Row gutter={16} style={{ marginBottom: '12px' }}>
-                <Col span={6}>
-                  <Form.Item name="isSuccess" label={t("is_success")}>
-                    <Select style={{ width: "100%" }} allowClear>
-                      <Select.Option value={true}>{t("success")}</Select.Option>
-                      <Select.Option value={false}>{t("fail")}</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col span={18}>
-                  <Form.Item name="dateRange" label={t("date_range")}>
-                    <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" style={{ width: "100%" }} />
-                  </Form.Item>
-                </Col>
-              </Row>
-            )}
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px' }}>
-              <div style={{ flex: 1 }}>
-                <Form.Item
-                  name="keyword"
-                  label={t("search_keywords")}
-                  style={{ marginBottom: 0 }}
-                >
-                  <Input placeholder={t("search_keywords")} />
-                </Form.Item>
-              </div>
-              <div>
-                <Space>
-                  <Button
-                    icon={<SearchOutlined />}
-                    type="primary"
-                    onClick={searchLog}
-                  >
-                    {t("search")}
-                  </Button>
-                  <Button type="default" onClick={resetLog}>
-                    {t("reset")}
-                  </Button>
-                  <Button
-                    icon={<SettingOutlined />}
-                    onClick={() => setSettingsDialogVisible(true)}
-                  />
-                  <a onClick={() => setExpand(!expand)}>
-                    {expand ? (
-                      <>
-                        {t("collapse")} <UpOutlined />
-                      </>
-                    ) : (
-                      <>
-                        {t("expand")} <DownOutlined />
-                      </>
-                    )}
-                  </a>
-                </Space>
-              </div>
-            </div>
-          </Form>
-        </div>
-
         {/* 图表区域 */}
         <div style={{
           height: '140px',
@@ -310,6 +293,7 @@ const LogViewer: React.FC = () => {
           <Descriptions.Item label="statusCode">{log?.statusCode}</Descriptions.Item>
           <Descriptions.Item label="responseTime">{log?.responseTime}ms</Descriptions.Item>
           <Descriptions.Item label="clientIp">{log?.clientIp}</Descriptions.Item>
+          <Descriptions.Item label={t("trace_id")}>{log?.traceId}</Descriptions.Item>
           <Descriptions.Item label="createdAt">{log?.createdAt}</Descriptions.Item>
           <Descriptions.Item label="isSuccess">{log?.isSuccess ? t("yes") : t("no")}</Descriptions.Item>
           <Descriptions.Item label="errorMessage">{log?.errorMessage}</Descriptions.Item>

@@ -30,6 +30,7 @@ const StatisticsPage: React.FC = () => {
     failData: [],
   });
   const [rankingData, setRankingData] = useState<RankingData[]>([]);
+  const [apiStatLoading, setApiStatLoading] = useState(true);
 
   // 默认日期范围设置为本周
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>([
@@ -48,13 +49,18 @@ const StatisticsPage: React.FC = () => {
   useEffect(() => {
     if (!projectId) return;
     const loadData = async () => {
-      const data: ApiLogStatSchema = await getApiLogStat(projectId, {
-        dateRange: dateRange
-          .map((date: any) => date?.format("YYYY-MM-DD HH:mm:ss"))
-          ?.join(","),
-      });
-      if (data.apiChart) setApiStat(data.apiChart);
-      if (data.apiRankingList) setRankingData(data.apiRankingList);
+      setApiStatLoading(true);
+      try {
+        const data: ApiLogStatSchema = await getApiLogStat(projectId, {
+          dateRange: dateRange
+            .map((date: any) => date?.format("YYYY-MM-DD HH:mm:ss"))
+            ?.join(","),
+        });
+        if (data.apiChart) setApiStat(data.apiChart);
+        if (data.apiRankingList) setRankingData(data.apiRankingList);
+      } finally {
+        setApiStatLoading(false);
+      }
     };
     loadData();
   }, [projectId, dateRange]);
@@ -81,6 +87,7 @@ const StatisticsPage: React.FC = () => {
       <TrendAnalysis
         apiStat={apiStat}
         rankingData={rankingData}
+        loading={apiStatLoading}
         dateRange={dateRange}
         onDateRangeChange={handleDateRangeChange}
       />

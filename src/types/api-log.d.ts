@@ -14,6 +14,7 @@ export interface ApiLog {
   createdAt: string;
   isSuccess: boolean;
   errorMessage?: string;
+  traceId?: string;
 }
 
 /**

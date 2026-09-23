@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Badge, Button, Card, Col, DatePicker, Row, Space, theme} from "antd";
+import {Badge, Button, Card, Col, DatePicker, Row, Space, Spin, theme} from "antd";
 import ReactECharts from "echarts-for-react";
 import echarts from '@/utils/echarts';
 import dayjs, {Dayjs} from "dayjs";
@@ -11,6 +11,7 @@ const { RangePicker } = DatePicker;
 interface TrendAnalysisProps {
   apiStat: ApiStat;
   rankingData: RankingData[];
+  loading?: boolean;
   dateRange: [Dayjs, Dayjs];
   onDateRangeChange: (dateRange: [Dayjs, Dayjs]) => void;
 }
@@ -18,6 +19,7 @@ interface TrendAnalysisProps {
 const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   apiStat,
   rankingData,
+                                                       loading = false,
   dateRange,
   onDateRangeChange
 }) => {
@@ -231,36 +233,39 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
             </Space>
           }
         >
-          <div style={{ display: "flex", gap: 16, height: 420 }}>
-            <div style={{ flex: "2 1 0", minWidth: 0 }}>
-              <ReactECharts echarts={echarts} option={chartConfig} style={{ height: "100%" }} />
-            </div>
-            <div style={{ flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: "16px", fontWeight: "500", marginBottom: "16px", color: token.colorText }}>
-                {t("api_ranking")}
+          <Spin spinning={loading}>
+            <div style={{display: "flex", gap: 16, height: 420}}>
+              <div style={{flex: "2 1 0", minWidth: 0}}>
+                <ReactECharts echarts={echarts} option={chartConfig} style={{height: "100%"}}/>
               </div>
-              <div
-                style={{
-                  flex: 1,
-                  overflowY: "auto",
-                  overflowX: "hidden",
-                }}
-                className="flex flex-col relative"
-              >
-                {rankingData.map((item, index) => (
-                  <div key={item.name} style={{ padding: "10px 10px" }}>
-                    <div className="flex w-full justify-between items-center gap-2">
-                      <Space className="overflow-hidden flex-1 min-w-0">
-                        <Badge count={index + 1} showZero color={index < 3 ? token.colorError : token.colorPrimary} />{" "}
-                        <span style={{ color: token.colorText }} className="truncate">{item.name}</span>
-                      </Space>
-                      <span style={{ color: token.colorText, flexShrink: 0 }}>{item.total}</span>
+              <div style={{flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column"}}>
+                <div style={{fontSize: "16px", fontWeight: "500", marginBottom: "16px", color: token.colorText}}>
+                  {t("api_ranking")}
+                </div>
+                <div
+                  style={{
+                    flex: 1,
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                  }}
+                  className="flex flex-col relative"
+                >
+                  {rankingData.map((item, index) => (
+                    <div key={item.name} style={{padding: "10px 10px"}}>
+                      <div className="flex w-full justify-between items-center gap-2">
+                        <Space className="overflow-hidden flex-1 min-w-0">
+                          <Badge count={index + 1} showZero
+                                 color={index < 3 ? token.colorError : token.colorPrimary}/>{" "}
+                          <span style={{color: token.colorText}} className="truncate">{item.name}</span>
+                        </Space>
+                        <span style={{color: token.colorText, flexShrink: 0}}>{item.total}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          </Spin>
         </Card>
       </Col>
     </Row>

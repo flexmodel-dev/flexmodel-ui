@@ -79,7 +79,7 @@ export const useConsoleLogs = (options: UseConsoleLogsOptions = {}): UseConsoleL
       setConnectionState(connected ? 'open' : 'closed');
     }, 2000);
 
-    const channel = realtimeClient.subscribe(['f_api_request_log', 'f_function_log', 'f_job_execution_log'], (payload: RealtimePayload) => {
+    const channel = realtimeClient.subscribe(['f_span', 'f_function_log'], (payload: RealtimePayload) => {
       if (payload.event === 'INSERT' || payload.event === 'UPDATE') {
         setLogs(prev => {
           const next = [...prev, mapRealtimeToLogEntry(payload)];

@@ -1,8 +1,17 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {Button, Input, message, Popconfirm, Select, Space, Table, Tag, Tooltip} from 'antd';
-import {EyeOutlined, HistoryOutlined, SearchOutlined, StopOutlined} from '@ant-design/icons';
+import {
+  EyeOutlined,
+  HistoryOutlined,
+  NodeIndexOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  StopOutlined
+} from '@ant-design/icons';
 import PageContainer from '@/components/common/PageContainer';
 import UserTasksDrawer from './UserTasksDrawer.tsx';
+import ElementInstancesDrawer from './ElementInstancesDrawer.tsx';
+import StartFlowModal from './StartFlowModal.tsx';
 import {useNavigate} from 'react-router-dom';
 import {
   FlowInstance,
@@ -10,6 +19,7 @@ import {
   getFlowInstance,
   getFlowInstanceList,
   getFlowUserTasks,
+  getElementInstances,
   NodeInstance,
   terminateFlowInstance
 } from '@/services/flow';
@@ -31,13 +41,21 @@ const FlowInstanceList: React.FC = () => {
     size: 20
   });
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
-  const [tableScrollY, setTableScrollY] = useState<number>(0);
+  const [tableScrollY, setTableScrollY] = useState<number>(300);
 
   // 用户任务相关状态
   const [historyDrawerVisible, setHistoryDrawerVisible] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [currentFlowInstance, setCurrentFlowInstance] = useState<FlowInstance | null>(null);
   const [userTasks, setUserTasks] = useState<NodeInstance[]>([]);
+
+  // 历史元素相关状态
+  const [elementsDrawerVisible, setElementsDrawerVisible] = useState(false);
+  const [elementsLoading, setElementsLoading] = useState(false);
+  const [elementInstances, setElementInstances] = useState<NodeInstance[]>([]);
+
+  // 发起流程相关状态
+  const [startFlowModalVisible, setStartFlowModalVisible] = useState(false);
 
   // 获取流程实例列表
   const fetchFlowInstanceList = useCallback(async () => {
@@ -58,25 +76,61 @@ const FlowInstanceList: React.FC = () => {
     fetchFlowInstanceList();
   }, [fetchFlowInstanceList]);
 
-  useEffect(() => {
-    const container = tableContainerRef.current;
-    if (!container) return;
+  // 计算表格表体可用高度：用 table 顶部到 wrapper 底部的距离作为 table 的可用
+  // 高度（flex:1 使 table 填满到 wrapper 底部），再减去表头、分页等占位。
+  const updateTableHeight = useCallback(() => {
+    const wrapper = tableContainerRef.current;
+    if (!wrapper) return;
 
-    const updateHeight = () => {
-      setTableScrollY(container.clientHeight - 80);
-    };
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const table = wrapper.querySelector<HTMLElement>('.ant-table');
+    if (!table) return;
 
-    updateHeight();
+    const tableRect = table.getBoundingClientRect();
+    // table 顶部到 wrapper 底部的高度
+    const tableAvailable = wrapperRect.bottom - tableRect.top;
 
-    const ro = new ResizeObserver(() => updateHeight());
-    ro.observe(container);
+    // 表头高度：滚动模式下为 .ant-table-header，否则取 .ant-table-thead
+    const header =
+      wrapper.querySelector<HTMLElement>('.ant-table-header') ||
+      wrapper.querySelector<HTMLElement>('.ant-table-thead');
+    const headerHeight = header ? header.getBoundingClientRect().height : 39;
 
-    window.addEventListener('resize', updateHeight);
+    // 分页高度（含上下 margin，否则 .ant-table-pagination 的外边距会漏算导致表体过高、
+    // 分页器被外层 overflow:hidden 裁掉底边）
+    const pagination = wrapper.querySelector<HTMLElement>('.ant-table-pagination');
+    let paginationHeight = 0;
+    if (pagination) {
+      const pr = pagination.getBoundingClientRect();
+      const cs = getComputedStyle(pagination);
+      paginationHeight =
+        pr.height + parseFloat(cs.marginTop || '0') + parseFloat(cs.marginBottom || '0');
+    }
+
+    // 表格内部边距/边框等冗余间距
+    const extraSpacing = 8;
+
+    const available = tableAvailable - headerHeight - paginationHeight - extraSpacing;
+    setTableScrollY(Math.max(available, 150));
+  }, []);
+
+  useLayoutEffect(() => {
+    updateTableHeight();
+    const ro = new ResizeObserver(updateTableHeight);
+    if (tableContainerRef.current) {
+      ro.observe(tableContainerRef.current);
+    }
+    window.addEventListener('resize', updateTableHeight);
     return () => {
       ro.disconnect();
-      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('resize', updateTableHeight);
     };
-  }, []);
+  }, [updateTableHeight]);
+
+  // 数据加载完成后、表头/分页高度可能变化，重新计算
+  useEffect(() => {
+    updateTableHeight();
+  }, [flowInstanceList, total, loading, updateTableHeight]);
 
   // 终止流程实例
   const handleTerminateFlowInstance = async (flowInstanceId: string) => {
@@ -111,6 +165,22 @@ const FlowInstanceList: React.FC = () => {
       message.error('获取用户任务失败');
     } finally {
       setHistoryLoading(false);
+    }
+  };
+
+  // 获取历史元素列表
+  const handleShowElements = async (record: FlowInstance) => {
+    setCurrentFlowInstance(record);
+    setElementsDrawerVisible(true);
+    setElementsLoading(true);
+    try {
+      const instances = await getElementInstances(projectId, record.flowInstanceId);
+      setElementInstances(instances || []);
+    } catch (error) {
+      console.error('获取历史元素列表失败:', error);
+      message.error('获取历史元素列表失败');
+    } finally {
+      setElementsLoading(false);
     }
   };
 
@@ -184,12 +254,6 @@ const FlowInstanceList: React.FC = () => {
       width: 120,
     },
     {
-      title: '创建人',
-      dataIndex: 'createdBy',
-      key: 'createdBy',
-      width: 120,
-    },
-    {
       title: '创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
@@ -226,6 +290,14 @@ const FlowInstanceList: React.FC = () => {
               icon={<HistoryOutlined/>}
               size="small"
               onClick={() => handleShowHistory(record)}
+            />
+          </Tooltip>
+          <Tooltip title="历史元素列表">
+            <Button
+              type="link"
+              icon={<NodeIndexOutlined/>}
+              size="small"
+              onClick={() => handleShowElements(record)}
             />
           </Tooltip>
           {record.status === 2 && (
@@ -285,19 +357,32 @@ const FlowInstanceList: React.FC = () => {
             <Select.Option value={3}>已终止</Select.Option>
             <Select.Option value={4}>已结束</Select.Option>
           </Select>
+          <Button type="primary" icon={<PlusOutlined/>} onClick={() => setStartFlowModalVisible(true)}>发起流程</Button>
         </Space>
       ]}
     >
+      <div
+        ref={tableContainerRef}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          overflow: 'hidden',
+        }}
+      >
       <Table
         columns={columns}
         dataSource={flowInstanceList}
         rowKey="flowInstanceId"
         loading={loading}
-        scroll={{y: tableScrollY || undefined}}
+        scroll={{y: tableScrollY}}
+        style={{flex: 1, minHeight: 0}}
         pagination={{
           current: searchParams.page,
           pageSize: searchParams.size,
           total: total,
+          showSizeChanger: true,
+          showQuickJumper: true,
           showTotal: (total: number, range: any) =>
             t("pagination_total_text", {
               start: range[0],
@@ -313,6 +398,7 @@ const FlowInstanceList: React.FC = () => {
           }
         }}
       />
+      </div>
       {/* 用户任务 Drawer */}
       <UserTasksDrawer
         visible={historyDrawerVisible}
@@ -340,6 +426,34 @@ const FlowInstanceList: React.FC = () => {
           // 刷新实例列表
           fetchFlowInstanceList();
         }}
+      />
+      {/* 历史元素 Drawer */}
+      <ElementInstancesDrawer
+        visible={elementsDrawerVisible}
+        loading={elementsLoading}
+        currentFlowInstance={currentFlowInstance}
+        elementInstances={elementInstances}
+        projectId={projectId}
+        onClose={() => setElementsDrawerVisible(false)}
+        onCommitted={async () => {
+          if (!currentFlowInstance) return;
+          setElementsLoading(true);
+          try {
+            const instances = await getElementInstances(projectId, currentFlowInstance.flowInstanceId);
+            setElementInstances(instances || []);
+          } catch (error) {
+            console.error('刷新历史元素列表失败:', error);
+          } finally {
+            setElementsLoading(false);
+          }
+        }}
+      />
+      {/* 发起流程 Modal */}
+      <StartFlowModal
+        visible={startFlowModalVisible}
+        projectId={projectId}
+        onClose={() => setStartFlowModalVisible(false)}
+        onStarted={() => fetchFlowInstanceList()}
       />
     </PageContainer>
   );

@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { Menu, message, Typography, theme } from "antd";
+import React, {useEffect, useState} from "react";
+import {Menu, message, Typography, theme} from "antd";
 import About from "@/pages/Settings/components/About";
 import Base from "@/pages/Settings/components/Base";
 import Proxy from "@/pages/Settings/components/Proxy";
-import { getSettings, saveSettings as reqSaveSettings, } from "@/services/settings.ts";
-import { useTranslation } from "react-i18next";
-import type { Settings } from "@/types/settings";
-import { PageContainer } from "@/components/common";
-import { spacing } from "@/theme/designTokens";
-const { Title } = Typography;
+import {getSettings, saveSettings as reqSaveSettings,} from "@/services/settings.ts";
+import {useTranslation} from "react-i18next";
+import type {Settings} from "@/types/settings";
+import {PageContainer} from "@/components/common";
+import {spacing} from "@/theme/designTokens";
+
+const {Title} = Typography;
 
 type OnChangeHandler = (data: Partial<Settings>) => void;
 
 const Settings: React.FC = () => {
-  const { token } = theme.useToken();
-  const { t } = useTranslation();
+  const {token} = theme.useToken();
+  const {t} = useTranslation();
   type SettingsStateKeys = "base" | "proxy" | "about";
 
   type SettingsState = {
@@ -29,16 +30,16 @@ const Settings: React.FC = () => {
   };
 
   const renderChildren = (onChange: OnChangeHandler) => {
-    const { selectKey } = initConfig;
+    const {selectKey} = initConfig;
     switch (selectKey) {
       case "base":
-        return <Base settings={settings} onChange={onChange} />;
+        return <Base settings={settings} onChange={onChange}/>;
       case "proxy":
-        return <Proxy settings={settings} onChange={onChange} />;
+        return <Proxy settings={settings} onChange={onChange}/>;
       /*case 'variables':
         return <Variables/>;*/
       case "about":
-        return <About />;
+        return <About/>;
       default:
         return null;
     }
@@ -66,7 +67,7 @@ const Settings: React.FC = () => {
     reqSaveSettings(data as Settings).then(() =>
       message.success(t("form_save_success"))
     );
-    setSettings((prev) => ({ ...prev, ...data } as Settings));
+    setSettings((prev) => ({...prev, ...data} as Settings));
   };
 
   return (
@@ -77,7 +78,7 @@ const Settings: React.FC = () => {
             className="h-full"
             mode="inline"
             selectedKeys={[initConfig.selectKey]}
-            onClick={({ key }) => {
+            onClick={({key}) => {
               setInitConfig({
                 ...initConfig,
                 selectKey: key as SettingsStateKeys,
