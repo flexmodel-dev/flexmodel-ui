@@ -10,6 +10,7 @@ import {
   Popconfirm,
   Spin,
   Radio,
+  Progress,
   theme as antdTheme,
 } from "antd";
 import {
@@ -24,12 +25,118 @@ import { useProject } from "@/store/appStore";
 import { createBranch, deleteBranch, mergeBranch } from "@/services/branch";
 import { getProject } from "@/services/project";
 import { useNavigate, useLocation } from "react-router-dom";
-import type { BranchCreateRequest, ConflictStrategy } from "@/types/branch";
+import type {
+  BranchCreateRequest,
+  BranchProgressEvent,
+  BranchProgressOperation,
+  ConflictStrategy,
+} from "@/types/branch";
 
 interface BranchSwitcherProps {
   projectId: string;
   onMenuItemsChange?: (items: any[]) => void;
 }
+
+interface BranchProgressState {
+  operation: BranchProgressOperation;
+  events: BranchProgressEvent[];
+}
+
+interface BranchProgressPanelProps {
+  events: BranchProgressEvent[];
+  title: string;
+  percent: number;
+  failure: boolean;
+  completed: boolean;
+}
+
+const BranchProgressPanel: React.FC<BranchProgressPanelProps> = ({
+                                                                   events,
+                                                                   title,
+                                                                   percent,
+                                                                   failure,
+                                                                   completed,
+                                                                 }) => {
+  const {t} = useTranslation();
+  const {token} = antdTheme.useToken();
+  const visibleEvents = events.filter(
+    (event) => event.type !== "STARTED" && event.type !== "COMPLETED",
+  );
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: token.marginXS,
+        marginTop: token.marginSM,
+      }}
+    >
+      <div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+        <span>{title}</span>
+        <span>{percent}%</span>
+      </div>
+      <Progress
+        percent={percent}
+        size="small"
+        status={failure ? "exception" : completed ? "success" : "active"}
+      />
+      <div style={{maxHeight: 220, overflowY: "auto"}}>
+        {visibleEvents.length === 0 && (
+          <div style={{color: token.colorTextSecondary}}>{t("branch.progressPreparing")}</div>
+        )}
+        {visibleEvents.map((event) => (
+          <div
+            key={`${event.stage}-${event.modelName ?? ""}-${event.type}`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: token.marginXS,
+              padding: `${token.paddingXXS}px 0`,
+            }}
+          >
+            <span
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {event.modelName ?? t(`branch.stage${event.stage}`)}
+            </span>
+            <span style={{display: "flex", alignItems: "center", gap: token.marginXS}}>
+              {event.type === "MODEL_COMPLETED" && (
+                <span>
+                  {t("branch.progressRecords", {
+                    inserted: event.insertedRecords ?? 0,
+                    updated: event.updatedRecords ?? 0,
+                  })}
+                </span>
+              )}
+              {(event.type === "FAILED" || event.type === "MODEL_FAILED") && (
+                <span>{event.message}</span>
+              )}
+              <Tag
+                color={
+                  event.type === "MODEL_STARTED"
+                    ? "processing"
+                    : event.type === "MODEL_COMPLETED" || event.type === "STAGE_COMPLETED"
+                      ? "success"
+                      : event.type === "MODEL_FAILED" || event.type === "FAILED"
+                        ? "error"
+                        : "default"
+                }
+              >
+                {t(`branch.progress${event.type}`)}
+              </Tag>
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 /** 分支名校验正则：小写字母开头，由小写字母、数字和下划线组成，长度2~63 */
 const BRANCH_NAME_REGEX = /^[a-z][a-z0-9_]{1,62}$/;
@@ -56,6 +163,7 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
   // 合并分支弹窗
   const [mergeModalOpen, setMergeModalOpen] = useState(false);
   const [mergeLoading, setMergeLoading] = useState(false);
+  const [branchProgress, setBranchProgress] = useState<BranchProgressState | null>(null);
   const [mergeForm] = Form.useForm();
 
   // 从项目 ID 推导当前分支名（Supabase 风格：每个分支是独立项目）
@@ -72,6 +180,38 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
       console.error("Failed to refresh project:", err);
     }
   }, [projectId, setCurrentProject]);
+
+  const startBranchProgress = useCallback((operation: BranchProgressOperation) => {
+    setBranchProgress({operation, events: []});
+  }, []);
+
+  const clearBranchProgress = useCallback(() => {
+    setBranchProgress(null);
+  }, []);
+
+  const appendBranchProgressEvent = useCallback((event: BranchProgressEvent) => {
+    setBranchProgress((previous) => {
+      if (!previous || previous.operation !== event.operation) {
+        return previous;
+      }
+
+      const events = [...previous.events];
+      if (event.modelName) {
+        const index = events.findIndex(
+          (item) => item.modelName === event.modelName && item.stage === event.stage,
+        );
+        if (index >= 0) {
+          events[index] = event;
+        } else {
+          events.push(event);
+        }
+      } else {
+        events.push(event);
+      }
+
+      return {...previous, events};
+    });
+  }, []);
 
   const handleSwitch = useCallback(
     async (branchName: string) => {
@@ -97,10 +237,9 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
     try {
       const values = await createForm.validateFields();
       setCreateLoading(true);
-      await createBranch(projectId, values as BranchCreateRequest);
+      startBranchProgress("CREATE");
+      await createBranch(projectId, values as BranchCreateRequest, appendBranchProgressEvent);
       message.success(t("branch.createSuccess", { name: values.name }));
-      setCreateModalOpen(false);
-      createForm.resetFields();
       await refreshProject();
     } catch (err: any) {
       if (err?.errorFields) return; // form validation error
@@ -108,7 +247,7 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
     } finally {
       setCreateLoading(false);
     }
-  }, [projectId, createForm, refreshProject, t]);
+  }, [projectId, createForm, refreshProject, appendBranchProgressEvent, startBranchProgress, t]);
 
   const handleDelete = useCallback(
     async (branchName: string) => {
@@ -130,14 +269,17 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
     try {
       const values = await mergeForm.validateFields();
       setMergeLoading(true);
-      await mergeBranch(projectId, {
-        sourceBranch: values.sourceBranch,
-        targetBranch: values.targetBranch,
-        conflictStrategy: values.conflictStrategy as ConflictStrategy,
-      });
+      startBranchProgress("MERGE");
+      await mergeBranch(
+        projectId,
+        {
+          sourceBranch: values.sourceBranch,
+          targetBranch: values.targetBranch,
+          conflictStrategy: values.conflictStrategy as ConflictStrategy,
+        },
+        appendBranchProgressEvent,
+      );
       message.success(t("branch.mergeSuccess"));
-      setMergeModalOpen(false);
-      mergeForm.resetFields();
       await refreshProject();
     } catch (err: any) {
       if (err?.errorFields) return;
@@ -145,7 +287,16 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
     } finally {
       setMergeLoading(false);
     }
-  }, [projectId, mergeForm, refreshProject, t]);
+  }, [projectId, mergeForm, refreshProject, appendBranchProgressEvent, startBranchProgress, t]);
+
+  const activeBranchProgress = branchProgress?.operation ?? null;
+  const progressEvents = branchProgress?.events ?? [];
+  const latestProgressEvent = progressEvents[progressEvents.length - 1];
+  const branchProgressPercent = latestProgressEvent?.progress ?? 0;
+  const branchProgressHasFailure = progressEvents.some(
+    (event) => event.type === "FAILED" || event.type === "MODEL_FAILED",
+  );
+  const branchProgressCompleted = latestProgressEvent?.type === "COMPLETED";
 
   const branchNameValidator = useCallback((_: any, value: string) => {
     if (!value) {
@@ -183,13 +334,19 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
         key: '__create__',
         label: t('branch.createBranch'),
         icon: <PlusOutlined />,
-        onClick: () => setCreateModalOpen(true),
+        onClick: () => {
+          clearBranchProgress();
+          setCreateModalOpen(true);
+        },
       },
       {
         key: '__merge__',
         label: t('branch.mergeBranch'),
         icon: <MergeCellsOutlined />,
-        onClick: () => setMergeModalOpen(true),
+        onClick: () => {
+          clearBranchProgress();
+          setMergeModalOpen(true);
+        },
       },
       {
         key: '__manage__',
@@ -198,7 +355,7 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
         onClick: () => setManageModalOpen(true),
       },
     ];
-  }, [branches, currentBranch, handleSwitch, t, token]);
+  }, [branches, currentBranch, handleSwitch, clearBranchProgress, t, token]);
 
   useEffect(() => {
     onMenuItemsChange?.(breadcrumbMenuItems);
@@ -220,6 +377,7 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
         onCancel={() => {
           setCreateModalOpen(false);
           createForm.resetFields();
+          clearBranchProgress();
         }}
         confirmLoading={createLoading}
         destroyOnHidden
@@ -241,6 +399,15 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
           <Form.Item label={t("branch.description")} name="description">
             <Input.TextArea rows={2} placeholder={t("branch.descriptionPlaceholder")} />
           </Form.Item>
+          {activeBranchProgress === "CREATE" && (
+            <BranchProgressPanel
+              events={progressEvents}
+              title={t("branch.progressCreate")}
+              percent={branchProgressPercent}
+              failure={branchProgressHasFailure}
+              completed={branchProgressCompleted}
+            />
+          )}
         </Form>
       </Modal>
 
@@ -313,6 +480,7 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
         onCancel={() => {
           setMergeModalOpen(false);
           mergeForm.resetFields();
+          clearBranchProgress();
         }}
         confirmLoading={mergeLoading}
         destroyOnHidden
@@ -351,6 +519,15 @@ const BranchSwitcher: React.FC<BranchSwitcherProps> = ({ projectId, onMenuItemsC
               <Radio value="OVERWRITE">{t("branch.conflictOverwrite")}</Radio>
             </Radio.Group>
           </Form.Item>
+          {activeBranchProgress === "MERGE" && (
+            <BranchProgressPanel
+              events={progressEvents}
+              title={t("branch.progressMerge")}
+              percent={branchProgressPercent}
+              failure={branchProgressHasFailure}
+              completed={branchProgressCompleted}
+            />
+          )}
         </Form>
       </Modal>
     </>

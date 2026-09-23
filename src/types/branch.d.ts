@@ -34,3 +34,43 @@ export interface BranchMergeRequest {
   targetBranch?: string;
   conflictStrategy: ConflictStrategy;
 }
+
+export type BranchProgressOperation = "CREATE" | "MERGE";
+
+export type BranchProgressEventType =
+  | "STARTED"
+  | "STAGE_COMPLETED"
+  | "MODEL_STARTED"
+  | "MODEL_COMPLETED"
+  | "MODEL_SKIPPED"
+  | "MODEL_FAILED"
+  | "COMPLETED"
+  | "FAILED";
+
+export type BranchProgressStage =
+  | "VALIDATING"
+  | "RESOLVING_SOURCE"
+  | "CREATING_SCHEMA"
+  | "COPYING_SCHEMA"
+  | "MIGRATING_DATA"
+  | "SAVING_RECORDS"
+  | "REFRESHING_GRAPHQL"
+  | "MERGING_SCHEMA"
+  | "MERGING_DATA";
+
+export interface BranchProgressEvent {
+  operation: BranchProgressOperation;
+  type: BranchProgressEventType;
+  stage: BranchProgressStage;
+  modelName?: string | null;
+  totalModels?: number;
+  processedModels?: number;
+  progress?: number;
+  sourceRecords?: number;
+  targetRecords?: number;
+  insertedRecords?: number;
+  updatedRecords?: number;
+  message?: string | null;
+  result?: unknown;
+  timestamp?: string;
+}
