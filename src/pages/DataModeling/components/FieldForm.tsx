@@ -3,7 +3,7 @@ import {Form, Input, Select, Switch} from "antd";
 import {getModelList} from "@/services/model.ts";
 import {useTranslation} from "react-i18next";
 import DefaultValueInput from "./DefaultValueInput";
-import {Field} from "@/types/data-modeling";
+import {Field, RelationStrategy} from "@/types/data-modeling";
 import {useProject} from "@/store/appStore";
 import {BasicFieldTypes, FieldInitialValues} from "./fieldFormConstants";
 
@@ -31,6 +31,8 @@ const FieldForm = ({
 
   const [modelList, setModelList] = useState<any[]>([]);
   const [tmpType, setTmpType] = useState<string>("");
+  const relationStrategy = (Form.useWatch("strategy", form) ?? "FOREIGN_KEY") as RelationStrategy;
+  const relationFilterText = Form.useWatch("filterText", form) ?? "";
 
   const reqModelList = React.useCallback(async () => {
     const data = await getModelList(projectId);
@@ -55,6 +57,8 @@ const FieldForm = ({
     multiple: false,
     localField: null,
     foreignField: null,
+    strategy: "FOREIGN_KEY",
+    filterText: "",
     cascadeDelete: false,
     from: "",
     tmpType: "String",
@@ -63,9 +67,15 @@ const FieldForm = ({
   useEffect(() => {
     reqModelList();
     if (currentValue && Object.keys(currentValue).length > 0) {
+      const initialStrategy: RelationStrategy = currentValue.strategy
+        ?? (currentValue.filter && !currentValue.localField && !currentValue.foreignField
+          ? "CONDITION"
+          : "FOREIGN_KEY");
       form.setFieldsValue({
         ...initialValues,
-        ...currentValue
+        ...currentValue,
+        strategy: initialStrategy,
+        filterText: currentValue.filter ? JSON.stringify(currentValue.filter, null, 2) : ""
       });
       let tmpTypeValue = currentValue.tmpType;
       if (!tmpTypeValue) {
@@ -123,6 +133,28 @@ const FieldForm = ({
     }
   };
 
+  const handleStrategyChange = (value: RelationStrategy) => {
+    if (value === "CONDITION") {
+      form.setFieldsValue({
+        localField: null,
+        foreignField: null,
+        cascadeDelete: false
+      });
+    }
+  };
+
+  const parseRelationFilter = (filterText: string) => {
+    const trimmedFilter = filterText?.trim();
+    if (!trimmedFilter) {
+      return null;
+    }
+    const parsedFilter = JSON.parse(trimmedFilter);
+    if (Object.prototype.toString.call(parsedFilter) !== "[object Object]") {
+      throw new Error("invalid filter");
+    }
+    return parsedFilter as Record<string, unknown>;
+  };
+
   const handleConfirm = () => {
     form.validateFields().then((values) => {
       if (values.defaultValue?.name === null && values.defaultValue?.value === null) {
@@ -130,7 +162,17 @@ const FieldForm = ({
       }
       console.log('FieldForm提交的数据:', values);
       console.log('identity字段值:', values.identity);
-      onConfirm(values);
+      const submittedValues = {
+        ...values,
+        filter: parseRelationFilter(values.filterText)
+      };
+      delete submittedValues.filterText;
+      if (submittedValues.strategy === "CONDITION") {
+        delete submittedValues.localField;
+        delete submittedValues.foreignField;
+        delete submittedValues.cascadeDelete;
+      }
+      onConfirm(submittedValues);
     });
   };
 
@@ -170,6 +212,25 @@ const FieldForm = ({
 
     if ("identity" in changedValues && changedValues.identity === true) {
       console.log("Field set as identity:", allValues.name);
+    }
+
+    if (
+      "filterText" in changedValues &&
+      typeof changedValues.filterText === "string" &&
+      changedValues.filterText.trim() !== "" &&
+      allValues.strategy === "FOREIGN_KEY" &&
+      allValues.cascadeDelete === true
+    ) {
+      form.setFieldsValue({cascadeDelete: false});
+    }
+
+    if (
+      "cascadeDelete" in changedValues &&
+      changedValues.cascadeDelete === true &&
+      typeof allValues.filterText === "string" &&
+      allValues.filterText.trim() !== ""
+    ) {
+      form.setFieldsValue({cascadeDelete: false});
     }
   };
 
@@ -266,6 +327,18 @@ const FieldForm = ({
       {form.getFieldValue("tmpType")?.startsWith("ModelRef") && (
         <>
           <Form.Item
+            label={t("relation_strategy")}
+            name="strategy"
+            rules={[{required: true}]}
+          >
+            <Select onChange={handleStrategyChange}>
+              <Select.Option value="FOREIGN_KEY">{t("key_relation")}</Select.Option>
+              <Select.Option value="CONDITION">{t("condition_relation")}</Select.Option>
+            </Select>
+          </Form.Item>
+          {relationStrategy === "FOREIGN_KEY" && (
+            <>
+          <Form.Item
             label={t("local_field")}
             name="localField"
             rules={[{ required: true }]}
@@ -291,16 +364,57 @@ const FieldForm = ({
               ))}
             </Select>
           </Form.Item>
+            </>
+          )}
+          {relationStrategy === "FOREIGN_KEY" ? (
+            <>
+              <Form.Item
+                label={t("cascade_delete")}
+                name="cascadeDelete"
+                valuePropName="checked"
+              >
+                <Switch disabled={relationFilterText.trim() !== ""}/>
+              </Form.Item>
+            </>
+          ) : null}
+          <Form.Item
+            label={t("relation_filter")}
+            name="filterText"
+            extra={t("relation_filter_help")}
+            rules={[
+              {
+                validator: (_, value: string) => {
+                  const strategy = form.getFieldValue("strategy") as RelationStrategy;
+                  const filterText = value?.trim() ?? "";
+                  if (!filterText) {
+                    return strategy === "CONDITION"
+                      ? Promise.reject(new Error(t("relation_filter_required")))
+                      : Promise.resolve();
+                  }
+                  try {
+                    parseRelationFilter(filterText);
+                  } catch {
+                    return Promise.reject(new Error(t("relation_filter_invalid")));
+                  }
+                  if (
+                    strategy === "FOREIGN_KEY" &&
+                    form.getFieldValue("cascadeDelete") === true
+                  ) {
+                    return Promise.reject(new Error(t("relation_filter_cascade_conflict")));
+                  }
+                  return Promise.resolve();
+                }
+              }
+            ]}
+          >
+            <Input.TextArea
+              rows={4}
+              placeholder={t("relation_filter_placeholder")}
+            />
+          </Form.Item>
           <Form.Item
             label={t("selection_multiple")}
             name="multiple"
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
-          <Form.Item
-            label={t("cascade_delete")}
-            name="cascadeDelete"
             valuePropName="checked"
           >
             <Switch />

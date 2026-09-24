@@ -39,6 +39,8 @@ export interface NativeQueryModel extends TypeWrapper {
 /**
  * 字段接口
  */
+export type RelationStrategy = "FOREIGN_KEY" | "CONDITION";
+
 export interface Field extends Record<string, any> {
   name: string;
   type: string;
@@ -52,6 +54,12 @@ export interface Field extends Record<string, any> {
   tmpType?: string;
   identity?: boolean;
   text?: boolean;
+  localField?: string;
+  foreignField?: string;
+  cascadeDelete?: boolean;
+  strategy?: RelationStrategy;
+  filter?: Record<string, unknown>;
+  filterText?: string;
 }
 
 /**
@@ -130,6 +138,13 @@ export interface TypedFieldSchema {
   modelName: string;
   identity?: boolean;
   concreteType?: string;
+  multiple?: boolean;
+  from?: string;
+  localField?: string | null;
+  foreignField?: string | null;
+  cascadeDelete?: boolean;
+  strategy?: RelationStrategy;
+  filter?: Record<string, unknown> | null;
 }
 
 /**

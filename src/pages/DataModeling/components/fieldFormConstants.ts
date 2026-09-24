@@ -101,6 +101,8 @@ export const FieldInitialValues: any = {
     multiple: true,
     localField: null,
     foreignField: null,
+    strategy: 'FOREIGN_KEY',
+    filterText: '',
     unique: false,
     nullable: true,
     cascadeDelete: false,

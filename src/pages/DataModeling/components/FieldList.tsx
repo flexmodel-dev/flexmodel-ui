@@ -109,13 +109,24 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
         modelName: model?.name,
         identity: values.identity ?? false,
       };
+      if (values.type === "ModelRef") {
+        Object.assign(typedField, {
+          multiple: values.multiple ?? false,
+          from: values.from,
+          strategy: values.strategy ?? "FOREIGN_KEY",
+          localField: values.strategy === "CONDITION" ? null : values.localField ?? null,
+          foreignField: values.strategy === "CONDITION" ? null : values.foreignField ?? null,
+          cascadeDelete: values.strategy === "CONDITION" ? false : values.cascadeDelete ?? false,
+          filter: values.filter ?? null,
+        });
+      }
       if (selectedFieldIndex === -1) {
         const res = await createField(projectId, model?.name, typedField);
         setFieldList([...fieldList, res as unknown as Field]);
       } else {
-        await modifyField(projectId, model?.name, values.name, typedField);
+        const updatedField = await modifyField(projectId, model?.name, values.name, typedField);
         const updatedFields = [...fieldList];
-        updatedFields[selectedFieldIndex] = values;
+        updatedFields[selectedFieldIndex] = updatedField as unknown as Field;
         setFieldList(updatedFields);
       }
       setChangeDialogVisible(false);
@@ -204,15 +215,28 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
       key: "type",
       render: (type: string, f: Field) => {
         if (type === "ModelRef") {
+          const isConditionRelation = f.strategy === "CONDITION";
           return (
             <Tooltip
               title={
                 <span>
-                  {t("local_field")}: {f?.localField + ""}
-                  <br />
-                  {t("foreign_field")}: {f?.foreignField + ""}
-                  <br />
-                  {t("cascade_delete")}: {f?.cascadeDelete + ""}
+                  {isConditionRelation ? (
+                    <>
+                      {t("relation_strategy")}: {t("condition_relation")}
+                      <br/>
+                      {t("relation_filter")}: {JSON.stringify(f.filter ?? {})}
+                    </>
+                  ) : (
+                    <>
+                      {t("relation_strategy")}: {t("key_relation")}
+                      <br/>
+                      {t("local_field")}: {f?.localField + ""}
+                      <br/>
+                      {t("foreign_field")}: {f?.foreignField + ""}
+                      <br/>
+                      {t("cascade_delete")}: {f?.cascadeDelete + ""}
+                    </>
+                  )}
                 </span>
               }
             >
