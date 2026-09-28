@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
-import {Button, Form, Input, Space} from 'antd';
+import {Button, Card, Descriptions, Form, Input, Table, Typography} from 'antd';
 import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {useTranslation} from 'react-i18next';
 import type {Enum} from '@/types/data-modeling';
 import {buildEnumPayload, toElementRows, type ElementRow} from './enumPayload';
+import {rounded, spacing} from '@/theme/designTokens';
 
 interface EnumFormProps {
   form?: any;
@@ -25,6 +26,7 @@ const EnumForm = ({
   const {t} = useTranslation();
   const [internalForm] = Form.useForm();
   const form = externalForm || internalForm;
+  const isView = mode === 'view';
 
   useEffect(() => {
     if (model) {
@@ -51,24 +53,67 @@ const EnumForm = ({
     validateFields: form.validateFields,
   }));
 
+  if (isView) {
+    const rows = model ? toElementRows(model) : [];
+
+    return (
+      <div style={{maxWidth: 760}}>
+        <Descriptions
+          bordered
+          column={2}
+          size="small"
+          items={[
+            {key: 'name', label: t('name'), children: model?.name || '-'},
+            {key: 'comment', label: t('comment'), children: model?.comment || '-'},
+          ]}
+        />
+        <Table
+          size="small"
+          pagination={false}
+          rowKey={(row: ElementRow) => row.name || '-'}
+          dataSource={rows}
+          style={{marginTop: spacing.md}}
+          columns={[
+            {title: t('element_name'), dataIndex: 'name', width: 180},
+            {
+              title: t('element_code'),
+              dataIndex: 'code',
+              width: 120,
+              render: (value: ElementRow['code']) => (value === '' || value === undefined ? '-' : String(value)),
+            },
+            {title: t('element_comment'), dataIndex: 'comment', render: (value: ElementRow['comment']) => value || '-'},
+          ]}
+        />
+      </div>
+    );
+  }
+
+  const elementGridStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: 'minmax(140px, 1fr) 88px minmax(180px, 1.5fr) 32px',
+    gap: spacing.xs,
+    alignItems: 'center',
+  };
+
   return (
-    <Form form={form} layout="vertical" variant={mode === "view" ? "borderless" : "outlined"}>
-      <Form.Item
-        name="name"
-        label={t('name')}
-        rules={mode !== 'view' ? [{required: true}] : []}
+    <Form form={form} layout="vertical" variant="outlined" style={{maxWidth: 760}}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(160px, 1fr) minmax(280px, 2fr)',
+          gap: spacing.xs,
+        }}
       >
-        <Input readOnly={mode === 'view' || (!!model && mode === 'edit')}/>
-      </Form.Item>
-      <Form.Item
-        name="comment"
-        label={t('comment')}
-      >
-        <Input readOnly={mode === 'view'}/>
-      </Form.Item>
+        <Form.Item name="name" label={t('name')} rules={[{required: true}]}>
+          <Input readOnly={!!model && mode === 'edit'}/>
+        </Form.Item>
+        <Form.Item name="comment" label={t('comment')}>
+          <Input/>
+        </Form.Item>
+      </div>
       <Form.List
         name="elements"
-        rules={mode !== 'view' ? [
+        rules={[
           {
             validator: async (_, rows: ElementRow[]) => {
               if (!rows || rows.length < 2) {
@@ -92,39 +137,53 @@ const EnumForm = ({
               return Promise.resolve();
             },
           },
-        ] : []}
+        ]}
       >
         {(fields, {add, remove}, {errors}) => (
-          <>
-            <div style={{display: 'flex', gap: 8, marginBottom: 4}}>
-              <div style={{flex: 1}}>{t('element_name')}</div>
-              <div style={{width: 120}}>{t('element_code')}</div>
-              <div style={{flex: 1}}>{t('element_comment')}</div>
-              <div style={{width: 32}}/>
+          <Card
+            title={t('enum_elements')}
+            extra={
+              <Button
+                type="dashed"
+                icon={<PlusOutlined/>}
+                onClick={() => add({name: '', code: '', comment: ''})}
+              >
+                {t('add_element')}
+              </Button>
+            }
+            styles={{
+              body: {padding: spacing.md},
+            }}
+            style={{borderRadius: rounded.lg}}
+          >
+            <div style={{...elementGridStyle, marginBottom: spacing.xs}}>
+              <Typography.Text type="secondary">{t('element_name')}</Typography.Text>
+              <Typography.Text type="secondary">{t('element_code')}</Typography.Text>
+              <Typography.Text type="secondary">{t('element_comment')}</Typography.Text>
             </div>
-            {fields.map((field) => (
-              <div key={field.key} style={{display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center'}}>
+            {fields.map((field, index) => (
+              <div
+                key={field.key}
+                style={{
+                  ...elementGridStyle,
+                  marginBottom: index === fields.length - 1 ? 0 : spacing.xs,
+                }}
+              >
                 <Form.Item
                   name={[field.name, 'name']}
-                  rules={mode !== 'view' ? [{required: true, message: t('enum_element_name_required')}] : []}
-                  style={{flex: 1, marginBottom: 0}}
+                  rules={[{required: true, message: t('enum_element_name_required')}]}
+                  style={{marginBottom: 0}}
                 >
-                  <Input readOnly={mode === 'view'}/>
+                  <Input/>
                 </Form.Item>
-                <Form.Item
-                  name={[field.name, 'code']}
-                  style={{width: 120, marginBottom: 0}}
-                >
-                  <Input readOnly={mode === 'view'} placeholder={mode === 'view' ? '' : t('element_code')}/>
+                <Form.Item name={[field.name, 'code']} style={{marginBottom: 0}}>
+                  <Input placeholder={t('element_code')}/>
                 </Form.Item>
-                <Form.Item
-                  name={[field.name, 'comment']}
-                  style={{flex: 1, marginBottom: 0}}
-                >
-                  <Input readOnly={mode === 'view'}/>
+                <Form.Item name={[field.name, 'comment']} style={{marginBottom: 0}}>
+                  <Input/>
                 </Form.Item>
-                <div style={{width: 32}}>
-                  {fields.length > 1 && mode !== 'view' && (
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                  {fields.length > 1 && (
                     <Button
                       type="text"
                       icon={<MinusCircleOutlined/>}
@@ -134,32 +193,8 @@ const EnumForm = ({
                 </div>
               </div>
             ))}
-            <Form.Item>
-              <Space style={{display: 'flex', gap: 8}}>
-                {mode !== 'view' && (
-                  <>
-                    <Button
-                      type="dashed"
-                      onClick={() => {
-                        add({name: '', code: '', comment: ''}, 0);
-                      }}
-                      icon={<PlusOutlined/>}
-                    >
-                      {t('add_element_at_top')}
-                    </Button>
-                    <Button
-                      type="dashed"
-                      onClick={() => add({name: '', code: '', comment: ''})}
-                      icon={<PlusOutlined/>}
-                    >
-                      {t('add_element_at_bottom')}
-                    </Button>
-                  </>
-                )}
-                <Form.ErrorList errors={errors}/>
-              </Space>
-            </Form.Item>
-          </>
+            <Form.ErrorList errors={errors}/>
+          </Card>
         )}
       </Form.List>
     </Form>

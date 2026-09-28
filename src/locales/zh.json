@@ -525,6 +525,8 @@
   "generate_apis": "生成接口",
   "statement": "语句",
   "elements": "元素",
+  "enum_elements": "枚举元素",
+  "add_element": "添加元素",
   "add_element_at_top": "向上添加",
   "add_element_at_bottom": "向下添加",
   "enum_element_size_valid": "至少2个元素",

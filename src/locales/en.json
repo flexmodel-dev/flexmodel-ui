@@ -525,6 +525,8 @@
   "generate_apis": "Generate APIs",
   "statement": "Statement",
   "elements": "Elements",
+  "enum_elements": "Enum elements",
+  "add_element": "Add element",
   "add_element_at_top": "Add element at top",
   "add_element_at_bottom": "Add element at bottom",
   "enum_element_size_valid": "At least 2 elements",
