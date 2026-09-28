@@ -35,6 +35,7 @@ export interface Enum extends TypeWrapper {
   elements: string[];
   elementDefinitions?: EnumElement[];
   comment?: string;
+  fml?: string;
 }
 
 /**

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {Button, Card, Descriptions, Form, Input, Table, Typography} from 'antd';
-import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {Button, Card, Descriptions, Form, Input, Popover, Table, Typography} from 'antd';
+import {CodeOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {useTranslation} from 'react-i18next';
 import type {Enum} from '@/types/data-modeling';
 import {buildEnumPayload, toElementRows, type ElementRow} from './enumPayload';
@@ -62,6 +62,25 @@ const EnumForm = ({
           bordered
           column={2}
           size="small"
+          extra={
+            model?.fml ? (
+              <Popover
+                title={t('api_description')}
+                content={
+                  <Typography.Paragraph
+                    copyable
+                    style={{whiteSpace: 'pre-wrap', margin: '8px 0 0 0'}}
+                  >
+                    {model.fml}
+                  </Typography.Paragraph>
+                }
+              >
+                <Button icon={<CodeOutlined/>} type="text" size="small">
+                  {t('api_description')}
+                </Button>
+              </Popover>
+            ) : undefined
+          }
           items={[
             {key: 'name', label: t('name'), children: model?.name || '-'},
             {key: 'comment', label: t('comment'), children: model?.comment || '-'},
