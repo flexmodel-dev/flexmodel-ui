@@ -94,19 +94,15 @@ const FieldInput: React.FC<FieldInputProps> = ({
         );
       case "EnumRef": {
         const fromEnum = modelList.find((m) => m.name === field.from);
-        const commentByName = new Map<string, string>(
-          (fromEnum?.elementDefinitions ?? [])
-            .filter((element: any) => element?.comment)
-            .map((element: any) => [element.name, element.comment])
-        );
+        const elements = fromEnum?.elements ?? [];
         return (
           <Select
             mode={field?.multiple ? "multiple" : undefined}
             style={{width: "100%"}}
             placeholder={field.comment}
-            options={fromEnum?.elements?.map((val: any) => ({
-              value: val,
-              label: commentByName.get(val) || val,
+            options={elements.map((element: any) => ({
+              value: element.name,
+              label: element.comment || element.name,
             }))}
             value={value}
             onChange={(e) => onChange(e)}

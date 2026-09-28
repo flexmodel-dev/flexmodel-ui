@@ -8,21 +8,17 @@ export interface ElementRow {
 
 const isNumericLiteral = (value: string) => /^-?\d+$/.test(value);
 
-export const toElementRows = (model?: Partial<Enum>): ElementRow[] => {
-  if (model?.elementDefinitions?.length) {
-    return model.elementDefinitions.map((element) => ({
-      name: element.name,
-      code: element.code === null || element.code === undefined ? '' : String(element.code),
-      comment: element.comment ?? '',
-    }));
-  }
-  return (model?.elements ?? []).map((name) => ({name, code: '', comment: ''}));
-};
+export const toElementRows = (model?: Partial<Enum>): ElementRow[] =>
+  (model?.elements ?? []).map((element) => ({
+    name: element.name,
+    code: element.code === null || element.code === undefined ? '' : String(element.code),
+    comment: element.comment ?? '',
+  }));
 
 export const buildEnumPayload = (values: Record<string, any>): Enum => {
   const rows: ElementRow[] = values?.elements ?? [];
   const hasAnyCode = rows.some((row) => (row?.code ?? '').toString().trim() !== '');
-  const elementDefinitions: EnumElement[] = rows.map((row) => {
+  const elements: EnumElement[] = rows.map((row) => {
     const name = (row?.name ?? '').trim();
     const code = (row?.code ?? '').toString().trim();
     const comment = (row?.comment ?? '').toString().trim();
@@ -35,8 +31,7 @@ export const buildEnumPayload = (values: Record<string, any>): Enum => {
   return {
     name: values?.name,
     type: 'Enum',
-    elements: elementDefinitions.map((element) => element.name),
-    elementDefinitions,
+    elements,
     ...(values?.comment ? {comment: values.comment} : {}),
   };
 };

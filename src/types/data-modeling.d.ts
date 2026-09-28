@@ -32,8 +32,7 @@ export interface EnumElement {
 }
 
 export interface Enum extends TypeWrapper {
-  elements: string[];
-  elementDefinitions?: EnumElement[];
+  elements: EnumElement[];
   comment?: string;
   fml?: string;
 }
@@ -113,8 +112,7 @@ export interface EntitySchema {
 export interface EnumSchema {
   name: string;
   comment?: string;
-  elements: string[];
-  elementDefinitions?: EnumElement[];
+  elements: EnumElement[];
   additionalProperties?: Record<string, any>;
   fml?: string;
   type: string;
