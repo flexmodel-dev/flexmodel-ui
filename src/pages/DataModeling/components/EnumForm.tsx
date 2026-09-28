@@ -75,9 +75,12 @@ const EnumForm = ({
                   </Typography.Paragraph>
                 }
               >
-                <Button icon={<CodeOutlined/>} type="text" size="small">
-                  {t('api_description')}
-                </Button>
+                <Button
+                  aria-label={t('api_description')}
+                  icon={<CodeOutlined/>}
+                  type="text"
+                  size="small"
+                />
               </Popover>
             ) : undefined
           }
