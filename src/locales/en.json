@@ -1,4 +1,4 @@
-﻿{
+{
   "api": "API",
   "apis": {
     "name": "API Name",
@@ -528,6 +528,13 @@
   "add_element_at_top": "Add element at top",
   "add_element_at_bottom": "Add element at bottom",
   "enum_element_size_valid": "At least 2 elements",
+  "element_name": "Name",
+  "element_code": "Code",
+  "element_comment": "Comment",
+  "enum_element_name_required": "Please enter the element name",
+  "enum_element_name_duplicate": "Element names must be unique",
+  "enum_code_partial": "Codes must be set on all elements or none",
+  "enum_code_duplicate": "Codes must be unique",
   "parameters": "Parameters",
   "query_execution_failed": "Query execution failed",
   "time_taken": "Time taken",

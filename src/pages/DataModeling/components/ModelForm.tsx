@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {Entity} from '@/types/data-modeling';
 import EntityForm from './EntityForm';
 import EnumForm from './EnumForm';
+import {buildEnumPayload} from './enumPayload';
 import NativeQueryForm from './NativeQueryForm';
 
 interface ModelFormProps {
@@ -58,11 +59,7 @@ const ModelForm = ({
   const handleEnumSubmit = async () => {
     try {
       const values = await enumForm.validateFields();
-      const enumData = {
-        ...values,
-        type: 'Enum',
-      };
-      onConfirm(enumData);
+      onConfirm(buildEnumPayload(values));
     } catch (error) {
       console.error(error);
       message.error(t('form_save_failed'));

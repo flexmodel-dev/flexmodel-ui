@@ -24,8 +24,16 @@ export interface Entity extends Model {
 /**
  * 枚举接口
  */
+export interface EnumElement {
+  name: string;
+  code?: string | number | null;
+  comment?: string | null;
+  additionalProperties?: Record<string, any>;
+}
+
 export interface Enum extends TypeWrapper {
   elements: string[];
+  elementDefinitions?: EnumElement[];
   comment?: string;
 }
 
@@ -105,6 +113,7 @@ export interface EnumSchema {
   name: string;
   comment?: string;
   elements: string[];
+  elementDefinitions?: EnumElement[];
   additionalProperties?: Record<string, any>;
   fml?: string;
   type: string;

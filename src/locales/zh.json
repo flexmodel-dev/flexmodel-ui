@@ -1,4 +1,4 @@
-﻿{
+{
   "api": "接口",
   "apis": {
     "name": "接口名称",
@@ -528,6 +528,13 @@
   "add_element_at_top": "向上添加",
   "add_element_at_bottom": "向下添加",
   "enum_element_size_valid": "至少2个元素",
+  "element_name": "名称",
+  "element_code": "编码",
+  "element_comment": "注释",
+  "enum_element_name_required": "请输入元素名称",
+  "enum_element_name_duplicate": "元素名称不能重复",
+  "enum_code_partial": "编码必须全部填写或全部留空",
+  "enum_code_duplicate": "编码不能重复",
   "parameters": "参数",
   "query_execution_failed": "查询执行失败",
   "time_taken": "耗时",
