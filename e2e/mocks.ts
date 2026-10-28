@@ -195,9 +195,8 @@ async function handleRoute(route: Route) {
   }));
   if (matchGet(/^\/projects\/[^/]+\/functions\/[^/]+$/)) return route.fulfill(ok(functions()[0]));
 
-  // ---- 认证提供商 / Pages ----
+  // ---- 认证提供商 ----
   if (matchGet(/^\/projects\/[^/]+\/auth-providers$/)) return route.fulfill(ok([]));
-  if (matchGet(/^\/projects\/[^/]+\/page$/)) return route.fulfill(ok(pageSite()));
 
   // ---- 存储桶 ----
   if (matchGet(/^\/projects\/[^/]+\/buckets$/)) return route.fulfill(ok(buckets()));
@@ -218,7 +217,6 @@ function globalProfile() {
     projectBaseDomain: "",
     edgeUrlTemplate: "",
     routingMode: "path",
-    pagesUrlTemplate: "/pages/{{projectId}}",
     version: "test-1.0.0",
   };
 }
@@ -508,23 +506,6 @@ function functions() {
       updatedAt: "2024-03-02T00:00:00Z",
     },
   ];
-}
-
-function pageSite() {
-  return {
-    id: "page-1",
-    projectId: PROJECT_ID,
-    customDomains: null,
-    productionDeploymentId: "deploy-1",
-    status: "READY",
-    fileCount: 3,
-    sizeBytes: 10240,
-    errorMessage: null,
-    createdBy: "admin",
-    updatedBy: "admin",
-    createdAt: "2024-03-01",
-    updatedAt: "2024-03-01",
-  };
 }
 
 function buckets() {

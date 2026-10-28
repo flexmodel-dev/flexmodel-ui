@@ -6,13 +6,12 @@ import {getProject, patchProject} from '@/services/project';
 import {useProject} from '@/store/appStore';
 import {PageContainer} from '@/components/common';
 import ProvidersTab from '@/pages/Authentication/components/ProvidersTab';
-import PagesTab from '@/pages/Pages';
 import LogSettingsTab from '@/pages/ProjectSettings/components/LogSettingsTab';
 import {spacing} from '@/theme/designTokens';
 
 const {Title, Text} = Typography;
 
-type ProjectSettingsTabKey = 'base' | 'auth' | 'logs' | 'pages';
+type ProjectSettingsTabKey = 'base' | 'auth' | 'logs';
 
 const ProjectSettings: React.FC = () => {
   const {t} = useTranslation();
@@ -31,7 +30,6 @@ const ProjectSettings: React.FC = () => {
     base: t('settings_basic_settings'),
     auth: t('authentication'),
     logs: t('project_log_settings'),
-    pages: t('pages.title'),
   };
 
   const menuItems = (Object.keys(menuMap) as ProjectSettingsTabKey[]).map((key) => ({
@@ -143,8 +141,6 @@ const ProjectSettings: React.FC = () => {
         return <ProvidersTab/>;
       case 'logs':
         return projectId ? <LogSettingsTab projectId={projectId} disabled={isDefaultProject}/> : null;
-      case 'pages':
-        return projectId ? <PagesTab projectId={projectId}/> : null;
       default:
         return null;
     }

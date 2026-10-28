@@ -85,7 +85,6 @@ export const useAppStore = create<AppState>()(
                 projectBaseDomain: profile.projectBaseDomain,
                 edgeUrlTemplate: profile.edgeUrlTemplate,
                 routingMode: profile.routingMode,
-                pagesUrlTemplate: profile.pagesUrlTemplate,
                 version: profile.version
               }, isLoading: false
             });

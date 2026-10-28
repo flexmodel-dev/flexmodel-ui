@@ -10,6 +10,5 @@ export interface SystemProfile {
   projectBaseDomain: string;
   edgeUrlTemplate: string;
   routingMode: string;
-  pagesUrlTemplate: string;
   version: string;
 }
