@@ -50,7 +50,6 @@
   "log.api_logs": "API Logs",
   "log.job_execution_log": "Job Execution Logs",
   "log.node_instance_logs": "Node Instance Logs",
-  "log.audit_logs": "Audit Logs",
   "trace_id": "Trace ID",
   "ok": "OK",
   "back": "Back",
@@ -237,10 +236,7 @@
   "deleted": "Deleted",
   "normal": "Normal",
   "job_execution_log_detail": "Job Execution Log Detail",
-  "audit_log_detail": "Audit Log Detail",
-  "change_diff": "Change Diff",
   "load_job_execution_log_failed": "Failed to load job execution logs",
-  "load_audit_log_failed": "Failed to load audit logs",
   "collapse": "Collapse",
   "expand": "Expand",
   "level": "Level",
@@ -1185,10 +1181,5 @@
   "function.settings": "Settings",
   "project_log_settings": "Log Settings",
   "project_log_settings_log_retention_days": "Log retention days",
-  "project_log_settings_log_retention_days_desc": "API logs older than this will be purged automatically",
-  "project_log_settings_audit_resources": "Audit resources",
-  "project_log_settings_audit_resources_desc": "Audit logs are recorded only for inserts/updates/deletes on these configuration tables. Type a table name and press Enter to add",
-  "project_log_settings_audit_resources_placeholder": "Enter resource table name, e.g. f_trigger",
-  "project_log_settings_audit_resources_required": "Audit resources cannot be empty",
-  "project_log_settings_hint": "When audit resources are empty, the default whitelist is used: f_trigger, f_em_flow_definition, f_em_flow_deployment, f_function, f_bucket, f_auth_provider_config"
+  "project_log_settings_log_retention_days_desc": "API logs older than this will be purged automatically"
 }

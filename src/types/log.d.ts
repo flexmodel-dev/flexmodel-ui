@@ -67,21 +67,3 @@ export interface NodeInstanceLogRef {
   updatedBy?: string;
   updatedAt?: string;
 }
-
-/**
- * 审计日志（配置变更）
- */
-export interface AuditLog {
-  id: string;
-  action: string;
-  resourceType: string;
-  resourceId: string;
-  resourceName?: string;
-  userId?: string;
-  success: boolean;
-  errorMessage?: string;
-  oldData?: string;
-  newData?: string;
-  traceId?: string;
-  createdAt: string;
-}

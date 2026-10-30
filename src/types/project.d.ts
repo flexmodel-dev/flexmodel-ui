@@ -19,7 +19,6 @@ export interface Project {
     showSystemModels?: boolean;
     logSettings?: {
       logRetentionDays?: number;
-      auditResources?: string[];
     };
     [key: string]: any;
   };

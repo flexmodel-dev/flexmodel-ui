@@ -51,7 +51,6 @@
   "log.api_logs": "接口日志",
   "log.job_execution_log": "任务执行日志",
   "log.node_instance_logs": "节点执行日志",
-  "log.audit_logs": "审计日志",
   "trace_id": "Trace ID",
   "ok": "成功",
   "back": "返回",
@@ -237,10 +236,7 @@
   "deleted": "已删除",
   "normal": "正常",
   "job_execution_log_detail": "任务执行日志详情",
-  "audit_log_detail": "审计日志详情",
-  "change_diff": "变更对比",
   "load_job_execution_log_failed": "加载任务执行日志失败",
-  "load_audit_log_failed": "加载审计日志失败",
   "collapse": "折叠",
   "expand": "展开",
   "level": "级别",
@@ -1188,10 +1184,5 @@
   "function.settings": "设置",
   "project_log_settings": "日志设置",
   "project_log_settings_log_retention_days": "日志保留天数",
-  "project_log_settings_log_retention_days_desc": "超过该天数的 API 日志将被自动清理",
-  "project_log_settings_audit_resources": "审计资源",
-  "project_log_settings_audit_resources_desc": "仅对这些配置定义表的增删改记录审计日志，输入资源表名后回车添加",
-  "project_log_settings_audit_resources_placeholder": "输入资源表名，如 f_trigger",
-  "project_log_settings_audit_resources_required": "审计资源不能为空",
-  "project_log_settings_hint": "审计资源为空时将回退到默认白名单：f_trigger、f_em_flow_definition、f_em_flow_deployment、f_function、f_bucket、f_auth_provider_config"
+  "project_log_settings_log_retention_days_desc": "超过该天数的 API 日志将被自动清理"
 }
