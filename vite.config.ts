@@ -186,11 +186,6 @@ export default defineConfig({
         target: "http://localhost:9999",
         changeOrigin: true,
       },
-      // Pages fallback → Java server (when local files not found)
-      "/pages/": {
-        target: "http://localhost:8080",
-        changeOrigin: true,
-      },
     },
   },
 });
