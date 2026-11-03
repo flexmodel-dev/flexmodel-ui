@@ -303,14 +303,9 @@ const FieldForm = ({
       </Form.Item>
 
       {form.getFieldValue("tmpType") === "String" && (
-        <>
-          <Form.Item label={t("length")} name="length">
-            <Input type="number"/>
-          </Form.Item>
-          <Form.Item label={t("text")} name="text" valuePropName="checked">
-            <Switch/>
-          </Form.Item>
-        </>
+        <Form.Item label={t("length")} name="length">
+          <Input type="number"/>
+        </Form.Item>
       )}
 
       {form.getFieldValue("tmpType") === "Decimal" && (

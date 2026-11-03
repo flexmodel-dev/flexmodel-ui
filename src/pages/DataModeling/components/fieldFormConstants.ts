@@ -4,6 +4,10 @@ export const BasicFieldTypes = [
     label: 'String',
   },
   {
+    name: 'Text',
+    label: 'Text',
+  },
+  {
     name: 'Int',
     label: 'Int',
   },
@@ -42,6 +46,12 @@ export const FieldInitialValues: any = {
     type: 'String',
     length: 255,
     text: false,
+    unique: false,
+    nullable: true,
+    identity: false,
+  },
+  TEXT: {
+    type: 'Text',
     unique: false,
     nullable: true,
     identity: false,

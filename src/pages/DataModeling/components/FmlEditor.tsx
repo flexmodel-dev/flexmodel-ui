@@ -93,7 +93,7 @@ const FmlEditor: React.FC<FmlEditorProps> = ({
     tokenPostfix: '.fml',
 
     keywords: [
-      'model', 'enum', 'seed', 'String', 'Int', 'Long', 'Float', 'Double', 'Boolean',
+      'model', 'enum', 'seed', 'String', 'Text', 'Int', 'Long', 'Float', 'Double', 'Boolean',
       'DateTime', 'JSON', 'BigInt', 'Decimal', 'Bytes', 'Unsupported', 'true', 'false', 'null'
     ],
 
@@ -191,6 +191,13 @@ const FmlEditor: React.FC<FmlEditorProps> = ({
           insertText: 'String',
           documentation: t('fml.string_type'),
           sortText: '04'
+        },
+        {
+          label: 'Text',
+          kind: 5, // Class
+          insertText: 'Text',
+          documentation: t('fml.text_type'),
+          sortText: '04.5'
         },
         {
           label: 'Int',

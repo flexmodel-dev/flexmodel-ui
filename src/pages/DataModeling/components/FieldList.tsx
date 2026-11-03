@@ -166,6 +166,8 @@ const FieldList: React.FC<FieldListProps> = ({ model }) => {
     switch (type) {
       case 'String':
         return <FontSizeOutlined style={{color: colors.info, marginRight: 4}}/>;
+      case 'Text':
+        return <FileTextOutlined style={{color: colors['ink-muted'], marginRight: 4}}/>;
       case 'Int':
       case 'Long':
       case 'Float':

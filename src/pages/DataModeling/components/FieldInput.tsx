@@ -83,6 +83,7 @@ const FieldInput: React.FC<FieldInputProps> = ({
             style={{width: "100%"}}
           />
         );
+      case "Text":
       case "JSON":
         return (
           <Input.TextArea

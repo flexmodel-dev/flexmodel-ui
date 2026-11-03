@@ -360,6 +360,7 @@
     "enum_definition": "定义一个新的枚举",
     "seed_definition": "定义种子数据",
     "string_type": "字符串类型",
+    "text_type": "大文本类型（TEXT/CLOB，无长度限制）",
     "int_type": "整数类型",
     "long_type": "长整数类型",
     "float_type": "浮点数类型",

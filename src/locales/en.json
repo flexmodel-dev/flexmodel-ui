@@ -360,6 +360,7 @@
     "enum_definition": "Define a new enum",
     "seed_definition": "Define seed data",
     "string_type": "String type",
+    "text_type": "Large text type (TEXT/CLOB, no length limit)",
     "int_type": "Integer type",
     "long_type": "Long integer type",
     "float_type": "Float type",
